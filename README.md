@@ -7,21 +7,23 @@
   <img src="https://img.shields.io/badge/License-MIT-34C759?style=for-the-badge" alt="MIT License">
 </p>
 
+
 ## Overview
 
-**Spendora** is a privacy-first iOS application that helps users track, manage, and understand their recurring subscriptions. No bank connections required — all data stays locally on the user's device.
+### Introduction
 
-### Problem Statement
+Subscription fatigue has become a widespread problem in modern digital life. Users subscribe to streaming platforms, productivity tools, and cloud services but gradually lose track of recurring payments, leading to unnoticed and unnecessary spending.
 
-Subscription fatigue is a growing issue. Users subscribe to multiple services (Netflix, Spotify, Apple One, etc.) but lose track of monthly spending, leading to unexpected charges and wasted money.
+**Spendora** is a privacy-focused iOS application designed to help users manage and track their subscriptions through manual input without requiring access to bank accounts or financial credentials. All data is stored locally on the device using SwiftData, ensuring complete privacy and control.
 
-### Solution
+The app helps users answer three key questions:
 
-Spendora provides a clean, intuitive dashboard where users can manually track subscriptions without sharing sensitive financial data.
-
+| Question | How Spendora Answers |
+|----------|---------------------|
+| What am I paying for? | Dashboard shows all active subscriptions |
+| How much do I spend each month? | Automatic monthly and yearly calculations |
+| When are my next charges due? | Upcoming billing dates and notifications |
 ---
-
-## Features
 
 ### Core Functionality
 
