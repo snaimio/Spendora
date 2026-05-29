@@ -85,9 +85,6 @@ Spendora provides a clean, intuitive dashboard where users can manually track su
 
 ## Project Structure
 
-## 📁 Project Structure
-
-## 📁 Project Structure
 
 ```
 Spendora/
