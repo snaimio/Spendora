@@ -83,34 +83,37 @@ Spendora provides a clean, intuitive dashboard where users can manually track su
 
 ## Project Structure
 
+```
 Spendora/
-├── SpendoraApp.swift # App entry point with onboarding
+│
+├── SpendoraApp.swift
 │
 ├── Models/
-│ └── Subscription.swift # SwiftData model with computed properties
+│   └── Subscription.swift
 │
 ├── Views/
-│ ├── Home/
-│ │ └── HomeView.swift # Main dashboard with totals and list
-│ ├── Add/
-│ │ └── AddSubscriptionView.swift # Add subscription form
-│ ├── Detail/
-│ │ └── SubscriptionDetailView.swift # Detail view with edit and delete
-│ └── Settings/
-│ └── SettingsView.swift # App settings and data management
+│   ├── Home/
+│   │   └── HomeView.swift
+│   ├── Add/
+│   │   └── AddSubscriptionView.swift
+│   ├── Detail/
+│   │   └── SubscriptionDetailView.swift
+│   └── Settings/
+│       └── SettingsView.swift
 │
 ├── Components/
-│ ├── SubscriptionCard.swift # Reusable subscription card component
-│ ├── NextChargeCard.swift # Upcoming bill highlight card
-│ ├── EmptyStateView.swift # Empty state placeholder
-│ └── SearchBar.swift # Search and filter component
+│   ├── SubscriptionCard.swift
+│   ├── NextChargeCard.swift
+│   ├── EmptyStateView.swift
+│   └── SearchBar.swift
 │
 ├── Services/
-│ ├── NotificationService.swift # Local notification scheduling
-│ └── WidgetSyncService.swift # Widget data sync (prepared)
+│   ├── NotificationService.swift
+│   └── WidgetSyncService.swift
 │
 └── Utils/
-└── DateExtensions.swift # Date helper functions
+    └── DateExtensions.swift
+```
 
 
 ---
