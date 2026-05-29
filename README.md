@@ -1,25 +1,29 @@
 # Spendora - Smart Subscription and Spending Tracker
 
-[![Platform](https://img.shields.io/badge/platform-iOS-blue.svg)](https://developer.apple.com/ios/)
-[![Swift](https://img.shields.io/badge/Swift-5.9-orange.svg)](https://swift.org/)
-[![SwiftData](https://img.shields.io/badge/SwiftData-supported-green.svg)](https://developer.apple.com/xcode/swiftdata/)
-[![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](LICENSE)
+<p align="center">
+  <img src="https://img.shields.io/badge/Platform-iOS-000000?style=for-the-badge&logo=ios&logoColor=white" alt="iOS">
+  <img src="https://img.shields.io/badge/Swift-6.3-FA7343?style=for-the-badge&logo=swift&logoColor=white" alt="Swift 6.3">
+  <img src="https://img.shields.io/badge/SwiftData-6.3-5AC8FA?style=for-the-badge&logo=apple&logoColor=white" alt="SwiftData">
+  <img src="https://img.shields.io/badge/License-MIT-34C759?style=for-the-badge" alt="MIT License">
+</p>
+
 
 ## Overview
 
-**Spendora** is a privacy-first iOS application that helps users track, manage, and understand their recurring subscriptions. No bank connections required — all data stays locally on the user's device.
+### Introduction
 
-### Problem Statement
+Subscription fatigue has become a widespread problem in modern digital life. Users subscribe to streaming platforms, productivity tools, and cloud services but gradually lose track of recurring payments, leading to unnoticed and unnecessary spending.
 
-Subscription fatigue is a growing issue. Users subscribe to multiple services (Netflix, Spotify, Apple One, etc.) but lose track of monthly spending, leading to unexpected charges and wasted money.
+**Spendora** is a privacy-focused iOS application designed to help users manage and track their subscriptions through manual input without requiring access to bank accounts or financial credentials. All data is stored locally on the device using SwiftData, ensuring complete privacy and control.
 
-### Solution
+The app helps users answer three key questions:
 
-Spendora provides a clean, intuitive dashboard where users can manually track subscriptions without sharing sensitive financial data.
-
+| Question | How Spendora Answers |
+|----------|---------------------|
+| What am I paying for? | Dashboard shows all active subscriptions |
+| How much do I spend each month? | Automatic monthly and yearly calculations |
+| When are my next charges due? | Upcoming billing dates and notifications |
 ---
-
-## Features
 
 ### Core Functionality
 
@@ -83,37 +87,49 @@ Spendora provides a clean, intuitive dashboard where users can manually track su
 
 ## Project Structure
 
+
 ```
 Spendora/
+├── SpendoraApp.swift                     # App entry point with persistent onboarding
 │
-├── SpendoraApp.swift
+├── Models/                               # Data models
+│   └── Subscription.swift                # SwiftData model with computed properties
 │
-├── Models/
-│   └── Subscription.swift
+├── Views/                                ← Different SCREENS (each is unique)
+│   ├── Home/                             ← Screen 1
+│   │   └── HomeView.swift                # Main dashboard with totals and list
+│   ├── Add/                              ← Screen 2
+│   │   └── AddSubscriptionView.swift     # Add subscription form
+│   ├── Detail/                           ← Screen 3
+│   │   └── SubscriptionDetailView.swift  # Detail view with edit/delete
+│   └── Settings/                         ← Screen 4
+│       └── SettingsView.swift            # App settings and data management
 │
-├── Views/
-│   ├── Home/
-│   │   └── HomeView.swift
-│   ├── Add/
-│   │   └── AddSubscriptionView.swift
-│   ├── Detail/
-│   │   └── SubscriptionDetailView.swift
-│   └── Settings/
-│       └── SettingsView.swift
+├── Components/                           ← Reusable PIECES (all related)
+│   ├── SubscriptionCard.swift            # Subscription card component
+│   ├── NextChargeCard.swift              # Upcoming bill card
+│   ├── EmptyStateView.swift              # Empty state placeholder
+│   └── SearchBar.swift                   # Search and filter component
 │
-├── Components/
-│   ├── SubscriptionCard.swift
-│   ├── NextChargeCard.swift
-│   ├── EmptyStateView.swift
-│   └── SearchBar.swift
+├── Services/                             ← Background LOGIC (all related)
+│   ├── NotificationService.swift         # Local notification scheduling
+│   └── WidgetSyncService.swift           # Widget data sync (prepared)
 │
-├── Services/
-│   ├── NotificationService.swift
-│   └── WidgetSyncService.swift
-│
-└── Utils/
-    └── DateExtensions.swift
+└── Utils/                                # Helper functions
+    └── DateExtensions.swift              # Date formatting helpers
 ```
+
+### Why This Structure?
+
+| Folder | Purpose | Organization Rule |
+|--------|---------|-------------------|
+| **Views/** | Different SCREENS | Each screen gets its own folder |
+| **Components/** | Reusable PIECES | All related components live together |
+| **Services/** | Background LOGIC | All related services live together |
+| **Models/** | Data model | Single file, no subfolder needed |
+| **Utils/** | Helper functions | Single file, no subfolder needed |
+
+This separation follows **industry best practices** for iOS development.
 
 
 ---
