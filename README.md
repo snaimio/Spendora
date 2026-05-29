@@ -87,35 +87,37 @@ Spendora provides a clean, intuitive dashboard where users can manually track su
 
 ## 📁 Project Structure
 
+## 📁 Project Structure
+
 ```
 Spendora/
-├── SpendoraApp.swift                 # App entry point with persistent onboarding
+├── SpendoraApp.swift                     # App entry point with persistent onboarding
 │
-├── Models/                           # Data models
-│   └── Subscription.swift            # SwiftData model with computed properties
+├── Models/                               # Data models
+│   └── Subscription.swift                # SwiftData model with computed properties
 │
-├── Views/                            ← Different SCREENS (each is unique)
-│   ├── Home/                         ← Screen 1
-│   │   └── HomeView.swift            # Main dashboard with totals and list
-│   ├── Add/                          ← Screen 2
-│   │   └── AddSubscriptionView.swift # Add subscription form
-│   ├── Detail/                       ← Screen 3
-│   │   └── SubscriptionDetailView.swift # Detail view with edit/delete
-│   └── Settings/                     ← Screen 4
-│       └── SettingsView.swift        # App settings and data management
+├── Views/                                ← Different SCREENS (each is unique)
+│   ├── Home/                             ← Screen 1
+│   │   └── HomeView.swift                # Main dashboard with totals and list
+│   ├── Add/                              ← Screen 2
+│   │   └── AddSubscriptionView.swift     # Add subscription form
+│   ├── Detail/                           ← Screen 3
+│   │   └── SubscriptionDetailView.swift  # Detail view with edit/delete
+│   └── Settings/                         ← Screen 4
+│       └── SettingsView.swift            # App settings and data management
 │
-├── Components/                       ← Reusable PIECES (all related)
-│   ├── SubscriptionCard.swift        # Subscription card component
-│   ├── NextChargeCard.swift          # Upcoming bill card
-│   ├── EmptyStateView.swift          # Empty state placeholder
-│   └── SearchBar.swift               # Search and filter component
+├── Components/                           ← Reusable PIECES (all related)
+│   ├── SubscriptionCard.swift            # Subscription card component
+│   ├── NextChargeCard.swift              # Upcoming bill card
+│   ├── EmptyStateView.swift              # Empty state placeholder
+│   └── SearchBar.swift                   # Search and filter component
 │
-├── Services/                         ← Background LOGIC (all related)
-│   ├── NotificationService.swift     # Local notification scheduling
-│   └── WidgetSyncService.swift       # Widget data sync (prepared)
+├── Services/                             ← Background LOGIC (all related)
+│   ├── NotificationService.swift         # Local notification scheduling
+│   └── WidgetSyncService.swift           # Widget data sync (prepared)
 │
-└── Utils/                            # Helper functions
-    └── DateExtensions.swift          # Date formatting helpers
+└── Utils/                                # Helper functions
+    └── DateExtensions.swift              # Date formatting helpers
 ```
 
 ### Why This Structure?
