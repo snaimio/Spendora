@@ -1,10 +1,10 @@
 # Spendora - Smart Subscription and Spending Tracker
 
 <p align="center">
-  <img src="https://img.shields.io/badge/platform-iOS-blue.svg">
-  <img src="https://img.shields.io/badge/Swift-5.9-orange.svg">
-  <img src="https://img.shields.io/badge/SwiftData-supported-green.svg">
-  <img src="https://img.shields.io/badge/license-MIT-lightgrey.svg">
+  <img src="https://img.shields.io/badge/Platform-iOS-000000?style=for-the-badge&logo=ios&logoColor=white" alt="iOS">
+  <img src="https://img.shields.io/badge/Swift-6.3-FA7343?style=for-the-badge&logo=swift&logoColor=white" alt="Swift 6.3">
+  <img src="https://img.shields.io/badge/SwiftData-6.3-5AC8FA?style=for-the-badge&logo=apple&logoColor=white" alt="SwiftData">
+  <img src="https://img.shields.io/badge/License-MIT-34C759?style=for-the-badge" alt="MIT License">
 </p>
 
 ## Overview
