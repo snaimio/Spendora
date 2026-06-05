@@ -32,7 +32,7 @@ struct SubscriptionDetailView: View {
                     HStack {
                         Text("Monthly cost:")
                         Spacer()
-                        Text(subscription.monthlyCost, format: .currency(code: "USD"))
+                        Text(String(format: "$%.2f", subscription.monthlyCost))
                             .fontWeight(.semibold)
                     }
                     
@@ -40,7 +40,7 @@ struct SubscriptionDetailView: View {
                         HStack {
                             Text("Savings per month:")
                             Spacer()
-                            Text(subscription.cost / 12, format: .currency(code: "USD"))
+                            Text(String(format: "$%.2f", subscription.cost / 12))
                                 .foregroundColor(.green)
                         }
                     }
@@ -98,19 +98,15 @@ struct SubscriptionDetailView: View {
     
     private func formatCost() -> String {
         if subscription.isYearly {
-            return "\(subscription.cost, format: .currency(code: "USD")) per year"
+            return String(format: "$%.2f per year", subscription.cost)
         } else {
-            return "\(subscription.monthlyCost, format: .currency(code: "USD")) per month"
+            return String(format: "$%.2f per month", subscription.monthlyCost)
         }
     }
     
     private func deleteSubscription() {
         NotificationService.shared.cancel(for: subscription)
         modelContext.delete(subscription)
-        
-        let fetchDescriptor = FetchDescriptor<Subscription>()
-        let allSubscriptions = try? modelContext.fetch(fetchDescriptor)
-        WidgetSyncService.updateSharedData(subscriptions: allSubscriptions ?? [])
         
         generator.impactOccurred()
         dismiss()
@@ -130,6 +126,22 @@ struct SubscriptionDetailView: View {
             urlString = "https://www.disneyplus.com/subscription"
         } else if serviceName.contains("hulu") {
             urlString = "https://help.hulu.com/account/cancel"
+        } else if serviceName.contains("amazon") || serviceName.contains("prime") {
+            urlString = "https://www.amazon.com/gp/css/account/manageprime"
+        } else if serviceName.contains("youtube") {
+            urlString = "https://www.youtube.com/paid_memberships"
+        } else if serviceName.contains("peacock") {
+            urlString = "https://www.peacocktv.com/account"
+        } else if serviceName.contains("paramount") {
+            urlString = "https://www.paramountplus.com/account/"
+        } else if serviceName.contains("hbo") || serviceName.contains("max") {
+            urlString = "https://www.max.com/account"
+        } else if serviceName.contains("dropbox") {
+            urlString = "https://www.dropbox.com/account/plan"
+        } else if serviceName.contains("adobe") {
+            urlString = "https://account.adobe.com/plans"
+        } else if serviceName.contains("microsoft") || serviceName.contains("office") || serviceName.contains("365") {
+            urlString = "https://account.microsoft.com/services"
         } else {
             let searchQuery = serviceName.replacingOccurrences(of: " ", with: "+")
             urlString = "https://www.google.com/search?q=how+to+cancel+\(searchQuery)"
@@ -141,6 +153,7 @@ struct SubscriptionDetailView: View {
     }
 }
 
+// MARK: - Detail Row
 struct DetailRow: View {
     let icon: String
     let title: String
@@ -164,6 +177,7 @@ struct DetailRow: View {
     }
 }
 
+// MARK: - Edit Subscription View
 struct EditSubscriptionView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
@@ -204,8 +218,7 @@ struct EditSubscriptionView: View {
                     
                     Picker("Category", selection: $selectedCategory) {
                         ForEach(SubscriptionCategory.allCases, id: \.self) { category in
-                            Label(category.rawValue, systemImage: category.icon)
-                                .tag(category)
+                            Text(category.rawValue).tag(category)
                         }
                     }
                     
@@ -239,10 +252,6 @@ struct EditSubscriptionView: View {
         
         NotificationService.shared.cancel(for: subscription)
         NotificationService.shared.schedule(for: subscription)
-        
-        let fetchDescriptor = FetchDescriptor<Subscription>()
-        let allSubscriptions = try? modelContext.fetch(fetchDescriptor)
-        WidgetSyncService.updateSharedData(subscriptions: allSubscriptions ?? [])
         
         dismiss()
     }

@@ -5,7 +5,6 @@
 
 import SwiftUI
 import SwiftData
-import UIKit
 
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
@@ -59,22 +58,135 @@ struct HomeView: View {
             ScrollView {
                 VStack(spacing: 20) {
                     // Total Spending Card
-                    TotalSpendingCard(
-                        monthlyTotal: totalMonthly,
-                        yearlyTotal: totalYearly
-                    )
+                    VStack(spacing: 16) {
+                        HStack(spacing: 20) {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Monthly")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Text(String(format: "$%.2f", totalMonthly))
+                                    .font(.system(size: 34, weight: .bold))
+                                    .foregroundColor(.primary)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            Divider()
+                                .frame(height: 40)
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Yearly")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Text(String(format: "$%.2f", totalYearly))
+                                    .font(.system(size: 34, weight: .bold))
+                                    .foregroundColor(.primary)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        
+                        if totalMonthly > 0 {
+                            Divider()
+                            HStack {
+                                Image(systemName: "lightbulb.fill")
+                                    .foregroundColor(.yellow)
+                                    .font(.caption)
+                                Text("You're spending \(String(format: "$%.0f", totalMonthly))/month on subscriptions")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                    }
+                    .padding()
+                    .background(Color(.systemBackground))
+                    .cornerRadius(16)
+                    .padding(.horizontal)
                     
                     // Analytics Card
                     if !filteredSubscriptions.isEmpty {
-                        AnalyticsCard(
-                            averageCost: averageMonthlyCost,
-                            highestSubscription: highestCostSubscription
-                        )
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack {
+                                Image(systemName: "chart.line.uptrend.xyaxis")
+                                    .foregroundColor(.blue)
+                                Text("Insights")
+                                    .font(.headline)
+                            }
+                            Divider()
+                            HStack {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Average Monthly")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                    Text(String(format: "$%.2f", averageMonthlyCost))
+                                        .font(.title3)
+                                        .fontWeight(.semibold)
+                                }
+                                Spacer()
+                                if let highest = highestCostSubscription {
+                                    VStack(alignment: .trailing, spacing: 4) {
+                                        Text("Highest")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                        Text(highest.displayName)
+                                            .font(.subheadline)
+                                            .fontWeight(.medium)
+                                        Text(String(format: "$%.2f", highest.monthlyCost))
+                                            .font(.caption)
+                                            .foregroundColor(.orange)
+                                    }
+                                }
+                            }
+                        }
+                        .padding()
+                        .background(Color(.systemBackground))
+                        .cornerRadius(16)
+                        .padding(.horizontal)
                     }
                     
                     // Next Charge Card
                     if let next = nextSubscription {
-                        NextChargeCard(subscription: next)
+                        HStack(spacing: 16) {
+                            VStack(spacing: 4) {
+                                Text(getMonthAbbreviation(for: next.nextBillingDate))
+                                    .font(.caption2)
+                                    .fontWeight(.medium)
+                                    .foregroundColor(.blue)
+                                Text(getDayString(for: next.nextBillingDate))
+                                    .font(.title2)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.blue)
+                            }
+                            .frame(width: 60, height: 60)
+                            .background(Color.blue.opacity(0.1))
+                            .cornerRadius(12)
+                            
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text("Next Charge")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Text(next.displayName)
+                                    .font(.headline)
+                                    .fontWeight(.semibold)
+                                HStack(spacing: 8) {
+                                    Text(String(format: "$%.2f", next.monthlyCost))
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                    Text("•")
+                                        .foregroundColor(.secondary)
+                                    Text(getDaysUntil(next.nextBillingDate) == 0 ? "Today" : "In \(getDaysUntil(next.nextBillingDate)) days")
+                                        .font(.caption)
+                                        .fontWeight(.medium)
+                                        .foregroundColor(getDaysUntil(next.nextBillingDate) <= 3 ? .orange : .secondary)
+                                }
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding()
+                        .background(Color(.systemBackground))
+                        .cornerRadius(16)
+                        .padding(.horizontal)
                     }
                     
                     // Subscriptions Header
@@ -82,9 +194,7 @@ struct HomeView: View {
                         Text("Your Subscriptions")
                             .font(.title2)
                             .fontWeight(.semibold)
-                        
                         Spacer()
-                        
                         Text("\(filteredSubscriptions.count) active")
                             .font(.caption)
                             .foregroundColor(.secondary)
@@ -93,38 +203,121 @@ struct HomeView: View {
                     .padding(.top, 8)
                     
                     // Search Bar
-                    SearchBar(text: $searchText)
-                        .padding(.bottom, 8)
+                    HStack {
+                        Image(systemName: "magnifyingglass")
+                            .foregroundColor(.gray)
+                        TextField("Search by name or category...", text: $searchText)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .autocapitalization(.none)
+                    }
+                    .padding(.horizontal)
                     
                     // Subscriptions List
                     if filteredSubscriptions.isEmpty {
-                        if searchText.isEmpty {
-                            EmptyStateView()
-                        } else {
-                            NoSearchResultsView(searchText: searchText)
+                        VStack(spacing: 20) {
+                            Spacer().frame(height: 60)
+                            ZStack {
+                                Circle()
+                                    .fill(Color.blue.opacity(0.1))
+                                    .frame(width: 120, height: 120)
+                                Image(systemName: "creditcard.and.123")
+                                    .font(.system(size: 50))
+                                    .foregroundColor(.blue)
+                            }
+                            Text("No Subscriptions Yet")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                            Text("Start tracking your subscriptions by tapping the + button above.")
+                                .font(.body)
+                                .foregroundColor(.secondary)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal, 40)
+                            Spacer()
                         }
+                        .frame(maxWidth: .infinity)
+                        .padding()
                     } else {
                         LazyVStack(spacing: 12) {
                             ForEach(filteredSubscriptions) { subscription in
-                                SubscriptionCard(subscription: subscription)
-                                    .onTapGesture {
+                                HStack(spacing: 16) {
+                                    let category = SubscriptionCategory(rawValue: subscription.category) ?? .other
+                                    Circle()
+                                        .fill(Color.blue.opacity(0.1))
+                                        .frame(width: 50, height: 50)
+                                        .overlay {
+                                            Image(systemName: category.icon)
+                                                .foregroundColor(.blue)
+                                                .font(.title3)
+                                        }
+                                    
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(subscription.displayName)
+                                            .font(.headline)
+                                            .fontWeight(.semibold)
+                                        
+                                        if subscription.isYearly {
+                                            Text(String(format: "$%.2f", subscription.cost))
+                                                .font(.subheadline)
+                                                .foregroundColor(.secondary)
+                                            + Text("/year")
+                                                .font(.caption2)
+                                                .foregroundColor(.secondary)
+                                            Text("(\(String(format: "$%.2f", subscription.monthlyCost))/month equivalent)")
+                                                .font(.caption2)
+                                                .foregroundColor(.secondary)
+                                        } else {
+                                            Text(String(format: "$%.2f", subscription.monthlyCost))
+                                                .font(.subheadline)
+                                                .foregroundColor(.secondary)
+                                            + Text("/month")
+                                                .font(.caption2)
+                                                .foregroundColor(.secondary)
+                                        }
+                                        
+                                        HStack(spacing: 4) {
+                                            Image(systemName: "calendar")
+                                                .font(.caption2)
+                                            Text("Next: \(subscription.formattedNextBillingDate)")
+                                                .font(.caption)
+                                        }
+                                        .foregroundColor(subscription.isUpcoming ? .orange : .secondary)
+                                    }
+                                    
+                                    Spacer()
+                                    
+                                    if subscription.isUpcoming {
+                                        Text("Soon")
+                                            .font(.caption2)
+                                            .fontWeight(.medium)
+                                            .padding(.horizontal, 8)
+                                            .padding(.vertical, 4)
+                                            .background(Color.orange.opacity(0.2))
+                                            .foregroundColor(.orange)
+                                            .cornerRadius(8)
+                                    }
+                                }
+                                .padding()
+                                .background(Color(.systemBackground))
+                                .cornerRadius(16)
+                                .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+                                .onTapGesture {
+                                    selectedSubscription = subscription
+                                }
+                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                    Button(role: .destructive) {
+                                        deleteSubscription(subscription)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                }
+                                .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                                    Button {
                                         selectedSubscription = subscription
+                                    } label: {
+                                        Label("Details", systemImage: "info.circle")
                                     }
-                                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                        Button(role: .destructive) {
-                                            deleteSubscription(subscription)
-                                        } label: {
-                                            Label("Delete", systemImage: "trash")
-                                        }
-                                    }
-                                    .swipeActions(edge: .leading, allowsFullSwipe: false) {
-                                        Button {
-                                            selectedSubscription = subscription
-                                        } label: {
-                                            Label("Details", systemImage: "info.circle")
-                                        }
-                                        .tint(.blue)
-                                    }
+                                    .tint(.blue)
+                                }
                             }
                         }
                         .padding(.horizontal)
@@ -166,142 +359,25 @@ struct HomeView: View {
             NotificationService.shared.cancel(for: subscription)
             modelContext.delete(subscription)
             try modelContext.save()
-            
-            let fetchDescriptor = FetchDescriptor<Subscription>()
-            let allSubscriptions = try? modelContext.fetch(fetchDescriptor)
-            WidgetSyncService.updateSharedData(subscriptions: allSubscriptions ?? [])
-            
             generator.impactOccurred()
         } catch {
             errorMessage = "Failed to delete: \(error.localizedDescription)"
             showingErrorAlert = true
         }
     }
-}
-
-// MARK: - Total Spending Card
-struct TotalSpendingCard: View {
-    let monthlyTotal: Double
-    let yearlyTotal: Double
     
-    var body: some View {
-        VStack(spacing: 16) {
-            HStack(spacing: 20) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Monthly")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    
-                    Text(monthlyTotal, format: .currency(code: "USD"))
-                        .font(.system(size: 34, weight: .bold))
-                        .foregroundColor(.primary)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                
-                Divider()
-                    .frame(height: 40)
-                
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Yearly")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    
-                    Text(yearlyTotal, format: .currency(code: "USD"))
-                        .font(.system(size: 34, weight: .bold))
-                        .foregroundColor(.primary)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            
-            if monthlyTotal > 0 {
-                Divider()
-                
-                HStack {
-                    Image(systemName: "lightbulb.fill")
-                        .foregroundColor(.yellow)
-                        .font(.caption)
-                    
-                    Text("You're spending \(monthlyTotal, format: .currency(code: "USD"))/month on subscriptions")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-            }
-        }
-        .padding()
-        .background(Color(.systemBackground))
-        .cornerRadius(16)
-        .padding(.horizontal)
-        .shadow(color: Color.black.opacity(0.03), radius: 5, x: 0, y: 2)
+    private func getMonthAbbreviation(for date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM"
+        return formatter.string(from: date).uppercased()
     }
-}
-
-// MARK: - Analytics Card
-struct AnalyticsCard: View {
-    let averageCost: Double
-    let highestSubscription: Subscription?
     
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Image(systemName: "chart.line.uptrend.xyaxis")
-                    .foregroundColor(.blue)
-                Text("Insights")
-                    .font(.headline)
-            }
-            
-            Divider()
-            
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Average Monthly")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    Text(averageCost, format: .currency(code: "USD"))
-                        .font(.title3)
-                        .fontWeight(.semibold)
-                }
-                
-                Spacer()
-                
-                if let highest = highestSubscription {
-                    VStack(alignment: .trailing, spacing: 4) {
-                        Text("Highest")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        Text(highest.displayName)
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                        Text(highest.monthlyCost, format: .currency(code: "USD"))
-                            .font(.caption)
-                            .foregroundColor(.orange)
-                    }
-                }
-            }
-        }
-        .padding()
-        .background(Color(.systemBackground))
-        .cornerRadius(16)
-        .padding(.horizontal)
-        .shadow(color: Color.black.opacity(0.03), radius: 5, x: 0, y: 2)
+    private func getDayString(for date: Date) -> String {
+        let day = Calendar.current.component(.day, from: date)
+        return "\(day)"
     }
-}
-
-// MARK: - No Search Results View
-struct NoSearchResultsView: View {
-    let searchText: String
     
-    var body: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "magnifyingglass")
-                .font(.largeTitle)
-                .foregroundColor(.secondary)
-            Text("No results for \"\(searchText)\"")
-                .font(.headline)
-            Text("Try a different search term")
-                .font(.caption)
-                .foregroundColor(.secondary)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.top, 60)
+    private func getDaysUntil(_ date: Date) -> Int {
+        Calendar.current.dateComponents([.day], from: Date(), to: date).day ?? 0
     }
 }

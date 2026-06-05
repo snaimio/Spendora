@@ -4,8 +4,6 @@
 //
 
 import SwiftUI
-import StoreKit
-import MessageUI
 import SwiftData
 
 struct SettingsView: View {
@@ -13,7 +11,7 @@ struct SettingsView: View {
     @Query private var subscriptions: [Subscription]
     
     @AppStorage("notificationsEnabled") private var notificationsEnabled = true
-    @State private var showingMailView = false
+    @AppStorage("isDarkMode") private var isDarkMode = false
     @State private var showingResetAlert = false
     @State private var showingPrivacyPolicy = false
     @State private var showingResetConfirmation = false
@@ -41,6 +39,17 @@ struct SettingsView: View {
                     .padding(.vertical, 8)
                 }
                 
+                Section("Appearance") {
+                    HStack {
+                        Image(systemName: isDarkMode ? "moon.fill" : "sun.max.fill")
+                            .foregroundColor(isDarkMode ? .yellow : .orange)
+                        Toggle("Dark Mode", isOn: $isDarkMode)
+                            .onChange(of: isDarkMode) { _, newValue in
+                                toggleDarkMode(newValue)
+                            }
+                    }
+                }
+                
                 Section("Notifications") {
                     Toggle("Enable Reminders", isOn: $notificationsEnabled)
                         .onChange(of: notificationsEnabled) { _, newValue in
@@ -65,40 +74,12 @@ struct SettingsView: View {
                 
                 Section("Support") {
                     Button {
-                        rateApp()
-                    } label: {
-                        HStack {
-                            Image(systemName: "star.fill")
-                                .foregroundColor(.yellow)
-                            Text("Rate Spendora")
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                    
-                    Button {
                         shareApp()
                     } label: {
                         HStack {
                             Image(systemName: "square.and.arrow.up")
                                 .foregroundColor(.blue)
                             Text("Share App")
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                    
-                    Button {
-                        showingMailView = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "envelope.fill")
-                                .foregroundColor(.blue)
-                            Text("Contact Support")
                             Spacer()
                             Image(systemName: "chevron.right")
                                 .font(.caption)
@@ -135,13 +116,6 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle("Settings")
-            .sheet(isPresented: $showingMailView) {
-                if MFMailComposeViewController.canSendMail() {
-                    MailView(recipients: ["support@spendora.com"], subject: "Support Request")
-                } else {
-                    SupportMailView()
-                }
-            }
             .alert("Reset All Data", isPresented: $showingResetAlert) {
                 Button("Cancel", role: .cancel) { }
                 Button("Reset", role: .destructive) {
@@ -158,6 +132,7 @@ struct SettingsView: View {
             .sheet(isPresented: $showingPrivacyPolicy) {
                 PrivacyPolicyView()
             }
+            .preferredColorScheme(isDarkMode ? .dark : .light)
         }
     }
     
@@ -165,12 +140,6 @@ struct SettingsView: View {
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
         let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
         return "\(version) (\(build))"
-    }
-    
-    private func rateApp() {
-        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-            SKStoreReviewController.requestReview(in: scene)
-        }
     }
     
     private func shareApp() {
@@ -192,63 +161,20 @@ struct SettingsView: View {
         
         do {
             try modelContext.save()
-            WidgetSyncService.clearWidgetData()
             showingResetConfirmation = true
         } catch {
             print("Failed to reset data: \(error)")
         }
     }
-}
-
-// MARK: - Mail View
-struct MailView: UIViewControllerRepresentable {
-    let recipients: [String]
-    let subject: String
     
-    func makeUIViewController(context: Context) -> MFMailComposeViewController {
-        let vc = MFMailComposeViewController()
-        vc.setToRecipients(recipients)
-        vc.setSubject(subject)
-        vc.mailComposeDelegate = context.coordinator
-        return vc
-    }
-    
-    func updateUIViewController(_ uiViewController: MFMailComposeViewController, context: Context) {}
-    
-    func makeCoordinator() -> Coordinator {
-        Coordinator()
-    }
-    
-    class Coordinator: NSObject, MFMailComposeViewControllerDelegate {
-        func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
-            controller.dismiss(animated: true)
-        }
-    }
-}
-
-struct SupportMailView: View {
-    @Environment(\.dismiss) private var dismiss
-    
-    var body: some View {
-        NavigationStack {
-            VStack(spacing: 20) {
-                Image(systemName: "envelope")
-                    .font(.largeTitle)
-                    .foregroundColor(.secondary)
-                Text("Please email support@spendora.com")
-                    .multilineTextAlignment(.center)
-                Button("Copy Email") {
-                    UIPasteboard.general.string = "support@spendora.com"
-                }
-                .buttonStyle(.borderedProminent)
-            }
-            .padding()
-            .navigationTitle("Contact Support")
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Done") { dismiss() }
-                }
-            }
+    private func toggleDarkMode(_ isDark: Bool) {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first else { return }
+        
+        if isDark {
+            window.overrideUserInterfaceStyle = .dark
+        } else {
+            window.overrideUserInterfaceStyle = .light
         }
     }
 }
@@ -270,30 +196,11 @@ struct PrivacyPolicyView: View {
                         .foregroundColor(.secondary)
                     
                     Group {
-                        PolicySection(
-                            title: "Data Collection",
-                            content: "Spendora does not collect any personal data. All subscription information is stored locally on your device."
-                        )
-                        
-                        PolicySection(
-                            title: "No Third-Party Sharing",
-                            content: "Since we don't collect any data, we don't share any data with third parties."
-                        )
-                        
-                        PolicySection(
-                            title: "Notifications",
-                            content: "If you enable notifications, they are scheduled locally on your device."
-                        )
-                        
-                        PolicySection(
-                            title: "Your Rights",
-                            content: "You have complete control over your data. You can delete all data at any time."
-                        )
-                        
-                        PolicySection(
-                            title: "Contact",
-                            content: "Questions? Email support@spendora.com"
-                        )
+                        PolicySection(title: "Data Collection", content: "Spendora does not collect any personal data. All subscription information is stored locally on your device.")
+                        PolicySection(title: "No Third-Party Sharing", content: "Since we don't collect any data, we don't share any data with third parties.")
+                        PolicySection(title: "Notifications", content: "If you enable notifications, they are scheduled locally on your device.")
+                        PolicySection(title: "Your Rights", content: "You have complete control over your data. You can delete all data at any time.")
+                        PolicySection(title: "Contact", content: "Questions? Email support@spendora.com")
                     }
                 }
                 .padding()

@@ -12,11 +12,11 @@ struct SubscriptionCard: View {
         HStack(spacing: 16) {
             let category = SubscriptionCategory(rawValue: subscription.category) ?? .other
             Circle()
-                .fill(Color.blue.opacity(0.1))
+                .fill(Color(.systemBlue).opacity(0.1))
                 .frame(width: 50, height: 50)
                 .overlay {
                     Image(systemName: category.icon)
-                        .foregroundColor(.blue)
+                        .foregroundColor(Color(.systemBlue))
                         .font(.title3)
                 }
             
@@ -26,23 +26,23 @@ struct SubscriptionCard: View {
                     .fontWeight(.semibold)
                 
                 if subscription.isYearly {
-                    Text(subscription.cost, format: .currency(code: "USD"))
+                    Text(String(format: "$%.2f", subscription.cost))
                         .font(.subheadline)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(Color(.secondaryLabel))
                     + Text("/year")
                         .font(.caption2)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(Color(.secondaryLabel))
                     
-                    Text("(\(subscription.monthlyCost, format: .currency(code: "USD"))/month equivalent)")
+                    Text("(\(String(format: "$%.2f", subscription.monthlyCost))/month equivalent)")
                         .font(.caption2)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(Color(.secondaryLabel))
                 } else {
-                    Text(subscription.monthlyCost, format: .currency(code: "USD"))
+                    Text(String(format: "$%.2f", subscription.monthlyCost))
                         .font(.subheadline)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(Color(.secondaryLabel))
                     + Text("/month")
                         .font(.caption2)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(Color(.secondaryLabel))
                 }
                 
                 HStack(spacing: 4) {
@@ -51,7 +51,7 @@ struct SubscriptionCard: View {
                     Text("Next: \(subscription.formattedNextBillingDate)")
                         .font(.caption)
                 }
-                .foregroundColor(subscription.isUpcoming ? .orange : .secondary)
+                .foregroundColor(subscription.isUpcoming ? .orange : Color(.secondaryLabel))
             }
             
             Spacer()
@@ -73,7 +73,7 @@ struct SubscriptionCard: View {
         .cornerRadius(16)
         .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(subscription.displayName), \(subscription.isYearly ? "\(subscription.cost) dollars per year" : "\(subscription.monthlyCost) dollars per month"), next billing \(subscription.formattedNextBillingDate)")
+        .accessibilityLabel("\(subscription.displayName), \(subscription.isYearly ? "\(String(format: "%.2f", subscription.cost)) dollars per year" : "\(String(format: "%.2f", subscription.monthlyCost)) dollars per month"), next billing \(subscription.formattedNextBillingDate)")
         .accessibilityHint("Swipe left for delete options, tap for details")
     }
 }

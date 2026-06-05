@@ -22,11 +22,6 @@ struct AddSubscriptionView: View {
     
     private let generator = UIImpactFeedbackGenerator(style: .medium)
     
-    var monthlyEquivalent: Double? {
-        guard let costValue = Double(cost), costValue > 0 else { return nil }
-        return isYearly ? costValue / 12 : costValue
-    }
-    
     var isValid: Bool {
         let trimmedName = name.trimmingCharacters(in: .whitespaces)
         guard !trimmedName.isEmpty else { return false }
@@ -50,18 +45,9 @@ struct AddSubscriptionView: View {
                             .keyboardType(.decimalPad)
                     }
                     
-                    if let monthlyEquivalent = monthlyEquivalent, isValid {
-                        Text(isYearly
-                             ? "Monthly equivalent: \(monthlyEquivalent, format: .currency(code: "USD"))/month"
-                             : "Yearly cost: \((monthlyEquivalent * 12), format: .currency(code: "USD"))/year")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                    
                     Picker("Category", selection: $selectedCategory) {
                         ForEach(SubscriptionCategory.allCases, id: \.self) { category in
-                            Label(category.rawValue, systemImage: category.icon)
-                                .tag(category)
+                            Text(category.rawValue).tag(category)
                         }
                     }
                     
@@ -125,20 +111,10 @@ struct AddSubscriptionView: View {
         )
         
         do {
-            withAnimation {
-                modelContext.insert(newSubscription)
-            }
-            
+            modelContext.insert(newSubscription)
             try modelContext.save()
-            
             NotificationService.shared.schedule(for: newSubscription)
-            
-            let fetchDescriptor = FetchDescriptor<Subscription>()
-            let allSubscriptions = try? modelContext.fetch(fetchDescriptor)
-            WidgetSyncService.updateSharedData(subscriptions: allSubscriptions ?? [])
-            
             generator.impactOccurred()
-            
             dismiss()
         } catch {
             errorMessage = "Failed to save: \(error.localizedDescription)"
