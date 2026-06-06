@@ -56,16 +56,54 @@ struct SubscriptionCard: View {
             
             Spacer()
             
-            if subscription.isUpcoming {
-                Text("Soon")
-                    .font(.caption2)
-                    .fontWeight(.medium)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Color.orange.opacity(0.2))
-                    .foregroundColor(.orange)
-                    .cornerRadius(8)
-                    .accessibilityLabel("Upcoming charge")
+            // Badges Stack
+            VStack(alignment: .trailing, spacing: 4) {
+                // Upcoming Badge
+                if subscription.isUpcoming {
+                    Text("Soon")
+                        .font(.caption2)
+                        .fontWeight(.medium)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color.orange.opacity(0.2))
+                        .foregroundColor(.orange)
+                        .cornerRadius(8)
+                }
+                
+                // Trial Badge
+                if subscription.isTrial && !subscription.trialConvertedToPaid {
+                    if subscription.trialWarning {
+                        Text("Trial ends in \(subscription.trialDaysRemaining) days")
+                            .font(.caption2)
+                            .fontWeight(.medium)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Color.red.opacity(0.2))
+                            .foregroundColor(.red)
+                            .cornerRadius(8)
+                    } else {
+                        Text("Trial")
+                            .font(.caption2)
+                            .fontWeight(.medium)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Color.green.opacity(0.2))
+                            .foregroundColor(.green)
+                            .cornerRadius(8)
+                    }
+                }
+                
+                // Price Increase Badge
+                if subscription.priceIncreased {
+                    Text("+\(String(format: "$%.2f", subscription.priceIncreaseAmount))")
+                        .font(.caption2)
+                        .fontWeight(.medium)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color.orange.opacity(0.2))
+                        .foregroundColor(.orange)
+                        .cornerRadius(8)
+                }
             }
         }
         .padding()

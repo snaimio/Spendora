@@ -9,16 +9,19 @@ import SwiftData
 struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var subscriptions: [Subscription]
+    @StateObject private var currencyManager = CurrencyManager.shared
     
     @AppStorage("notificationsEnabled") private var notificationsEnabled = true
-    @AppStorage("isDarkMode") private var isDarkMode = false
     @State private var showingResetAlert = false
     @State private var showingPrivacyPolicy = false
     @State private var showingResetConfirmation = false
+    @State private var showingExportSuccess = false
+    @State private var selectedCurrency: Currency = .CAD
     
     var body: some View {
         NavigationStack {
             List {
+                // MARK: - App Info
                 Section {
                     HStack {
                         Image(systemName: "creditcard.and.123")
@@ -39,17 +42,51 @@ struct SettingsView: View {
                     .padding(.vertical, 8)
                 }
                 
+                // MARK: - Appearance
                 Section("Appearance") {
                     HStack {
-                        Image(systemName: isDarkMode ? "moon.fill" : "sun.max.fill")
-                            .foregroundColor(isDarkMode ? .yellow : .orange)
-                        Toggle("Dark Mode", isOn: $isDarkMode)
-                            .onChange(of: isDarkMode) { _, newValue in
-                                toggleDarkMode(newValue)
+                        Image(systemName: "moon.fill")
+                            .foregroundColor(.purple)
+                        Toggle("Dark Mode", isOn: Binding(
+                            get: {
+                                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                                   let window = windowScene.windows.first {
+                                    return window.overrideUserInterfaceStyle == .dark
+                                }
+                                return false
+                            },
+                            set: { isDark in
+                                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                                   let window = windowScene.windows.first {
+                                    window.overrideUserInterfaceStyle = isDark ? .dark : .light
+                                }
                             }
+                        ))
                     }
                 }
                 
+                // MARK: - Currency
+                Section {
+                    Picker("Select Currency", selection: $selectedCurrency) {
+                        ForEach(Currency.allCases, id: \.self) { currency in
+                            Text(currency.displayName)
+                                .tag(currency)
+                        }
+                    }
+                    .onChange(of: selectedCurrency) { _, newValue in
+                        currencyManager.setCurrency(newValue)
+                    }
+                    
+                    Text("All amounts will be shown in \(currencyManager.currentCurrency.symbol) (\(currencyManager.currentCurrency.code))")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                } header: {
+                    Text("Currency")
+                } footer: {
+                    Text("Change how subscription costs are displayed")
+                }
+                
+                // MARK: - Notifications
                 Section("Notifications") {
                     Toggle("Enable Reminders", isOn: $notificationsEnabled)
                         .onChange(of: notificationsEnabled) { _, newValue in
@@ -72,6 +109,7 @@ struct SettingsView: View {
                     .font(.caption)
                 }
                 
+                // MARK: - Support
                 Section("Support") {
                     Button {
                         shareApp()
@@ -88,6 +126,49 @@ struct SettingsView: View {
                     }
                 }
                 
+                // MARK: - Data
+                Section("Data") {
+                    Button {
+                        exportCSV()
+                    } label: {
+                        HStack {
+                            Image(systemName: "tablecells")
+                            Text("Export CSV")
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    
+                    Button {
+                        exportPDF()
+                    } label: {
+                        HStack {
+                            Image(systemName: "doc.text.fill")
+                            Text("Export PDF Report")
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    
+                    Button(role: .destructive) {
+                        showingResetAlert = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "trash.fill")
+                            Text("Reset All Data")
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                }
+                
+                // MARK: - Legal
                 Section("Legal") {
                     Button {
                         showingPrivacyPolicy = true
@@ -103,19 +184,11 @@ struct SettingsView: View {
                         }
                     }
                 }
-                
-                Section("Data") {
-                    Button(role: .destructive) {
-                        showingResetAlert = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "trash.fill")
-                            Text("Reset All Data")
-                        }
-                    }
-                }
             }
             .navigationTitle("Settings")
+            .onAppear {
+                selectedCurrency = currencyManager.currentCurrency
+            }
             .alert("Reset All Data", isPresented: $showingResetAlert) {
                 Button("Cancel", role: .cancel) { }
                 Button("Reset", role: .destructive) {
@@ -129,10 +202,14 @@ struct SettingsView: View {
             } message: {
                 Text("All data has been reset successfully.")
             }
+            .alert("Export Successful", isPresented: $showingExportSuccess) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Your data has been exported and shared.")
+            }
             .sheet(isPresented: $showingPrivacyPolicy) {
                 PrivacyPolicyView()
             }
-            .preferredColorScheme(isDarkMode ? .dark : .light)
         }
     }
     
@@ -167,14 +244,30 @@ struct SettingsView: View {
         }
     }
     
-    private func toggleDarkMode(_ isDark: Bool) {
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-              let window = windowScene.windows.first else { return }
+    private func exportCSV() {
+        guard let fileURL = ExportService.generateCSV(subscriptions: subscriptions) else {
+            print("Failed to generate CSV")
+            return
+        }
         
-        if isDark {
-            window.overrideUserInterfaceStyle = .dark
-        } else {
-            window.overrideUserInterfaceStyle = .light
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let rootVC = windowScene.windows.first?.rootViewController {
+            ExportService.shareCSV(from: rootVC, fileURL: fileURL)
+            showingExportSuccess = true
+        }
+    }
+    
+    private func exportPDF() {
+        guard let fileURL = PDFExportService.generatePDF(subscriptions: subscriptions) else {
+            print("Failed to generate PDF")
+            return
+        }
+        
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let rootVC = windowScene.windows.first?.rootViewController {
+            let activityVC = UIActivityViewController(activityItems: [fileURL], applicationActivities: nil)
+            rootVC.present(activityVC, animated: true)
+            showingExportSuccess = true
         }
     }
 }

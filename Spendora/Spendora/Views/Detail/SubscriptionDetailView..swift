@@ -46,6 +46,41 @@ struct SubscriptionDetailView: View {
                     }
                 }
                 
+                // MARK: - Trial Information Section
+                if subscription.isTrial {
+                    Section("Trial Information") {
+                        DetailRow(icon: "timer", title: "Status", value: subscription.trialStatus)
+                        
+                        if !subscription.trialConvertedToPaid && subscription.trialDaysRemaining > 0 {
+                            DetailRow(icon: "calendar", title: "Days Remaining", value: "\(subscription.trialDaysRemaining)")
+                            
+                            Button {
+                                subscription.trialConvertedToPaid = true
+                                NotificationService.shared.cancel(for: subscription)
+                                try? modelContext.save()
+                            } label: {
+                                Text("Mark as Converted to Paid")
+                                    .foregroundColor(.blue)
+                            }
+                        }
+                    }
+                }
+                
+                // MARK: - Price Alert Section
+                if subscription.priceAlertEnabled {
+                    Section("Price Alert") {
+                        if let expected = subscription.expectedPrice {
+                            DetailRow(icon: "dollarsign.circle", title: "Expected Price", value: String(format: "$%.2f", expected))
+                        }
+                        
+                        if subscription.priceIncreased {
+                            DetailRow(icon: "exclamationmark.triangle", title: "Price Increase", value: String(format: "+$%.2f", subscription.priceIncreaseAmount))
+                                .foregroundColor(.red)
+                        }
+                    }
+                }
+                
+                // MARK: - Cancel Subscription Section
                 Section {
                     Button {
                         openCancellationPage()
@@ -61,6 +96,7 @@ struct SubscriptionDetailView: View {
                     .foregroundColor(.red)
                 }
                 
+                // MARK: - Delete Subscription Section
                 Section {
                     Button(role: .destructive) {
                         showingDeleteAlert = true
@@ -136,12 +172,6 @@ struct SubscriptionDetailView: View {
             urlString = "https://www.paramountplus.com/account/"
         } else if serviceName.contains("hbo") || serviceName.contains("max") {
             urlString = "https://www.max.com/account"
-        } else if serviceName.contains("dropbox") {
-            urlString = "https://www.dropbox.com/account/plan"
-        } else if serviceName.contains("adobe") {
-            urlString = "https://account.adobe.com/plans"
-        } else if serviceName.contains("microsoft") || serviceName.contains("office") || serviceName.contains("365") {
-            urlString = "https://account.microsoft.com/services"
         } else {
             let searchQuery = serviceName.replacingOccurrences(of: " ", with: "+")
             urlString = "https://www.google.com/search?q=how+to+cancel+\(searchQuery)"
@@ -189,6 +219,10 @@ struct EditSubscriptionView: View {
     @State private var selectedCategory: SubscriptionCategory
     @State private var isYearly: Bool
     @State private var nextBillingDate: Date
+    @State private var isTrial: Bool
+    @State private var trialEndDate: Date
+    @State private var priceAlertEnabled: Bool
+    @State private var expectedPrice: String
     
     init(subscription: Subscription) {
         self.subscription = subscription
@@ -197,6 +231,10 @@ struct EditSubscriptionView: View {
         _selectedCategory = State(initialValue: SubscriptionCategory(rawValue: subscription.category) ?? .other)
         _isYearly = State(initialValue: subscription.isYearly)
         _nextBillingDate = State(initialValue: subscription.nextBillingDate)
+        _isTrial = State(initialValue: subscription.isTrial)
+        _trialEndDate = State(initialValue: subscription.trialEndDate ?? Date())
+        _priceAlertEnabled = State(initialValue: subscription.priceAlertEnabled)
+        _expectedPrice = State(initialValue: subscription.expectedPrice.map { String($0) } ?? "")
     }
     
     var isValid: Bool {
@@ -226,6 +264,27 @@ struct EditSubscriptionView: View {
                     
                     DatePicker("Next Billing Date", selection: $nextBillingDate, in: Date()..., displayedComponents: .date)
                 }
+                
+                Section("Free Trial") {
+                    Toggle("This is a free trial", isOn: $isTrial)
+                    
+                    if isTrial {
+                        DatePicker("Trial End Date", selection: $trialEndDate, in: Date()..., displayedComponents: .date)
+                    }
+                }
+                
+                Section("Price Alert") {
+                    Toggle("Alert if price increases", isOn: $priceAlertEnabled)
+                    
+                    if priceAlertEnabled {
+                        HStack {
+                            Text("Expected price:")
+                            TextField("Amount", text: $expectedPrice)
+                                .keyboardType(.decimalPad)
+                                .frame(width: 80)
+                        }
+                    }
+                }
             }
             .navigationTitle("Edit Subscription")
             .navigationBarTitleDisplayMode(.inline)
@@ -249,9 +308,17 @@ struct EditSubscriptionView: View {
         subscription.category = selectedCategory.rawValue
         subscription.isYearly = isYearly
         subscription.nextBillingDate = nextBillingDate
+        subscription.isTrial = isTrial
+        subscription.trialEndDate = isTrial ? trialEndDate : nil
+        subscription.priceAlertEnabled = priceAlertEnabled
+        subscription.expectedPrice = priceAlertEnabled ? Double(expectedPrice) : nil
         
         NotificationService.shared.cancel(for: subscription)
         NotificationService.shared.schedule(for: subscription)
+        
+        if isTrial {
+            NotificationService.shared.scheduleTrialReminder(for: subscription)
+        }
         
         dismiss()
     }
