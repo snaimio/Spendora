@@ -42,9 +42,19 @@ struct AddSubscriptionView: View {
     
     var isValid: Bool {
         let trimmedName = name.trimmingCharacters(in: .whitespaces)
-        guard !trimmedName.isEmpty else { return false }
-        guard let costValue = Double(cost), costValue > 0 else { return false }
-        guard nextBillingDate > Date() else { return false }
+        guard !trimmedName.isEmpty else {
+            print("🔴 Validation failed: name is empty")
+            return false
+        }
+        guard let costValue = Double(cost), costValue > 0 else {
+            print("🔴 Validation failed: cost invalid - '\(cost)'")
+            return false
+        }
+        guard nextBillingDate > Date() else {
+            print("🔴 Validation failed: date not in future - \(nextBillingDate)")
+            return false
+        }
+        print("🟢 Validation passed - name: \(name), cost: \(costValue), date: \(nextBillingDate)")
         return true
     }
     
@@ -56,12 +66,18 @@ struct AddSubscriptionView: View {
                     TextField("Service Name", text: $name)
                         .textInputAutocapitalization(.words)
                         .autocorrectionDisabled()
+                        .onChange(of: name) { _, newValue in
+                            print("Name changed to: '\(newValue)'")
+                        }
                     
                     HStack {
                         Text(CurrencyManager.shared.currentCurrency.symbol)
                             .foregroundColor(.secondary)
                         TextField(isYearly ? "Yearly Cost" : "Monthly Cost", text: $cost)
                             .keyboardType(.decimalPad)
+                            .onChange(of: cost) { _, newValue in
+                                print("Cost changed to: '\(newValue)'")
+                            }
                     }
                     
                     if let monthlyEquivalent = monthlyEquivalent, isValid {
@@ -130,19 +146,26 @@ struct AddSubscriptionView: View {
                     }
                 }
                 
-                // MARK: - Save Button
+                // MARK: - Save Button Section
                 Section {
-                    Button(action: saveSubscription) {
-                        if isSaving {
-                            ProgressView()
-                                .frame(maxWidth: .infinity)
-                        } else {
-                            Text("Save Subscription")
-                                .frame(maxWidth: .infinity)
-                                .fontWeight(.semibold)
+                    HStack {
+                        Spacer()
+                        Button {
+                            print("🟡 SAVE BUTTON TAPPED")
+                            saveSubscription()
+                        } label: {
+                            if isSaving {
+                                ProgressView()
+                            } else {
+                                Text("Save Subscription")
+                                    .fontWeight(.semibold)
+                            }
                         }
+                        .disabled(!isValid || isSaving)
+                        .buttonStyle(.borderedProminent)
+                        .tint(.blue)
+                        Spacer()
                     }
-                    .disabled(!isValid || isSaving)
                 }
             }
             .navigationTitle("Add Subscription")
@@ -151,6 +174,14 @@ struct AddSubscriptionView: View {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
                         dismiss()
+                    }
+                }
+            }
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("Done") {
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                     }
                 }
             }
@@ -163,17 +194,30 @@ struct AddSubscriptionView: View {
     }
     
     private func saveSubscription() {
+        print("🔵 saveSubscription called")
+        print("🔵 name: \(name)")
+        print("🔵 cost: \(cost)")
+        print("🔵 isYearly: \(isYearly)")
+        print("🔵 nextBillingDate: \(nextBillingDate)")
+        
         guard isValid else {
+            print("🔴 isValid failed - returning early")
             errorMessage = "Please fill in all fields correctly"
             showingError = true
             return
         }
         
         guard let costValue = Double(cost) else {
+            print("🔴 cost conversion failed for: \(cost)")
             errorMessage = "Please enter a valid cost"
             showingError = true
             return
         }
+        
+        print("🟢 costValue: \(costValue)")
+        print("🟢 selectedCategory: \(selectedCategory)")
+        print("🟢 isTrial: \(isTrial)")
+        print("🟢 priceAlertEnabled: \(priceAlertEnabled)")
         
         isSaving = true
         
@@ -202,21 +246,35 @@ struct AddSubscriptionView: View {
             customCategory: customCat
         )
         
+        print("🟢 Subscription created: \(newSubscription.displayName)")
+        
+        // Insert and save
+        modelContext.insert(newSubscription)
+        print("🟢 Inserted into modelContext")
+        
         do {
-            modelContext.insert(newSubscription)
             try modelContext.save()
+            print("🟢✅ Save successful!")
             
-            // Schedule regular notification
             NotificationService.shared.schedule(for: newSubscription)
+            print("🟢 Notification scheduled")
             
-            // Schedule trial notification if applicable
             if isTrial {
                 NotificationService.shared.scheduleTrialReminder(for: newSubscription)
+                print("🟢 Trial reminder scheduled")
             }
             
             generator.impactOccurred()
+            print("🟢 Haptic feedback sent")
+            
+            // Post notification to refresh HomeView
+            NotificationCenter.default.post(name: NSNotification.Name("SubscriptionAdded"), object: nil)
+            print("🟢 Refresh notification posted")
+            
             dismiss()
+            print("🟢 View dismissed")
         } catch {
+            print("🔴❌ SAVE FAILED: \(error.localizedDescription)")
             errorMessage = "Failed to save: \(error.localizedDescription)"
             showingError = true
             isSaving = false

@@ -8,15 +8,9 @@ import SwiftData
 
 @main
 struct SpendoraApp: App {
-    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
-    
     var body: some Scene {
         WindowGroup {
-            if hasCompletedOnboarding {
-                ContentView()
-            } else {
-                OnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
-            }
+            ContentView()
         }
         .modelContainer(for: Subscription.self)
     }

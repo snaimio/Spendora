@@ -25,14 +25,14 @@ struct SubscriptionDetailView: View {
                     DetailRow(icon: "dollarsign.circle.fill", title: "Cost", value: formatCost())
                     DetailRow(icon: "calendar.circle.fill", title: "Billing Cycle", value: subscription.isYearly ? "Yearly" : "Monthly")
                     DetailRow(icon: "calendar.badge.clock", title: "Next Billing", value: subscription.formattedNextBillingDate)
-                    DetailRow(icon: "folder.fill", title: "Category", value: subscription.category)
+                    DetailRow(icon: "folder.fill", title: "Category", value: subscription.effectiveCategory)
                 }
                 
                 Section("Monthly Breakdown") {
                     HStack {
                         Text("Monthly cost:")
                         Spacer()
-                        Text(String(format: "$%.2f", subscription.monthlyCost))
+                        Text(CurrencyManager.shared.format(subscription.monthlyCost))
                             .fontWeight(.semibold)
                     }
                     
@@ -40,13 +40,13 @@ struct SubscriptionDetailView: View {
                         HStack {
                             Text("Savings per month:")
                             Spacer()
-                            Text(String(format: "$%.2f", subscription.cost / 12))
+                            Text(CurrencyManager.shared.format(subscription.cost / 12))
                                 .foregroundColor(.green)
                         }
                     }
                 }
                 
-                // MARK: - Trial Information Section
+                // Trial Information
                 if subscription.isTrial {
                     Section("Trial Information") {
                         DetailRow(icon: "timer", title: "Status", value: subscription.trialStatus)
@@ -66,21 +66,21 @@ struct SubscriptionDetailView: View {
                     }
                 }
                 
-                // MARK: - Price Alert Section
+                // Price Alert
                 if subscription.priceAlertEnabled {
                     Section("Price Alert") {
                         if let expected = subscription.expectedPrice {
-                            DetailRow(icon: "dollarsign.circle", title: "Expected Price", value: String(format: "$%.2f", expected))
+                            DetailRow(icon: "dollarsign.circle", title: "Expected Price", value: CurrencyManager.shared.format(expected))
                         }
                         
                         if subscription.priceIncreased {
-                            DetailRow(icon: "exclamationmark.triangle", title: "Price Increase", value: String(format: "+$%.2f", subscription.priceIncreaseAmount))
+                            DetailRow(icon: "exclamationmark.triangle", title: "Price Increase", value: CurrencyManager.shared.format(subscription.priceIncreaseAmount))
                                 .foregroundColor(.red)
                         }
                     }
                 }
                 
-                // MARK: - Cancel Subscription Section
+                // Cancel Subscription Link
                 Section {
                     Button {
                         openCancellationPage()
@@ -96,7 +96,7 @@ struct SubscriptionDetailView: View {
                     .foregroundColor(.red)
                 }
                 
-                // MARK: - Delete Subscription Section
+                // Delete Button
                 Section {
                     Button(role: .destructive) {
                         showingDeleteAlert = true
@@ -134,9 +134,9 @@ struct SubscriptionDetailView: View {
     
     private func formatCost() -> String {
         if subscription.isYearly {
-            return String(format: "$%.2f per year", subscription.cost)
+            return "\(CurrencyManager.shared.format(subscription.cost)) per year"
         } else {
-            return String(format: "$%.2f per month", subscription.monthlyCost)
+            return "\(CurrencyManager.shared.format(subscription.monthlyCost)) per month"
         }
     }
     
@@ -160,18 +160,8 @@ struct SubscriptionDetailView: View {
             urlString = "https://appleid.apple.com/account/manage"
         } else if serviceName.contains("disney") {
             urlString = "https://www.disneyplus.com/subscription"
-        } else if serviceName.contains("hulu") {
-            urlString = "https://help.hulu.com/account/cancel"
         } else if serviceName.contains("amazon") || serviceName.contains("prime") {
             urlString = "https://www.amazon.com/gp/css/account/manageprime"
-        } else if serviceName.contains("youtube") {
-            urlString = "https://www.youtube.com/paid_memberships"
-        } else if serviceName.contains("peacock") {
-            urlString = "https://www.peacocktv.com/account"
-        } else if serviceName.contains("paramount") {
-            urlString = "https://www.paramountplus.com/account/"
-        } else if serviceName.contains("hbo") || serviceName.contains("max") {
-            urlString = "https://www.max.com/account"
         } else {
             let searchQuery = serviceName.replacingOccurrences(of: " ", with: "+")
             urlString = "https://www.google.com/search?q=how+to+cancel+\(searchQuery)"
@@ -248,7 +238,7 @@ struct EditSubscriptionView: View {
                     TextField("Service Name", text: $name)
                     
                     HStack {
-                        Text("$")
+                        Text(CurrencyManager.shared.currentCurrency.symbol)
                             .foregroundColor(.secondary)
                         TextField("Cost", text: $cost)
                             .keyboardType(.decimalPad)
@@ -281,7 +271,7 @@ struct EditSubscriptionView: View {
                             Text("Expected price:")
                             TextField("Amount", text: $expectedPrice)
                                 .keyboardType(.decimalPad)
-                                .frame(width: 80)
+                                .frame(width: 100)
                         }
                     }
                 }

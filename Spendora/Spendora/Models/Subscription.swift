@@ -17,16 +17,16 @@ final class Subscription {
     var createdAt: Date
     var notes: String?
     
-    // MARK: - Free Trial Properties
+    // Free Trial Properties
     var isTrial: Bool
     var trialEndDate: Date?
     var trialConvertedToPaid: Bool
     
-    // MARK: - Price Alert Properties
+    // Price Alert Properties
     var expectedPrice: Double?
     var priceAlertEnabled: Bool
     
-    // MARK: - Custom Category Properties
+    // Custom Category
     var customCategory: String?
     
     init(
@@ -97,10 +97,6 @@ final class Subscription {
             return customCategory
         }
         return category
-    }
-    
-    var isCustomCategoryEnabled: Bool {
-        return customCategory != nil && !customCategory!.isEmpty
     }
     
     // MARK: - Free Trial Computed Properties
