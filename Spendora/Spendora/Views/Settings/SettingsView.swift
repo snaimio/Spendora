@@ -17,6 +17,7 @@ struct SettingsView: View {
     @State private var showingResetConfirmation = false
     @State private var showingExportSuccess = false
     @State private var selectedCurrency: Currency = .CAD
+    @State private var showingOnboarding = false
     
     var body: some View {
         NavigationStack {
@@ -62,6 +63,23 @@ struct SettingsView: View {
                                 }
                             }
                         ))
+                    }
+                }
+                
+                // MARK: - App Tour
+                Section("App") {
+                    Button {
+                        showingOnboarding = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "book.fill")
+                                .foregroundColor(.blue)
+                            Text("Show Onboarding Tour")
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
                     }
                 }
                 
@@ -209,6 +227,9 @@ struct SettingsView: View {
             }
             .sheet(isPresented: $showingPrivacyPolicy) {
                 PrivacyPolicyView()
+            }
+            .sheet(isPresented: $showingOnboarding) {
+                OnboardingSheetView()
             }
         }
     }

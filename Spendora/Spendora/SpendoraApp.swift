@@ -17,25 +17,42 @@ struct SpendoraApp: App {
 }
 
 struct ContentView: View {
+    @Environment(\.modelContext) private var modelContext
+    @Query(sort: \Subscription.nextBillingDate, order: .forward) private var subscriptions: [Subscription]
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @State private var selectedTab = 0
     
     var body: some View {
-        TabView(selection: $selectedTab) {
-            HomeView()
-                .tabItem {
-                    Label("Subscriptions", systemImage: "list.bullet")
-                }
-                .tag(0)
-            
-            SettingsView()
-                .tabItem {
-                    Label("Settings", systemImage: "gear")
-                }
-                .tag(1)
+        if hasCompletedOnboarding {
+            TabView(selection: $selectedTab) {
+                // Tab 1: Home (Subscriptions List)
+                HomeView()
+                    .tabItem {
+                        Label("Subscriptions", systemImage: "list.bullet")
+                    }
+                    .tag(0)
+                
+                // Tab 2: Calendar View
+                SubscriptionCalendarView(subscriptions: subscriptions)
+                    .tabItem {
+                        Label("Calendar", systemImage: "calendar")
+                    }
+                    .tag(1)
+                
+                // Tab 3: Settings
+                SettingsView()
+                    .tabItem {
+                        Label("Settings", systemImage: "gear")
+                    }
+                    .tag(2)
+            }
+        } else {
+            OnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
         }
     }
 }
 
+// MARK: - Onboarding View
 struct OnboardingView: View {
     @Binding var hasCompletedOnboarding: Bool
     
@@ -72,6 +89,12 @@ struct OnboardingView: View {
                     icon: "chart.line.uptrend.xyaxis",
                     title: "Insights",
                     description: "See your total monthly and yearly spending"
+                )
+                
+                OnboardingFeature(
+                    icon: "calendar",
+                    title: "Calendar View",
+                    description: "See all your billing dates at a glance"
                 )
             }
             .padding(.horizontal, 32)
