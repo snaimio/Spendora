@@ -1,5 +1,5 @@
 //
-//  AnimatedNumber.swift
+//  SubscriptionCard.swift
 //  Spendora
 //
 //  Created by Sheikh Naim on 2026-06-19.
