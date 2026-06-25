@@ -29,6 +29,9 @@ final class Subscription {
     // Custom Category
     var customCategory: String?
     
+    // ✅ Payment Method
+    var paymentMethod: String?
+    
     init(
         name: String,
         cost: Double,
@@ -40,7 +43,8 @@ final class Subscription {
         trialEndDate: Date? = nil,
         expectedPrice: Double? = nil,
         priceAlertEnabled: Bool = false,
-        customCategory: String? = nil
+        customCategory: String? = nil,
+        paymentMethod: String? = nil  // ✅ ADD THIS
     ) {
         self.id = UUID()
         self.name = name
@@ -56,6 +60,7 @@ final class Subscription {
         self.expectedPrice = expectedPrice
         self.priceAlertEnabled = priceAlertEnabled
         self.customCategory = customCategory
+        self.paymentMethod = paymentMethod  // ✅ ADD THIS
     }
     
     // MARK: - Computed Properties
@@ -97,6 +102,10 @@ final class Subscription {
             return customCategory
         }
         return category
+    }
+    
+    var effectivePaymentMethod: String {
+        return paymentMethod ?? "Not set"
     }
     
     // MARK: - Free Trial Computed Properties
@@ -151,4 +160,15 @@ enum SubscriptionCategory: String, CaseIterable {
         case .other: return "tag.fill"
         }
     }
+}
+
+// MARK: - Payment Method Enum
+enum PaymentMethod: String, CaseIterable {
+    case creditCard = "💳 Credit Card"
+    case debitCard = "💳 Debit Card"
+    case paypal = "💰 PayPal"
+    case applePay = "📱 Apple Pay"
+    case googlePay = "📱 Google Pay"
+    case bankTransfer = "🏦 Bank Transfer"
+    case other = "🔵 Other"
 }

@@ -11,51 +11,61 @@ struct SubscriptionCard: View {
     
     var body: some View {
         HStack(spacing: 16) {
-            // Category Icon
+            // Category Icon with Gradient Background
             ZStack {
                 Circle()
                     .fill(categoryColor.opacity(0.15))
-                    .frame(width: 52, height: 52)
+                    .frame(width: 56, height: 56)
                 
                 Circle()
-                    .fill(categoryColor.opacity(0.25))
+                    .fill(
+                        LinearGradient(
+                            colors: [categoryColor, categoryColor.opacity(0.7)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
                     .frame(width: 44, height: 44)
+                    .opacity(0.9)
                 
                 Image(systemName: categoryIcon)
-                    .font(.system(size: 22, weight: .medium))
-                    .foregroundColor(categoryColor)
+                    .font(.system(size: 20, weight: .medium))
+                    .foregroundColor(.white)
             }
             
             VStack(alignment: .leading, spacing: 6) {
-                Text(subscription.displayName)
-                    .font(.system(size: 17, weight: .semibold))
-                    .foregroundColor(.primary)
+                HStack {
+                    Text(subscription.displayName)
+                        .font(.system(size: 17, weight: .semibold, design: .rounded))
+                        .foregroundColor(.primary)
+                    
+                    if subscription.isUpcoming {
+                        Text("Soon")
+                            .font(.system(size: 9, weight: .bold, design: .rounded))
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 3)
+                            .background(Color.orange.opacity(0.15))
+                            .foregroundColor(.orange)
+                            .cornerRadius(10)
+                    }
+                }
                 
-                HStack(spacing: 8) {
+                HStack(spacing: 6) {
+                    Text(CurrencyManager.shared.format(subscription.monthlyCost))
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .foregroundColor(.primary)
+                    
+                    Text("/month")
+                        .font(.system(size: 13, weight: .regular, design: .rounded))
+                        .foregroundColor(.secondary)
+                    
                     if subscription.isYearly {
-                        Text(CurrencyManager.shared.format(subscription.cost))
-                            .font(.system(size: 15, weight: .medium))
-                            .foregroundColor(.secondary)
-                        Text("/year")
-                            .font(.system(size: 13))
-                            .foregroundColor(.secondary)
-                        
                         Text("•")
                             .font(.caption)
                             .foregroundColor(.secondary)
                         
-                        Text(CurrencyManager.shared.format(subscription.monthlyCost))
-                            .font(.system(size: 13))
-                            .foregroundColor(.secondary)
-                        Text("/mo")
-                            .font(.system(size: 11))
-                            .foregroundColor(.secondary)
-                    } else {
-                        Text(CurrencyManager.shared.format(subscription.monthlyCost))
-                            .font(.system(size: 17, weight: .medium))
-                            .foregroundColor(.primary)
-                        Text("/month")
-                            .font(.system(size: 13))
+                        Text("Yearly")
+                            .font(.system(size: 12, weight: .regular, design: .rounded))
                             .foregroundColor(.secondary)
                     }
                 }
@@ -63,10 +73,12 @@ struct SubscriptionCard: View {
                 HStack(spacing: 4) {
                     Image(systemName: "calendar")
                         .font(.system(size: 10))
+                        .foregroundColor(.secondary)
+                    
                     Text("Next: \(subscription.formattedNextBillingDate)")
-                        .font(.system(size: 12))
+                        .font(.system(size: 12, weight: .regular, design: .rounded))
+                        .foregroundColor(.secondary)
                 }
-                .foregroundColor(subscription.isUpcoming ? Color.brandAccent : .secondary)
             }
             
             Spacer()
@@ -74,12 +86,15 @@ struct SubscriptionCard: View {
             Image(systemName: "chevron.right")
                 .font(.caption)
                 .foregroundColor(.secondary)
+                .opacity(0.5)
         }
         .padding(16)
-        .background(Color(.systemBackground))
-        .cornerRadius(20)
-        .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 2)
-        .scaleEffect(isPressed ? 0.98 : 1.0)
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color(.systemBackground))
+                .shadow(color: Color.black.opacity(0.05), radius: 12, x: 0, y: 4)
+        )
+        .scaleEffect(isPressed ? 0.97 : 1.0)
         .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isPressed)
         .onTapGesture {
             let generator = UIImpactFeedbackGenerator(style: .light)

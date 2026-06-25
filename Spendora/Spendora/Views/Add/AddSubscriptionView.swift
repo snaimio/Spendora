@@ -29,6 +29,9 @@ struct AddSubscriptionView: View {
     @State private var isCustomCategory = false
     @State private var customCategoryName = ""
     
+    // ✅ NEW: Payment Method
+    @State private var selectedPaymentMethod: PaymentMethod = .creditCard
+    
     @State private var showingError = false
     @State private var errorMessage = ""
     @State private var isSaving = false
@@ -42,19 +45,9 @@ struct AddSubscriptionView: View {
     
     var isValid: Bool {
         let trimmedName = name.trimmingCharacters(in: .whitespaces)
-        guard !trimmedName.isEmpty else {
-            print("🔴 Validation failed: name is empty")
-            return false
-        }
-        guard let costValue = Double(cost), costValue > 0 else {
-            print("🔴 Validation failed: cost invalid - '\(cost)'")
-            return false
-        }
-        guard nextBillingDate > Date() else {
-            print("🔴 Validation failed: date not in future - \(nextBillingDate)")
-            return false
-        }
-        print("🟢 Validation passed - name: \(name), cost: \(costValue), date: \(nextBillingDate)")
+        guard !trimmedName.isEmpty else { return false }
+        guard let costValue = Double(cost), costValue > 0 else { return false }
+        guard nextBillingDate > Date() else { return false }
         return true
     }
     
@@ -66,18 +59,12 @@ struct AddSubscriptionView: View {
                     TextField("Service Name", text: $name)
                         .textInputAutocapitalization(.words)
                         .autocorrectionDisabled()
-                        .onChange(of: name) { _, newValue in
-                            print("Name changed to: '\(newValue)'")
-                        }
                     
                     HStack {
                         Text(CurrencyManager.shared.currentCurrency.symbol)
                             .foregroundColor(.secondary)
                         TextField(isYearly ? "Yearly Cost" : "Monthly Cost", text: $cost)
                             .keyboardType(.decimalPad)
-                            .onChange(of: cost) { _, newValue in
-                                print("Cost changed to: '\(newValue)'")
-                            }
                     }
                     
                     if let monthlyEquivalent = monthlyEquivalent, isValid {
@@ -110,6 +97,13 @@ struct AddSubscriptionView: View {
                             isCustomCategory = true
                         }
                         .font(.caption)
+                    }
+                    
+                    // ✅ NEW: Payment Method Picker
+                    Picker("Payment Method", selection: $selectedPaymentMethod) {
+                        ForEach(PaymentMethod.allCases, id: \.self) { method in
+                            Text(method.rawValue).tag(method)
+                        }
                     }
                     
                     Toggle("Yearly Billing", isOn: $isYearly)
@@ -146,26 +140,19 @@ struct AddSubscriptionView: View {
                     }
                 }
                 
-                // MARK: - Save Button Section
+                // MARK: - Save Button
                 Section {
-                    HStack {
-                        Spacer()
-                        Button {
-                            print("🟡 SAVE BUTTON TAPPED")
-                            saveSubscription()
-                        } label: {
-                            if isSaving {
-                                ProgressView()
-                            } else {
-                                Text("Save Subscription")
-                                    .fontWeight(.semibold)
-                            }
+                    Button(action: saveSubscription) {
+                        if isSaving {
+                            ProgressView()
+                                .frame(maxWidth: .infinity)
+                        } else {
+                            Text("Save Subscription")
+                                .frame(maxWidth: .infinity)
+                                .fontWeight(.semibold)
                         }
-                        .disabled(!isValid || isSaving)
-                        .buttonStyle(.borderedProminent)
-                        .tint(.blue)
-                        Spacer()
                     }
+                    .disabled(!isValid || isSaving)
                 }
             }
             .navigationTitle("Add Subscription")
@@ -201,7 +188,7 @@ struct AddSubscriptionView: View {
         print("🔵 nextBillingDate: \(nextBillingDate)")
         
         guard isValid else {
-            print("🔴 isValid failed - returning early")
+            print("🔴 isValid failed - name: '\(name)', cost: '\(cost)', date: \(nextBillingDate)")
             errorMessage = "Please fill in all fields correctly"
             showingError = true
             return
@@ -218,6 +205,7 @@ struct AddSubscriptionView: View {
         print("🟢 selectedCategory: \(selectedCategory)")
         print("🟢 isTrial: \(isTrial)")
         print("🟢 priceAlertEnabled: \(priceAlertEnabled)")
+        print("🟢 paymentMethod: \(selectedPaymentMethod.rawValue)")
         
         isSaving = true
         
@@ -243,12 +231,12 @@ struct AddSubscriptionView: View {
             trialEndDate: isTrial ? trialEndDate : nil,
             expectedPrice: expectedPriceValue,
             priceAlertEnabled: priceAlertEnabled,
-            customCategory: customCat
+            customCategory: customCat,
+            paymentMethod: selectedPaymentMethod.rawValue
         )
         
         print("🟢 Subscription created: \(newSubscription.displayName)")
         
-        // Insert and save
         modelContext.insert(newSubscription)
         print("🟢 Inserted into modelContext")
         
@@ -267,7 +255,6 @@ struct AddSubscriptionView: View {
             generator.impactOccurred()
             print("🟢 Haptic feedback sent")
             
-            // Post notification to refresh HomeView
             NotificationCenter.default.post(name: NSNotification.Name("SubscriptionAdded"), object: nil)
             print("🟢 Refresh notification posted")
             

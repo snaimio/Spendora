@@ -71,6 +71,6 @@ struct SpendoraWidget: Widget {
         }
         .configurationDisplayName("Spendora")
         .description("Track your subscription spending.")
-        .supportedFamilies([.systemSmall])
+        .supportedFamilies([.systemSmall, .systemMedium])
     }
 }

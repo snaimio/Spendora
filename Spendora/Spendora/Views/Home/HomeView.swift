@@ -1,11 +1,18 @@
 //
-//  HomeView.swift
-//  Spendora
+//  HomeView.swift (Premium UI)
 //
 
 import SwiftUI
 import SwiftData
 import WidgetKit
+
+enum SortOption: String, CaseIterable {
+    case nextBilling = "Next Billing"
+    case cost = "Cost"
+    case name = "Name"
+    case category = "Category"
+    case recentlyAdded = "Recently Added"
+}
 
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
@@ -19,11 +26,23 @@ struct HomeView: View {
     @State private var shareImage: UIImage?
     @State private var refreshID = 0
     @State private var forceRefresh = false
+    @State private var sortOption: SortOption = .nextBilling
     
     private let generator = UIImpactFeedbackGenerator(style: .medium)
     
     var sortedSubscriptions: [Subscription] {
-        subscriptions.sorted { $0.nextBillingDate < $1.nextBillingDate }
+        switch sortOption {
+        case .nextBilling:
+            return subscriptions.sorted { $0.nextBillingDate < $1.nextBillingDate }
+        case .cost:
+            return subscriptions.sorted { $0.monthlyCost > $1.monthlyCost }
+        case .name:
+            return subscriptions.sorted { $0.displayName < $1.displayName }
+        case .category:
+            return subscriptions.sorted { $0.category < $1.category }
+        case .recentlyAdded:
+            return subscriptions.sorted { $0.createdAt > $1.createdAt }
+        }
     }
     
     var filteredSubscriptions: [Subscription] {
@@ -38,90 +57,106 @@ struct HomeView: View {
         filteredSubscriptions.reduce(0) { $0 + $1.monthlyCost }
     }
     
-    var totalYearly: Double {
-        filteredSubscriptions.reduce(0) { $0 + $1.yearlyCost }
-    }
-    
-    var topCategory: String {
-        let grouped = Dictionary(grouping: filteredSubscriptions) { $0.category }
-        let totals = grouped.map { ($0.key, $0.value.reduce(0) { $0 + $1.monthlyCost }) }
-        return totals.max { $0.1 < $1.1 }?.0 ?? "None"
-    }
-    
     var body: some View {
         NavigationStack {
             ZStack {
-                AnimatedGradientBackground()
+                // Premium Gradient Background
+                LinearGradient(
+                    colors: [
+                        Color(hex: "#EEF2FF"),
+                        Color(hex: "#F5F3FF"),
+                        Color(hex: "#FEF3C7")
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
                 
                 ScrollView {
                     VStack(spacing: 24) {
-                        // Hero Section
-                        VStack(spacing: 12) {
-                            Text("MONTHLY SPEND")
+                        // MARK: - Hero Section
+                        VStack(spacing: 8) {
+                            Text("💰 Monthly Spend")
                                 .font(.caption)
                                 .fontWeight(.medium)
                                 .foregroundColor(.secondary)
                                 .tracking(2)
                             
-                            AnimatedNumber(value: totalMonthly)
-                                .font(.system(size: 56, weight: .bold))
-                                .foregroundStyle(Color.brandPrimary)
+                            Text(CurrencyManager.shared.format(totalMonthly))
+                                .font(.system(size: 48, weight: .bold, design: .rounded))
+                                .foregroundStyle(Color.primaryGradient)
+                                .contentTransition(.numericText())
                             
                             if totalMonthly > 0 {
-                                Text("across \(filteredSubscriptions.count) subscriptions")
-                                    .font(.caption)
+                                Text("\(filteredSubscriptions.count) active subscriptions")
+                                    .font(.subheadline)
                                     .foregroundColor(.secondary)
                             }
                         }
-                        .padding(.top, 20)
+                        .padding(.vertical, 16)
                         
-                        // Quick Stats Row
+                        // MARK: - Quick Stats Row
                         if !filteredSubscriptions.isEmpty {
-                            HStack(spacing: 16) {
-                                QuickStatCard(
+                            HStack(spacing: 12) {
+                                PremiumStatCard(
                                     title: "Yearly",
-                                    value: totalYearly,
+                                    value: CurrencyManager.shared.format(totalMonthly * 12),
                                     icon: "calendar",
-                                    color: Color.brandSecondary
+                                    color: .brandPrimary
                                 )
                                 
-                                QuickStatCard(
+                                PremiumStatCard(
                                     title: "Average",
-                                    value: filteredSubscriptions.isEmpty ? 0 : totalMonthly / Double(filteredSubscriptions.count),
+                                    value: CurrencyManager.shared.format(totalMonthly / Double(max(1, filteredSubscriptions.count))),
                                     icon: "chart.line.uptrend.xyaxis",
-                                    color: Color.brandAccent
+                                    color: .brandAccent
                                 )
                             }
                             .padding(.horizontal, 20)
                         }
                         
-                        // Charts
+                        // MARK: - Savings Score
+                        if !filteredSubscriptions.isEmpty {
+                            SavingsScoreView(subscriptions: filteredSubscriptions)
+                        }
+                        
+                        // MARK: - Charts
                         if !filteredSubscriptions.isEmpty {
                             SpendingChartView(subscriptions: filteredSubscriptions)
-                                .padding(.horizontal, 20)
                         }
                         
-                        // Search Bar
-                        HStack {
-                            Image(systemName: "magnifyingglass")
-                                .foregroundColor(.secondary)
-                            TextField("Search subscriptions...", text: $searchText)
-                                .textFieldStyle(.plain)
+                        // MARK: - Search & Sort
+                        VStack(spacing: 12) {
+                            // Search
+                            HStack {
+                                Image(systemName: "magnifyingglass")
+                                    .foregroundColor(.secondary)
+                                TextField("Search subscriptions...", text: $searchText)
+                                    .font(.system(.body, design: .rounded))
+                            }
+                            .padding(12)
+                            .background(Color(.systemBackground))
+                            .cornerRadius(16)
+                            .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 2)
+                            
+                            // Sort Picker
+                            Picker("Sort by", selection: $sortOption) {
+                                ForEach(SortOption.allCases, id: \.self) { option in
+                                    Text(option.rawValue).tag(option)
+                                }
+                            }
+                            .pickerStyle(.segmented)
                         }
-                        .padding(12)
-                        .background(Color(.systemBackground))
-                        .cornerRadius(16)
                         .padding(.horizontal, 20)
                         
-                        // Subscriptions List
+                        // MARK: - Subscriptions List
                         if filteredSubscriptions.isEmpty {
-                            DelightfulEmptyState()
+                            PremiumEmptyStateView()
                                 .padding(.horizontal, 20)
                         } else {
-                            LazyVStack(spacing: 12) {
+                            VStack(spacing: 12) {
                                 ForEach(filteredSubscriptions) { subscription in
                                     Button {
-                                        print("🟡 TAPPED subscription: \(subscription.displayName)")
                                         generator.impactOccurred()
                                         selectedSubscription = subscription
                                     } label: {
@@ -138,7 +173,6 @@ struct HomeView: View {
                 .id(refreshID)
                 .id(forceRefresh)
                 .onAppear {
-                    print("📊 HomeView appeared, subscriptions count: \(subscriptions.count)")
                     updateWidgetData()
                 }
                 .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("SubscriptionAdded"))) { _ in
@@ -151,26 +185,13 @@ struct HomeView: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Menu {
-                        Button {
-                            generator.impactOccurred()
-                            showingAddSheet = true
-                        } label: {
-                            Label("Add Subscription", systemImage: "plus")
-                        }
-                        
-                        if !filteredSubscriptions.isEmpty {
-                            Button {
-                                generator.impactOccurred()
-                                generateAndShareReport()
-                            } label: {
-                                Label("Share Spending Report", systemImage: "square.and.arrow.up")
-                            }
-                        }
+                    Button {
+                        generator.impactOccurred()
+                        showingAddSheet = true
                     } label: {
-                        Image(systemName: "ellipsis.circle.fill")
+                        Image(systemName: "plus.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(Color.brandPrimary)
+                            .foregroundStyle(Color.primaryGradient)
                     }
                 }
             }
@@ -188,22 +209,9 @@ struct HomeView: View {
                         updateWidgetData()
                     }
             }
-            .sheet(isPresented: $showingShareSheet) {
-                if let image = shareImage {
-                    ShareSheet(items: [image])
-                }
-            }
-            .overlay {
-                if showConfetti {
-                    ConfettiView {
-                        showConfetti = false
-                    }
-                }
-            }
         }
     }
     
-    // MARK: - Widget Data Sync
     private func updateWidgetData() {
         let total = subscriptions.reduce(0) { $0 + $1.monthlyCost }
         let next = subscriptions.sorted { $0.nextBillingDate < $1.nextBillingDate }.first
@@ -212,29 +220,88 @@ struct HomeView: View {
         defaults?.set(total, forKey: "totalSpending")
         defaults?.set(next?.displayName ?? "None", forKey: "nextSubscription")
         defaults?.synchronize()
-        
         WidgetCenter.shared.reloadAllTimelines()
-        print("🔄 Widget data updated - Total: \(total), Next: \(next?.displayName ?? "None")")
     }
+}
+
+// MARK: - Premium Stat Card
+struct PremiumStatCard: View {
+    let title: String
+    let value: String
+    let icon: String
+    let color: Color
     
-    private func generateAndShareReport() {
-        let renderer = ImageRenderer(content: ShareableReportCard(
-            totalMonthly: totalMonthly,
-            totalYearly: totalYearly,
-            subscriptionCount: filteredSubscriptions.count,
-            topCategory: topCategory,
-            topCategoryAmount: getTopCategoryAmount()
-        ))
-        
-        if let image = renderer.uiImage {
-            shareImage = image
-            showingShareSheet = true
+    var body: some View {
+        HStack(spacing: 12) {
+            ZStack {
+                Circle()
+                    .fill(color.opacity(0.12))
+                    .frame(width: 40, height: 40)
+                Image(systemName: icon)
+                    .font(.title3)
+                    .foregroundColor(color)
+            }
+            
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Text(value)
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundColor(.primary)
+            }
+            
+            Spacer()
         }
+        .padding(14)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(.systemBackground))
+                .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 2)
+        )
     }
+}
+
+// MARK: - Premium Empty State
+struct PremiumEmptyStateView: View {
+    @State private var bounce = false
     
-    private func getTopCategoryAmount() -> Double {
-        let grouped = Dictionary(grouping: filteredSubscriptions) { $0.category }
-        let totals = grouped.map { ($0.key, $0.value.reduce(0) { $0 + $1.monthlyCost }) }
-        return totals.max { $0.1 < $1.1 }?.1 ?? 0
+    var body: some View {
+        VStack(spacing: 24) {
+            ZStack {
+                Circle()
+                    .fill(Color.brandPrimary.opacity(0.08))
+                    .frame(width: 120, height: 120)
+                
+                Circle()
+                    .fill(Color.brandPrimary.opacity(0.15))
+                    .frame(width: 100, height: 100)
+                
+                Image(systemName: "sparkles.rectangle.stack")
+                    .font(.system(size: 44))
+                    .foregroundStyle(Color.primaryGradient)
+            }
+            .scaleEffect(bounce ? 1.05 : 1.0)
+            .animation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true), value: bounce)
+            .onAppear { bounce = true }
+            
+            Text("No Subscriptions Yet")
+                .font(.title2)
+                .fontWeight(.bold)
+                .foregroundColor(.primary)
+            
+            Text("Tap the + button to start tracking your subscriptions")
+                .font(.body)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .padding(.vertical, 60)
+        .frame(maxWidth: .infinity)
+        .background(
+            RoundedRectangle(cornerRadius: 24)
+                .fill(Color(.systemBackground))
+                .shadow(color: Color.black.opacity(0.04), radius: 12, x: 0, y: 4)
+        )
     }
 }
