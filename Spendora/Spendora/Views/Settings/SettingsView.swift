@@ -5,6 +5,7 @@
 
 import SwiftUI
 import SwiftData
+import WidgetKit
 
 struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
@@ -259,6 +260,14 @@ struct SettingsView: View {
         
         do {
             try modelContext.save()
+            
+            // 🔥 Clear widget data
+            let defaults = UserDefaults(suiteName: "group.com.trios2026sn.Spendora")
+            defaults?.removeObject(forKey: "totalSpending")
+            defaults?.removeObject(forKey: "nextSubscription")
+            defaults?.synchronize()
+            WidgetCenter.shared.reloadAllTimelines()
+            
             showingResetConfirmation = true
         } catch {
             print("Failed to reset data: \(error)")

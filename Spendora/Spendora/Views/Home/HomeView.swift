@@ -5,6 +5,7 @@
 
 import SwiftUI
 import SwiftData
+import WidgetKit
 
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
@@ -138,10 +139,12 @@ struct HomeView: View {
                 .id(forceRefresh)
                 .onAppear {
                     print("📊 HomeView appeared, subscriptions count: \(subscriptions.count)")
+                    updateWidgetData()
                 }
                 .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("SubscriptionAdded"))) { _ in
                     forceRefresh.toggle()
                     refreshID += 1
+                    updateWidgetData()
                 }
             }
             .navigationTitle("Spendora")
@@ -176,10 +179,14 @@ struct HomeView: View {
                     .onDisappear {
                         refreshID += 1
                         forceRefresh.toggle()
+                        updateWidgetData()
                     }
             }
             .sheet(item: $selectedSubscription) { subscription in
                 SubscriptionDetailView(subscription: subscription)
+                    .onDisappear {
+                        updateWidgetData()
+                    }
             }
             .sheet(isPresented: $showingShareSheet) {
                 if let image = shareImage {
@@ -194,6 +201,20 @@ struct HomeView: View {
                 }
             }
         }
+    }
+    
+    // MARK: - Widget Data Sync
+    private func updateWidgetData() {
+        let total = subscriptions.reduce(0) { $0 + $1.monthlyCost }
+        let next = subscriptions.sorted { $0.nextBillingDate < $1.nextBillingDate }.first
+        
+        let defaults = UserDefaults(suiteName: "group.com.trios2026sn.Spendora")
+        defaults?.set(total, forKey: "totalSpending")
+        defaults?.set(next?.displayName ?? "None", forKey: "nextSubscription")
+        defaults?.synchronize()
+        
+        WidgetCenter.shared.reloadAllTimelines()
+        print("🔄 Widget data updated - Total: \(total), Next: \(next?.displayName ?? "None")")
     }
     
     private func generateAndShareReport() {
