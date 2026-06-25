@@ -17,20 +17,26 @@ final class Subscription {
     var createdAt: Date
     var notes: String?
     
-    // Free Trial Properties
+    // Free Trial
     var isTrial: Bool
     var trialEndDate: Date?
     var trialConvertedToPaid: Bool
     
-    // Price Alert Properties
+    // Price Alert
     var expectedPrice: Double?
     var priceAlertEnabled: Bool
     
     // Custom Category
     var customCategory: String?
     
-    // ✅ Payment Method
+    // Payment Method
     var paymentMethod: String?
+    
+    // Tags/Labels
+    var tags: [String]?
+    
+    // Color (stored as hex)
+    var colorHex: String?
     
     init(
         name: String,
@@ -44,7 +50,9 @@ final class Subscription {
         expectedPrice: Double? = nil,
         priceAlertEnabled: Bool = false,
         customCategory: String? = nil,
-        paymentMethod: String? = nil  // ✅ ADD THIS
+        paymentMethod: String? = nil,
+        tags: [String]? = nil,
+        colorHex: String? = nil
     ) {
         self.id = UUID()
         self.name = name
@@ -60,7 +68,9 @@ final class Subscription {
         self.expectedPrice = expectedPrice
         self.priceAlertEnabled = priceAlertEnabled
         self.customCategory = customCategory
-        self.paymentMethod = paymentMethod  // ✅ ADD THIS
+        self.paymentMethod = paymentMethod
+        self.tags = tags
+        self.colorHex = colorHex
     }
     
     // MARK: - Computed Properties
@@ -108,7 +118,12 @@ final class Subscription {
         return paymentMethod ?? "Not set"
     }
     
-    // MARK: - Free Trial Computed Properties
+    var tagsList: [String] {
+        get { tags ?? [] }
+        set { tags = newValue }
+    }
+    
+    // MARK: - Free Trial
     var trialDaysRemaining: Int {
         guard isTrial, let endDate = trialEndDate else { return 0 }
         return Calendar.current.dateComponents([.day], from: Date(), to: endDate).day ?? 0
@@ -127,7 +142,7 @@ final class Subscription {
         isTrial && !trialConvertedToPaid && trialDaysRemaining <= 3 && trialDaysRemaining >= 0
     }
     
-    // MARK: - Price Alert Computed Properties
+    // MARK: - Price Alert
     var priceIncreased: Bool {
         guard priceAlertEnabled, let expected = expectedPrice else { return false }
         return cost > expected
@@ -139,7 +154,7 @@ final class Subscription {
     }
 }
 
-// MARK: - Category Enum
+// MARK: - Enums
 enum SubscriptionCategory: String, CaseIterable {
     case entertainment = "Entertainment"
     case productivity = "Productivity"
@@ -162,7 +177,6 @@ enum SubscriptionCategory: String, CaseIterable {
     }
 }
 
-// MARK: - Payment Method Enum
 enum PaymentMethod: String, CaseIterable {
     case creditCard = "💳 Credit Card"
     case debitCard = "💳 Debit Card"
