@@ -2,13 +2,13 @@
 //  SpendoraWidgetBundle.swift
 //  SpendoraWidget
 //
-//  Created by Sheikh Naim on 2026-06-19.
+//  Created by Sheikh Naim on 2026-06-25.
 //
 
 import WidgetKit
 import SwiftUI
 
-@main
+// @main
 struct SpendoraWidgetBundle: WidgetBundle {
     var body: some Widget {
         SpendoraWidget()
