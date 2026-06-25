@@ -28,9 +28,10 @@ struct HomeView: View {
     @State private var showingShareSheet = false
     @State private var shareImage: UIImage?
     @State private var refreshID = 0
-    @State private var forceRefresh = false
     @State private var sortOption: SortOption = .nextBilling
     @State private var customOrder: [String] = []
+    @State private var showingYearlyReport = false
+    @State private var showingChallenges = false
     
     private let generator = UIImpactFeedbackGenerator(style: .medium)
     
@@ -82,6 +83,7 @@ struct HomeView: View {
                 
                 ScrollView {
                     VStack(spacing: 24) {
+                        // Hero Section
                         VStack(spacing: 8) {
                             Text("💰 Monthly Spend")
                                 .font(.caption)
@@ -102,22 +104,37 @@ struct HomeView: View {
                         }
                         .padding(.vertical, 16)
                         
+                        // Quick Stats Row
                         if !filteredSubscriptions.isEmpty {
                             HStack(spacing: 12) {
-                                PremiumStatCard(title: "Yearly", value: CurrencyManager.shared.format(totalMonthly * 12), icon: "calendar", color: .brandPrimary)
-                                PremiumStatCard(title: "Average", value: CurrencyManager.shared.format(totalMonthly / Double(max(1, filteredSubscriptions.count))), icon: "chart.line.uptrend.xyaxis", color: .brandAccent)
+                                PremiumStatCard(
+                                    title: "Yearly",
+                                    value: CurrencyManager.shared.format(totalMonthly * 12),
+                                    icon: "calendar",
+                                    color: .brandPrimary
+                                )
+                                
+                                PremiumStatCard(
+                                    title: "Average",
+                                    value: CurrencyManager.shared.format(totalMonthly / Double(max(1, filteredSubscriptions.count))),
+                                    icon: "chart.line.uptrend.xyaxis",
+                                    color: .brandAccent
+                                )
                             }
                             .padding(.horizontal, 20)
                         }
                         
+                        // Savings Score
                         if !filteredSubscriptions.isEmpty {
                             SavingsScoreView(subscriptions: filteredSubscriptions)
                         }
                         
+                        // Charts
                         if !filteredSubscriptions.isEmpty {
                             SpendingChartView(subscriptions: filteredSubscriptions)
                         }
                         
+                        // Search & Sort
                         VStack(spacing: 12) {
                             HStack {
                                 Image(systemName: "magnifyingglass")
@@ -139,6 +156,7 @@ struct HomeView: View {
                         }
                         .padding(.horizontal, 20)
                         
+                        // Subscriptions List
                         if filteredSubscriptions.isEmpty {
                             PremiumEmptyStateView()
                                 .padding(.horizontal, 20)
@@ -171,14 +189,9 @@ struct HomeView: View {
                     .padding(.vertical, 20)
                 }
                 .id(refreshID)
-                .id(forceRefresh)
                 .onAppear {
+                    print("🟢 HomeView appeared")
                     loadCustomOrder()
-                    updateWidgetData()
-                }
-                .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("SubscriptionAdded"))) { _ in
-                    forceRefresh.toggle()
-                    refreshID += 1
                     updateWidgetData()
                 }
             }
@@ -186,11 +199,38 @@ struct HomeView: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        generator.impactOccurred()
-                        showingAddSheet = true
+                    Menu {
+                        Button {
+                            generator.impactOccurred()
+                            showingAddSheet = true
+                        } label: {
+                            Label("Add Subscription", systemImage: "plus")
+                        }
+                        
+                        Divider()
+                        
+                        Button {
+                            showingYearlyReport = true
+                        } label: {
+                            Label("Yearly Report", systemImage: "calendar")
+                        }
+                        
+                        Button {
+                            showingChallenges = true
+                        } label: {
+                            Label("Challenges", systemImage: "trophy")
+                        }
+                        
+                        if !filteredSubscriptions.isEmpty {
+                            Button {
+                                generator.impactOccurred()
+                                generateAndShareReport()
+                            } label: {
+                                Label("Share Spending Report", systemImage: "square.and.arrow.up")
+                            }
+                        }
                     } label: {
-                        Image(systemName: "plus.circle.fill")
+                        Image(systemName: "ellipsis.circle.fill")
                             .font(.title2)
                             .foregroundStyle(Color.primaryGradient)
                     }
@@ -200,7 +240,6 @@ struct HomeView: View {
                 AddSubscriptionView()
                     .onDisappear {
                         refreshID += 1
-                        forceRefresh.toggle()
                         updateWidgetData()
                     }
             }
@@ -210,9 +249,28 @@ struct HomeView: View {
                         updateWidgetData()
                     }
             }
+            .sheet(isPresented: $showingYearlyReport) {
+                YearlyReportView(subscriptions: filteredSubscriptions)
+            }
+            .sheet(isPresented: $showingChallenges) {
+                ChallengesView(subscriptions: filteredSubscriptions)
+            }
+            .sheet(isPresented: $showingShareSheet) {
+                if let image = shareImage {
+                    ShareSheet(items: [image])
+                }
+            }
+            .overlay {
+                if showConfetti {
+                    ConfettiView {
+                        showConfetti = false
+                    }
+                }
+            }
         }
     }
     
+    // MARK: - Custom Order
     private func loadCustomOrder() {
         if let saved = UserDefaults.standard.stringArray(forKey: "customOrder") {
             customOrder = saved
@@ -231,6 +289,7 @@ struct HomeView: View {
         refreshID += 1
     }
     
+    // MARK: - Widget Sync
     private func updateWidgetData() {
         let total = subscriptions.reduce(0) { $0 + $1.monthlyCost }
         let next = subscriptions.sorted { $0.nextBillingDate < $1.nextBillingDate }.first
@@ -239,6 +298,34 @@ struct HomeView: View {
         defaults?.set(next?.displayName ?? "None", forKey: "nextSubscription")
         defaults?.synchronize()
         WidgetCenter.shared.reloadAllTimelines()
+    }
+    
+    // MARK: - Share Report
+    private func generateAndShareReport() {
+        let renderer = ImageRenderer(content: ShareableReportCard(
+            totalMonthly: totalMonthly,
+            totalYearly: totalMonthly * 12,
+            subscriptionCount: filteredSubscriptions.count,
+            topCategory: getTopCategory(),
+            topCategoryAmount: getTopCategoryAmount()
+        ))
+        
+        if let image = renderer.uiImage {
+            shareImage = image
+            showingShareSheet = true
+        }
+    }
+    
+    private func getTopCategory() -> String {
+        let grouped = Dictionary(grouping: filteredSubscriptions) { $0.category }
+        let totals = grouped.map { ($0.key, $0.value.reduce(0) { $0 + $1.monthlyCost }) }
+        return totals.max { $0.1 < $1.1 }?.0 ?? "None"
+    }
+    
+    private func getTopCategoryAmount() -> Double {
+        let grouped = Dictionary(grouping: filteredSubscriptions) { $0.category }
+        let totals = grouped.map { ($0.key, $0.value.reduce(0) { $0 + $1.monthlyCost }) }
+        return totals.max { $0.1 < $1.1 }?.1 ?? 0
     }
 }
 
@@ -262,42 +349,82 @@ struct SubscriptionDropDelegate: DropDelegate {
 
 // MARK: - Premium Stat Card
 struct PremiumStatCard: View {
-    let title: String; let value: String; let icon: String; let color: Color
+    let title: String
+    let value: String
+    let icon: String
+    let color: Color
+    
     var body: some View {
         HStack(spacing: 12) {
             ZStack {
-                Circle().fill(color.opacity(0.12)).frame(width: 40, height: 40)
-                Image(systemName: icon).font(.title3).foregroundColor(color)
+                Circle()
+                    .fill(color.opacity(0.12))
+                    .frame(width: 40, height: 40)
+                Image(systemName: icon)
+                    .font(.title3)
+                    .foregroundColor(color)
             }
+            
             VStack(alignment: .leading, spacing: 2) {
-                Text(title).font(.caption).foregroundColor(.secondary)
-                Text(value).font(.headline).fontWeight(.bold).foregroundColor(.primary)
+                Text(title)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Text(value)
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundColor(.primary)
             }
+            
             Spacer()
         }
         .padding(14)
-        .background(RoundedRectangle(cornerRadius: 16).fill(Color(.systemBackground)).shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 2))
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(.systemBackground))
+                .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 2)
+        )
     }
 }
 
 // MARK: - Premium Empty State
 struct PremiumEmptyStateView: View {
     @State private var bounce = false
+    
     var body: some View {
         VStack(spacing: 24) {
             ZStack {
-                Circle().fill(Color.brandPrimary.opacity(0.08)).frame(width: 120, height: 120)
-                Circle().fill(Color.brandPrimary.opacity(0.15)).frame(width: 100, height: 100)
-                Image(systemName: "sparkles.rectangle.stack").font(.system(size: 44)).foregroundStyle(Color.primaryGradient)
+                Circle()
+                    .fill(Color.brandPrimary.opacity(0.08))
+                    .frame(width: 120, height: 120)
+                
+                Circle()
+                    .fill(Color.brandPrimary.opacity(0.15))
+                    .frame(width: 100, height: 100)
+                
+                Image(systemName: "sparkles.rectangle.stack")
+                    .font(.system(size: 44))
+                    .foregroundStyle(Color.primaryGradient)
             }
             .scaleEffect(bounce ? 1.05 : 1.0)
             .animation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true), value: bounce)
             .onAppear { bounce = true }
-            Text("No Subscriptions Yet").font(.title2).fontWeight(.bold).foregroundColor(.primary)
-            Text("Tap the + button to start tracking your subscriptions").font(.body).foregroundColor(.secondary).multilineTextAlignment(.center)
+            
+            Text("No Subscriptions Yet")
+                .font(.title2)
+                .fontWeight(.bold)
+                .foregroundColor(.primary)
+            
+            Text("Tap the + button to start tracking your subscriptions")
+                .font(.body)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
         }
         .padding(.vertical, 60)
         .frame(maxWidth: .infinity)
-        .background(RoundedRectangle(cornerRadius: 24).fill(Color(.systemBackground)).shadow(color: Color.black.opacity(0.04), radius: 12, x: 0, y: 4))
+        .background(
+            RoundedRectangle(cornerRadius: 24)
+                .fill(Color(.systemBackground))
+                .shadow(color: Color.black.opacity(0.04), radius: 12, x: 0, y: 4)
+        )
     }
 }

@@ -13,7 +13,7 @@ class BackupService {
         var backupData: [[String: Any]] = []
         
         for sub in subscriptions {
-            var dict: [String: Any] = [
+            let dict: [String: Any] = [    //  Changed from var to let
                 "id": sub.id.uuidString,
                 "name": sub.name,
                 "cost": sub.cost,
@@ -31,7 +31,6 @@ class BackupService {
                 "colorHex": sub.colorHex ?? "",
                 "tags": sub.tags ?? []
             ]
-            
             backupData.append(dict)
         }
         

@@ -16,46 +16,36 @@ struct SpendoraApp: App {
     }
 }
 
+// MARK: - Content View (Main App)
 struct ContentView: View {
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
-    
-    var body: some View {
-        if hasCompletedOnboarding {
-            MainTabView()
-        } else {
-            PremiumOnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
-        }
-    }
-}
-
-// MARK: - Main Tab View
-struct MainTabView: View {
     @State private var selectedTab = 0
     @Query private var subscriptions: [Subscription]
     
     var body: some View {
-        TabView(selection: $selectedTab) {
-            HomeView()
-                .tabItem {
-                    Image(systemName: "house.fill")
-                    Text("Home")
-                }
-                .tag(0)
-            
-            SubscriptionCalendarView(subscriptions: subscriptions)
-                .tabItem {
-                    Image(systemName: "calendar")
-                    Text("Calendar")
-                }
-                .tag(1)
-            
-            SettingsView()
-                .tabItem {
-                    Image(systemName: "gear")
-                    Text("Settings")
-                }
-                .tag(2)
+        if hasCompletedOnboarding {
+            TabView(selection: $selectedTab) {
+                HomeView()
+                    .tabItem {
+                        Label("Home", systemImage: "house.fill")
+                    }
+                    .tag(0)
+                
+                SubscriptionCalendarView(subscriptions: subscriptions)
+                    .tabItem {
+                        Label("Calendar", systemImage: "calendar")
+                    }
+                    .tag(1)
+                
+                SettingsView()
+                    .tabItem {
+                        Label("Settings", systemImage: "gear")
+                    }
+                    .tag(2)
+            }
+            .accentColor(.brandPrimary)
+        } else {
+            PremiumOnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
         }
-        .accentColor(.brandPrimary)
     }
 }

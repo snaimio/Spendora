@@ -26,6 +26,7 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             List {
+                // MARK: - App Info
                 Section {
                     HStack {
                         Image(systemName: "creditcard.and.123")
@@ -46,6 +47,7 @@ struct SettingsView: View {
                     .padding(.vertical, 8)
                 }
                 
+                // MARK: - Appearance
                 Section("Appearance") {
                     HStack {
                         Image(systemName: "moon.fill")
@@ -68,6 +70,7 @@ struct SettingsView: View {
                     }
                 }
                 
+                // MARK: - App Tour
                 Section("App") {
                     Button {
                         showingOnboarding = true
@@ -84,6 +87,7 @@ struct SettingsView: View {
                     }
                 }
                 
+                // MARK: - Currency
                 Section {
                     Picker("Select Currency", selection: $selectedCurrency) {
                         ForEach(Currency.allCases, id: \.self) { currency in
@@ -104,6 +108,7 @@ struct SettingsView: View {
                     Text("Change how subscription costs are displayed")
                 }
                 
+                // MARK: - Notifications
                 Section("Notifications") {
                     Toggle("Enable Reminders", isOn: $notificationsEnabled)
                         .onChange(of: notificationsEnabled) { _, newValue in
@@ -136,6 +141,13 @@ struct SettingsView: View {
                     }
                 }
                 
+                // MARK: - Cloud Sync (NEW)
+                Section("Cloud") {
+                    CloudSyncView()
+                        .listRowInsets(EdgeInsets())
+                }
+                
+                // MARK: - Support
                 Section("Support") {
                     Button {
                         shareApp()
@@ -152,6 +164,7 @@ struct SettingsView: View {
                     }
                 }
                 
+                // MARK: - Data
                 Section("Data") {
                     Button {
                         exportCSV()
@@ -221,6 +234,7 @@ struct SettingsView: View {
                     }
                 }
                 
+                // MARK: - Legal
                 Section("Legal") {
                     Button {
                         showingPrivacyPolicy = true
@@ -354,14 +368,22 @@ struct SettingsView: View {
     }
 }
 
+// MARK: - Privacy Policy View
 struct PrivacyPolicyView: View {
     @Environment(\.dismiss) private var dismiss
+    
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                    Text("Privacy Policy").font(.title).fontWeight(.bold)
-                    Text("Last Updated: \(Date().formatted(date: .long, time: .omitted))").font(.caption).foregroundColor(.secondary)
+                    Text("Privacy Policy")
+                        .font(.title)
+                        .fontWeight(.bold)
+                    
+                    Text("Last Updated: \(Date().formatted(date: .long, time: .omitted))")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
                     Group {
                         PolicySection(title: "Data Collection", content: "Spendora does not collect any personal data. All subscription information is stored locally on your device.")
                         PolicySection(title: "No Third-Party Sharing", content: "Since we don't collect any data, we don't share any data with third parties.")
@@ -384,11 +406,16 @@ struct PrivacyPolicyView: View {
 }
 
 struct PolicySection: View {
-    let title: String; let content: String
+    let title: String
+    let content: String
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(title).font(.headline)
-            Text(content).font(.body).foregroundColor(.secondary)
+            Text(title)
+                .font(.headline)
+            Text(content)
+                .font(.body)
+                .foregroundColor(.secondary)
         }
         .padding(.vertical, 4)
     }
