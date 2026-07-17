@@ -2,12 +2,9 @@
 //  SubscriptionListView.swift
 //  Spendora
 //
-//  Created by Sheikh Naim on 2026-06-19.
-//
 
 import SwiftUI
 import SwiftData
-import WidgetKit
 
 struct SubscriptionListView: View {
     @Query private var subscriptions: [Subscription]
@@ -32,12 +29,10 @@ struct SubscriptionListView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                // Search Bar
                 SearchBar(text: $searchText, placeholder: "Search subscriptions...")
                     .padding(.horizontal)
                     .padding(.vertical, 8)
                 
-                // Stats Bar
                 HStack {
                     Text("\(filteredSubscriptions.count) subscriptions")
                         .font(.caption)
@@ -52,7 +47,6 @@ struct SubscriptionListView: View {
                 .padding(.horizontal)
                 .padding(.vertical, 8)
                 
-                // Sort Picker
                 Picker("Sort by", selection: $sortOption) {
                     ForEach(SortOption.allCases, id: \.self) { option in
                         Text(option.rawValue).tag(option)
@@ -125,68 +119,4 @@ struct SubscriptionListView: View {
         modelContext.delete(subscription)
         try? modelContext.save()
     }
-}
-
-struct SubscriptionRow: View {
-    let subscription: Subscription
-    
-    var body: some View {
-        HStack(spacing: 12) {
-            // Color indicator
-            Circle()
-                .fill(Color(hex: subscription.colorHex ?? "#6C63FF"))
-                .frame(width: 10, height: 10)
-            
-            VStack(alignment: .leading, spacing: 2) {
-                Text(subscription.displayName)
-                    .font(.headline)
-                    .foregroundColor(.primary)
-                
-                HStack(spacing: 4) {
-                    Text(subscription.effectiveCategory)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    
-                    if subscription.isYearly {
-                        Text("•")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        Text("Yearly")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                    
-                    if subscription.isTrial && !subscription.trialConvertedToPaid {
-                        Text("•")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        Text("Trial")
-                            .font(.caption)
-                            .foregroundColor(.orange)
-                    }
-                }
-            }
-            
-            Spacer()
-            
-            VStack(alignment: .trailing, spacing: 2) {
-                Text(CurrencyManager.shared.format(subscription.monthlyCost))
-                    .font(.headline)
-                    .fontWeight(.bold)
-                
-                Text("/month")
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-            }
-        }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 12)
-        .background(Color(.systemBackground))
-        .cornerRadius(12)
-        .shadow(color: Color.black.opacity(0.03), radius: 4)
-    }
-}
-
-#Preview {
-    SubscriptionListView()
 }

@@ -37,7 +37,7 @@ struct QuickStatsStatCard: View {
     @State private var isPressed = false
     
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 10) {
             ZStack {
                 Circle()
                     .fill(
@@ -47,10 +47,10 @@ struct QuickStatsStatCard: View {
                             endPoint: .bottomTrailing
                         )
                     )
-                    .frame(width: 40, height: 40)
+                    .frame(width: 32, height: 32)
                 
                 Image(systemName: icon)
-                    .font(.headline)
+                    .font(.system(size: 14, weight: .medium))
                     .foregroundStyle(
                         LinearGradient(
                             colors: [color, color.opacity(0.7)],
@@ -60,26 +60,26 @@ struct QuickStatsStatCard: View {
                     )
             }
             
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 1) {
                 Text(title)
-                    .font(.system(.caption, design: .rounded))
+                    .font(.system(.caption2, design: .rounded))
                     .foregroundColor(.secondary)
-                    .tracking(0.3)
                 
                 Text(value)
-                    .font(.system(.headline, design: .rounded))
+                    .font(.system(.subheadline, design: .rounded))
                     .fontWeight(.bold)
-                    .contentTransition(.numericText())
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
             }
             
-            Spacer()
+            Spacer(minLength: 4)
         }
-        .padding(12)
+        .padding(10)
         .frame(maxWidth: .infinity)
         .background(
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: 14)
                 .fill(Color(.systemBackground))
-                .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 2)
+                .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 2)
         )
         .scaleEffect(isPressed ? 0.97 : 1.0)
         .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isPressed)
@@ -94,14 +94,4 @@ struct QuickStatsStatCard: View {
             }
         }
     }
-}
-
-// MARK: - Preview
-#Preview {
-    VStack(spacing: 20) {
-        QuickStatsView(count: 3, totalMonthly: 45.99, totalYearly: 551.88)
-        QuickStatsView(count: 0, totalMonthly: 0, totalYearly: 0)
-    }
-    .padding()
-    .background(Color(.systemGroupedBackground))
 }

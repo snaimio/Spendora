@@ -1,99 +1,118 @@
 //
-//  Views/Subscriptions/SubscriptionDetailView.swift
+//  SubscriptionDetailView.swift
 //  Spendora
 //
 
 import SwiftUI
 import SwiftData
-import UIKit
 
 struct SubscriptionDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     
-    @Bindable var subscription: Subscription
+    let subscription: Subscription
+    
+    @State private var name: String
+    @State private var cost: String
+    @State private var category: String
+    @State private var isYearly: Bool
+    @State private var nextBillingDate: Date
+    @State private var notes: String
+    @State private var colorHex: String
+    @State private var isTrial: Bool
+    @State private var usageRating: Int
+    @State private var paymentMethod: String
     
     @State private var showingDeleteAlert = false
-    @State private var showingEditSheet = false
+    @State private var isSaving = false
+    @State private var showingError = false
+    @State private var errorMessage = ""
     
     private let generator = UIImpactFeedbackGenerator(style: .medium)
     
+    init(subscription: Subscription) {
+        self.subscription = subscription
+        _name = State(initialValue: subscription.name)
+        _cost = State(initialValue: String(format: "%.2f", subscription.cost))
+        _category = State(initialValue: subscription.category)
+        _isYearly = State(initialValue: subscription.isYearly)
+        _nextBillingDate = State(initialValue: subscription.nextBillingDate)
+        _notes = State(initialValue: subscription.notes ?? "")
+        _colorHex = State(initialValue: subscription.colorHex ?? "#6C63FF")
+        _isTrial = State(initialValue: subscription.isTrial)
+        _usageRating = State(initialValue: subscription.usageRating)
+        _paymentMethod = State(initialValue: subscription.paymentMethod ?? "Not Set")
+    }
+    
+    var costValue: Double? { Double(cost) }
+    var isValid: Bool {
+        !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
+        (costValue ?? 0) > 0
+    }
+    
     var body: some View {
         NavigationStack {
-            List {
-                // MARK: - Details
-                Section("Details") {
-                    DetailRow(icon: "tag.fill", title: "Name", value: subscription.displayName)
-                    DetailRow(icon: "dollarsign.circle.fill", title: "Cost", value: formatCost())
-                    DetailRow(icon: "calendar.circle.fill", title: "Billing Cycle", value: subscription.isYearly ? "Yearly" : "Monthly")
-                    DetailRow(icon: "calendar.badge.clock", title: "Next Billing", value: subscription.formattedNextBillingDate)
-                    DetailRow(icon: "folder.fill", title: "Category", value: subscription.effectiveCategory)
+            Form {
+                // MARK: - Subscription Info
+                Section("Subscription Info") {
+                    SubscriptionDetailSection(icon: "tag.fill", title: "Name", value: name)
+                    SubscriptionDetailSection(icon: "dollarsign.circle.fill", title: "Cost", value: "$\(cost)/\(isYearly ? "year" : "month")")
+                    SubscriptionDetailSection(icon: "folder.fill", title: "Category", value: category)
+                    SubscriptionDetailSection(icon: "creditcard.fill", title: "Payment Method", value: paymentMethod)
+                    SubscriptionDetailSection(icon: "repeat.circle.fill", title: "Billing Cycle", value: isYearly ? "Yearly" : "Monthly")
+                }
+                
+                // MARK: - Billing
+                Section("Billing") {
+                    SubscriptionDetailSection(icon: "calendar", title: "Next Billing Date", value: subscription.formattedNextBillingDate)
+                    SubscriptionDetailSection(icon: "clock.fill", title: "Days Until Billing", value: "\(subscription.daysUntilBilling) days")
                     
-                    if let paymentMethod = subscription.paymentMethod, !paymentMethod.isEmpty {
-                        DetailRow(icon: "creditcard.fill", title: "Payment Method", value: paymentMethod)
+                    if subscription.isOverdue {
+                        SubscriptionDetailSection(icon: "exclamationmark.triangle.fill", title: "Status", value: "Overdue", color: .red)
+                    } else if subscription.isUpcoming {
+                        SubscriptionDetailSection(icon: "bell.fill", title: "Status", value: "Due Soon", color: .orange)
+                    } else {
+                        SubscriptionDetailSection(icon: "checkmark.circle.fill", title: "Status", value: "Active", color: .green)
                     }
                 }
                 
-                // MARK: - Monthly Breakdown
-                Section("Monthly Breakdown") {
+                // MARK: - Usage Rating
+                Section("Usage Rating") {
                     HStack {
-                        Text("Monthly Cost")
+                        Text("How often do you use this?")
+                            .font(.system(.body, design: .rounded))
                         Spacer()
-                        Text(String(format: "$%.2f", subscription.monthlyCost))
-                            .fontWeight(.semibold)
+                        UsageRatingView(rating: $usageRating, maximumRating: 5) { newRating in
+                            subscription.usageRating = newRating
+                            try? modelContext.save()
+                        }
                     }
-                    
-                    if subscription.isYearly {
-                        HStack {
-                            Text("Yearly Cost")
-                            Spacer()
-                            Text(String(format: "$%.2f", subscription.yearlyCost))
-                                .fontWeight(.semibold)
-                                .foregroundColor(.blue)
+                    .padding(.vertical, 4)
+                }
+                
+                // MARK: - Trial Info
+                if subscription.isTrial {
+                    Section("Trial Information") {
+                        SubscriptionDetailSection(icon: "clock.arrow.circlepath", title: "Trial Status", value: subscription.trialStatus)
+                        if let trialEndDate = subscription.trialEndDate {
+                            SubscriptionDetailSection(icon: "calendar.badge.clock", title: "Trial Ends", value: trialEndDate.formattedAsMonthDayYear)
+                        }
+                        if subscription.trialWarning {
+                            SubscriptionDetailSection(icon: "exclamationmark.triangle.fill", title: "Warning", value: "Trial ending soon!", color: .orange)
                         }
                     }
                 }
                 
-                // MARK: - Usage Rating (NEW)
-                if subscription.usageRating > 0 {
-                    Section("Usage Rating") {
-                        HStack {
-                            Text("Your Rating")
-                            Spacer()
-                            HStack(spacing: 4) {
-                                ForEach(1...5, id: \.self) { star in
-                                    Image(systemName: star <= subscription.usageRating ? "star.fill" : "star")
-                                        .foregroundColor(star <= subscription.usageRating ? .yellow : .gray)
-                                        .font(.caption)
-                                }
-                            }
-                        }
-                        
-                        if subscription.usageRating <= 2 && subscription.monthlyCost > 5 {
-                            Text("⚠️ This subscription is flagged for 'Consider Cancelling'")
-                                .font(.caption)
-                                .foregroundColor(.orange)
-                        }
+                // MARK: - Notes
+                if let notes = subscription.notes, !notes.isEmpty {
+                    Section("Notes") {
+                        Text(notes)
+                            .font(.system(.body, design: .rounded))
+                            .foregroundColor(.secondary)
                     }
                 }
                 
-                // MARK: - Cancel Subscription
-                Section {
-                    Button {
-                        openCancellationPage()
-                    } label: {
-                        HStack {
-                            Image(systemName: "safari")
-                            Text("Cancel Subscription")
-                            Spacer()
-                            Image(systemName: "arrow.up.forward.square")
-                                .font(.caption)
-                        }
-                    }
-                    .foregroundColor(.red)
-                }
-                
-                // MARK: - Delete
+                // MARK: - Actions
                 Section {
                     Button(role: .destructive) {
                         showingDeleteAlert = true
@@ -101,6 +120,8 @@ struct SubscriptionDetailView: View {
                         HStack {
                             Spacer()
                             Text("Delete Subscription")
+                                .font(.system(.headline, design: .rounded))
+                                .foregroundColor(.red)
                             Spacer()
                         }
                     }
@@ -109,14 +130,13 @@ struct SubscriptionDetailView: View {
             .navigationTitle("Subscription Details")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Edit") {
-                        showingEditSheet = true
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Done") {
+                        generator.impactOccurred()
+                        dismiss()
                     }
+                    .font(.system(.body, design: .rounded))
                 }
-            }
-            .sheet(isPresented: $showingEditSheet) {
-                EditSubscriptionView(subscription: subscription)
             }
             .alert("Delete Subscription", isPresented: $showingDeleteAlert) {
                 Button("Cancel", role: .cancel) { }
@@ -124,197 +144,26 @@ struct SubscriptionDetailView: View {
                     deleteSubscription()
                 }
             } message: {
-                Text("Are you sure you want to delete \(subscription.displayName)?")
+                Text("Are you sure you want to delete '\(subscription.displayName)'? This action cannot be undone.")
             }
-        }
-    }
-    
-    private func formatCost() -> String {
-        if subscription.isYearly {
-            return String(format: "$%.2f per year", subscription.cost)
-        } else {
-            return String(format: "$%.2f per month", subscription.monthlyCost)
+            .alert("Error", isPresented: $showingError) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text(errorMessage)
+            }
         }
     }
     
     private func deleteSubscription() {
         NotificationService.shared.cancel(for: subscription)
         modelContext.delete(subscription)
-        
         do {
             try modelContext.save()
+            generator.impactOccurred()
+            dismiss()
         } catch {
-            print("Error deleting subscription: \(error)")
-        }
-        
-        generator.impactOccurred()
-        dismiss()
-    }
-    
-    private func openCancellationPage() {
-        let serviceName = subscription.displayName.lowercased()
-        let urlString: String
-        
-        if serviceName.contains("netflix") {
-            urlString = "https://www.netflix.com/cancelplan"
-        } else if serviceName.contains("spotify") {
-            urlString = "https://www.spotify.com/account/cancel/"
-        } else if serviceName.contains("apple") {
-            urlString = "https://appleid.apple.com/account/manage"
-        } else if serviceName.contains("disney") {
-            urlString = "https://www.disneyplus.com/account"
-        } else if serviceName.contains("amazon") || serviceName.contains("prime") {
-            urlString = "https://www.amazon.com/gp/css/account/manageprime"
-        } else {
-            let searchQuery = serviceName.replacingOccurrences(of: " ", with: "+")
-            urlString = "https://www.google.com/search?q=how+to+cancel+\(searchQuery)"
-        }
-        
-        guard let url = URL(string: urlString) else { return }
-        UIApplication.shared.open(url)
-    }
-}
-
-// MARK: - Detail Row
-struct DetailRow: View {
-    let icon: String
-    let title: String
-    let value: String
-    
-    var body: some View {
-        HStack {
-            Image(systemName: icon)
-                .foregroundColor(.blue)
-                .frame(width: 24)
-            
-            Text(title)
-                .foregroundColor(.secondary)
-            
-            Spacer()
-            
-            Text(value)
-                .fontWeight(.medium)
-                .foregroundColor(.primary)
-        }
-        .padding(.vertical, 4)
-    }
-}
-
-// MARK: - Edit Subscription View
-struct EditSubscriptionView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Environment(\.dismiss) private var dismiss
-    
-    @Bindable var subscription: Subscription
-    
-    @State private var name: String
-    @State private var cost: String
-    @State private var selectedCategory: String
-    @State private var isYearly: Bool
-    @State private var nextBillingDate: Date
-    @State private var usageRating: Int
-    
-    init(subscription: Subscription) {
-        self.subscription = subscription
-        _name = State(initialValue: subscription.name)
-        _cost = State(initialValue: String(subscription.cost))
-        _selectedCategory = State(initialValue: subscription.category)
-        _isYearly = State(initialValue: subscription.isYearly)
-        _nextBillingDate = State(initialValue: subscription.nextBillingDate)
-        _usageRating = State(initialValue: subscription.usageRating)
-    }
-    
-    var isValid: Bool {
-        let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmedName.isEmpty else { return false }
-        guard let costValue = Double(cost), costValue > 0 else { return false }
-        return true
-    }
-    
-    var body: some View {
-        NavigationStack {
-            Form {
-                Section("Edit Subscription") {
-                    TextField("Service Name", text: $name)
-                    
-                    HStack {
-                        Text("$")
-                            .foregroundColor(.secondary)
-                        TextField("Cost", text: $cost)
-                            .keyboardType(.decimalPad)
-                    }
-                    
-                    Picker("Category", selection: $selectedCategory) {
-                        ForEach(SubscriptionCategory.allCases, id: \.rawValue) { category in
-                            Text(category.rawValue).tag(category.rawValue)
-                        }
-                    }
-                    
-                    Toggle("Yearly Billing", isOn: $isYearly)
-                    
-                    DatePicker("Next Billing Date", selection: $nextBillingDate, in: Date()..., displayedComponents: .date)
-                }
-                
-                // MARK: - Usage Rating (NEW)
-                Section("Usage Rating") {
-                    HStack {
-                        Text("How often do you use this?")
-                            .font(.subheadline)
-                        Spacer()
-                        RatingView(rating: $usageRating)
-                    }
-                    Text("Rate 1-5 stars. Subscriptions rated 1-2 stars will appear in 'Consider Cancelling' on your dashboard")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-            }
-            .navigationTitle("Edit Subscription")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") { saveChanges() }
-                        .disabled(!isValid)
-                }
-            }
+            errorMessage = "Failed to delete: \(error.localizedDescription)"
+            showingError = true
         }
     }
-    
-    private func saveChanges() {
-        guard let costValue = Double(cost) else { return }
-        
-        subscription.name = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        subscription.cost = costValue
-        subscription.category = selectedCategory
-        subscription.isYearly = isYearly
-        subscription.nextBillingDate = nextBillingDate
-        subscription.usageRating = usageRating
-        
-        NotificationService.shared.cancel(for: subscription)
-        NotificationService.shared.schedule(for: subscription)
-        
-        do {
-            try modelContext.save()
-        } catch {
-            print("Error saving changes: \(error)")
-            return
-        }
-        
-        dismiss()
-    }
-}
-
-// MARK: - Preview
-#Preview {
-    let sample = Subscription(
-        name: "Netflix",
-        cost: 15.99,
-        isYearly: false,
-        nextBillingDate: Date().addingTimeInterval(86400 * 30),
-        category: SubscriptionCategory.entertainment.rawValue,
-        colorHex: "#FF6B6B"
-    )
-    return SubscriptionDetailView(subscription: sample)
 }
