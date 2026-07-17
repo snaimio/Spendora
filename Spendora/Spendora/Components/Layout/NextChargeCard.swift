@@ -2,96 +2,151 @@
 //  NextChargeCard.swift
 //  Spendora
 //
-//  Created by Sheikh Naim on 2026-06-19.
-//
 
 import SwiftUI
 
 struct NextChargeCard: View {
     let subscription: Subscription
-
+    @State private var isPressed = false
+    
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Next Charge")
-                .font(.caption)
-                .foregroundColor(.secondary)
-
-            HStack {
-                // Category Color Indicator
+        HStack(spacing: 16) {
+            // Premium Icon with gradient
+            ZStack {
                 Circle()
-                    .fill(categoryColor)
-                    .frame(width: 12, height: 12)
-
+                    .fill(
+                        LinearGradient(
+                            colors: [categoryColor.opacity(0.12), categoryColor.opacity(0.05)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 44, height: 44)
+                
+                Circle()
+                    .fill(
+                        LinearGradient(
+                            colors: [categoryColor, categoryColor.opacity(0.7)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 32, height: 32)
+                    .overlay(
+                        Image(systemName: "clock.fill")
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundColor(.white)
+                    )
+            }
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Next Charge")
+                    .font(.system(.caption, design: .rounded))
+                    .fontWeight(.semibold)
+                    .foregroundColor(.secondary)
+                    .tracking(1)
+                
                 Text(subscription.displayName)
-                    .font(.headline)
+                    .font(.system(.headline, design: .rounded))
                     .foregroundColor(.primary)
-
-                Spacer()
-
-                VStack(alignment: .trailing, spacing: 2) {
-                    Text(String(format: "$%.2f", subscription.monthlyCost))
-                        .font(.headline)
+                
+                HStack(spacing: 6) {
+                    Text(CurrencyManager.shared.format(subscription.monthlyCost))
+                        .font(.system(.subheadline, design: .rounded))
                         .fontWeight(.bold)
-                        .foregroundColor(.primary)
-
+                    
+                    Text("•")
+                        .foregroundColor(.secondary)
+                    
                     Text(subscription.formattedNextBillingDate)
-                        .font(.caption)
+                        .font(.system(.caption, design: .rounded))
                         .foregroundColor(.secondary)
                 }
             }
+            
+            Spacer()
+            
+            // Days remaining badge
+            let days = subscription.daysUntilBilling
+            if days >= 0 && days <= 7 {
+                PremiumDaysBadge(days: days)
+            }
         }
-        .padding()
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
         .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.blue.opacity(0.08))
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(.systemBackground))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.blue.opacity(0.2), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(
+                            LinearGradient(
+                                colors: [.brandPrimary.opacity(0.15), .brandSecondary.opacity(0.05)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 1
+                        )
                 )
+                .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 2)
         )
+        .scaleEffect(isPressed ? 0.97 : 1.0)
+        .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isPressed)
+        .onTapGesture {
+            let generator = UIImpactFeedbackGenerator(style: .light)
+            generator.impactOccurred()
+            withAnimation {
+                isPressed = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    isPressed = false
+                }
+            }
+        }
     }
-
-    // MARK: - Category Color
-
+    
     private var categoryColor: Color {
         switch subscription.category {
-        case "Entertainment":
-            return .categoryEntertainment
-
-        case "Productivity":
-            return .categoryProductivity
-
-        case "Health & Fitness":
-            return .categoryHealth
-
-        case "Shopping":
-            return .categoryShopping
-
-        case "Food & Dining":
-            return .categoryFood
-
-        case "Education":
-            return .categoryEducation
-
-        default:
-            return .categoryOther
+        case "Entertainment": return .categoryEntertainment
+        case "Productivity": return .categoryProductivity
+        case "Health & Fitness": return .categoryHealth
+        case "Shopping": return .categoryShopping
+        case "Food & Dining": return .categoryFood
+        case "Education": return .categoryEducation
+        default: return .categoryOther
         }
     }
 }
 
-// MARK: - Preview
-
-#Preview {
-    let sample = Subscription(
-        name: "Netflix",
-        cost: 15.99,
-        isYearly: false,
-        nextBillingDate: Date().addingTimeInterval(86400 * 5),
-        category: SubscriptionCategory.entertainment.rawValue,
-        colorHex: "#FF6B6B"
-    )
-
-    return NextChargeCard(subscription: sample)
-        .padding()
-        .background(Color(.systemGroupedBackground))
+// MARK: - Premium Days Badge
+struct PremiumDaysBadge: View {
+    let days: Int
+    
+    var body: some View {
+        VStack(spacing: 2) {
+            if days == 0 {
+                Text("Today")
+                    .font(.system(size: 11, weight: .bold, design: .rounded))
+            } else {
+                Text("\(days)")
+                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                Text("days")
+                    .font(.system(size: 8, weight: .semibold, design: .rounded))
+                    .tracking(1)
+            }
+        }
+        .foregroundColor(days <= 1 ? .red : .orange)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill((days <= 1 ? Color.red : Color.orange).opacity(0.12))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(
+                            (days <= 1 ? Color.red : Color.orange).opacity(0.2),
+                            lineWidth: 1
+                        )
+                )
+        )
+    }
 }

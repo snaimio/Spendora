@@ -34,33 +34,19 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             List {
-                // MARK: - App Info
+                // MARK: - App Info (Premium)
                 Section {
-                    HStack {
-                        Image(systemName: "creditcard.and.123")
-                            .font(.title)
-                            .foregroundColor(.blue)
-                            .frame(width: 50, height: 50)
-                            .background(Color.blue.opacity(0.1))
-                            .cornerRadius(12)
-                        
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Spendora")
-                                .font(.headline)
-                            Text("Version \(getAppVersion())")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                    .padding(.vertical, 8)
+                    PremiumAppInfoRow()
                 }
                 
                 // MARK: - Appearance
                 Section("Appearance") {
-                    HStack {
-                        Image(systemName: "moon.fill")
-                            .foregroundColor(.purple)
-                        Toggle("Dark Mode", isOn: Binding(
+                    PremiumSettingsRow(
+                        icon: "moon.fill",
+                        title: "Dark Mode",
+                        subtitle: "Match system appearance"
+                    ) {
+                        Toggle("", isOn: Binding(
                             get: {
                                 if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                                    let window = windowScene.windows.first {
@@ -75,75 +61,77 @@ struct SettingsView: View {
                                 }
                             }
                         ))
+                        .toggleStyle(SwitchToggleStyle(tint: .brandPrimary))
+                        .labelsHidden()
                     }
                 }
                 
-                // MARK: - Reports
+                // MARK: - Reports (Premium)
                 Section("Reports") {
-                    Button {
-                        showingYearlyReport = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "calendar")
-                                .foregroundColor(.blue)
-                            Text("Yearly Report")
-                            Spacer()
+                    PremiumSettingsRow(
+                        icon: "calendar",
+                        title: "Yearly Report",
+                        subtitle: "View annual spending summary"
+                    ) {
+                        Button {
+                            showingYearlyReport = true
+                        } label: {
                             Image(systemName: "chevron.right")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
                     }
                     
-                    Button {
-                        showingChallenges = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "trophy")
-                                .foregroundColor(.orange)
-                            Text("Challenges")
-                            Spacer()
+                    PremiumSettingsRow(
+                        icon: "trophy",
+                        title: "Challenges",
+                        subtitle: "Complete achievements"
+                    ) {
+                        Button {
+                            showingChallenges = true
+                        } label: {
                             Image(systemName: "chevron.right")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
                     }
                     
-                    Button {
-                        showingSavingsScore = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "star.circle.fill")
-                                .foregroundColor(.yellow)
-                            Text("Savings Score")
-                            Spacer()
+                    PremiumSettingsRow(
+                        icon: "star.circle.fill",
+                        title: "Savings Score",
+                        subtitle: "Your financial wellness"
+                    ) {
+                        Button {
+                            showingSavingsScore = true
+                        } label: {
                             Image(systemName: "chevron.right")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
                     }
                     
-                    Button {
-                        showingAIInsights = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "brain.head.profile")
-                                .foregroundColor(.purple)
-                            Text("AI Insights")
-                            Spacer()
+                    PremiumSettingsRow(
+                        icon: "brain.head.profile",
+                        title: "AI Insights",
+                        subtitle: "Smart spending analysis"
+                    ) {
+                        Button {
+                            showingAIInsights = true
+                        } label: {
                             Image(systemName: "chevron.right")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
                     }
                     
-                    Button {
-                        showingSpendingChart = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "chart.bar.fill")
-                                .foregroundColor(.green)
-                            Text("Spending Chart")
-                            Spacer()
+                    PremiumSettingsRow(
+                        icon: "chart.bar.fill",
+                        title: "Spending Chart",
+                        subtitle: "Visual spending breakdown"
+                    ) {
+                        Button {
+                            showingSpendingChart = true
+                        } label: {
                             Image(systemName: "chevron.right")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
@@ -153,14 +141,14 @@ struct SettingsView: View {
                 
                 // MARK: - App Tour
                 Section("App") {
-                    Button {
-                        showingOnboarding = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "book.fill")
-                                .foregroundColor(.blue)
-                            Text("Show Onboarding Tour")
-                            Spacer()
+                    PremiumSettingsRow(
+                        icon: "book.fill",
+                        title: "Show Onboarding Tour",
+                        subtitle: "Replay the welcome experience"
+                    ) {
+                        Button {
+                            showingOnboarding = true
+                        } label: {
                             Image(systemName: "chevron.right")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
@@ -168,12 +156,15 @@ struct SettingsView: View {
                     }
                 }
                 
-                // MARK: - Currency
+                // MARK: - Currency (Premium)
                 Section {
                     Picker("Select Currency", selection: $selectedCurrency) {
                         ForEach(Currency.allCases, id: \.self) { currency in
-                            Text(currency.displayName)
-                                .tag(currency)
+                            HStack {
+                                Text(currency.symbol)
+                                Text(currency.code)
+                            }
+                            .tag(currency)
                         }
                     }
                     .onChange(of: selectedCurrency) { _, newValue in
@@ -181,38 +172,45 @@ struct SettingsView: View {
                     }
                     
                     Text("All amounts will be shown in \(currencyManager.currentCurrency.symbol) (\(currencyManager.currentCurrency.code))")
-                        .font(.caption)
+                        .font(.system(.caption, design: .rounded))
                         .foregroundColor(.secondary)
                 } header: {
                     Text("Currency")
                 } footer: {
                     Text("Change how subscription costs are displayed")
+                        .font(.system(.caption, design: .rounded))
                 }
                 
-                // MARK: - Notifications
+                // MARK: - Notifications (Premium)
                 Section("Notifications") {
-                    Toggle("Enable Reminders", isOn: $notificationsEnabled)
-                        .onChange(of: notificationsEnabled) { _, newValue in
-                            if newValue {
-                                NotificationService.shared.requestPermission()
-                            } else {
-                                NotificationService.shared.cancelAll()
+                    PremiumSettingsRow(
+                        icon: "bell.fill",
+                        title: "Enable Reminders",
+                        subtitle: "Get notified 3 days before renewal"
+                    ) {
+                        Toggle("", isOn: $notificationsEnabled)
+                            .toggleStyle(SwitchToggleStyle(tint: .brandPrimary))
+                            .labelsHidden()
+                            .onChange(of: notificationsEnabled) { _, newValue in
+                                if newValue {
+                                    NotificationService.shared.requestPermission()
+                                } else {
+                                    NotificationService.shared.cancelAll()
+                                }
                             }
-                        }
-                    
-                    Text("You'll receive reminders 3 days before each subscription renews")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                    }
                     
                     Button("Open Notification Settings") {
                         if let url = URL(string: UIApplication.openSettingsURLString) {
                             UIApplication.shared.open(url)
                         }
                     }
-                    .font(.caption)
+                    .font(.system(.caption, design: .rounded))
+                    .foregroundColor(.brandPrimary)
                     
                     HStack {
                         Text("Reminder Time")
+                            .font(.system(.body, design: .rounded))
                         Spacer()
                         DatePicker("", selection: $notificationTime, displayedComponents: .hourAndMinute)
                             .labelsHidden()
@@ -228,16 +226,32 @@ struct SettingsView: View {
                         .listRowInsets(EdgeInsets())
                 }
                 
-                // MARK: - Support
+                // MARK: - Support (Premium)
                 Section("Support") {
-                    Button {
-                        shareApp()
-                    } label: {
-                        HStack {
-                            Image(systemName: "square.and.arrow.up")
-                                .foregroundColor(.blue)
-                            Text("Share App")
-                            Spacer()
+                    PremiumSettingsRow(
+                        icon: "square.and.arrow.up",
+                        title: "Share App",
+                        subtitle: "Share Spendora with friends"
+                    ) {
+                        Button {
+                            shareApp()
+                        } label: {
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    
+                    PremiumSettingsRow(
+                        icon: "envelope.fill",
+                        title: "Contact Support",
+                        subtitle: "Help & feedback"
+                    ) {
+                        Button {
+                            if let url = URL(string: "mailto:support@spendora.com") {
+                                UIApplication.shared.open(url)
+                            }
+                        } label: {
                             Image(systemName: "chevron.right")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
@@ -245,93 +259,106 @@ struct SettingsView: View {
                     }
                 }
                 
-                // MARK: - Data
+                // MARK: - Data (Premium)
                 Section("Data") {
-                    Button {
-                        exportCSV()
-                    } label: {
-                        HStack {
-                            Image(systemName: "tablecells")
-                            Text("Export CSV")
-                            Spacer()
+                    PremiumSettingsRow(
+                        icon: "tablecells",
+                        title: "Export CSV",
+                        subtitle: "Spreadsheet format"
+                    ) {
+                        Button {
+                            exportCSV()
+                        } label: {
                             Image(systemName: "chevron.right")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
                     }
                     
-                    Button {
-                        exportPDF()
-                    } label: {
-                        HStack {
-                            Image(systemName: "doc.text.fill")
-                            Text("Export PDF Report")
-                            Spacer()
+                    PremiumSettingsRow(
+                        icon: "doc.text.fill",
+                        title: "Export PDF Report",
+                        subtitle: "Professional report"
+                    ) {
+                        Button {
+                            exportPDF()
+                        } label: {
                             Image(systemName: "chevron.right")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
                     }
                     
-                    Button {
-                        exportBackup()
-                    } label: {
-                        HStack {
-                            Image(systemName: "arrow.up.doc")
-                                .foregroundColor(.blue)
-                            Text("Backup Data")
-                            Spacer()
+                    PremiumSettingsRow(
+                        icon: "arrow.up.doc",
+                        title: "Backup Data",
+                        subtitle: "JSON backup file"
+                    ) {
+                        Button {
+                            exportBackup()
+                        } label: {
                             Image(systemName: "chevron.right")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
                     }
                     
-                    Button {
-                        showingDocumentPicker = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "arrow.down.doc")
-                                .foregroundColor(.blue)
-                            Text("Restore Backup")
-                            Spacer()
+                    PremiumSettingsRow(
+                        icon: "arrow.down.doc",
+                        title: "Restore Backup",
+                        subtitle: "Import from JSON file"
+                    ) {
+                        Button {
+                            showingDocumentPicker = true
+                        } label: {
                             Image(systemName: "chevron.right")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
                     }
                     
-                    Button(role: .destructive) {
-                        showingResetAlert = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "trash.fill")
-                            Text("Reset All Data")
-                            Spacer()
+                    PremiumSettingsRow(
+                        icon: "trash.fill",
+                        title: "Reset All Data",
+                        subtitle: "Delete all subscriptions"
+                    ) {
+                        Button(role: .destructive) {
+                            showingResetAlert = true
+                        } label: {
                             Image(systemName: "chevron.right")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
                     }
+                    .foregroundColor(.red)
                 }
                 
-                // MARK: - Legal
+                // MARK: - Legal (Premium)
                 Section("Legal") {
-                    Button {
-                        showingPrivacyPolicy = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "lock.doc.fill")
-                                .foregroundColor(.blue)
-                            Text("Privacy Policy")
-                            Spacer()
+                    PremiumSettingsRow(
+                        icon: "lock.doc.fill",
+                        title: "Privacy Policy",
+                        subtitle: "How we protect your data"
+                    ) {
+                        Button {
+                            showingPrivacyPolicy = true
+                        } label: {
                             Image(systemName: "chevron.right")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
+                    }
+                    
+                    PremiumSettingsRow(
+                        icon: "info.circle.fill",
+                        title: "Version",
+                        subtitle: getAppVersion()
+                    ) {
+                        EmptyView()
                     }
                 }
             }
+            .listStyle(.insetGrouped)
             .navigationTitle("Settings")
             .onAppear {
                 selectedCurrency = currencyManager.currentCurrency
@@ -432,7 +459,7 @@ struct SettingsView: View {
         }
         do {
             try modelContext.save()
-            let defaults = UserDefaults(suiteName: "group.com.spendora.app")
+            let defaults = UserDefaults(suiteName: "group.com.trios2026sn.Spendora")
             defaults?.removeObject(forKey: "totalMonthly")
             defaults?.removeObject(forKey: "nextSubName")
             defaults?.synchronize()
@@ -481,55 +508,111 @@ struct SettingsView: View {
     }
 }
 
-// MARK: - Privacy Policy View
-struct PrivacyPolicyView: View {
-    @Environment(\.dismiss) private var dismiss
-    
+// MARK: - Premium App Info Row
+struct PremiumAppInfoRow: View {
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    Text("Privacy Policy")
-                        .font(.title)
-                        .fontWeight(.bold)
-                    
-                    Text("Last Updated: \(Date().formatted(date: .long, time: .omitted))")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    
-                    Group {
-                        PolicySection(title: "Data Collection", content: "Spendora does not collect any personal data. All subscription information is stored locally on your device.")
-                        PolicySection(title: "No Third-Party Sharing", content: "Since we don't collect any data, we don't share any data with third parties.")
-                        PolicySection(title: "Notifications", content: "If you enable notifications, they are scheduled locally on your device.")
-                        PolicySection(title: "Your Rights", content: "You have complete control over your data. You can delete all data at any time.")
-                        PolicySection(title: "Contact", content: "Questions? Email support@spendora.com")
-                    }
-                }
-                .padding()
+        HStack(spacing: 14) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(
+                        LinearGradient(
+                            colors: [.brandPrimary.opacity(0.12), .brandSecondary.opacity(0.05)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 50, height: 50)
+                
+                Image(systemName: "creditcard.and.123")
+                    .font(.title2)
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [.brandPrimary, .brandSecondary],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
             }
-            .navigationTitle("Privacy Policy")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Done") { dismiss() }
-                }
+            
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Spendora")
+                    .font(.system(.headline, design: .rounded))
+                    .fontWeight(.bold)
+                
+                Text("Version \(getAppVersion())")
+                    .font(.system(.caption, design: .rounded))
+                    .foregroundColor(.secondary)
             }
+            
+            Spacer()
+            
+            // Premium badge
+            HStack(spacing: 4) {
+                Image(systemName: "sparkles")
+                    .font(.system(size: 10))
+                Text("PRO")
+                    .font(.system(.caption2, design: .rounded))
+                    .fontWeight(.bold)
+            }
+            .foregroundColor(.white)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 4)
+            .background(
+                LinearGradient(
+                    colors: [.brandPrimary, .brandSecondary],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+            )
+            .cornerRadius(8)
         }
+        .padding(.vertical, 4)
+    }
+    
+    private func getAppVersion() -> String {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
+        return "\(version) (\(build))"
     }
 }
 
-// MARK: - Policy Section
-struct PolicySection: View {
+// MARK: - Premium Settings Row
+struct PremiumSettingsRow<Content: View>: View {
+    let icon: String
     let title: String
-    let content: String
+    let subtitle: String?
+    let trailing: Content?
+    
+    init(icon: String, title: String, subtitle: String? = nil, @ViewBuilder trailing: () -> Content? = { nil }) {
+        self.icon = icon
+        self.title = title
+        self.subtitle = subtitle
+        self.trailing = trailing()
+    }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(title)
-                .font(.headline)
-            Text(content)
-                .font(.body)
-                .foregroundColor(.secondary)
+        HStack(spacing: 14) {
+            Image(systemName: icon)
+                .font(.title3)
+                .foregroundColor(.brandPrimary)
+                .frame(width: 28)
+            
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.system(.body, design: .rounded))
+                
+                if let subtitle = subtitle {
+                    Text(subtitle)
+                        .font(.system(.caption, design: .rounded))
+                        .foregroundColor(.secondary)
+                }
+            }
+            
+            Spacer()
+            
+            if let trailing = trailing {
+                trailing
+            }
         }
         .padding(.vertical, 4)
     }

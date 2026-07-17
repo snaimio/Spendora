@@ -1,20 +1,43 @@
 //
-//  QuickStatCard.swift
+//  QuickStatsView.swift
 //  Spendora
 //
 
 import SwiftUI
 
-struct QuickStatCard: View {
-    let title: String
-    let value: Double
+struct QuickStatsView: View {
+    let count: Int
+    let totalMonthly: Double
+    let totalYearly: Double
+    
+    var body: some View {
+        HStack(spacing: 12) {
+            QuickStatsStatCard(
+                icon: "calendar",
+                title: "Yearly",
+                value: CurrencyManager.shared.format(totalYearly),
+                color: .brandPrimary
+            )
+            
+            QuickStatsStatCard(
+                icon: "chart.bar.fill",
+                title: "Average",
+                value: CurrencyManager.shared.format(count > 0 ? totalMonthly / Double(count) : 0),
+                color: .brandAccent
+            )
+        }
+    }
+}
+
+struct QuickStatsStatCard: View {
     let icon: String
+    let title: String
+    let value: String
     let color: Color
     @State private var isPressed = false
     
     var body: some View {
-        HStack(spacing: 14) {
-            // Premium Icon with gradient background
+        HStack(spacing: 12) {
             ZStack {
                 Circle()
                     .fill(
@@ -24,10 +47,10 @@ struct QuickStatCard: View {
                             endPoint: .bottomTrailing
                         )
                     )
-                    .frame(width: 44, height: 44)
+                    .frame(width: 40, height: 40)
                 
                 Image(systemName: icon)
-                    .font(.title3)
+                    .font(.headline)
                     .foregroundStyle(
                         LinearGradient(
                             colors: [color, color.opacity(0.7)],
@@ -41,17 +64,18 @@ struct QuickStatCard: View {
                 Text(title)
                     .font(.system(.caption, design: .rounded))
                     .foregroundColor(.secondary)
-                    .tracking(0.5)
+                    .tracking(0.3)
                 
-                Text(CurrencyManager.shared.format(value))
+                Text(value)
                     .font(.system(.headline, design: .rounded))
                     .fontWeight(.bold)
+                    .contentTransition(.numericText())
             }
             
             Spacer()
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
+        .padding(12)
+        .frame(maxWidth: .infinity)
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color(.systemBackground))
@@ -70,4 +94,14 @@ struct QuickStatCard: View {
             }
         }
     }
+}
+
+// MARK: - Preview
+#Preview {
+    VStack(spacing: 20) {
+        QuickStatsView(count: 3, totalMonthly: 45.99, totalYearly: 551.88)
+        QuickStatsView(count: 0, totalMonthly: 0, totalYearly: 0)
+    }
+    .padding()
+    .background(Color(.systemGroupedBackground))
 }
