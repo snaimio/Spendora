@@ -56,7 +56,7 @@ struct PremiumOnboardingView: View {
                 HStack {
                     Spacer()
                     Button {
-                        withAnimation {
+                        withAnimation(.easeInOut(duration: 0.3)) {
                             hasCompletedOnboarding = true
                         }
                     } label: {
@@ -82,20 +82,24 @@ struct PremiumOnboardingView: View {
                 // Page Content
                 TabView(selection: $currentPage) {
                     ForEach(pages.indices, id: \.self) { index in
-                        OnboardingPageView(page: pages[index], isLast: index == pages.count - 1) {
-                            withAnimation {
-                                if index == pages.count - 1 {
-                                    hasCompletedOnboarding = true
-                                } else {
-                                    currentPage += 1
+                        OnboardingPageView(
+                            page: pages[index],
+                            isLast: index == pages.count - 1,
+                            onAction: {
+                                withAnimation {
+                                    if index == pages.count - 1 {
+                                        hasCompletedOnboarding = true
+                                    } else {
+                                        currentPage += 1
+                                    }
                                 }
                             }
-                        }
+                        )
                         .tag(index)
                     }
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
-                .animation(.spring(), value: currentPage)
+                .animation(.spring(response: 0.4, dampingFraction: 0.8), value: currentPage)
                 
                 Spacer()
                 
@@ -262,4 +266,9 @@ struct FeatureHighlight: View {
             Spacer()
         }
     }
+}
+
+// MARK: - Preview
+#Preview {
+    PremiumOnboardingView(hasCompletedOnboarding: .constant(false))
 }

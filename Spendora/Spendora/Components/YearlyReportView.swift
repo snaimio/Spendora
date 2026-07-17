@@ -18,11 +18,15 @@ struct YearlyReportView: View {
         var result: [(month: String, amount: Double)] = []
         
         for i in 0..<12 {
-            guard let date = calendar.date(byAdding: .month, value: -i, to: currentDate) else { continue }
+            guard let date = calendar.date(byAdding: .month, value: -i, to: currentDate) else {
+                continue
+            }
+            
             let monthFormatter = DateFormatter()
             monthFormatter.dateFormat = "MMM"
             let month = monthFormatter.string(from: date)
             
+            // Calculate total for this month (using current data since historical data isn't available)
             let total = subscriptions.reduce(0) { $0 + $1.monthlyCost }
             result.append((month: month, amount: total))
         }
@@ -185,12 +189,15 @@ struct YearlyReportView: View {
     }
     
     private func generateShareImage() {
-        let renderer = ImageRenderer(content: ShareableYearlyReport(
-            year: selectedYear,
-            totalYearly: totalYearly,
-            averageMonthly: averageMonthly,
-            topCategory: topCategory
-        ))
+        let renderer = ImageRenderer(
+            content: ShareableYearlyReport(
+                year: selectedYear,
+                totalYearly: totalYearly,
+                averageMonthly: averageMonthly,
+                topCategory: topCategory
+            )
+        )
+        
         if let image = renderer.uiImage {
             shareImage = image
             showingShareSheet = true

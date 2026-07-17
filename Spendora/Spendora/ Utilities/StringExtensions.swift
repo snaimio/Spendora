@@ -26,7 +26,9 @@ extension String {
     
     /// Convert to valid currency amount
     var asCurrencyAmount: Double? {
-        Double(replacingOccurrences(of: "$", with: "")
-            .replacingOccurrences(of: ",", with: ""))
+        Double(
+            replacingOccurrences(of: "$", with: "")
+                .replacingOccurrences(of: ",", with: "")
+        )
     }
 }

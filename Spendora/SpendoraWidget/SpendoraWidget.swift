@@ -7,23 +7,49 @@ import WidgetKit
 import SwiftUI
 
 struct Provider: TimelineProvider {
+    
     func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), totalSpending: 0, upcomingSubscription: "No subscriptions")
+        SimpleEntry(
+            date: Date(),
+            totalSpending: 0,
+            upcomingSubscription: "No subscriptions"
+        )
     }
-
-    func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        let entry = SimpleEntry(date: Date(), totalSpending: 0, upcomingSubscription: "No subscriptions")
+    
+    func getSnapshot(
+        in context: Context,
+        completion: @escaping (SimpleEntry) -> Void
+    ) {
+        let entry = SimpleEntry(
+            date: Date(),
+            totalSpending: 0,
+            upcomingSubscription: "No subscriptions"
+        )
         completion(entry)
     }
-
-    func getTimeline(in context: Context, completion: @escaping (Timeline<SimpleEntry>) -> ()) {
-        // 🔥 Read REAL data from shared UserDefaults
-        let defaults = UserDefaults(suiteName: "group.com.trios2026sn.Spendora")
-        let total = defaults?.double(forKey: "totalSpending") ?? 0
-        let next = defaults?.string(forKey: "nextSubscription") ?? "No subscriptions"
+    
+    // 👇 CRITICAL: This reads data from the app
+    func getTimeline(
+        in context: Context,
+        completion: @escaping (Timeline<SimpleEntry>) -> Void
+    ) {
+        // 👇 MUST match WidgetSyncService
+        let defaults = UserDefaults(suiteName: "group.com.spendora.app")
         
-        let entry = SimpleEntry(date: Date(), totalSpending: total, upcomingSubscription: next)
-        let timeline = Timeline(entries: [entry], policy: .atEnd)
+        // 👇 MUST match the keys in WidgetSyncService
+        let total = defaults?.double(forKey: "totalMonthly") ?? 0
+        let next = defaults?.string(forKey: "nextSubName") ?? "No subscriptions"
+        
+        let entry = SimpleEntry(
+            date: Date(),
+            totalSpending: total,
+            upcomingSubscription: next
+        )
+        
+        // Refresh every hour
+        let refreshDate = Calendar.current.date(byAdding: .hour, value: 1, to: Date())!
+        let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
+        
         completion(timeline)
     }
 }
@@ -36,7 +62,7 @@ struct SimpleEntry: TimelineEntry {
 
 struct SpendoraWidgetEntryView: View {
     var entry: Provider.Entry
-
+    
     var body: some View {
         VStack(spacing: 8) {
             Text("Spendora")
@@ -64,13 +90,27 @@ struct SpendoraWidgetEntryView: View {
 @main
 struct SpendoraWidget: Widget {
     let kind: String = "SpendoraWidget"
-
+    
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: Provider()) { entry in
+        StaticConfiguration(
+            kind: kind,
+            provider: Provider()
+        ) { entry in
             SpendoraWidgetEntryView(entry: entry)
         }
         .configurationDisplayName("Spendora")
         .description("Track your subscription spending.")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
+}
+
+// MARK: - Preview
+#Preview(as: .systemSmall) {
+    SpendoraWidget()
+} timeline: {
+    SimpleEntry(
+        date: .now,
+        totalSpending: 82.47,
+        upcomingSubscription: "Netflix"
+    )
 }

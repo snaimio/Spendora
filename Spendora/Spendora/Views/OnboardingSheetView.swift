@@ -15,10 +15,12 @@ struct OnboardingSheetView: View {
                     Spacer()
                         .frame(height: 20)
                     
+                    // MARK: - Header Icon
                     Image(systemName: "creditcard.and.123")
                         .font(.system(size: 70))
                         .foregroundStyle(Color.primaryGradient)
                     
+                    // MARK: - Title
                     Text("Welcome to Spendora")
                         .font(.largeTitle)
                         .fontWeight(.bold)
@@ -27,6 +29,7 @@ struct OnboardingSheetView: View {
                         .font(.title3)
                         .foregroundColor(.secondary)
                     
+                    // MARK: - Features Card
                     VStack(alignment: .leading, spacing: 24) {
                         OnboardingSheetFeature(
                             icon: "plus.circle.fill",
@@ -59,6 +62,10 @@ struct OnboardingSheetView: View {
                         )
                     }
                     .padding(.horizontal, 24)
+                    .padding(.vertical, 20)
+                    .background(Color(.secondarySystemGroupedBackground))
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .padding(.horizontal)
                     
                     Spacer()
                         .frame(height: 30)
@@ -82,6 +89,7 @@ struct OnboardingSheetView: View {
     }
 }
 
+// MARK: - Feature Row
 struct OnboardingSheetFeature: View {
     let icon: String
     let title: String
@@ -105,4 +113,9 @@ struct OnboardingSheetFeature: View {
             Spacer()
         }
     }
+}
+
+// MARK: - Preview
+#Preview {
+    OnboardingSheetView()
 }

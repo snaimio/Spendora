@@ -13,34 +13,12 @@ struct AddSubscriptionView: View {
     // Basic Info
     @State private var name = ""
     @State private var cost = ""
-    @State private var selectedCategory = SubscriptionCategory.other
+    @State private var selectedCategory: String = SubscriptionCategory.other.rawValue
     @State private var isYearly = false
     @State private var nextBillingDate = Calendar.current.date(byAdding: .day, value: 30, to: Date()) ?? Date()
-    
-    // Free Trial
-    @State private var isTrial = false
-    @State private var trialEndDate = Calendar.current.date(byAdding: .day, value: 14, to: Date()) ?? Date()
-    
-    // Price Alert
-    @State private var priceAlertEnabled = false
-    @State private var expectedPrice = ""
-    
-    // Custom Category
-    @State private var isCustomCategory = false
-    @State private var customCategoryName = ""
-    
-    // Payment Method
-    @State private var selectedPaymentMethod: PaymentMethod = .creditCard
-    
-    // Tags
-    @State private var tagsInput = ""
-    @State private var tags: [String] = []
-    
-    // Color Picker
-    @State private var selectedColor: Color = .brandPrimary
-    
-    // Notes
+    @State private var selectedColorHex = "#6C63FF"
     @State private var notes = ""
+    @State private var selectedPaymentMethod: PaymentMethod = .creditCard
     
     @State private var showingError = false
     @State private var errorMessage = ""
@@ -48,55 +26,40 @@ struct AddSubscriptionView: View {
     
     private let generator = UIImpactFeedbackGenerator(style: .medium)
     
+    // MARK: - Color Options
+    let colorOptions: [(name: String, hex: String)] = [
+        ("Purple", "#6C63FF"),
+        ("Blue", "#007AFF"),
+        ("Red", "#FF3B30"),
+        ("Orange", "#FF9500"),
+        ("Yellow", "#FFCC00"),
+        ("Green", "#34C759"),
+        ("Teal", "#5AC8FA"),
+        ("Pink", "#FF2D55")
+    ]
+    
+    // MARK: - Computed Properties
+    var costValue: Double? {
+        Double(cost)
+    }
+    
     var monthlyEquivalent: Double? {
-        guard let costValue = Double(cost), costValue > 0 else { return nil }
+        guard let costValue = costValue, costValue > 0 else { return nil }
         return isYearly ? costValue / 12 : costValue
     }
     
     var isValid: Bool {
-        let trimmedName = name.trimmingCharacters(in: .whitespaces)
+        let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedName.isEmpty else { return false }
-        guard let costValue = Double(cost), costValue > 0 else { return false }
+        guard let costValue = costValue, costValue > 0 else { return false }
         guard nextBillingDate > Date() else { return false }
         return true
     }
     
+    // MARK: - Body
     var body: some View {
         NavigationStack {
             Form {
-                // MARK: - Quick Select Presets
-                Section("Quick Select") {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 16) {
-                            ForEach(SubscriptionPreset.all) { preset in
-                                Button {
-                                    fillFromPreset(preset)
-                                } label: {
-                                    VStack(spacing: 8) {
-                                        ZStack {
-                                            Circle()
-                                                .fill(preset.color.opacity(0.2))
-                                                .frame(width: 60, height: 60)
-                                            
-                                            Image(systemName: preset.systemIcon)
-                                                .font(.title2)
-                                                .foregroundColor(preset.color)
-                                        }
-                                        
-                                        Text(preset.name)
-                                            .font(.caption2)
-                                            .foregroundColor(.secondary)
-                                            .lineLimit(1)
-                                    }
-                                    .frame(width: 70)
-                                }
-                                .buttonStyle(.plain)
-                            }
-                        }
-                        .padding(.vertical, 4)
-                    }
-                }
-                
                 // MARK: - Subscription Info
                 Section("Subscription Info") {
                     TextField("Service Name", text: $name)
@@ -104,7 +67,7 @@ struct AddSubscriptionView: View {
                         .autocorrectionDisabled()
                     
                     HStack {
-                        Text(CurrencyManager.shared.currentCurrency.symbol)
+                        Text("$")
                             .foregroundColor(.secondary)
                         TextField(isYearly ? "Yearly Cost" : "Monthly Cost", text: $cost)
                             .keyboardType(.decimalPad)
@@ -112,38 +75,44 @@ struct AddSubscriptionView: View {
                     
                     if let monthlyEquivalent = monthlyEquivalent, isValid {
                         Text(isYearly
-                             ? "Monthly equivalent: \(CurrencyManager.shared.format(monthlyEquivalent))/month"
-                             : "Yearly cost: \(CurrencyManager.shared.format(monthlyEquivalent * 12))/year")
+                             ? "Monthly equivalent: $\(String(format: "%.2f", monthlyEquivalent))/month"
+                             : "Yearly cost: $\(String(format: "%.2f", monthlyEquivalent * 12))/year")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
                     
-                    // Category
-                    if isCustomCategory {
-                        TextField("Custom Category Name", text: $customCategoryName)
-                            .textInputAutocapitalization(.words)
-                        
-                        Button("Use Standard Categories") {
-                            isCustomCategory = false
-                            customCategoryName = ""
+                    // Category Picker
+                    Picker("Category", selection: $selectedCategory) {
+                        ForEach(SubscriptionCategory.allCases, id: \.rawValue) { category in
+                            Label(category.rawValue, systemImage: category.icon)
+                                .tag(category.rawValue)
                         }
-                        .font(.caption)
-                    } else {
-                        Picker("Category", selection: $selectedCategory) {
-                            ForEach(SubscriptionCategory.allCases, id: \.self) { category in
-                                Label(category.rawValue, systemImage: category.icon)
-                                    .tag(category)
-                            }
-                        }
-                        
-                        Button("Add Custom Category") {
-                            isCustomCategory = true
-                        }
-                        .font(.caption)
                     }
                     
                     // Color Picker
-                    ColorPicker("Subscription Color", selection: $selectedColor, supportsOpacity: false)
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Color")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                        
+                        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4), spacing: 8) {
+                            ForEach(colorOptions, id: \.hex) { color in
+                                Circle()
+                                    .fill(Color(hex: color.hex))
+                                    .frame(width: 40, height: 40)
+                                    .overlay(
+                                        Circle()
+                                            .stroke(Color(.systemBackground), lineWidth: selectedColorHex == color.hex ? 3 : 0)
+                                            .shadow(radius: 2)
+                                    )
+                                    .onTapGesture {
+                                        selectedColorHex = color.hex
+                                        generator.impactOccurred()
+                                    }
+                            }
+                        }
+                    }
+                    .padding(.vertical, 4)
                     
                     // Payment Method
                     Picker("Payment Method", selection: $selectedPaymentMethod) {
@@ -155,59 +124,6 @@ struct AddSubscriptionView: View {
                     Toggle("Yearly Billing", isOn: $isYearly)
                     
                     DatePicker("Next Billing Date", selection: $nextBillingDate, in: Date()..., displayedComponents: .date)
-                }
-                
-                // MARK: - Tags
-                Section("Tags") {
-                    TextField("Add tags (comma separated)", text: $tagsInput)
-                        .onChange(of: tagsInput) { _, newValue in
-                            tags = newValue.split(separator: ",").map { String($0).trimmingCharacters(in: .whitespaces) }
-                        }
-                    
-                    if !tags.isEmpty {
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack {
-                                ForEach(tags, id: \.self) { tag in
-                                    Text("#\(tag)")
-                                        .font(.caption)
-                                        .padding(.horizontal, 10)
-                                        .padding(.vertical, 4)
-                                        .background(Color.brandPrimary.opacity(0.1))
-                                        .foregroundColor(.brandPrimary)
-                                        .cornerRadius(10)
-                                }
-                            }
-                        }
-                    }
-                }
-                
-                // MARK: - Free Trial
-                Section("Free Trial") {
-                    Toggle("This is a free trial", isOn: $isTrial)
-                    
-                    if isTrial {
-                        DatePicker("Trial End Date", selection: $trialEndDate, in: Date()..., displayedComponents: .date)
-                        
-                        Text("Will convert to \(isYearly ? "yearly" : "monthly") billing on \(trialEndDate.formatted(date: .abbreviated, time: .omitted))")
-                            .font(.caption)
-                            .foregroundColor(.orange)
-                    }
-                }
-                
-                // MARK: - Price Alert
-                Section("Price Alert") {
-                    Toggle("Alert if price increases", isOn: $priceAlertEnabled)
-                    
-                    if priceAlertEnabled {
-                        HStack {
-                            Text("Expected price:")
-                            TextField("Amount", text: $expectedPrice)
-                                .keyboardType(.decimalPad)
-                                .frame(width: 100)
-                            Text("per \(isYearly ? "year" : "month")")
-                                .font(.caption)
-                        }
-                    }
                 }
                 
                 // MARK: - Notes
@@ -229,6 +145,7 @@ struct AddSubscriptionView: View {
                         }
                     }
                     .disabled(!isValid || isSaving)
+                    .foregroundColor(isValid ? .brandPrimary : .gray)
                 }
             }
             .navigationTitle("Add Subscription")
@@ -239,8 +156,6 @@ struct AddSubscriptionView: View {
                         dismiss()
                     }
                 }
-            }
-            .toolbar {
                 ToolbarItemGroup(placement: .keyboard) {
                     Spacer()
                     Button("Done") {
@@ -256,13 +171,7 @@ struct AddSubscriptionView: View {
         }
     }
     
-    private func fillFromPreset(_ preset: SubscriptionPreset) {
-        name = preset.name
-        selectedCategory = SubscriptionCategory(rawValue: preset.category) ?? .other
-        selectedColor = preset.color
-        generator.impactOccurred()
-    }
-    
+    // MARK: - Save Function
     private func saveSubscription() {
         guard isValid else {
             errorMessage = "Please fill in all fields correctly"
@@ -270,7 +179,7 @@ struct AddSubscriptionView: View {
             return
         }
         
-        guard let costValue = Double(cost) else {
+        guard let costValue = costValue else {
             errorMessage = "Please enter a valid cost"
             showingError = true
             return
@@ -278,49 +187,36 @@ struct AddSubscriptionView: View {
         
         isSaving = true
         
-        let expectedPriceValue = priceAlertEnabled ? Double(expectedPrice) : nil
-        let finalCategory: String
-        let customCat: String?
-        
-        if isCustomCategory && !customCategoryName.isEmpty {
-            finalCategory = customCategoryName
-            customCat = customCategoryName
-        } else {
-            finalCategory = selectedCategory.rawValue
-            customCat = nil
-        }
+        let trimmedNotes = notes.trimmingCharacters(in: .whitespacesAndNewlines)
         
         let newSubscription = Subscription(
-            name: name.trimmingCharacters(in: .whitespaces),
+            name: name.trimmingCharacters(in: .whitespacesAndNewlines),
             cost: costValue,
             isYearly: isYearly,
             nextBillingDate: nextBillingDate,
-            category: finalCategory,
-            notes: notes.isEmpty ? nil : notes,
-            isTrial: isTrial,
-            trialEndDate: isTrial ? trialEndDate : nil,
-            expectedPrice: expectedPriceValue,
-            priceAlertEnabled: priceAlertEnabled,
-            customCategory: customCat,
+            category: selectedCategory,
+            notes: trimmedNotes.isEmpty ? nil : trimmedNotes,
+            isTrial: false,
+            trialEndDate: nil,
+            expectedPrice: nil,
+            priceAlertEnabled: false,
+            customCategory: nil,
             paymentMethod: selectedPaymentMethod.rawValue,
-            tags: tags.isEmpty ? nil : tags,
-            colorHex: selectedColor.toHex()
+            tags: nil,
+            colorHex: selectedColorHex,
+            usageRating: 0
         )
         
         modelContext.insert(newSubscription)
         
         do {
             try modelContext.save()
+            isSaving = false
             
+            // Schedule notification
             NotificationService.shared.schedule(for: newSubscription)
             
-            if isTrial {
-                NotificationService.shared.scheduleTrialReminder(for: newSubscription)
-            }
-            
             generator.impactOccurred()
-            
-            NotificationCenter.default.post(name: NSNotification.Name("SubscriptionAdded"), object: nil)
             
             dismiss()
         } catch {
@@ -331,14 +227,7 @@ struct AddSubscriptionView: View {
     }
 }
 
-extension Color {
-    func toHex() -> String {
-        let uiColor = UIColor(self)
-        var red: CGFloat = 0
-        var green: CGFloat = 0
-        var blue: CGFloat = 0
-        var alpha: CGFloat = 0
-        uiColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-        return String(format: "%02X%02X%02X", Int(red * 255), Int(green * 255), Int(blue * 255))
-    }
+// MARK: - Preview
+#Preview {
+    AddSubscriptionView()
 }

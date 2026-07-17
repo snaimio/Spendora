@@ -7,11 +7,12 @@ import SwiftUI
 import SwiftData
 import WidgetKit
 import UniformTypeIdentifiers
+import UIKit
 
 struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var subscriptions: [Subscription]
-    @StateObject private var currencyManager = CurrencyManager.shared
+    @ObservedObject private var currencyManager = CurrencyManager.shared
     
     @AppStorage("notificationsEnabled") private var notificationsEnabled = true
     @State private var showingResetAlert = false
@@ -22,6 +23,13 @@ struct SettingsView: View {
     @State private var showingOnboarding = false
     @State private var notificationTime = Date()
     @State private var showingDocumentPicker = false
+    
+    // MARK: - Report Navigation
+    @State private var showingYearlyReport = false
+    @State private var showingChallenges = false
+    @State private var showingSavingsScore = false
+    @State private var showingAIInsights = false
+    @State private var showingSpendingChart = false
     
     var body: some View {
         NavigationStack {
@@ -67,6 +75,79 @@ struct SettingsView: View {
                                 }
                             }
                         ))
+                    }
+                }
+                
+                // MARK: - Reports
+                Section("Reports") {
+                    Button {
+                        showingYearlyReport = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "calendar")
+                                .foregroundColor(.blue)
+                            Text("Yearly Report")
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    
+                    Button {
+                        showingChallenges = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "trophy")
+                                .foregroundColor(.orange)
+                            Text("Challenges")
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    
+                    Button {
+                        showingSavingsScore = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "star.circle.fill")
+                                .foregroundColor(.yellow)
+                            Text("Savings Score")
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    
+                    Button {
+                        showingAIInsights = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "brain.head.profile")
+                                .foregroundColor(.purple)
+                            Text("AI Insights")
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    
+                    Button {
+                        showingSpendingChart = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "chart.bar.fill")
+                                .foregroundColor(.green)
+                            Text("Spending Chart")
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
                     }
                 }
                 
@@ -141,7 +222,7 @@ struct SettingsView: View {
                     }
                 }
                 
-                // MARK: - Cloud Sync (NEW)
+                // MARK: - Cloud Sync
                 Section("Cloud") {
                     CloudSyncView()
                         .listRowInsets(EdgeInsets())
@@ -282,6 +363,31 @@ struct SettingsView: View {
             .sheet(isPresented: $showingOnboarding) {
                 OnboardingSheetView()
             }
+            .sheet(isPresented: $showingYearlyReport) {
+                NavigationStack {
+                    YearlyReportView(subscriptions: subscriptions)
+                }
+            }
+            .sheet(isPresented: $showingChallenges) {
+                NavigationStack {
+                    ChallengesView(subscriptions: subscriptions)
+                }
+            }
+            .sheet(isPresented: $showingSavingsScore) {
+                NavigationStack {
+                    SavingsScoreView(subscriptions: subscriptions)
+                }
+            }
+            .sheet(isPresented: $showingAIInsights) {
+                NavigationStack {
+                    AIInsightsView(subscriptions: subscriptions)
+                }
+            }
+            .sheet(isPresented: $showingSpendingChart) {
+                NavigationStack {
+                    SpendingChartView(subscriptions: subscriptions)
+                }
+            }
             .fileImporter(
                 isPresented: $showingDocumentPicker,
                 allowedContentTypes: [.json],
@@ -305,7 +411,14 @@ struct SettingsView: View {
     
     private func shareApp() {
         let appStoreURL = "https://apps.apple.com/app/idYOUR_APP_ID"
-        let activityVC = UIActivityViewController(activityItems: ["Check out Spendora! Track your subscriptions easily. \(appStoreURL)"], applicationActivities: nil)
+        
+        let activityVC = UIActivityViewController(
+            activityItems: [
+                "Check out Spendora! Track your subscriptions easily. \(appStoreURL)"
+            ],
+            applicationActivities: nil
+        )
+        
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
            let rootVC = windowScene.windows.first?.rootViewController {
             rootVC.present(activityVC, animated: true)
@@ -319,9 +432,9 @@ struct SettingsView: View {
         }
         do {
             try modelContext.save()
-            let defaults = UserDefaults(suiteName: "group.com.trios2026sn.Spendora")
-            defaults?.removeObject(forKey: "totalSpending")
-            defaults?.removeObject(forKey: "nextSubscription")
+            let defaults = UserDefaults(suiteName: "group.com.spendora.app")
+            defaults?.removeObject(forKey: "totalMonthly")
+            defaults?.removeObject(forKey: "nextSubName")
             defaults?.synchronize()
             WidgetCenter.shared.reloadAllTimelines()
             showingResetConfirmation = true
@@ -405,6 +518,7 @@ struct PrivacyPolicyView: View {
     }
 }
 
+// MARK: - Policy Section
 struct PolicySection: View {
     let title: String
     let content: String
@@ -419,4 +533,9 @@ struct PolicySection: View {
         }
         .padding(.vertical, 4)
     }
+}
+
+// MARK: - Preview
+#Preview {
+    SettingsView()
 }

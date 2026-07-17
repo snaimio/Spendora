@@ -5,47 +5,79 @@
 
 import SwiftUI
 import SwiftData
+import WidgetKit
 
 @main
 struct SpendoraApp: App {
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if !hasCompletedOnboarding {
+                PremiumOnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
+            } else {
+                MainTabView()
+                    .modelContainer(for: Subscription.self)
+                    .onAppear {
+                        NotificationService.shared.requestPermission()
+                        sendWidgetData()
+                    }
+            }
         }
-        .modelContainer(for: Subscription.self)
+    }
+    
+    func sendWidgetData() {
+        let defaults = UserDefaults(suiteName: "group.com.spendora.app")
+        defaults?.set(0.0, forKey: "totalMonthly")
+        defaults?.set("None", forKey: "nextSubName")
+        defaults?.set(Date().timeIntervalSince1970, forKey: "nextSubDate")
+        WidgetCenter.shared.reloadAllTimelines()
     }
 }
 
-// MARK: - Content View (Main App)
-struct ContentView: View {
-    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+// MARK: - Main Tab View
+struct MainTabView: View {
     @State private var selectedTab = 0
     @Query private var subscriptions: [Subscription]
     
     var body: some View {
-        if hasCompletedOnboarding {
-            TabView(selection: $selectedTab) {
-                HomeView()
-                    .tabItem {
-                        Label("Home", systemImage: "house.fill")
-                    }
-                    .tag(0)
-                
-                SubscriptionCalendarView(subscriptions: subscriptions)
-                    .tabItem {
-                        Label("Calendar", systemImage: "calendar")
-                    }
-                    .tag(1)
-                
-                SettingsView()
-                    .tabItem {
-                        Label("Settings", systemImage: "gear")
-                    }
-                    .tag(2)
+        TabView(selection: $selectedTab) {
+            // Tab 1: Dashboard
+            HomeView()
+                .tabItem {
+                    Label("Dashboard", systemImage: "house.fill")
+                }
+                .tag(0)
+            
+            // Tab 2: Subscriptions
+            SubscriptionListView()
+                .tabItem {
+                    Label("Subscriptions", systemImage: "list.bullet")
+                }
+                .tag(1)
+            
+            // Tab 3: Calendar
+            SubscriptionCalendarView(subscriptions: subscriptions)
+                .tabItem {
+                    Label("Calendar", systemImage: "calendar")
+                }
+                .tag(2)
+            
+            // Tab 4: Settings
+            SettingsView()
+                .tabItem {
+                    Label("Settings", systemImage: "gear")
+                }
+                .tag(3)
+        }
+        .accentColor(.brandPrimary)
+        .sheet(isPresented: Binding(
+            get: { selectedTab == 4 },
+            set: { if !$0 { selectedTab = 0 } }
+        )) {
+            NavigationStack {
+                AddSubscriptionView()
             }
-            .accentColor(.brandPrimary)
-        } else {
-            PremiumOnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
         }
     }
 }

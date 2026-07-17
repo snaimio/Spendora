@@ -1,7 +1,5 @@
-//
-//  PDFExportService.swift
+//  Services/PDFExportService.swift
 //  Spendora
-//
 
 import UIKit
 
@@ -12,12 +10,17 @@ class PDFExportService {
             kCGPDFContextAuthor: "Spendora User",
             kCGPDFContextTitle: "Subscription Report"
         ]
+
         let format = UIGraphicsPDFRendererFormat()
         format.documentInfo = pdfMetaData as [String: Any]
 
         let pageWidth = 612.0
         let pageHeight = 792.0
-        let renderer = UIGraphicsPDFRenderer(bounds: CGRect(x: 0, y: 0, width: pageWidth, height: pageHeight), format: format)
+
+        let renderer = UIGraphicsPDFRenderer(
+            bounds: CGRect(x: 0, y: 0, width: pageWidth, height: pageHeight),
+            format: format
+        )
 
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
@@ -32,20 +35,38 @@ class PDFExportService {
             let headerFont = UIFont.boldSystemFont(ofSize: 14)
             let textFont = UIFont.systemFont(ofSize: 12)
 
-            // Title
-            "Spendora Subscription Report".draw(at: CGPoint(x: 50, y: 50), withAttributes: [.font: titleFont])
+            "Spendora Subscription Report".draw(
+                at: CGPoint(x: 50, y: 50),
+                withAttributes: [.font: titleFont]
+            )
 
-            // Date
-            "Generated: \(dateFormatter.string(from: Date()))".draw(at: CGPoint(x: 50, y: 90), withAttributes: [.font: UIFont.systemFont(ofSize: 12), .foregroundColor: UIColor.gray])
+            "Generated: \(dateFormatter.string(from: Date()))".draw(
+                at: CGPoint(x: 50, y: 90),
+                withAttributes: [
+                    .font: UIFont.systemFont(ofSize: 12),
+                    .foregroundColor: UIColor.gray
+                ]
+            )
 
-            // Totals
             let totalsY = 140
-            "Total Monthly: \(CurrencyManager.shared.format(totalMonthly))".draw(at: CGPoint(x: 50, y: totalsY), withAttributes: [.font: headerFont])
-            "Total Yearly: \(CurrencyManager.shared.format(totalYearly))".draw(at: CGPoint(x: 50, y: totalsY + 25), withAttributes: [.font: headerFont])
-            "Active Subscriptions: \(subscriptions.count)".draw(at: CGPoint(x: 50, y: totalsY + 50), withAttributes: [.font: headerFont])
 
-            // Table Header
+            "Total Monthly: \(String(format: "$%.2f", totalMonthly))".draw(
+                at: CGPoint(x: 50, y: totalsY),
+                withAttributes: [.font: headerFont]
+            )
+
+            "Total Yearly: \(String(format: "$%.2f", totalYearly))".draw(
+                at: CGPoint(x: 50, y: totalsY + 25),
+                withAttributes: [.font: headerFont]
+            )
+
+            "Active Subscriptions: \(subscriptions.count)".draw(
+                at: CGPoint(x: 50, y: totalsY + 50),
+                withAttributes: [.font: headerFont]
+            )
+
             let headerY = 210
+
             "Name".draw(at: CGPoint(x: 50, y: headerY), withAttributes: [.font: headerFont])
             "Cost".draw(at: CGPoint(x: 220, y: headerY), withAttributes: [.font: headerFont])
             "Cycle".draw(at: CGPoint(x: 330, y: headerY), withAttributes: [.font: headerFont])
@@ -58,12 +79,12 @@ class PDFExportService {
 
             var yPosition = CGFloat(headerY + 35)
             let pageHeightCGFloat = CGFloat(pageHeight)
-            
+
             for sub in subscriptions {
                 guard yPosition < pageHeightCGFloat - 60 else { break }
 
                 sub.displayName.draw(at: CGPoint(x: 50, y: yPosition), withAttributes: [.font: textFont])
-                CurrencyManager.shared.format(sub.cost).draw(at: CGPoint(x: 220, y: yPosition), withAttributes: [.font: textFont])
+                String(format: "$%.2f", sub.cost).draw(at: CGPoint(x: 220, y: yPosition), withAttributes: [.font: textFont])
                 (sub.isYearly ? "Yearly" : "Monthly").draw(at: CGPoint(x: 330, y: yPosition), withAttributes: [.font: textFont])
                 sub.formattedNextBillingDate.draw(at: CGPoint(x: 430, y: yPosition), withAttributes: [.font: textFont])
 
@@ -71,8 +92,15 @@ class PDFExportService {
             }
         }
 
-        let url = FileManager.default.temporaryDirectory.appendingPathComponent("Spendora_Report.pdf")
-        try? pdfData.write(to: url)
-        return url
+        let url = FileManager.default.temporaryDirectory
+            .appendingPathComponent("Spendora_Report.pdf")
+
+        do {
+            try pdfData.write(to: url)
+            return url
+        } catch {
+            print("Failed to save PDF: \(error)")
+            return nil
+        }
     }
 }

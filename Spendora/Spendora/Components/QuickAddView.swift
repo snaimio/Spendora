@@ -7,12 +7,19 @@ import SwiftUI
 
 struct QuickAddView: View {
     let onSelect: (SubscriptionPreset) -> Void
+
     @Environment(\.dismiss) private var dismiss
-    
+
     var body: some View {
         NavigationStack {
             ScrollView {
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 16) {
+                LazyVGrid(
+                    columns: Array(
+                        repeating: GridItem(.flexible()),
+                        count: 3
+                    ),
+                    spacing: 16
+                ) {
                     ForEach(SubscriptionPreset.all) { preset in
                         Button {
                             onSelect(preset)
@@ -23,12 +30,12 @@ struct QuickAddView: View {
                                     Circle()
                                         .fill(preset.color.opacity(0.2))
                                         .frame(width: 64, height: 64)
-                                    
+
                                     Image(systemName: preset.systemIcon)
                                         .font(.title2)
                                         .foregroundColor(preset.color)
                                 }
-                                
+
                                 Text(preset.name)
                                     .font(.caption)
                                     .foregroundColor(.primary)
@@ -47,9 +54,15 @@ struct QuickAddView: View {
             .navigationTitle("Quick Add")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
+                    Button("Cancel") {
+                        dismiss()
+                    }
                 }
             }
         }
     }
+}
+
+#Preview {
+    QuickAddView { _ in }
 }

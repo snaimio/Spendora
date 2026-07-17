@@ -176,14 +176,14 @@ struct SubscriptionCalendarView: View {
                             
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 12) {
-                                    SummaryCard(
+                                    CalendarSummaryCard(
                                         title: "Total Monthly",
                                         value: CurrencyManager.shared.format(subscriptions.reduce(0) { $0 + $1.monthlyCost }),
                                         icon: "dollarsign.circle.fill",
                                         color: .brandPrimary
                                     )
                                     
-                                    SummaryCard(
+                                    CalendarSummaryCard(
                                         title: "Active Subs",
                                         value: "\(subscriptions.count)",
                                         icon: "number.circle.fill",
@@ -191,7 +191,7 @@ struct SubscriptionCalendarView: View {
                                     )
                                     
                                     let upcomingCount = subscriptions.filter { $0.isUpcoming }.count
-                                    SummaryCard(
+                                    CalendarSummaryCard(
                                         title: "Upcoming",
                                         value: "\(upcomingCount)",
                                         icon: "clock.fill",
@@ -337,8 +337,8 @@ struct CalendarDayCell: View {
     }
 }
 
-// MARK: - Summary Card
-struct SummaryCard: View {
+// MARK: - Calendar Summary Card
+struct CalendarSummaryCard: View {
     let title: String
     let value: String
     let icon: String

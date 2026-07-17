@@ -9,16 +9,18 @@ import Combine
 
 class CurrencyManager: ObservableObject {
     static let shared = CurrencyManager()
-    
+
     @Published var currentCurrency: Currency = .CAD
-    
+
     private init() {
         loadSavedCurrency()
     }
-    
+
     private func loadSavedCurrency() {
-        let savedCode = UserDefaults.standard.string(forKey: "selectedCurrencyCode")
-        
+        let savedCode = UserDefaults.standard.string(
+            forKey: "selectedCurrencyCode"
+        )
+
         switch savedCode {
         case "USD":
             currentCurrency = .USD
@@ -34,18 +36,25 @@ class CurrencyManager: ObservableObject {
             currentCurrency = .AUD
         default:
             currentCurrency = .CAD
-            UserDefaults.standard.set("CAD", forKey: "selectedCurrencyCode")
+            UserDefaults.standard.set(
+                "CAD",
+                forKey: "selectedCurrencyCode"
+            )
         }
     }
-    
+
     func format(_ amount: Double) -> String {
         let formattedAmount = String(format: "%.2f", amount)
         return "\(currentCurrency.symbol)\(formattedAmount)"
     }
-    
+
     func setCurrency(_ currency: Currency) {
         currentCurrency = currency
-        UserDefaults.standard.set(currency.code, forKey: "selectedCurrencyCode")
+        UserDefaults.standard.set(
+            currency.code,
+            forKey: "selectedCurrencyCode"
+        )
+
         objectWillChange.send()
     }
 }
@@ -57,7 +66,7 @@ enum Currency {
     case GBP
     case JPY
     case AUD
-    
+
     var symbol: String {
         switch self {
         case .USD: return "$"
@@ -68,7 +77,7 @@ enum Currency {
         case .AUD: return "A$"
         }
     }
-    
+
     var code: String {
         switch self {
         case .USD: return "USD"
@@ -79,12 +88,12 @@ enum Currency {
         case .AUD: return "AUD"
         }
     }
-    
+
     var displayName: String {
-        return "\(symbol) (\(code))"
+        "\(symbol) (\(code))"
     }
-    
+
     static var allCases: [Currency] {
-        return [.USD, .CAD, .EUR, .GBP, .JPY, .AUD]
+        [.USD, .CAD, .EUR, .GBP, .JPY, .AUD]
     }
 }

@@ -12,6 +12,12 @@ extension Color {
     static let brandSecondary = Color(hex: "#8B5CF6")    // Purple
     static let brandAccent = Color(hex: "#F59E0B")       // Amber
     
+    // MARK: - UI Colors
+    static let appBackground = Color(.systemGroupedBackground)
+    static let cardBackground = Color(.systemBackground)
+    static let textPrimary = Color.primary
+    static let textSecondary = Color.secondary
+    
     // MARK: - Gradients
     static let primaryGradient = LinearGradient(
         colors: [.brandPrimary, .brandSecondary],
@@ -45,17 +51,34 @@ extension Color {
         let hex = hex.trimmingCharacters(in: .alphanumerics.inverted)
         var int: UInt64 = 0
         Scanner(string: hex).scanHexInt64(&int)
+        
         let a, r, g, b: UInt64
         switch hex.count {
         case 3:
-            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
+            (a, r, g, b) = (
+                255,
+                (int >> 8) * 17,
+                (int >> 4 & 0xF) * 17,
+                (int & 0xF) * 17
+            )
         case 6:
-            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
+            (a, r, g, b) = (
+                255,
+                int >> 16,
+                int >> 8 & 0xFF,
+                int & 0xFF
+            )
         case 8:
-            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
+            (a, r, g, b) = (
+                int >> 24,
+                int >> 16 & 0xFF,
+                int >> 8 & 0xFF,
+                int & 0xFF
+            )
         default:
             (a, r, g, b) = (255, 0, 0, 0)
         }
+        
         self.init(
             .sRGB,
             red: Double(r) / 255,

@@ -88,7 +88,8 @@ struct AIInsightsView: View {
     }
     
     func formatCurrency(_ amount: Double) -> String {
-        return String(format: "$%.2f", amount)
+        // Use CurrencyManager for consistency with the rest of the app
+        return CurrencyManager.shared.format(amount)
     }
     
     var body: some View {
@@ -116,6 +117,12 @@ struct AIInsightsView: View {
         .padding()
         .background(Color(.systemBackground))
         .cornerRadius(16)
+        .shadow(color: .black.opacity(0.05), radius: 5)
         .padding(.horizontal)
     }
+}
+
+// MARK: - Preview
+#Preview {
+    AIInsightsView(subscriptions: [])
 }

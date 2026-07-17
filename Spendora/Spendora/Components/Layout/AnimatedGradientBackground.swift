@@ -7,7 +7,7 @@ import SwiftUI
 
 struct AnimatedGradientBackground: View {
     @State private var animate = false
-    
+
     var body: some View {
         LinearGradient(
             colors: [
@@ -18,7 +18,11 @@ struct AnimatedGradientBackground: View {
             endPoint: animate ? .bottomTrailing : .topLeading
         )
         .ignoresSafeArea()
-        .animation(.easeInOut(duration: 5).repeatForever(autoreverses: true), value: animate)
+        .animation(
+            .easeInOut(duration: 5)
+                .repeatForever(autoreverses: true),
+            value: animate
+        )
         .onAppear {
             animate = true
         }
