@@ -195,49 +195,85 @@ class MagicFinderService {
         return (name, cost, category)
     }
 
+    // MARK: - Category Detection (UPDATED)
+
     private func detectCategory(from text: String) -> String? {
         let lowercased = text.lowercased()
-
+        
+        // Entertainment
         if lowercased.contains("music")
             || lowercased.contains("tv")
             || lowercased.contains("movie")
-            || lowercased.contains("show") {
-
+            || lowercased.contains("show")
+            || lowercased.contains("netflix")
+            || lowercased.contains("spotify")
+            || lowercased.contains("disney")
+            || lowercased.contains("hulu")
+            || lowercased.contains("youtube")
+            || lowercased.contains("hbo")
+            || lowercased.contains("max")
+            || lowercased.contains("peacock")
+            || lowercased.contains("paramount")
+            || lowercased.contains("starz")
+            || lowercased.contains("showtime")
+            || lowercased.contains("crunchyroll")
+            || lowercased.contains("audible")
+            || lowercased.contains("kindle") {
             return "Entertainment"
-
-        } else if lowercased.contains("work")
+        }
+        
+        // Productivity
+        if lowercased.contains("work")
             || lowercased.contains("office")
             || lowercased.contains("cloud")
-            || lowercased.contains("storage") {
-
+            || lowercased.contains("storage")
+            || lowercased.contains("microsoft")
+            || lowercased.contains("google")
+            || lowercased.contains("dropbox")
+            || lowercased.contains("notion") {
             return "Productivity"
-
-        } else if lowercased.contains("fitness")
+        }
+        
+        // Health & Fitness
+        if lowercased.contains("fitness")
             || lowercased.contains("health")
             || lowercased.contains("gym")
-            || lowercased.contains("workout") {
-
+            || lowercased.contains("workout")
+            || lowercased.contains("fitbit")
+            || lowercased.contains("myfitnesspal")
+            || lowercased.contains("headspace")
+            || lowercased.contains("calm")
+            || lowercased.contains("strava")
+            || lowercased.contains("peloton")
+            || lowercased.contains("whoop")
+            || lowercased.contains("zwift") {
             return "Health & Fitness"
-
-        } else if lowercased.contains("shop")
+        }
+        
+        // Shopping
+        if lowercased.contains("shop")
             || lowercased.contains("delivery")
-            || lowercased.contains("prime") {
-
+            || lowercased.contains("prime")
+            || lowercased.contains("amazon") {
             return "Shopping"
-
-        } else if lowercased.contains("food")
+        }
+        
+        // Food & Dining
+        if lowercased.contains("food")
             || lowercased.contains("meal")
-            || lowercased.contains("cook") {
-
+            || lowercased.contains("cook")
+            || lowercased.contains("hellofresh") {
             return "Food & Dining"
-
-        } else if lowercased.contains("learn")
+        }
+        
+        // Education
+        if lowercased.contains("learn")
             || lowercased.contains("course")
-            || lowercased.contains("class") {
-
+            || lowercased.contains("class")
+            || lowercased.contains("duolingo") {
             return "Education"
         }
-
+        
         return nil
     }
 }

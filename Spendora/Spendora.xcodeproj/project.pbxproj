@@ -20,6 +20,13 @@
 			remoteGlobalIDString = 192B5CC52FED857D00C1DC14;
 			remoteInfo = SpendoraWidgetExtension;
 		};
+		19DF885A300A76820064282D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 199B53EC2FC9F0C0003A4094 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 199B53F32FC9F0C0003A4094;
+			remoteInfo = Spendora;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -42,6 +49,7 @@
 		192B5CCA2FED857D00C1DC14 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		192B5CDC2FED86ED00C1DC14 /* SpendoraWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpendoraWidgetExtension.entitlements; sourceTree = "<group>"; };
 		199B53F42FC9F0C0003A4094 /* Spendora.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Spendora.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		19DF8856300A76820064282D /* SpendoraTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpendoraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -68,6 +76,11 @@
 			path = Spendora;
 			sourceTree = "<group>";
 		};
+		19DF8857300A76820064282D /* SpendoraTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = SpendoraTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +94,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		199B53F12FC9F0C0003A4094 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		19DF8853300A76820064282D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -105,6 +125,7 @@
 				192B5CDC2FED86ED00C1DC14 /* SpendoraWidgetExtension.entitlements */,
 				199B53F62FC9F0C0003A4094 /* Spendora */,
 				192B5CCC2FED857D00C1DC14 /* SpendoraWidget */,
+				19DF8857300A76820064282D /* SpendoraTests */,
 				192B5CC72FED857D00C1DC14 /* Frameworks */,
 				199B53F52FC9F0C0003A4094 /* Products */,
 			);
@@ -115,6 +136,7 @@
 			children = (
 				199B53F42FC9F0C0003A4094 /* Spendora.app */,
 				192B5CC62FED857D00C1DC14 /* SpendoraWidgetExtension.appex */,
+				19DF8856300A76820064282D /* SpendoraTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -168,6 +190,29 @@
 			productReference = 199B53F42FC9F0C0003A4094 /* Spendora.app */;
 			productType = "com.apple.product-type.application";
 		};
+		19DF8855300A76820064282D /* SpendoraTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 19DF885C300A76820064282D /* Build configuration list for PBXNativeTarget "SpendoraTests" */;
+			buildPhases = (
+				19DF8852300A76820064282D /* Sources */,
+				19DF8853300A76820064282D /* Frameworks */,
+				19DF8854300A76820064282D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				19DF885B300A76820064282D /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				19DF8857300A76820064282D /* SpendoraTests */,
+			);
+			name = SpendoraTests;
+			packageProductDependencies = (
+			);
+			productName = SpendoraTests;
+			productReference = 19DF8856300A76820064282D /* SpendoraTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -183,6 +228,10 @@
 					};
 					199B53F32FC9F0C0003A4094 = {
 						CreatedOnToolsVersion = 26.5;
+					};
+					19DF8855300A76820064282D = {
+						CreatedOnToolsVersion = 26.5;
+						TestTargetID = 199B53F32FC9F0C0003A4094;
 					};
 				};
 			};
@@ -202,6 +251,7 @@
 			targets = (
 				199B53F32FC9F0C0003A4094 /* Spendora */,
 				192B5CC52FED857D00C1DC14 /* SpendoraWidgetExtension */,
+				19DF8855300A76820064282D /* SpendoraTests */,
 			);
 		};
 /* End PBXProject section */
@@ -215,6 +265,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		199B53F22FC9F0C0003A4094 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		19DF8854300A76820064282D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -238,6 +295,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		19DF8852300A76820064282D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -245,6 +309,11 @@
 			isa = PBXTargetDependency;
 			target = 192B5CC52FED857D00C1DC14 /* SpendoraWidgetExtension */;
 			targetProxy = 192B5CD42FED857E00C1DC14 /* PBXContainerItemProxy */;
+		};
+		19DF885B300A76820064282D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 199B53F32FC9F0C0003A4094 /* Spendora */;
+			targetProxy = 19DF885A300A76820064282D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -498,6 +567,48 @@
 			};
 			name = Release;
 		};
+		19DF885D300A76820064282D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = BP49ZMU6R3;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.trios2026sn.SpendoraTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Spendora.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Spendora";
+			};
+			name = Debug;
+		};
+		19DF885E300A76820064282D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = BP49ZMU6R3;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.trios2026sn.SpendoraTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Spendora.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Spendora";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -524,6 +635,15 @@
 			buildConfigurations = (
 				199B54002FC9F0C1003A4094 /* Debug */,
 				199B54012FC9F0C1003A4094 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		19DF885C300A76820064282D /* Build configuration list for PBXNativeTarget "SpendoraTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				19DF885D300A76820064282D /* Debug */,
+				19DF885E300A76820064282D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

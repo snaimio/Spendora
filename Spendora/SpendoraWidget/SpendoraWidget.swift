@@ -34,7 +34,7 @@ struct Provider: TimelineProvider {
         completion: @escaping (Timeline<SimpleEntry>) -> Void
     ) {
         // 👇 MUST match WidgetSyncService
-        let defaults = UserDefaults(suiteName: "group.com.spendora.app")
+        let defaults = UserDefaults(suiteName: "group.com.trios2026sn.Spendora")
         
         // 👇 MUST match the keys in WidgetSyncService
         let total = defaults?.double(forKey: "totalMonthly") ?? 0

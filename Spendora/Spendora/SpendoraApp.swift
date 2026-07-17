@@ -27,7 +27,8 @@ struct SpendoraApp: App {
     }
     
     func sendWidgetData() {
-        let defaults = UserDefaults(suiteName: "group.com.spendora.app")
+    
+        let defaults = UserDefaults(suiteName: "group.com.trios2026sn.Spendora")
         defaults?.set(0.0, forKey: "totalMonthly")
         defaults?.set("None", forKey: "nextSubName")
         defaults?.set(Date().timeIntervalSince1970, forKey: "nextSubDate")

@@ -1,10 +1,11 @@
 //
-//  AddSubscriptionView.swift
+//  Views/Add/AddSubscriptionView.swift
 //  Spendora
 //
 
 import SwiftUI
 import SwiftData
+import WidgetKit
 
 struct AddSubscriptionView: View {
     @Environment(\.modelContext) private var modelContext
@@ -18,7 +19,7 @@ struct AddSubscriptionView: View {
     @State private var nextBillingDate = Calendar.current.date(byAdding: .day, value: 30, to: Date()) ?? Date()
     @State private var selectedColorHex = "#6C63FF"
     @State private var notes = ""
-    @State private var selectedPaymentMethod: PaymentMethod = .creditCard
+    @State private var selectedPaymentMethod: PaymentMethod = .creditCard  // Uses PaymentMethod from Subscription.swift
     
     @State private var showingError = false
     @State private var errorMessage = ""
@@ -114,7 +115,7 @@ struct AddSubscriptionView: View {
                     }
                     .padding(.vertical, 4)
                     
-                    // Payment Method
+                    // Payment Method - Uses PaymentMethod from Subscription.swift
                     Picker("Payment Method", selection: $selectedPaymentMethod) {
                         ForEach(PaymentMethod.allCases, id: \.self) { method in
                             Text(method.rawValue).tag(method)

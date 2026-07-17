@@ -10,299 +10,180 @@ import SwiftData
 import WidgetKit
 
 struct SubscriptionListView: View {
-    @Query var subscriptions: [Subscription]
+    @Query private var subscriptions: [Subscription]
     @Environment(\.modelContext) private var modelContext
-
     @State private var searchText = ""
+    @State private var selectedSubscription: Subscription?
     @State private var sortOption: SortOption = .alphabetical
-    @State private var selectedCategory: String?
-
-    // MARK: - Sorted Subscriptions
-
-    var sortedSubscriptions: [Subscription] {
-        switch sortOption {
-        case .alphabetical:
-            return subscriptions.sorted {
-                $0.displayName < $1.displayName
-            }
-
-        case .cost:
-            return subscriptions.sorted {
-                $0.monthlyCost > $1.monthlyCost
-            }
-
-        case .cheapest:
-            return subscriptions.sorted {
-                $0.monthlyCost < $1.monthlyCost
-            }
-
-        case .renewalDate:
-            return subscriptions.sorted {
-                $0.nextBillingDate < $1.nextBillingDate
-            }
-
-        case .category:
-            return subscriptions.sorted {
-                $0.effectiveCategory < $1.effectiveCategory
-            }
-
-        default:
-            return subscriptions
-        }
-    }
-
-    // MARK: - Filtered Subscriptions
-
+    
     var filteredSubscriptions: [Subscription] {
-        var result = sortedSubscriptions
-
-        if !searchText.isEmpty {
-            result = result.filter {
-                $0.displayName.localizedCaseInsensitiveContains(searchText)
-                || $0.effectiveCategory.localizedCaseInsensitiveContains(searchText)
-            }
+        let sorted = sortSubscriptions(subscriptions)
+        if searchText.isEmpty { return sorted }
+        return sorted.filter {
+            $0.displayName.localizedCaseInsensitiveContains(searchText) ||
+            $0.effectiveCategory.localizedCaseInsensitiveContains(searchText)
         }
-
-        if let category = selectedCategory,
-           category != "All" {
-            result = result.filter {
-                $0.effectiveCategory == category
-            }
-        }
-
-        return result
     }
-
-    // MARK: - Categories
-
-    var categories: [String] {
-        let all = Set(
-            subscriptions.map {
-                $0.effectiveCategory
-            }
-        )
-
-        return ["All"] + all.sorted()
+    
+    var totalMonthly: Double {
+        filteredSubscriptions.reduce(0) { $0 + $1.monthlyCost }
     }
-
-    // MARK: - Body
-
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-
                 // Search Bar
-
+                SearchBar(text: $searchText, placeholder: "Search subscriptions...")
+                    .padding(.horizontal)
+                    .padding(.vertical, 8)
+                
+                // Stats Bar
                 HStack {
-                    Image(systemName: "magnifyingglass")
+                    Text("\(filteredSubscriptions.count) subscriptions")
+                        .font(.caption)
                         .foregroundColor(.secondary)
-
-                    TextField(
-                        "Search subscriptions...",
-                        text: $searchText
-                    )
-                    .textFieldStyle(.plain)
-
-                    if !searchText.isEmpty {
-                        Button {
-                            searchText = ""
-                        } label: {
-                            Image(systemName: "xmark.circle.fill")
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                }
-                .padding(12)
-                .background(Color(.systemBackground))
-                .cornerRadius(12)
-                .shadow(
-                    color: .black.opacity(0.04),
-                    radius: 4
-                )
-                .padding(.horizontal)
-                .padding(.top, 8)
-
-                // Sort & Filter
-
-                HStack {
-                    Picker(
-                        "Sort",
-                        selection: $sortOption
-                    ) {
-                        ForEach(
-                            SortOption.allCases,
-                            id: \.self
-                        ) { option in
-                            Text(option.rawValue)
-                                .tag(option)
-                        }
-                    }
-                    .pickerStyle(.menu)
-
+                    
                     Spacer()
-
-                    Menu {
-                        ForEach(categories, id: \.self) { category in
-                            Button {
-                                selectedCategory =
-                                    category == "All"
-                                    ? nil
-                                    : category
-                            } label: {
-                                HStack {
-                                    Text(category)
-
-                                    if selectedCategory == category
-                                        || (category == "All"
-                                            && selectedCategory == nil) {
-                                        Image(systemName: "checkmark")
-                                    }
-                                }
-                            }
-                        }
-                    } label: {
-                        HStack {
-                            Image(systemName: "line.3.horizontal.decrease.circle")
-
-                            Text(selectedCategory ?? "All")
-                                .font(.caption)
-                        }
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(Color(.systemGray6))
-                        .cornerRadius(8)
-                    }
+                    
+                    Text("Total: \(CurrencyManager.shared.format(totalMonthly))/mo")
+                        .font(.caption)
+                        .fontWeight(.semibold)
                 }
                 .padding(.horizontal)
                 .padding(.vertical, 8)
-
-                // Subscription List
-
-                if filteredSubscriptions.isEmpty {
-
-                    if subscriptions.isEmpty {
-                        VStack(spacing: 16) {
-                            Image(systemName: "tray")
-                                .font(.system(size: 48))
-                                .foregroundColor(.secondary)
-
-                            Text("No subscriptions yet")
-                                .font(.headline)
-
-                            Text("Tap + to add your first subscription")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                        .padding(.top, 60)
-
-                    } else {
-                        VStack(spacing: 16) {
-                            Image(systemName: "magnifyingglass")
-                                .font(.system(size: 40))
-                                .foregroundColor(.secondary)
-
-                            Text("No matches found")
-                                .font(.headline)
-
-                            Text("Try adjusting your search")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                        .padding(.top, 60)
+                
+                // Sort Picker
+                Picker("Sort by", selection: $sortOption) {
+                    ForEach(SortOption.allCases, id: \.self) { option in
+                        Text(option.rawValue).tag(option)
                     }
-
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal)
+                .padding(.vertical, 8)
+                
+                if filteredSubscriptions.isEmpty {
+                    DelightfulEmptyState()
+                        .padding(.top, 40)
                 } else {
-
                     List {
                         ForEach(filteredSubscriptions) { subscription in
-                            NavigationLink(
-                                destination: SubscriptionDetailView(
-                                    subscription: subscription
-                                )
-                            ) {
-                                SubscriptionCard(
-                                    subscription: subscription
-                                )
-                            }
-                        }
-                        .onDelete { indexSet in
-                            deleteSubscriptions(at: indexSet)
+                            SubscriptionRow(subscription: subscription)
+                                .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
+                                .listRowBackground(Color.clear)
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    selectedSubscription = subscription
+                                }
+                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                    Button(role: .destructive) {
+                                        deleteSubscription(subscription)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                }
+                                .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                                    Button {
+                                        selectedSubscription = subscription
+                                    } label: {
+                                        Label("Edit", systemImage: "pencil")
+                                    }
+                                    .tint(.blue)
+                                }
                         }
                     }
                     .listStyle(.plain)
                 }
             }
-            .navigationTitle("Subscriptions")
+            .navigationTitle("All Subscriptions")
             .navigationBarTitleDisplayMode(.large)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    EditButton()
+            .sheet(item: $selectedSubscription) { subscription in
+                SubscriptionDetailView(subscription: subscription)
+            }
+        }
+    }
+    
+    private func sortSubscriptions(_ subs: [Subscription]) -> [Subscription] {
+        switch sortOption {
+        case .alphabetical:
+            return subs.sorted { $0.displayName < $1.displayName }
+        case .cost:
+            return subs.sorted { $0.monthlyCost > $1.monthlyCost }
+        case .cheapest:
+            return subs.sorted { $0.monthlyCost < $1.monthlyCost }
+        case .renewalDate:
+            return subs.sorted { $0.nextBillingDate < $1.nextBillingDate }
+        case .category:
+            return subs.sorted { $0.effectiveCategory < $1.effectiveCategory }
+        case .recentlyAdded:
+            return subs.sorted { $0.createdAt > $1.createdAt }
+        }
+    }
+    
+    private func deleteSubscription(_ subscription: Subscription) {
+        NotificationService.shared.cancel(for: subscription)
+        modelContext.delete(subscription)
+        try? modelContext.save()
+    }
+}
+
+struct SubscriptionRow: View {
+    let subscription: Subscription
+    
+    var body: some View {
+        HStack(spacing: 12) {
+            // Color indicator
+            Circle()
+                .fill(Color(hex: subscription.colorHex ?? "#6C63FF"))
+                .frame(width: 10, height: 10)
+            
+            VStack(alignment: .leading, spacing: 2) {
+                Text(subscription.displayName)
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                
+                HStack(spacing: 4) {
+                    Text(subscription.effectiveCategory)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
+                    if subscription.isYearly {
+                        Text("•")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Text("Yearly")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    if subscription.isTrial && !subscription.trialConvertedToPaid {
+                        Text("•")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Text("Trial")
+                            .font(.caption)
+                            .foregroundColor(.orange)
+                    }
                 }
             }
-            .onChange(of: subscriptions.count) { _, _ in
-                updateWidget()
+            
+            Spacer()
+            
+            VStack(alignment: .trailing, spacing: 2) {
+                Text(CurrencyManager.shared.format(subscription.monthlyCost))
+                    .font(.headline)
+                    .fontWeight(.bold)
+                
+                Text("/month")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
             }
         }
-    }
-
-    // MARK: - Delete
-
-    private func deleteSubscriptions(at offsets: IndexSet) {
-        for index in offsets {
-            let subscription = filteredSubscriptions[index]
-
-            NotificationService.shared.cancel(
-                for: subscription
-            )
-
-            modelContext.delete(subscription)
-        }
-
-        do {
-            try modelContext.save()
-        } catch {
-            print("Error deleting subscriptions: \(error)")
-        }
-
-        updateWidget()
-    }
-
-    // MARK: - Widget Update
-
-    private func updateWidget() {
-        let total = subscriptions.reduce(0) {
-            $0 + $1.monthlyCost
-        }
-
-        let next = subscriptions
-            .filter { !$0.isOverdue }
-            .sorted {
-                $0.nextBillingDate < $1.nextBillingDate
-            }
-            .first
-
-        guard let defaults = UserDefaults(
-            suiteName: "group.com.spendora.app"
-        ) else {
-            return
-        }
-
-        defaults.set(
-            total,
-            forKey: "totalMonthly"
-        )
-
-        defaults.set(
-            next?.displayName ?? "None",
-            forKey: "nextSubName"
-        )
-
-        defaults.set(
-            next?.nextBillingDate.timeIntervalSince1970 ?? 0,
-            forKey: "nextSubDate"
-        )
-
-        WidgetCenter.shared.reloadAllTimelines()
+        .padding(.vertical, 8)
+        .padding(.horizontal, 12)
+        .background(Color(.systemBackground))
+        .cornerRadius(12)
+        .shadow(color: Color.black.opacity(0.03), radius: 4)
     }
 }
 

@@ -100,7 +100,7 @@ struct HomeView: View {
                             NextChargeCard(subscription: next)
                         }
                         
-                        // Quick Stats (uses shared StatCard component)
+                        // Quick Stats
                         if !filteredSubscriptions.isEmpty {
                             QuickStatsView(
                                 count: filteredSubscriptions.count,
@@ -109,9 +109,12 @@ struct HomeView: View {
                             )
                         }
                         
-                        // Flagged Subscriptions
+                        // MARK: - Flagged Subscriptions (FIXED)
+                        // Only show if usageRating > 0 (rated) AND rating <= 2 AND cost > $5
                         let flagged = subscriptions.filter {
-                            $0.usageRating <= 2 && $0.monthlyCost > 5
+                            $0.usageRating > 0 &&
+                            $0.usageRating <= 2 &&
+                            $0.monthlyCost > 5
                         }
                         if !flagged.isEmpty {
                             FlaggedSubscriptionsView(subscriptions: flagged)
@@ -260,7 +263,7 @@ struct HomeView: View {
             .sorted { $0.nextBillingDate < $1.nextBillingDate }
             .first
         
-        guard let defaults = UserDefaults(suiteName: "group.com.spendora.app") else {
+        guard let defaults = UserDefaults(suiteName: "group.com.trios2026sn.Spendora") else {
             return
         }
         
@@ -310,7 +313,7 @@ struct HeroHeaderView: View {
     }
 }
 
-// MARK: - Quick Stats View (Uses Shared StatCard)
+// MARK: - Quick Stats View
 struct QuickStatsView: View {
     let count: Int
     let totalMonthly: Double

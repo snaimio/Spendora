@@ -7,122 +7,203 @@ import SwiftUI
 
 struct AIInsightsView: View {
     let subscriptions: [Subscription]
-    
-    var totalSpending: Double {
-        subscriptions.reduce(0) { $0 + $1.monthlyCost }
-    }
-    
-    var averagePerSubscription: Double {
-        guard !subscriptions.isEmpty else { return 0 }
-        return totalSpending / Double(subscriptions.count)
-    }
-    
-    var topCategory: String {
-        let grouped = Dictionary(grouping: subscriptions) { $0.category }
-        let categoryTotals = grouped.map { (cat, subs) in
-            (category: cat, total: subs.reduce(0) { $0 + $1.monthlyCost })
-        }
-        return categoryTotals.max { $0.total < $1.total }?.category ?? "None"
-    }
-    
-    var activeTrials: Int {
-        subscriptions.filter { $0.isTrial && !$0.trialConvertedToPaid && $0.trialDaysRemaining > 0 }.count
-    }
-    
-    var expiringTrials: Int {
-        subscriptions.filter { $0.trialWarning }.count
-    }
-    
-    var priceIncreasedCount: Int {
-        subscriptions.filter { $0.priceIncreased }.count
-    }
-    
-    var insights: [String] {
-        var result: [String] = []
-        
-        // Spending insight
-        if totalSpending > 100 {
-            result.append("💡 You're spending over \(formatCurrency(totalSpending))/month on subscriptions. Consider reviewing which ones you actually use.")
-        } else if totalSpending > 50 {
-            result.append("📊 Your subscription spending is \(formatCurrency(totalSpending))/month. Track which services you use most.")
-        }
-        
-        // Count insight
-        if subscriptions.count > 10 {
-            result.append("⚠️ You have \(subscriptions.count) active subscriptions. The average person uses only 4-5 regularly.")
-        } else if subscriptions.count > 5 {
-            result.append("📱 You have \(subscriptions.count) subscriptions. Make sure each one provides value.")
-        }
-        
-        // Yearly insight
-        let yearlyCount = subscriptions.filter { $0.isYearly }.count
-        if yearlyCount > 3 {
-            result.append("📅 You have \(yearlyCount) yearly subscriptions. Calculate if monthly would be cheaper for little-used services.")
-        }
-        
-        // Trial insight
-        if activeTrials > 0 {
-            result.append("⏰ You have \(activeTrials) active trial\(activeTrials > 1 ? "s" : ""). \(expiringTrials > 0 ? "\(expiringTrials) ending soon!" : "Don't forget to cancel if not needed.")")
-        }
-        
-        // Price increase insight
-        if priceIncreasedCount > 0 {
-            result.append("📈 \(priceIncreasedCount) subscription\(priceIncreasedCount > 1 ? "s have" : " has") increased in price. Review if still worth the cost.")
-        }
-        
-        // Category insight
-        if topCategory != "None" {
-            result.append("🎯 Your highest spending category is \(topCategory) at \(formatCurrency(categoryTotal(topCategory)))/month.")
-        }
-        
-        // Positive insight
-        if result.isEmpty {
-            result.append("✅ Your subscription spending looks healthy! Keep tracking to stay on top of your finances.")
-        }
-        
-        return result
-    }
-    
-    func categoryTotal(_ category: String) -> Double {
-        subscriptions.filter { $0.category == category }.reduce(0) { $0 + $1.monthlyCost }
-    }
-    
-    func formatCurrency(_ amount: Double) -> String {
-        // Use CurrencyManager for consistency with the rest of the app
-        return CurrencyManager.shared.format(amount)
-    }
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                Image(systemName: "brain.head.profile")
-                    .foregroundColor(.purple)
-                Text("AI Spending Insights")
-                    .font(.headline)
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: 24) {
+                    // Header
+                    VStack(spacing: 8) {
+                        Image(systemName: "brain.head.profile")
+                            .font(.system(size: 60))
+                            .foregroundStyle(Color.primaryGradient)
+                        
+                        Text("AI Insights")
+                            .font(.title)
+                            .fontWeight(.bold)
+                        
+                        Text("Smart analysis of your subscription spending")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.top, 20)
+                    
+                    if subscriptions.isEmpty {
+                        EmptyInsightsView()
+                    } else {
+                        // Spending Summary
+                        InsightCard(
+                            icon: "dollarsign.circle.fill",
+                            title: "Monthly Spending",
+                            value: CurrencyManager.shared.format(
+                                subscriptions.reduce(0) { $0 + $1.monthlyCost }
+                            ),
+                            color: .blue
+                        )
+                        
+                        // Most Expensive
+                        if let mostExpensive = subscriptions.max(by: { $0.monthlyCost < $1.monthlyCost }) {
+                            InsightCard(
+                                icon: "chart.line.uptrend.xyaxis",
+                                title: "Most Expensive",
+                                value: mostExpensive.displayName,
+                                subtitle: CurrencyManager.shared.format(mostExpensive.monthlyCost) + "/month",
+                                color: .red
+                            )
+                        }
+                        
+                        // Savings Opportunity
+                        let unusedSubs = subscriptions.filter { $0.usageRating <= 2 }
+                        if !unusedSubs.isEmpty {
+                            InsightCard(
+                                icon: "lightbulb.fill",
+                                title: "Savings Opportunity",
+                                value: "\(unusedSubs.count) underused",
+                                subtitle: "Consider cancelling these subscriptions",
+                                color: .orange
+                            )
+                        }
+                        
+                        // Trial Ending Soon
+                        let trialsEnding = subscriptions.filter {
+                            $0.isTrial && !$0.trialConvertedToPaid && $0.trialDaysRemaining <= 3 && $0.trialDaysRemaining >= 0
+                        }
+                        if !trialsEnding.isEmpty {
+                            InsightCard(
+                                icon: "clock.fill",
+                                title: "Trials Ending Soon",
+                                value: "\(trialsEnding.count) trials",
+                                subtitle: trialsEnding.map { $0.displayName }.joined(separator: ", "),
+                                color: .purple
+                            )
+                        }
+                        
+                        // Spending Distribution
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Spending by Category")
+                                .font(.headline)
+                            
+                            let grouped = Dictionary(grouping: subscriptions) { $0.category }
+                            let sortedCategories = grouped.sorted {
+                                $0.value.reduce(0) { $0 + $1.monthlyCost } >
+                                $1.value.reduce(0) { $0 + $1.monthlyCost }
+                            }
+                            
+                            ForEach(sortedCategories.prefix(5), id: \.key) { category, subs in
+                                let total = subs.reduce(0) { $0 + $1.monthlyCost }
+                                let percentage = (total / subscriptions.reduce(0) { $0 + $1.monthlyCost }) * 100
+                                
+                                VStack(alignment: .leading, spacing: 4) {
+                                    HStack {
+                                        Text(category)
+                                            .font(.subheadline)
+                                        Spacer()
+                                        Text(CurrencyManager.shared.format(total))
+                                            .font(.subheadline)
+                                            .fontWeight(.semibold)
+                                    }
+                                    
+                                    ProgressView(value: percentage, total: 100)
+                                        .tint(categoryColor(for: category))
+                                        .frame(height: 6)
+                                        .scaleEffect(x: 1, y: 1.5, anchor: .center)
+                                }
+                            }
+                        }
+                        .padding()
+                        .background(Color(.secondarySystemBackground))
+                        .cornerRadius(16)
+                    }
+                }
+                .padding()
             }
-            
-            Divider()
-            
-            ForEach(insights, id: \.self) { insight in
-                HStack(alignment: .top, spacing: 12) {
-                    Text("•")
-                        .foregroundColor(.purple)
-                    Text(insight)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
+            .navigationTitle("AI Insights")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Done") { dismiss() }
                 }
             }
+        }
+    }
+    
+    private func categoryColor(for category: String) -> Color {
+        switch category {
+        case "Entertainment": return .categoryEntertainment
+        case "Productivity": return .categoryProductivity
+        case "Health & Fitness": return .categoryHealth
+        case "Shopping": return .categoryShopping
+        case "Food & Dining": return .categoryFood
+        case "Education": return .categoryEducation
+        default: return .categoryOther
+        }
+    }
+}
+
+struct EmptyInsightsView: View {
+    var body: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "plus.circle")
+                .font(.system(size: 48))
+                .foregroundColor(.secondary)
+            
+            Text("No subscriptions to analyze")
+                .font(.headline)
+            
+            Text("Add your first subscription to get AI-powered insights")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .padding(.vertical, 40)
+        .frame(maxWidth: .infinity)
+        .background(Color(.secondarySystemBackground))
+        .cornerRadius(16)
+    }
+}
+
+struct InsightCard: View {
+    let icon: String
+    let title: String
+    let value: String
+    var subtitle: String? = nil
+    let color: Color
+    
+    var body: some View {
+        HStack(spacing: 16) {
+            Image(systemName: icon)
+                .font(.title2)
+                .foregroundColor(color)
+                .frame(width: 44, height: 44)
+                .background(color.opacity(0.12))
+                .cornerRadius(12)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                
+                Text(value)
+                    .font(.headline)
+                    .fontWeight(.bold)
+                
+                if let subtitle = subtitle {
+                    Text(subtitle)
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                }
+            }
+            
+            Spacer()
         }
         .padding()
         .background(Color(.systemBackground))
         .cornerRadius(16)
-        .shadow(color: .black.opacity(0.05), radius: 5)
-        .padding(.horizontal)
+        .shadow(color: Color.black.opacity(0.04), radius: 8)
     }
 }
 
-// MARK: - Preview
 #Preview {
     AIInsightsView(subscriptions: [])
 }
