@@ -49,26 +49,28 @@ struct PremiumSubscriptionCard: View {
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
                     
-                    if subscription.isUpcoming {
+                    if subscription.status == .paused {
+                        PremiumBadge(text: "Paused", color: .orange)
+                    } else if subscription.status == .cancelled {
+                        PremiumBadge(text: "Cancelled", color: .red)
+                    } else if subscription.isUpcoming {
                         PremiumBadge(text: "Soon", color: Color(hex: "#FFE66D"))
-                    }
-                    
-                    if subscription.isTrial && !subscription.trialConvertedToPaid {
+                    } else if subscription.isTrial && !subscription.trialConvertedToPaid {
                         PremiumBadge(text: "Trial", color: Color(hex: "#FF6B6B"))
                     }
                 }
                 
                 HStack(spacing: 6) {
-                    Text(CurrencyManager.shared.format(subscription.monthlyCost))
+                    Text(subscription.formattedCost)
                         .font(.system(size: 15, weight: .bold, design: .rounded))
                         .foregroundColor(.brandPrimary)
                     
-                    Text("/month")
+                    Text(subscription.isYearly ? "/year" : "/month")
                         .font(.system(size: 13, weight: .regular, design: .rounded))
                         .foregroundColor(.secondary)
                     
                     if subscription.isYearly {
-                        Text("• Yearly")
+                        Text("(\(CurrencyManager.shared.format(subscription.monthlyCost, currency: subscription.currency))/mo)")
                             .font(.system(size: 12, weight: .regular, design: .rounded))
                             .foregroundColor(.secondary)
                     }

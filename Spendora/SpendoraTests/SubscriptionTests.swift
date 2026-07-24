@@ -112,4 +112,21 @@ final class SubscriptionTests: XCTestCase {
         )
         XCTAssertFalse(sub.isValid)
     }
+
+    func testSubscriptionStatus_PausedAndCancelled() {
+        let activeSub = Subscription(name: "Netflix", cost: 15, isYearly: false, nextBillingDate: Date().addingTimeInterval(86400))
+        XCTAssertEqual(activeSub.status, .active)
+
+        let pausedSub = Subscription(name: "Gym", cost: 50, isYearly: false, nextBillingDate: Date().addingTimeInterval(86400), statusRaw: "Paused")
+        XCTAssertEqual(pausedSub.status, .paused)
+
+        let cancelledSub = Subscription(name: "News", cost: 10, isYearly: false, nextBillingDate: Date().addingTimeInterval(86400), isCancelled: true)
+        XCTAssertEqual(cancelledSub.status, .cancelled)
+    }
+
+    func testCurrencyNormalization() {
+        let subUSD = Subscription(name: "ChatGPT", cost: 20.0, isYearly: false, nextBillingDate: Date().addingTimeInterval(86400), currencyCode: "USD")
+        XCTAssertEqual(subUSD.currency, .USD)
+        XCTAssertGreaterThan(subUSD.normalizedMonthlyCost, 0)
+    }
 }

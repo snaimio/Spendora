@@ -11,6 +11,12 @@ class MagicFinderService {
 
     // Popular subscription keywords for detection
     private let subscriptionPatterns: [String: String] = [
+        "chatgpt": "ChatGPT Plus",
+        "openai": "ChatGPT Plus",
+        "claude": "Claude Pro",
+        "anthropic": "Claude Pro",
+        "copilot": "GitHub Copilot",
+        "midjourney": "Midjourney",
         "netflix": "Netflix",
         "spotify": "Spotify",
         "apple music": "Apple Music",

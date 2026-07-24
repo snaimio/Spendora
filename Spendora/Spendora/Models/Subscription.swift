@@ -36,6 +36,8 @@ final class Subscription {
     var customCategory: String?
     var paymentMethod: String?
     var tags: [String]?
+    var currencyCode: String?
+    var statusRaw: String?
 
     // MARK: - Appearance
 
@@ -68,9 +70,11 @@ final class Subscription {
         tags: [String]? = nil,
         colorHex: String? = nil,
         usageRating: Int = 0,
-        isCancelled: Bool = false,           // NEW
-        cancellationDate: Date? = nil,       // NEW
-        cancellationReason: String? = nil    // NEW
+        isCancelled: Bool = false,
+        cancellationDate: Date? = nil,
+        cancellationReason: String? = nil,
+        currencyCode: String? = nil,
+        statusRaw: String? = "Active"
     ) {
         self.id = UUID()
         self.name = name
@@ -91,14 +95,38 @@ final class Subscription {
         self.customCategory = customCategory
         self.paymentMethod = paymentMethod
         self.tags = tags
+        self.currencyCode = currencyCode
+        self.statusRaw = statusRaw
 
         self.colorHex = colorHex
         self.usageRating = usageRating
         
-        // NEW
         self.isCancelled = isCancelled
         self.cancellationDate = cancellationDate
         self.cancellationReason = cancellationReason
+    }
+
+    // MARK: - Currency & Status Helpers
+
+    var currency: Currency {
+        if let currencyCode, let matched = Currency.allCases.first(where: { $0.code == currencyCode }) {
+            return matched
+        }
+        return CurrencyManager.shared.currentCurrency
+    }
+
+    var status: SubscriptionStatus {
+        if isCancelled { return .cancelled }
+        guard let statusRaw else { return .active }
+        return SubscriptionStatus(rawValue: statusRaw) ?? .active
+    }
+
+    var normalizedMonthlyCost: Double {
+        CurrencyManager.shared.convertToCurrent(amount: monthlyCost, from: currency)
+    }
+
+    var normalizedYearlyCost: Double {
+        CurrencyManager.shared.convertToCurrent(amount: yearlyCost, from: currency)
     }
 
     // MARK: - Display Helpers
@@ -117,11 +145,7 @@ final class Subscription {
     }
 
     var formattedCost: String {
-        cost.formatted(
-            .currency(
-                code: Locale.current.currency?.identifier ?? "USD"
-            )
-        )
+        CurrencyManager.shared.format(cost, currency: currency)
     }
 
     var monthlyEquivalentDescription: String {
@@ -440,4 +464,30 @@ enum PaymentMethod: String, CaseIterable, Identifiable {
     case other = "🔵 Other"
 
     var id: String { rawValue }
+}
+
+// MARK: - Subscription Status
+
+enum SubscriptionStatus: String, CaseIterable, Identifiable {
+    case active = "Active"
+    case paused = "Paused"
+    case cancelled = "Cancelled"
+
+    var id: String { rawValue }
+
+    var icon: String {
+        switch self {
+        case .active: return "checkmark.circle.fill"
+        case .paused: return "pause.circle.fill"
+        case .cancelled: return "xmark.circle.fill"
+        }
+    }
+
+    var colorSystemName: String {
+        switch self {
+        case .active: return "green"
+        case .paused: return "orange"
+        case .cancelled: return "red"
+        }
+    }
 }
