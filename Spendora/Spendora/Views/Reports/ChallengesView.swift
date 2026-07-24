@@ -109,7 +109,6 @@ struct ChallengesView: View {
             .navigationTitle("Challenges")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                // ✅ ADDED DONE BUTTON
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Done") {
                         dismiss()
@@ -136,10 +135,18 @@ struct ChallengesView: View {
     }
     
     private func generateShareImage() {
-        let renderer = ImageRenderer(content: ShareableChallenges(
+        let shareableView = ShareableChallenges(
             percentage: completionPercentage,
             challenges: challenges
-        ))
+        )
+        
+        let renderer = ImageRenderer(content: shareableView)
+        
+        // ✅ FIXED: Use windowScene instead of UIScreen.main
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            renderer.scale = windowScene.screen.scale
+        }
+        
         if let image = renderer.uiImage {
             shareImage = image
             showingShareSheet = true

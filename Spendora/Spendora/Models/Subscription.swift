@@ -44,6 +44,11 @@ final class Subscription {
     // MARK: - Usage Rating
 
     var usageRating: Int
+    
+    // MARK: - Cancellation Properties (NEW)
+    var isCancelled: Bool
+    var cancellationDate: Date?
+    var cancellationReason: String?
 
     // MARK: - Initializer
 
@@ -62,7 +67,10 @@ final class Subscription {
         paymentMethod: String? = nil,
         tags: [String]? = nil,
         colorHex: String? = nil,
-        usageRating: Int = 0
+        usageRating: Int = 0,
+        isCancelled: Bool = false,           // NEW
+        cancellationDate: Date? = nil,       // NEW
+        cancellationReason: String? = nil    // NEW
     ) {
         self.id = UUID()
         self.name = name
@@ -86,6 +94,11 @@ final class Subscription {
 
         self.colorHex = colorHex
         self.usageRating = usageRating
+        
+        // NEW
+        self.isCancelled = isCancelled
+        self.cancellationDate = cancellationDate
+        self.cancellationReason = cancellationReason
     }
 
     // MARK: - Display Helpers
@@ -324,6 +337,28 @@ final class Subscription {
         }
 
         return ((cost - expectedPrice) / expectedPrice) * 100
+    }
+    
+    // MARK: - Cancellation Helpers (NEW)
+    
+    var formattedCancellationDate: String {
+        guard let cancellationDate = cancellationDate else {
+            return "Not cancelled"
+        }
+        return cancellationDate.formatted(
+            .dateTime
+                .month(.abbreviated)
+                .day()
+                .year()
+        )
+    }
+    
+    var cancellationStatus: String {
+        if isCancelled {
+            return "Cancelled"
+        } else {
+            return "Active"
+        }
     }
 }
 

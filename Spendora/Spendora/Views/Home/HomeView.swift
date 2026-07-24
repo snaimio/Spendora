@@ -15,7 +15,7 @@ struct HomeView: View {
     @State private var selectedSubscription: Subscription?
     @State private var searchText = ""
     @State private var refreshID = 0
-    @State private var sortOption: SortOption = .alphabetical  // ✅ Changed to Alphabetical
+    @State private var sortOption: SortOption = .alphabetical
     @State private var animateHeader = false
     
     @State private var showingYearlyReport = false

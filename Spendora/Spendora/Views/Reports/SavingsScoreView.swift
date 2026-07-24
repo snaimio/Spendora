@@ -25,17 +25,17 @@ struct SavingsScoreView: View {
         let count = subscriptions.count
         
         if count > 5 {
-            result.append("📉 You have \(count) subscriptions. Consider canceling unused ones.")
+            result.append("You have \(count) subscriptions. Consider canceling unused ones.")
         }
         if total > 100 {
-            result.append("💰 You're spending over $100/month. Review your subscriptions.")
+            result.append("You're spending over $100/month. Review your subscriptions.")
         }
         let trials = subscriptions.filter { $0.isTrial && !$0.trialConvertedToPaid }
         if !trials.isEmpty {
-            result.append("⏰ \(trials.count) trial(s) ending soon. Don't forget to cancel if not needed.")
+            result.append("\(trials.count) trial(s) ending soon. Don't forget to cancel if not needed.")
         }
         if result.isEmpty {
-            result.append("🌟 Great job! Your subscription spending is under control.")
+            result.append("Great job! Your subscription spending is under control.")
         }
         return result
     }
@@ -59,7 +59,6 @@ struct SavingsScoreView: View {
             .navigationTitle("Savings Score")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                // ✅ ADDED DONE BUTTON
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Done") {
                         dismiss()
@@ -78,13 +77,19 @@ struct SavingsScoreView: View {
     }
     
     private func generateShareImage() {
-        let renderer = ImageRenderer(
-            content: ShareableScoreCard(
-                score: savingsScore,
-                count: subscriptions.count,
-                total: subscriptions.reduce(0) { $0 + $1.monthlyCost }
-            )
+        let shareableView = ShareableScoreCard(
+            score: savingsScore,
+            count: subscriptions.count,
+            total: subscriptions.reduce(0) { $0 + $1.monthlyCost }
         )
+        
+        let renderer = ImageRenderer(content: shareableView)
+        
+        // Used windowScene instead of UIScreen.main
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            renderer.scale = windowScene.screen.scale
+        }
+        
         if let image = renderer.uiImage {
             shareImage = image
             showingShareSheet = true
@@ -119,9 +124,17 @@ struct SavingsScoreHeaderView: View {
             Divider()
             
             ForEach(recommendations, id: \.self) { recommendation in
-                Text(recommendation)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                HStack(alignment: .top, spacing: 8) {
+                    Image(systemName: "circle.fill")
+                        .font(.system(size: 6))
+                        .foregroundColor(.brandPrimary)
+                        .padding(.top, 6)
+                    
+                    Text(recommendation)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
             }
         }
         .padding()
@@ -130,3 +143,4 @@ struct SavingsScoreHeaderView: View {
         .shadow(color: Color.black.opacity(0.05), radius: 5)
     }
 }
+

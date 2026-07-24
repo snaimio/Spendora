@@ -75,7 +75,6 @@ struct YearlyReportView: View {
             .navigationTitle("Yearly Report")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                // ✅ ADDED DONE BUTTON
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Done") {
                         dismiss()
@@ -94,17 +93,25 @@ struct YearlyReportView: View {
     }
     
     private func generateShareImage() {
-        let renderer = ImageRenderer(
-            content: ShareableYearlyReport(
-                year: selectedYear,
-                totalYearly: totalYearly,
-                averageMonthly: averageMonthly,
-                topCategory: topCategory
-            )
+        let shareableView = ShareableYearlyReport(
+            year: selectedYear,
+            totalYearly: totalYearly,
+            averageMonthly: averageMonthly,
+            topCategory: topCategory
         )
+        
+        let renderer = ImageRenderer(content: shareableView)
+        
+        // ✅ FIXED: Use windowScene instead of UIScreen.main (deprecated)
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            renderer.scale = windowScene.screen.scale
+        }
+        
         if let image = renderer.uiImage {
             shareImage = image
             showingShareSheet = true
+        } else {
+            print("Failed to generate share image")
         }
     }
 }
@@ -200,30 +207,6 @@ struct TopCategoryView: View {
                 Spacer()
                 
                 Text("Highest spending category")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-            .padding()
-            .background(Color(.secondarySystemBackground))
-            .cornerRadius(12)
-            .padding(.horizontal)
-        }
-    }
-}
-
-// MARK: - Share Report Button
-struct ShareReportButton: View {
-    let action: () -> Void
-    
-    var body: some View {
-        Button {
-            action()
-        } label: {
-            HStack {
-                Image(systemName: "square.and.arrow.up")
-                Text("Share Yearly Report")
-                Spacer()
-                Image(systemName: "chevron.right")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
