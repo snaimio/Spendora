@@ -14,28 +14,25 @@ struct DataSection: View {
     let onReset: () -> Void
     
     var body: some View {
-        Section("Data") {
-            PremiumSettingsRow(
-                icon: "tablecells",
-                title: "Export CSV",
-                subtitle: "Spreadsheet format"
-            ) {
-                Button {
-                    exportCSV()
-                } label: {
-                    Image(systemName: "chevron.right")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-            }
-            
+        Section("Export & Backup") {
+            // Export Options - Consolidated
             PremiumSettingsRow(
                 icon: "doc.text.fill",
-                title: "Export PDF Report",
-                subtitle: "Professional report"
+                title: "Export Data",
+                subtitle: "CSV (Spreadsheet) or PDF (Report)"
             ) {
-                Button {
-                    exportPDF()
+                Menu {
+                    Button {
+                        exportCSV()
+                    } label: {
+                        Label("CSV (Spreadsheet)", systemImage: "tablecells")
+                    }
+                    
+                    Button {
+                        exportPDF()
+                    } label: {
+                        Label("PDF (Report)", systemImage: "doc.text.fill")
+                    }
                 } label: {
                     Image(systemName: "chevron.right")
                         .font(.caption)
@@ -43,10 +40,11 @@ struct DataSection: View {
                 }
             }
             
+            // Backup
             PremiumSettingsRow(
                 icon: "arrow.up.doc",
                 title: "Backup Data",
-                subtitle: "JSON backup file"
+                subtitle: "Save JSON backup file"
             ) {
                 Button {
                     exportBackup()
@@ -57,6 +55,7 @@ struct DataSection: View {
                 }
             }
             
+            // Restore
             PremiumSettingsRow(
                 icon: "arrow.down.doc",
                 title: "Restore Backup",
@@ -71,6 +70,7 @@ struct DataSection: View {
                 }
             }
             
+            // Reset
             PremiumSettingsRow(
                 icon: "trash.fill",
                 title: "Reset All Data",

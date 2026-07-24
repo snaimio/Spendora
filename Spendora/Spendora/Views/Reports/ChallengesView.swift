@@ -7,6 +7,7 @@ import SwiftUI
 
 struct ChallengesView: View {
     let subscriptions: [Subscription]
+    @Environment(\.dismiss) private var dismiss
     @State private var completedChallenges: Set<String> = []
     @State private var showingShareSheet = false
     @State private var shareImage: UIImage?
@@ -86,10 +87,8 @@ struct ChallengesView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 24) {
-                    // Progress Header
                     ChallengeProgressView(percentage: completionPercentage)
                     
-                    // Challenges Grid
                     LazyVGrid(columns: [
                         GridItem(.flexible()),
                         GridItem(.flexible())
@@ -99,7 +98,6 @@ struct ChallengesView: View {
                         }
                     }
                     
-                    // Share Progress Button
                     if challenges.filter({ $0.isCompleted }).count > 0 {
                         ShareReportButton {
                             generateShareImage()
@@ -110,6 +108,17 @@ struct ChallengesView: View {
             }
             .navigationTitle("Challenges")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                // ✅ ADDED DONE BUTTON
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                    .font(.system(.body, design: .rounded))
+                    .fontWeight(.semibold)
+                    .foregroundColor(.brandPrimary)
+                }
+            }
             .sheet(isPresented: $showingShareSheet) {
                 if let image = shareImage {
                     ShareSheet(items: [image])

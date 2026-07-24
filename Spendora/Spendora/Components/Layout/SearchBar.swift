@@ -10,20 +10,20 @@ struct SearchBar: View {
     var placeholder: String = "Search subscriptions..."
     
     @FocusState private var isFocused: Bool
-    @State private var isHovered = false
     
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 10) {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.secondary)
                 .font(.subheadline)
-                .opacity(text.isEmpty ? 0.6 : 1.0)
+                .frame(width: 20)
             
             TextField(placeholder, text: $text)
                 .focused($isFocused)
                 .autocorrectionDisabled()
                 .font(.system(.body, design: .rounded))
                 .foregroundColor(.primary)
+                .frame(minHeight: 22)
             
             if !text.isEmpty {
                 Button {
@@ -34,7 +34,6 @@ struct SearchBar: View {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundColor(.secondary)
                         .font(.subheadline)
-                        .symbolEffect(.bounce, value: text.isEmpty)
                 }
                 .transition(.scale.combined(with: .opacity))
             }
@@ -45,7 +44,7 @@ struct SearchBar: View {
             RoundedRectangle(cornerRadius: 14)
                 .fill(Color(.systemBackground))
                 .shadow(
-                    color: Color.black.opacity(isFocused ? 0.06 : 0.04),
+                    color: Color.black.opacity(isFocused ? 0.08 : 0.04),
                     radius: isFocused ? 12 : 8,
                     x: 0,
                     y: isFocused ? 4 : 2
@@ -62,11 +61,8 @@ struct SearchBar: View {
                         )
                 )
         )
-        .scaleEffect(isHovered ? 1.01 : 1.0)
-        .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHovered)
-        .onTapGesture {
-            isFocused = true
-        }
+        .frame(minHeight: 44)
+        .padding(.horizontal, 4)
     }
 }
 
@@ -75,7 +71,6 @@ struct SearchBar: View {
     VStack(spacing: 20) {
         SearchBar(text: .constant(""))
         SearchBar(text: .constant("Netflix"))
-        SearchBar(text: .constant(""), placeholder: "Custom placeholder...")
     }
     .padding()
     .background(Color(.systemGroupedBackground))

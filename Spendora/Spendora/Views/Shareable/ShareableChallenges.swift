@@ -21,7 +21,13 @@ struct ShareableChallenges: View {
             Text("\(percentage)% Complete")
                 .font(.largeTitle)
                 .fontWeight(.bold)
-                .foregroundStyle(Color.primaryGradient)
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [Color(hex: "#FF6B6B"), Color(hex: "#4ECDC4")],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
             
             VStack(spacing: 12) {
                 ForEach(challenges.prefix(4)) { challenge in

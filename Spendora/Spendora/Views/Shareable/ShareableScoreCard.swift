@@ -27,7 +27,7 @@ struct ShareableScoreCard: View {
                     .trim(from: 0, to: CGFloat(score) / 100)
                     .stroke(
                         LinearGradient(
-                            colors: [.blue, .purple],
+                            colors: [Color(hex: "#FF6B6B"), Color(hex: "#4ECDC4")],
                             startPoint: .top,
                             endPoint: .bottom
                         ),

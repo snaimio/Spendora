@@ -7,7 +7,6 @@ import SwiftUI
 
 struct AnimatedGradientBackground: View {
     @State private var animate = false
-    @State private var scale = false
     
     var body: some View {
         ZStack {
@@ -44,25 +43,6 @@ struct AnimatedGradientBackground: View {
                     .repeatForever(autoreverses: true),
                 value: animate
             )
-            
-            // Decorative dots pattern (subtle)
-            GeometryReader { geometry in
-                let size = geometry.size
-                Canvas { context, size in
-                    for i in 0..<20 {
-                        let x = CGFloat(i) * size.width / 20
-                        let y = CGFloat(i * 7 % 20) * size.height / 20
-                        let opacity = 0.03 + (sin(CGFloat(i) * 0.5 + Date().timeIntervalSince1970 * 0.1) * 0.02)
-                        
-                        context.fill(
-                            Path(ellipseIn: CGRect(x: x, y: y, width: 4, height: 4)),
-                            with: .color(Color.brandPrimary.opacity(opacity))
-                        )
-                    }
-                }
-            }
-            .ignoresSafeArea()
-            .opacity(0.5)
         }
         .onAppear {
             animate = true

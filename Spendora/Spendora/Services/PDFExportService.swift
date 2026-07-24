@@ -1,10 +1,14 @@
-//  Services/PDFExportService.swift
+//
+//  PDFExportService.swift
 //  Spendora
+//
 
 import UIKit
+import SwiftUI
 
 class PDFExportService {
-    static func generatePDF(subscriptions: [Subscription]) -> URL? {
+    
+    static func generatePDFData(subscriptions: [Subscription]) -> Data? {
         let pdfMetaData = [
             kCGPDFContextCreator: "Spendora",
             kCGPDFContextAuthor: "Spendora User",
@@ -91,13 +95,22 @@ class PDFExportService {
                 yPosition += 22
             }
         }
-
-        let url = FileManager.default.temporaryDirectory
-            .appendingPathComponent("Spendora_Report.pdf")
-
+        
+        return pdfData
+    }
+    
+    static func generatePDF(subscriptions: [Subscription]) -> URL? {
+        guard let pdfData = generatePDFData(subscriptions: subscriptions) else {
+            return nil
+        }
+        
+        let tempDir = FileManager.default.temporaryDirectory
+        let fileName = "Spendora_Report_\(Date().timeIntervalSince1970).pdf"
+        let fileURL = tempDir.appendingPathComponent(fileName)
+        
         do {
-            try pdfData.write(to: url)
-            return url
+            try pdfData.write(to: fileURL)
+            return fileURL
         } catch {
             print("Failed to save PDF: \(error)")
             return nil

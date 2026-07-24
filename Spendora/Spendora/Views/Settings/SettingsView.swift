@@ -19,6 +19,8 @@ struct SettingsView: View {
     @State private var showingExportSuccess = false
     @State private var showingOnboarding = false
     @State private var showingDocumentPicker = false
+    @State private var showingShareSheet = false
+    @State private var shareItems: [Any] = []
     
     @State private var showingYearlyReport = false
     @State private var showingChallenges = false
@@ -29,15 +31,12 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             List {
-                // MARK: - App Info
                 Section {
                     PremiumAppInfoRow()
                 }
                 
-                // MARK: - Appearance
                 AppearanceSection()
                 
-                // MARK: - Reports
                 ReportsSection(
                     subscriptions: subscriptions,
                     showingYearlyReport: $showingYearlyReport,
@@ -47,35 +46,132 @@ struct SettingsView: View {
                     showingSpendingChart: $showingSpendingChart
                 )
                 
-                // MARK: - App Tour
                 AppTourSection(showingOnboarding: $showingOnboarding)
                 
-                // MARK: - Currency
                 CurrencySection()
                 
-                // MARK: - Notifications
                 NotificationsSection()
                 
-                // MARK: - Cloud Sync
                 Section("Cloud") {
                     CloudSyncView()
                         .listRowInsets(EdgeInsets())
                 }
                 
-                // MARK: - Support
                 SupportSection(shareApp: shareApp)
                 
-                // MARK: - Data
-                DataSection(
-                    subscriptions: subscriptions,
-                    exportCSV: exportCSV,
-                    exportPDF: exportPDF,
-                    exportBackup: exportBackup,
-                    onRestore: { showingDocumentPicker = true },
-                    onReset: { showingResetAlert = true }
-                )
+                Section("Export & Backup") {
+                    // Export CSV
+                    Button {
+                        exportCSV()
+                    } label: {
+                        HStack {
+                            Image(systemName: "tablecells")
+                                .foregroundColor(.brandPrimary)
+                                .frame(width: 28)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Export CSV")
+                                    .font(.system(.body, design: .rounded))
+                                Text("Spreadsheet format")
+                                    .font(.system(.caption, design: .rounded))
+                                    .foregroundColor(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    
+                    // Export PDF
+                    Button {
+                        exportPDF()
+                    } label: {
+                        HStack {
+                            Image(systemName: "doc.text.fill")
+                                .foregroundColor(.brandPrimary)
+                                .frame(width: 28)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Export PDF Report")
+                                    .font(.system(.body, design: .rounded))
+                                Text("Professional report")
+                                    .font(.system(.caption, design: .rounded))
+                                    .foregroundColor(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    
+                    // Backup
+                    Button {
+                        exportBackup()
+                    } label: {
+                        HStack {
+                            Image(systemName: "arrow.up.doc")
+                                .foregroundColor(.brandPrimary)
+                                .frame(width: 28)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Backup Data")
+                                    .font(.system(.body, design: .rounded))
+                                Text("JSON backup file")
+                                    .font(.system(.caption, design: .rounded))
+                                    .foregroundColor(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    
+                    // Restore
+                    Button {
+                        showingDocumentPicker = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "arrow.down.doc")
+                                .foregroundColor(.brandPrimary)
+                                .frame(width: 28)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Restore Backup")
+                                    .font(.system(.body, design: .rounded))
+                                Text("Import from JSON file")
+                                    .font(.system(.caption, design: .rounded))
+                                    .foregroundColor(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    
+                    // Reset
+                    Button(role: .destructive) {
+                        showingResetAlert = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "trash.fill")
+                                .foregroundColor(.red)
+                                .frame(width: 28)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Reset All Data")
+                                    .font(.system(.body, design: .rounded))
+                                    .foregroundColor(.red)
+                                Text("Delete all subscriptions")
+                                    .font(.system(.caption, design: .rounded))
+                                    .foregroundColor(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                }
                 
-                // MARK: - Legal
                 LegalSection(showingPrivacyPolicy: $showingPrivacyPolicy)
             }
             .listStyle(.insetGrouped)
@@ -93,16 +189,14 @@ struct SettingsView: View {
             } message: {
                 Text("All data has been reset successfully.")
             }
-            .alert("Export Successful", isPresented: $showingExportSuccess) {
-                Button("OK", role: .cancel) { }
-            } message: {
-                Text("Your data has been exported and shared.")
+            .sheet(isPresented: $showingShareSheet) {
+                ShareSheet(items: shareItems)
             }
             .sheet(isPresented: $showingPrivacyPolicy) {
                 PrivacyPolicyView()
             }
             .sheet(isPresented: $showingOnboarding) {
-                OnboardingSheetView()
+                PremiumOnboardingView(hasCompletedOnboarding: $showingOnboarding)
             }
             .sheet(isPresented: $showingYearlyReport) {
                 NavigationStack {
@@ -144,7 +238,6 @@ struct SettingsView: View {
         }
     }
     
-    // MARK: - Private Methods
     private func shareApp() {
         let appStoreURL = "https://apps.apple.com/app/idYOUR_APP_ID"
         
@@ -179,38 +272,49 @@ struct SettingsView: View {
         }
     }
     
+    // MARK: - Export Functions
+    
     private func exportCSV() {
-        guard let fileURL = ExportService.generateCSV(subscriptions: subscriptions) else { return }
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let rootVC = windowScene.windows.first?.rootViewController {
-            ExportService.shareCSV(from: rootVC, fileURL: fileURL)
+        let csvString = ExportService.generateCSVString(subscriptions: subscriptions)
+        
+        let tempDir = FileManager.default.temporaryDirectory
+        let fileName = "Spendora_Export_\(Date().timeIntervalSince1970).csv"
+        let fileURL = tempDir.appendingPathComponent(fileName)
+        
+        do {
+            try csvString.write(to: fileURL, atomically: true, encoding: .utf8)
+            shareItems = [fileURL]
+            showingShareSheet = true
             showingExportSuccess = true
+        } catch {
+            print("Error creating CSV file: \(error)")
         }
     }
     
     private func exportPDF() {
-        guard let fileURL = PDFExportService.generatePDF(subscriptions: subscriptions) else { return }
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let rootVC = windowScene.windows.first?.rootViewController {
-            let activityVC = UIActivityViewController(activityItems: [fileURL], applicationActivities: nil)
-            rootVC.present(activityVC, animated: true)
-            showingExportSuccess = true
+        guard let fileURL = PDFExportService.generatePDF(subscriptions: subscriptions) else {
+            print("Failed to generate PDF")
+            return
         }
+        shareItems = [fileURL]
+        showingShareSheet = true
+        showingExportSuccess = true
     }
     
     private func exportBackup() {
-        guard let url = BackupService.shared.exportBackup(subscriptions: subscriptions) else { return }
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let rootVC = windowScene.windows.first?.rootViewController {
-            let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
-            rootVC.present(activityVC, animated: true)
+        guard let fileURL = BackupService.shared.exportBackup(subscriptions: subscriptions) else {
+            print("Failed to generate backup")
+            return
         }
+        shareItems = [fileURL]
+        showingShareSheet = true
     }
     
     private func importBackup(from url: URL) {
         do {
-            _ = try BackupService.shared.importBackup(from: url, modelContext: modelContext)
+            let count = try BackupService.shared.importBackup(from: url, modelContext: modelContext)
             showingResetConfirmation = true
+            print("Imported \(count) subscriptions")
         } catch {
             print("Restore failed: \(error)")
         }

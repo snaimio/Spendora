@@ -8,6 +8,7 @@ import Charts
 
 struct YearlyReportView: View {
     let subscriptions: [Subscription]
+    @Environment(\.dismiss) private var dismiss
     @State private var selectedYear = Calendar.current.component(.year, from: Date())
     @State private var showingShareSheet = false
     @State private var shareImage: UIImage?
@@ -50,26 +51,21 @@ struct YearlyReportView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 24) {
-                    // Year Selector
                     YearSelectorView(selectedYear: $selectedYear)
                     
-                    // Summary Cards
                     YearlyReportSummary(
                         totalYearly: totalYearly,
                         averageMonthly: averageMonthly
                     )
                     
-                    // Monthly Trend Chart
                     if !subscriptions.isEmpty {
                         MonthlyTrendChartView(monthlyData: monthlyData)
                     }
                     
-                    // Top Category
                     if topCategory != "None" {
                         TopCategoryView(topCategory: topCategory)
                     }
                     
-                    // Share Button
                     ShareReportButton {
                         generateShareImage()
                     }
@@ -78,6 +74,17 @@ struct YearlyReportView: View {
             }
             .navigationTitle("Yearly Report")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                // ✅ ADDED DONE BUTTON
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                    .font(.system(.body, design: .rounded))
+                    .fontWeight(.semibold)
+                    .foregroundColor(.brandPrimary)
+                }
+            }
             .sheet(isPresented: $showingShareSheet) {
                 if let image = shareImage {
                     ShareSheet(items: [image])

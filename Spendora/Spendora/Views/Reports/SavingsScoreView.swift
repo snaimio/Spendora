@@ -7,6 +7,7 @@ import SwiftUI
 
 struct SavingsScoreView: View {
     let subscriptions: [Subscription]
+    @Environment(\.dismiss) private var dismiss
     @State private var showingShareSheet = false
     @State private var shareImage: UIImage?
     
@@ -43,14 +44,12 @@ struct SavingsScoreView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 24) {
-                    // Score Header
                     SavingsScoreHeaderView(
                         savingsScore: savingsScore,
                         recommendations: recommendations,
                         subscriptions: subscriptions
                     )
                     
-                    // Share Button
                     ShareReportButton {
                         generateShareImage()
                     }
@@ -59,6 +58,17 @@ struct SavingsScoreView: View {
             }
             .navigationTitle("Savings Score")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                // ✅ ADDED DONE BUTTON
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                    .font(.system(.body, design: .rounded))
+                    .fontWeight(.semibold)
+                    .foregroundColor(.brandPrimary)
+                }
+            }
             .sheet(isPresented: $showingShareSheet) {
                 if let image = shareImage {
                     ShareSheet(items: [image])

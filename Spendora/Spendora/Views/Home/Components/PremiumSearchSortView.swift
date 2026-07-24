@@ -5,6 +5,8 @@
 
 import SwiftUI
 
+// SortOption is now in Models/SortOption.swift
+
 struct PremiumSearchSortView: View {
     @Binding var searchText: String
     @Binding var sortOption: SortOption

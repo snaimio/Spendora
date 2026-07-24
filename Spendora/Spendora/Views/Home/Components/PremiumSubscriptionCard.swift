@@ -10,13 +10,14 @@ struct PremiumSubscriptionCard: View {
     @State private var isPressed = false
     
     var body: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: 14) {
+            // Premium Icon with gradient background
             ZStack {
                 Circle()
                     .fill(
                         LinearGradient(
                             colors: [
-                                categoryColor.opacity(0.15),
+                                categoryColor.opacity(0.2),
                                 categoryColor.opacity(0.05)
                             ],
                             startPoint: .topLeading,
@@ -28,7 +29,7 @@ struct PremiumSubscriptionCard: View {
                 Circle()
                     .fill(
                         LinearGradient(
-                            colors: [categoryColor, categoryColor.opacity(0.7)],
+                            colors: [categoryColor, categoryColor.opacity(0.6)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
@@ -45,19 +46,22 @@ struct PremiumSubscriptionCard: View {
                 HStack(spacing: 8) {
                     Text(subscription.displayName)
                         .font(.system(size: 17, weight: .semibold, design: .rounded))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                     
                     if subscription.isUpcoming {
-                        PremiumBadge(text: "Soon", color: .orange)
+                        PremiumBadge(text: "Soon", color: Color(hex: "#FFE66D"))
                     }
                     
                     if subscription.isTrial && !subscription.trialConvertedToPaid {
-                        PremiumBadge(text: "Trial", color: .purple)
+                        PremiumBadge(text: "Trial", color: Color(hex: "#FF6B6B"))
                     }
                 }
                 
                 HStack(spacing: 6) {
                     Text(CurrencyManager.shared.format(subscription.monthlyCost))
                         .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .foregroundColor(.brandPrimary)
                     
                     Text("/month")
                         .font(.system(size: 13, weight: .regular, design: .rounded))
@@ -78,6 +82,8 @@ struct PremiumSubscriptionCard: View {
                     Text("Next: \(subscription.formattedNextBillingDate)")
                         .font(.system(size: 12, weight: .regular, design: .rounded))
                         .foregroundColor(.secondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
                 }
             }
             
@@ -91,7 +97,7 @@ struct PremiumSubscriptionCard: View {
                 if subscription.isUpcoming {
                     Text("Due soon")
                         .font(.system(.caption2, design: .rounded))
-                        .foregroundColor(.orange)
+                        .foregroundColor(Color(hex: "#FFE66D"))
                 }
             }
         }

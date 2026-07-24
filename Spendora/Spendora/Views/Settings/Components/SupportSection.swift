@@ -30,14 +30,45 @@ struct SupportSection: View {
                 subtitle: "Help & feedback"
             ) {
                 Button {
-                    if let url = URL(string: "mailto:support@spendora.com") {
-                        UIApplication.shared.open(url)
-                    }
+                    openMailSupport()
                 } label: {
                     Image(systemName: "chevron.right")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
+            }
+        }
+    }
+    
+    private func openMailSupport() {
+        let email = "support@spendora.com"
+        let subject = "Spendora Support Request"
+        let body = "Please describe your issue here..."
+        
+        let encodedSubject = subject.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        let encodedBody = body.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        
+        let mailtoString = "mailto:\(email)?subject=\(encodedSubject)&body=\(encodedBody)"
+        
+        guard let url = URL(string: mailtoString) else { return }
+        
+        if UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
+        } else {
+            // Fallback: Copy email to clipboard
+            UIPasteboard.general.string = email
+            
+            // Show alert
+            let alert = UIAlertController(
+                title: "Email Address Copied",
+                message: "No mail app found. The support email has been copied to your clipboard.",
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let rootVC = windowScene.windows.first?.rootViewController {
+                rootVC.present(alert, animated: true)
             }
         }
     }

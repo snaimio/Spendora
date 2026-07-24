@@ -9,7 +9,7 @@ import SwiftData
 class BackupService {
     static let shared = BackupService()
 
-    func exportBackup(subscriptions: [Subscription]) -> URL? {
+    func exportBackupData(subscriptions: [Subscription]) -> Data? {
         var backupData: [[String: Any]] = []
 
         for sub in subscriptions {
@@ -40,12 +40,23 @@ class BackupService {
                 withJSONObject: backupData,
                 options: .prettyPrinted
             )
+            return data
+        } catch {
+            print("Backup export failed: \(error)")
+            return nil
+        }
+    }
 
-            let url = FileManager.default.temporaryDirectory
-                .appendingPathComponent(
-                    "Spendora_Backup_\(Date().timeIntervalSince1970).json"
-                )
+    func exportBackup(subscriptions: [Subscription]) -> URL? {
+        guard let data = exportBackupData(subscriptions: subscriptions) else {
+            return nil
+        }
+        
+        let tempDir = FileManager.default.temporaryDirectory
+        let fileName = "Spendora_Backup_\(Date().timeIntervalSince1970).json"
+        let url = tempDir.appendingPathComponent(fileName)
 
+        do {
             try data.write(to: url)
             return url
         } catch {

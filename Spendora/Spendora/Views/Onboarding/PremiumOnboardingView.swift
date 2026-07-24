@@ -9,6 +9,7 @@ struct PremiumOnboardingView: View {
     @Binding var hasCompletedOnboarding: Bool
     @State private var currentPage = 0
     @State private var showButtons = false
+    @Environment(\.dismiss) private var dismiss
     
     private let pages: [OnboardingPage] = [
         OnboardingPage(
@@ -56,9 +57,10 @@ struct PremiumOnboardingView: View {
                 HStack {
                     Spacer()
                     Button {
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            hasCompletedOnboarding = true
-                        }
+                        // ✅ FIXED: Save to UserDefaults directly
+                        UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
+                        hasCompletedOnboarding = true
+                        dismiss()
                     } label: {
                         Text("Skip")
                             .font(.system(.body, design: .rounded))
@@ -86,10 +88,13 @@ struct PremiumOnboardingView: View {
                             page: pages[index],
                             isLast: index == pages.count - 1,
                             onAction: {
-                                withAnimation {
-                                    if index == pages.count - 1 {
-                                        hasCompletedOnboarding = true
-                                    } else {
+                                if index == pages.count - 1 {
+                                    // ✅ FIXED: Save to UserDefaults directly
+                                    UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
+                                    hasCompletedOnboarding = true
+                                    dismiss()
+                                } else {
+                                    withAnimation {
                                         currentPage += 1
                                     }
                                 }
@@ -117,10 +122,13 @@ struct PremiumOnboardingView: View {
                     
                     // Next/Get Started Button
                     Button {
-                        withAnimation {
-                            if currentPage == pages.count - 1 {
-                                hasCompletedOnboarding = true
-                            } else {
+                        if currentPage == pages.count - 1 {
+                            // ✅ FIXED: Save to UserDefaults directly
+                            UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
+                            hasCompletedOnboarding = true
+                            dismiss()
+                        } else {
+                            withAnimation {
                                 currentPage += 1
                             }
                         }
@@ -157,7 +165,7 @@ struct PremiumOnboardingView: View {
                 showButtons = true
             }
         }
-        .interactiveDismissDisabled()
+        .interactiveDismissDisabled(false)
     }
 }
 

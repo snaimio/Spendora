@@ -21,7 +21,10 @@ struct ShareableReportCard: View {
                 Circle()
                     .fill(
                         LinearGradient(
-                            colors: [.brandPrimary.opacity(0.08), .brandSecondary.opacity(0.03)],
+                            colors: [
+                                Color(hex: "#FF6B6B").opacity(0.08),
+                                Color(hex: "#4ECDC4").opacity(0.03)
+                            ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
@@ -32,7 +35,7 @@ struct ShareableReportCard: View {
                     .font(.system(size: 40, weight: .medium))
                     .foregroundStyle(
                         LinearGradient(
-                            colors: [.brandPrimary, .brandSecondary],
+                            colors: [Color(hex: "#FF6B6B"), Color(hex: "#4ECDC4")],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
@@ -51,34 +54,34 @@ struct ShareableReportCard: View {
                 .padding(.horizontal)
             
             VStack(spacing: 16) {
-                PremiumReportStatCard(
+                ReportStatCard(
                     icon: "dollarsign.circle.fill",
                     title: "Monthly Spending",
                     value: CurrencyManager.shared.format(totalMonthly),
-                    color: .brandPrimary
+                    color: Color(hex: "#FF6B6B")
                 )
                 
-                PremiumReportStatCard(
+                ReportStatCard(
                     icon: "calendar",
                     title: "Yearly Spending",
                     value: CurrencyManager.shared.format(totalYearly),
-                    color: .brandSecondary
+                    color: Color(hex: "#4ECDC4")
                 )
                 
-                PremiumReportStatCard(
+                ReportStatCard(
                     icon: "number.circle.fill",
                     title: "Active Subscriptions",
                     value: "\(subscriptionCount)",
-                    color: .green
+                    color: Color(hex: "#FFE66D")
                 )
                 
                 if topCategory != "None" {
-                    PremiumReportStatCard(
+                    ReportStatCard(
                         icon: "chart.pie.fill",
                         title: "Top Category",
                         value: topCategory,
                         subtitle: CurrencyManager.shared.format(topCategoryAmount),
-                        color: .orange
+                        color: Color(hex: "#A8E6CF")
                     )
                 }
             }
@@ -92,20 +95,13 @@ struct ShareableReportCard: View {
         }
         .padding()
         .frame(width: 350, height: 550)
-        .background(
-            LinearGradient(
-                colors: [Color(.systemBackground), Color(.systemBackground)],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        )
+        .background(Color(.systemBackground))
         .cornerRadius(32)
         .shadow(color: .black.opacity(0.1), radius: 20, x: 0, y: 8)
     }
 }
 
-// MARK: - Premium Report Stat Card
-struct PremiumReportStatCard: View {
+struct ReportStatCard: View {
     let icon: String
     let title: String
     let value: String

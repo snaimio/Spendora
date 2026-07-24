@@ -22,7 +22,13 @@ struct ShareableYearlyReport: View {
             
             Image(systemName: "creditcard.and.123")
                 .font(.system(size: 50))
-                .foregroundStyle(Color.primaryGradient)
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [Color(hex: "#FF6B6B"), Color(hex: "#4ECDC4")],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
             
             VStack(spacing: 16) {
                 HStack {

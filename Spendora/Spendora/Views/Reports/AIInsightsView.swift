@@ -13,7 +13,6 @@ struct AIInsightsView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 24) {
-                    // Header
                     AIInsightsHeaderView()
                     
                     if subscriptions.isEmpty {
@@ -27,8 +26,14 @@ struct AIInsightsView: View {
             .navigationTitle("AI Insights")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                // ✅ FIXED: Done button with brand primary color
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Done") { dismiss() }
+                    Button("Done") {
+                        dismiss()
+                    }
+                    .font(.system(.body, design: .rounded))
+                    .fontWeight(.semibold)
+                    .foregroundColor(.brandPrimary)
                 }
             }
         }
@@ -90,7 +95,6 @@ struct AIInsightsContent: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            // Spending Summary
             AIInsightCard(
                 icon: "dollarsign.circle.fill",
                 title: "Monthly Spending",
@@ -100,7 +104,6 @@ struct AIInsightsContent: View {
                 color: .blue
             )
             
-            // Most Expensive
             if let mostExpensive = subscriptions.max(by: { $0.monthlyCost < $1.monthlyCost }) {
                 AIInsightCard(
                     icon: "chart.line.uptrend.xyaxis",
@@ -111,7 +114,6 @@ struct AIInsightsContent: View {
                 )
             }
             
-            // Savings Opportunity
             let unusedSubs = subscriptions.filter { $0.usageRating <= 2 }
             if !unusedSubs.isEmpty {
                 AIInsightCard(
@@ -123,7 +125,6 @@ struct AIInsightsContent: View {
                 )
             }
             
-            // Trial Ending Soon
             let trialsEnding = subscriptions.filter {
                 $0.isTrial && !$0.trialConvertedToPaid && $0.trialDaysRemaining <= 3 && $0.trialDaysRemaining >= 0
             }
@@ -137,7 +138,6 @@ struct AIInsightsContent: View {
                 )
             }
             
-            // Spending Distribution
             SpendingDistributionView(subscriptions: subscriptions)
         }
     }

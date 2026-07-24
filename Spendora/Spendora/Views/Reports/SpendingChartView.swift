@@ -17,7 +17,6 @@ struct SpendingChartView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var selectedTimeframe: ChartTimeframe = .monthly
     
-    // MARK: - Computed Properties
     var chartData: [(label: String, amount: Double)] {
         switch selectedTimeframe {
         case .monthly:
@@ -42,11 +41,9 @@ struct SpendingChartView: View {
         chartData.reduce(0) { $0 + $1.amount }
     }
     
-    // MARK: - Body
     var body: some View {
         NavigationStack {
             VStack(spacing: 24) {
-                // Timeframe Picker
                 Picker("Timeframe", selection: $selectedTimeframe) {
                     ForEach(ChartTimeframe.allCases, id: \.self) { timeframe in
                         Text(timeframe.rawValue).tag(timeframe)
@@ -73,11 +70,14 @@ struct SpendingChartView: View {
             .navigationTitle("Spending Chart")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                // ✅ FIXED: Done button with brand primary color
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Done") {
                         dismiss()
                     }
                     .font(.system(.body, design: .rounded))
+                    .fontWeight(.semibold)
+                    .foregroundColor(.brandPrimary)
                 }
             }
         }

@@ -7,44 +7,65 @@ import SwiftUI
 
 extension Color {
     
-    // MARK: - Brand Colors
-    static let brandPrimary = Color(hex: "#6366F1")      // Indigo
-    static let brandSecondary = Color(hex: "#8B5CF6")    // Purple
-    static let brandAccent = Color(hex: "#F59E0B")       // Amber
-    
-    // MARK: - UI Colors
-    static let appBackground = Color(.systemGroupedBackground)
-    static let cardBackground = Color(.systemBackground)
-    static let textPrimary = Color.primary
-    static let textSecondary = Color.secondary
+    // MARK: - Brand Colors (Sunset & Ocean Theme)
+    static let brandPrimary = Color(hex: "#FF6B6B")      // Coral Red
+    static let brandSecondary = Color(hex: "#FF9A9E")    // Soft Pink
+    static let brandTertiary = Color(hex: "#4ECDC4")     // Mint Green
+    static let brandAccent = Color(hex: "#FFE66D")       // Sunshine Yellow
+    static let brandPurple = Color(hex: "#A29BFE")       // Lavender
     
     // MARK: - Gradients
-    static let primaryGradient = LinearGradient(
-        colors: [.brandPrimary, .brandSecondary],
+    static let gradientSunset = LinearGradient(
+        colors: [Color(hex: "#FF6B6B"), Color(hex: "#FFE66D")],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
     
-    static let secondaryGradient = LinearGradient(
-        colors: [Color(hex: "#F472B6"), Color(hex: "#FB923C")],
+    static let gradientOcean = LinearGradient(
+        colors: [Color(hex: "#4ECDC4"), Color(hex: "#45B7D1")],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
     
-    static let cardGradient = LinearGradient(
-        colors: [Color(.systemBackground), Color(.systemBackground)],
-        startPoint: .top,
-        endPoint: .bottom
+    static let gradientSunrise = LinearGradient(
+        colors: [Color(hex: "#FF9A9E"), Color(hex: "#FAD0C4")],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
     )
     
-    // MARK: - Category Colors (Vibrant)
-    static let categoryEntertainment = Color(hex: "#EC4899")
-    static let categoryProductivity = Color(hex: "#10B981")
-    static let categoryHealth = Color(hex: "#3B82F6")
-    static let categoryShopping = Color(hex: "#F59E0B")
-    static let categoryFood = Color(hex: "#8B5CF6")
-    static let categoryEducation = Color(hex: "#06B6D4")
-    static let categoryOther = Color(hex: "#6B7280")
+    static let gradientLavender = LinearGradient(
+        colors: [Color(hex: "#A29BFE"), Color(hex: "#D4A5FF")],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
+    
+    static let gradientMint = LinearGradient(
+        colors: [Color(hex: "#4ECDC4"), Color(hex: "#A8E6CF")],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
+    
+    static let gradientSunsetOcean = LinearGradient(
+        colors: [Color(hex: "#FF6B6B"), Color(hex: "#4ECDC4")],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
+    
+    // MARK: - UI Colors (Light & Airy)
+    static let appBackground = Color(hex: "#FFF8F0")     // Warm White
+    static let cardBackground = Color.white
+    static let textPrimary = Color(hex: "#2D3436")       // Dark Gray
+    static let textSecondary = Color(hex: "#636E72")     // Medium Gray
+    static let textTertiary = Color(hex: "#B2BEC3")      // Light Gray
+    
+    // MARK: - Category Colors (Vibrant & Fun)
+    static let categoryEntertainment = Color(hex: "#FF6B6B")   // Coral
+    static let categoryProductivity = Color(hex: "#4ECDC4")    // Mint
+    static let categoryHealth = Color(hex: "#FF9A9E")          // Soft Pink
+    static let categoryShopping = Color(hex: "#FFE66D")        // Yellow
+    static let categoryFood = Color(hex: "#FF8A5C")            // Orange
+    static let categoryEducation = Color(hex: "#A29BFE")       // Lavender
+    static let categoryOther = Color(hex: "#B2BEC3")           // Gray
     
     // MARK: - Helper
     init(hex: String) {

@@ -29,46 +29,44 @@ struct SubscriptionListView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                SearchBar(text: $searchText, placeholder: "Search subscriptions...")
-                    .padding(.horizontal)
+                SearchBarView(searchText: $searchText)
+                    .padding(.horizontal, 12)
                     .padding(.vertical, 8)
                 
                 HStack {
                     Text("\(filteredSubscriptions.count) subscriptions")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                        .font(.system(.caption, design: .rounded))
+                        .foregroundColor(.textSecondary)
                     
                     Spacer()
                     
                     Text("Total: \(CurrencyManager.shared.format(totalMonthly))/mo")
-                        .font(.caption)
+                        .font(.system(.caption, design: .rounded))
                         .fontWeight(.semibold)
+                        .foregroundColor(.brandPrimary)
                 }
                 .padding(.horizontal)
                 .padding(.vertical, 8)
                 
-                Picker("Sort by", selection: $sortOption) {
-                    ForEach(SortOption.allCases, id: \.self) { option in
-                        Text(option.rawValue).tag(option)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .padding(.horizontal)
-                .padding(.vertical, 8)
+                SortChipsView(sortOption: $sortOption)
+                    .padding(.horizontal)
+                    .padding(.vertical, 8)
                 
                 if filteredSubscriptions.isEmpty {
-                    DelightfulEmptyState()
+                    EmptyStateView()
                         .padding(.top, 40)
                 } else {
                     List {
                         ForEach(filteredSubscriptions) { subscription in
                             SubscriptionRow(subscription: subscription)
-                                .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
+                                .listRowInsets(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
                                 .listRowBackground(Color.clear)
+                                // ✅ Make the whole row tappable
                                 .contentShape(Rectangle())
                                 .onTapGesture {
                                     selectedSubscription = subscription
                                 }
+                                // ✅ Swipe actions
                                 .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                     Button(role: .destructive) {
                                         deleteSubscription(subscription)
@@ -76,7 +74,7 @@ struct SubscriptionListView: View {
                                         Label("Delete", systemImage: "trash")
                                     }
                                 }
-                                .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                                .swipeActions(edge: .leading, allowsFullSwipe: true) {
                                     Button {
                                         selectedSubscription = subscription
                                     } label: {
@@ -87,6 +85,7 @@ struct SubscriptionListView: View {
                         }
                     }
                     .listStyle(.plain)
+                    .scrollContentBackground(.hidden)
                 }
             }
             .navigationTitle("All Subscriptions")

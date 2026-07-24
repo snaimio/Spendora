@@ -32,3 +32,13 @@ struct UsageRatingView: View {
         }
     }
 }
+
+// MARK: - Preview
+#Preview {
+    VStack(spacing: 20) {
+        UsageRatingView(rating: .constant(3), maximumRating: 5)
+        UsageRatingView(rating: .constant(4), maximumRating: 5)
+        UsageRatingView(rating: .constant(0), maximumRating: 5)
+    }
+    .padding()
+}
