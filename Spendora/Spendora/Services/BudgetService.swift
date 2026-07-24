@@ -54,7 +54,7 @@ class BudgetService {
 
     func budgetStatus(currentSpending: Double) -> (status: String, color: Color) {
         guard monthlyBudget > 0 else {
-            return ("Set a monthly budget", .gray)
+            return ("Set a budget", .gray)
         }
 
         let remaining = remainingBudget(currentSpending: currentSpending)
