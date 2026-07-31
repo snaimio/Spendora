@@ -2,21 +2,33 @@
 //  CancellationService.swift
 //  Spendora
 //
+//  Capstone 2026 - Mobile Application Development
+//  Author: Sheikh Naim
+//
 
 import Foundation
 import SwiftUI
 
+/**
+ CancellationService provides direct deep-link cancellation portal URLs for 100+ popular subscription services.
+ Prevents broken 404 links by mapping services to verified primary account hubs, and falls back to a targeted Google cancellation search for custom user subscriptions.
+*/
 struct CancellationService {
+    /// Shared singleton instance
     static let shared = CancellationService()
 
     private init() {}
 
-    /// Returns the exact direct cancellation portal URL for over 100+ popular services
+    /// Resolves the exact direct cancellation portal URL for a subscription.
+    /// - Parameters:
+    ///   - subscriptionName: Name of the subscription (e.g. "Netflix", "ChatGPT", "Gym")
+    ///   - notes: Optional notes field which may contain a custom website link
+    /// - Returns: A valid URL pointing directly to the cancellation portal or Google search fallback.
     func getDirectCancellationURL(for subscriptionName: String, notes: String? = nil) -> URL? {
         let name = subscriptionName.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
         var urlString: String?
 
-        // Check if notes or name contains an explicit domain
+        // Check if the user entered an explicit website link in notes or name
         if let customURL = extractURL(from: name) ?? extractURL(from: notes ?? "") {
             return customURL
         }

@@ -2,20 +2,30 @@
 //  CurrencyManager.swift
 //  Spendora
 //
+//  Capstone 2026 - Mobile Application Development
+//  Author: Sheikh Naim
+//
 
 import Foundation
 import SwiftUI
 import Combine
 
+/**
+ CurrencyManager class handling global currency selection, exchange rate conversions, and price formatting.
+ Supports popular global currencies (CAD, USD, EUR, GBP, JPY, AUD, INR, etc.) and persists user preferences in UserDefaults.
+*/
 class CurrencyManager: ObservableObject {
+    /// Shared singleton instance for app-wide currency conversion and formatting
     static let shared = CurrencyManager()
 
+    /// Active selected currency, defaulting to CAD (Canadian Dollar)
     @Published var currentCurrency: Currency = .CAD
 
     private init() {
         loadSavedCurrency()
     }
 
+    /// Restores previously saved ISO currency code from UserDefaults
     private func loadSavedCurrency() {
         let savedCode = UserDefaults.standard.string(
             forKey: "selectedCurrencyCode"

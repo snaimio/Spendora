@@ -2,10 +2,15 @@
 //  UserProfile.swift
 //  Spendora
 //
+//  Capstone 2026 - Mobile Application Development
+//  Author: Sheikh Naim
+//
 
 import Foundation
 import SwiftUI
 
+/// Represents the authentication provider used for local profile personalization.
+/// Since Spendora is 100% offline and privacy-focused, authentication states are saved locally.
 enum AuthProvider: String, Codable, CaseIterable {
     case guest = "Guest"
     case email = "Email"
@@ -14,6 +19,7 @@ enum AuthProvider: String, Codable, CaseIterable {
 
     var displayName: String { rawValue }
 
+    /// SF Symbol or brand icon associated with each authentication option
     var icon: String {
         switch self {
         case .guest: return "person.crop.circle"
@@ -23,6 +29,7 @@ enum AuthProvider: String, Codable, CaseIterable {
         }
     }
 
+    /// Color coding for the status badge rendered on the Profile header
     var badgeColor: Color {
         switch self {
         case .guest: return .secondary
@@ -33,6 +40,10 @@ enum AuthProvider: String, Codable, CaseIterable {
     }
 }
 
+/**
+ UserProfile data model containing the active user's identity details.
+ Implements Codable so profile settings persist seamlessly in local UserDefaults.
+*/
 struct UserProfile: Codable, Equatable {
     var displayName: String
     var email: String
@@ -41,6 +52,7 @@ struct UserProfile: Codable, Equatable {
     var joinedDate: Date
     var avatarColorHex: String
 
+    /// Default guest profile initialized when the app is installed or when the user signs out
     static var defaultGuest: UserProfile {
         UserProfile(
             displayName: "Guest User",
@@ -52,6 +64,7 @@ struct UserProfile: Codable, Equatable {
         )
     }
 
+    /// Computes up to two initials from the display name to render inside the avatar gradient circle
     var initials: String {
         if isGuest { return "GU" }
         let components = displayName.components(separatedBy: " ").filter { !$0.isEmpty }
