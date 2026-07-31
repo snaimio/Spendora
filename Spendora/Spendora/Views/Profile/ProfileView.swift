@@ -175,42 +175,78 @@ struct ProfileView: View {
                         }
                     } else {
                         // MARK: - Account Actions (If Signed In)
-                        VStack(spacing: 12) {
-                            Button {
-                                generator.impactOccurred()
-                                showingEditSheet = true
-                            } label: {
-                                HStack {
-                                    Image(systemName: "pencil")
-                                        .foregroundColor(.brandPrimary)
-                                    Text("Edit Display Name & Email")
-                                        .font(.system(.body, design: .rounded))
-                                        .foregroundColor(.textPrimary)
-                                    Spacer()
-                                    Image(systemName: "chevron.right")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                                .padding(14)
-                                .background(Color.cardBackground)
-                                .cornerRadius(14)
-                            }
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Account Management")
+                                .font(.system(.subheadline, design: .rounded))
+                                .fontWeight(.semibold)
+                                .foregroundColor(.textSecondary)
+                                .padding(.horizontal, 4)
                             
-                            Button {
-                                generator.impactOccurred()
-                                showingSignOutAlert = true
-                            } label: {
-                                HStack {
-                                    Image(systemName: "rectangle.portrait.and.arrow.right")
-                                        .foregroundColor(.red)
-                                    Text("Switch to Guest Mode")
-                                        .font(.system(.body, design: .rounded))
-                                        .foregroundColor(.red)
-                                    Spacer()
+                            VStack(spacing: 8) {
+                                // Edit Profile
+                                Button {
+                                    generator.impactOccurred()
+                                    showingEditSheet = true
+                                } label: {
+                                    HStack {
+                                        Image(systemName: "pencil")
+                                            .foregroundColor(.brandPrimary)
+                                        Text("Edit Profile Details")
+                                            .font(.system(.body, design: .rounded))
+                                            .foregroundColor(.textPrimary)
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                    }
+                                    .padding(14)
+                                    .background(Color.cardBackground)
+                                    .cornerRadius(14)
                                 }
-                                .padding(14)
-                                .background(Color.cardBackground)
-                                .cornerRadius(14)
+                                
+                                // Switch Account
+                                Button {
+                                    generator.impactOccurred()
+                                    showingEmailSheet = true
+                                } label: {
+                                    HStack {
+                                        Image(systemName: "arrow.triangle.2.circlepath")
+                                            .foregroundColor(.brandSecondary)
+                                        Text("Switch to Different Account")
+                                            .font(.system(.body, design: .rounded))
+                                            .foregroundColor(.textPrimary)
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                    }
+                                    .padding(14)
+                                    .background(Color.cardBackground)
+                                    .cornerRadius(14)
+                                }
+                                
+                                // Prominent Sign Out Button
+                                Button {
+                                    generator.impactOccurred()
+                                    showingSignOutAlert = true
+                                } label: {
+                                    HStack {
+                                        Image(systemName: "rectangle.portrait.and.arrow.right")
+                                            .foregroundColor(.red)
+                                        Text("Sign Out (\(profileManager.profile.provider.displayName))")
+                                            .font(.system(.body, design: .rounded))
+                                            .fontWeight(.semibold)
+                                            .foregroundColor(.red)
+                                        Spacer()
+                                    }
+                                    .padding(14)
+                                    .background(Color.red.opacity(0.08))
+                                    .cornerRadius(14)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 14)
+                                            .stroke(Color.red.opacity(0.2), lineWidth: 1)
+                                    )
+                                }
                             }
                         }
                     }
@@ -268,13 +304,13 @@ struct ProfileView: View {
             .sheet(isPresented: $showingEditSheet) {
                 EditProfileSheet()
             }
-            .alert("Switch to Guest Mode?", isPresented: $showingSignOutAlert) {
-                Button("Switch to Guest", role: .destructive) {
+            .alert("Sign Out of Account?", isPresented: $showingSignOutAlert) {
+                Button("Sign Out", role: .destructive) {
                     profileManager.signOutToGuest()
                 }
                 Button("Cancel", role: .cancel) {}
             } message: {
-                Text("Your profile name will return to Guest User. All your subscription data remains safely on your iPhone.")
+                Text("You will be signed out of your \(profileManager.profile.provider.displayName) profile and returned to Guest Mode. All your subscription records remain safely stored on your iPhone.")
             }
         }
     }
