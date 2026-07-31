@@ -61,6 +61,7 @@ struct AddSubscriptionFormView: View {
                 )
                 .labelsHidden()
                 .datePickerStyle(.compact)
+                .tint(.brandPrimary)
             }
         }
     }

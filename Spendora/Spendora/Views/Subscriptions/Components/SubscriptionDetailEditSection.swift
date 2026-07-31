@@ -52,6 +52,7 @@ struct SubscriptionDetailEditSection: View {
                         Text(category.rawValue).tag(category.rawValue)
                     }
                 }
+                .tint(.brandPrimary)
                 
                 Picker("Payment Method", selection: $paymentMethod) {
                     ForEach(PaymentMethod.allCases) { method in
@@ -59,18 +60,23 @@ struct SubscriptionDetailEditSection: View {
                             .tag(method.rawValue)
                     }
                 }
+                .tint(.brandPrimary)
                 
                 Toggle("Yearly Billing", isOn: $isYearly)
+                    .tint(.brandPrimary)
                 
                 DatePicker("Next Billing Date", selection: $nextBillingDate, in: Date()..., displayedComponents: .date)
+                    .tint(.brandPrimary)
                 
                 Toggle("Free Trial", isOn: $isTrial)
+                    .tint(.brandPrimary)
                 
                 if isTrial {
                     DatePicker("Trial End Date", selection: Binding(
                         get: { subscription.trialEndDate ?? Date() },
                         set: { subscription.trialEndDate = $0 }
                     ), in: Date()..., displayedComponents: .date)
+                    .tint(.brandPrimary)
                 }
             }
             

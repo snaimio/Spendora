@@ -18,6 +18,7 @@ struct BillingCyclePickerView: View {
                 Text("Yearly").tag(true)
             }
             .pickerStyle(.segmented)
+            .tint(.brandPrimary)
             .frame(maxWidth: 200)
         }
     }

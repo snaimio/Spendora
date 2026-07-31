@@ -21,6 +21,7 @@ struct CategoryPickerView: View {
             }
             .pickerStyle(.menu)
             .labelsHidden()
+            .tint(.brandPrimary)
         }
     }
 }
