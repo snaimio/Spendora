@@ -2,14 +2,25 @@
 //  MagicFinderService.swift
 //  Spendora
 //
+//  Capstone 2026 - Mobile Application Development
+//  Author: Sheikh Naim
+//
+
+/**
+ * Main/Core Functions & Purpose:
+ * MagicFinderService engine providing smart subscription detection from raw text or transaction descriptions.
+ * Parses user input for recurring merchant keywords (Netflix, ChatGPT, Spotify, Adobe, etc.)
+ * and automatically auto-fills preset details including category, cost, billing cycle, and cancellation URLs.
+ */
 
 import Foundation
 import SwiftUI
 
 class MagicFinderService {
+    /// Shared singleton instance for subscription pattern matching
     static let shared = MagicFinderService()
 
-    // Popular subscription keywords for detection
+    // Popular subscription keywords mapped to standardized display names
     private let subscriptionPatterns: [String: String] = [
         "chatgpt": "ChatGPT Plus",
         "openai": "ChatGPT Plus",

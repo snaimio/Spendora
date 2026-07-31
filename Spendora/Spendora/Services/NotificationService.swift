@@ -2,12 +2,23 @@
 //  NotificationService.swift
 //  Spendora
 //
+//  Capstone 2026 - Mobile Application Development
+//  Author: Sheikh Naim
+//
+
+/**
+ * Main/Core Functions & Purpose:
+ * NotificationService class managing local iOS push notifications (`UNUserNotificationCenter`).
+ * Schedules automated billing reminders (1 day before, 3 days before, on due date),
+ * handles trial expiration alerts, and presents foreground notification banners.
+ */
 
 import Foundation
 import UserNotifications
 import UIKit
 
 class NotificationService: NSObject, UNUserNotificationCenterDelegate {
+    /// Shared singleton instance for scheduling local billing notifications
     static let shared = NotificationService()
 
     private override init() {
@@ -15,6 +26,7 @@ class NotificationService: NSObject, UNUserNotificationCenterDelegate {
         UNUserNotificationCenter.current().delegate = self
     }
 
+    /// Requests user authorization for alert, sound, and badge notifications
     func requestPermission() {
         UNUserNotificationCenter.current().requestAuthorization(
             options: [.alert, .sound, .badge]

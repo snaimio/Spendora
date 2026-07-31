@@ -2,6 +2,15 @@
 //  AboutCapstoneView.swift
 //  Spendora
 //
+//  Capstone 2026 - Mobile Application Development
+//  Author: Sheikh Naim
+//
+
+/**
+ * Main/Core Functions & Purpose:
+ * AboutCapstoneView screen documenting project metadata, developer contact details (Sheikh.Naim@triosstudent.com),
+ * triOS College 2026 Mobile Application Development Capstone goals, architecture overview, and privacy guarantees.
+ */
 
 import SwiftUI
 

@@ -2,6 +2,15 @@
 //  SubscriptionPreset.swift
 //  Spendora
 //
+//  Capstone 2026 - Mobile Application Development
+//  Author: Sheikh Naim
+//
+
+/**
+ * Main/Core Functions & Purpose:
+ * Catalog of popular pre-configured subscription presets (Netflix, Spotify, Apple, ChatGPT, Amazon Prime, etc.).
+ * Provides pre-populated default pricing, category mappings, brand accent colors, and cancellation URLs for quick 1-tap addition.
+ */
 
 import Foundation
 import SwiftUI

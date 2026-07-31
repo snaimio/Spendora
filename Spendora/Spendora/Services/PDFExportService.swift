@@ -2,12 +2,23 @@
 //  PDFExportService.swift
 //  Spendora
 //
+//  Capstone 2026 - Mobile Application Development
+//  Author: Sheikh Naim
+//
+
+/**
+ * Main/Core Functions & Purpose:
+ * PDFExportService class using CoreGraphics and `UIGraphicsPDFRenderer` to render professional, formatted PDF financial reports.
+ * Generates a clean 8.5x11 page layout containing Spendora app branding, overall monthly/yearly totals,
+ * active subscription counts, and tabular rows displaying cost and billing frequencies.
+ */
 
 import UIKit
 import SwiftUI
 
 class PDFExportService {
     
+    /// Renders a formatted PDF document binary Data object from an array of subscriptions
     static func generatePDFData(subscriptions: [Subscription]) -> Data? {
         let pdfMetaData = [
             kCGPDFContextCreator: "Spendora",

@@ -2,8 +2,16 @@
 //  WidgetSyncService.swift
 //  Spendora
 //
-//  Created by Sheikh Naim on 2026-06-19.
+//  Capstone 2026 - Mobile Application Development
+//  Author: Sheikh Naim
 //
+
+/**
+ * Main/Core Functions & Purpose:
+ * WidgetSyncService class syncing live subscription statistics to iOS Home Screen Widgets.
+ * Writes current monthly total, next upcoming charge name, cost, and due date into shared App Group UserDefaults (`group.com.trios2026sn.Spendora`),
+ * and forces WidgetCenter to reload all Widget timelines immediately.
+ */
 
 import Foundation
 import WidgetKit
@@ -11,8 +19,7 @@ import SwiftUI
 
 class WidgetSyncService {
 
-    // MARK: - Update Widget Data
-
+    /// Calculates current subscription totals and syncs payload to App Group UserDefaults
     static func update(subscriptions: [Subscription]) {
         let activeSubs = subscriptions.filter { !$0.isCancelled }
         

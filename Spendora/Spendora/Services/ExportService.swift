@@ -2,12 +2,23 @@
 //  ExportService.swift
 //  Spendora
 //
+//  Capstone 2026 - Mobile Application Development
+//  Author: Sheikh Naim
+//
+
+/**
+ * Main/Core Functions & Purpose:
+ * ExportService class providing CSV data export capabilities.
+ * Formats active subscription records into RFC 4180 compliant Comma-Separated Values (CSV) text
+ * for external spreadsheet analysis in Apple Numbers, Microsoft Excel, or Google Sheets.
+ */
 
 import Foundation
 import UIKit
 
 class ExportService {
     
+    /// Generates a CSV formatted string from an array of Subscription models
     static func generateCSVString(subscriptions: [Subscription]) -> String {
         var csvString = "Name,Cost,Yearly,Next Billing Date,Category,Monthly Equivalent,Trial Status,Payment Method\n"
         

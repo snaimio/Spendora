@@ -2,6 +2,15 @@
 //  SortOption.swift
 //  Spendora
 //
+//  Capstone 2026 - Mobile Application Development
+//  Author: Sheikh Naim
+//
+
+/**
+ * Main/Core Functions & Purpose:
+ * Enum defining all user-selectable sorting options for the subscriptions list on the main Dashboard.
+ * Supports sorting by Alphabetical order, Highest Cost, Lowest Cost, Renewal Date, Category, and Recently Added.
+ */
 
 import Foundation
 

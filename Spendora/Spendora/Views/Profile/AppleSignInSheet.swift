@@ -2,6 +2,16 @@
 //  AppleSignInSheet.swift
 //  Spendora
 //
+//  Capstone 2026 - Mobile Application Development
+//  Author: Sheikh Naim
+//
+
+/**
+ * Main/Core Functions & Purpose:
+ * AppleSignInSheet modal view handling Apple ID authentication flows.
+ * Supports Apple ID Hide My Email private relay features (`@privaterelay.appleid.com`),
+ * updating active user profile state while maintaining offline device privacy.
+ */
 
 import SwiftUI
 import AuthenticationServices
@@ -10,6 +20,7 @@ struct AppleSignInSheet: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject private var profileManager = UserProfileManager.shared
     
+    // User profile state variables
     @State private var displayName = "Sheikh Naim"
     @State private var useHideMyEmail = true
     @State private var customEmail = "s.naim@privaterelay.appleid.com"

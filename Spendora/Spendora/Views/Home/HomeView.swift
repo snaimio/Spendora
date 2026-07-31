@@ -2,6 +2,17 @@
 //  HomeView.swift
 //  Spendora
 //
+//  Capstone 2026 - Mobile Application Development
+//  Author: Sheikh Naim
+//
+
+/**
+ * Main/Core Functions & Purpose:
+ * HomeView main dashboard view of the Spendora app.
+ * Displays overall monthly/yearly spend totals, upcoming charge cards, search & sort controls,
+ * subscription cards list, quick actions toolbar menu (Yearly Report, Challenges, Savings Score, AI Insights),
+ * and user profile avatar header.
+ */
 
 import SwiftUI
 import SwiftData
@@ -11,6 +22,7 @@ struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var subscriptions: [Subscription]
     
+    // UI state management
     @State private var showingAddSheet = false
     @State private var selectedSubscription: Subscription?
     @State private var searchText = ""

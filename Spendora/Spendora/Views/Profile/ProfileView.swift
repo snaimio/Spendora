@@ -2,6 +2,16 @@
 //  ProfileView.swift
 //  Spendora
 //
+//  Capstone 2026 - Mobile Application Development
+//  Author: Sheikh Naim
+//
+
+/**
+ * Main/Core Functions & Purpose:
+ * ProfileView screen displaying active user profile identity (Guest Mode vs Signed-In Account),
+ * avatar initials, provider status badges (Apple, Google, Email), account management actions (Edit, Switch Account, Sign Out),
+ * and 100% on-device privacy guarantee cards.
+ */
 
 import SwiftUI
 import AuthenticationServices
@@ -10,6 +20,7 @@ struct ProfileView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject private var profileManager = UserProfileManager.shared
     
+    // Modal sheet presentation states
     @State private var showingEmailSheet = false
     @State private var showingAppleSheet = false
     @State private var showingGoogleSheet = false

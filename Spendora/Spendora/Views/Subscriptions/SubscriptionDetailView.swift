@@ -2,6 +2,16 @@
 //  SubscriptionDetailView.swift
 //  Spendora
 //
+//  Capstone 2026 - Mobile Application Development
+//  Author: Sheikh Naim
+//
+
+/**
+ * Main/Core Functions & Purpose:
+ * SubscriptionDetailView screen managing subscription details, editing, and cancellation.
+ * Displays billing history metrics, usage value ratings (1-5 stars), price alert settings,
+ * trial expiration countdowns, and direct deep-link "Cancel on Provider Website" integration.
+ */
 
 import SwiftUI
 import SwiftData
@@ -12,6 +22,7 @@ struct SubscriptionDetailView: View {
     
     let subscription: Subscription
     
+    // Editable subscription fields
     @State private var name: String
     @State private var cost: String
     @State private var category: String

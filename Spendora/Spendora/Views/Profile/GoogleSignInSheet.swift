@@ -2,6 +2,16 @@
 //  GoogleSignInSheet.swift
 //  Spendora
 //
+//  Capstone 2026 - Mobile Application Development
+//  Author: Sheikh Naim
+//
+
+/**
+ * Main/Core Functions & Purpose:
+ * GoogleSignInSheet modal view rendering an authentic Google Account selection portal.
+ * Features 1-tap quick account selection for preset student/developer emails as well as custom email input,
+ * saving credentials directly into UserProfileManager while keeping user data 100% on-device.
+ */
 
 import SwiftUI
 
@@ -9,6 +19,7 @@ struct GoogleSignInSheet: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject private var profileManager = UserProfileManager.shared
     
+    // State variables for form inputs and quick selection
     @State private var displayName = ""
     @State private var email = ""
     @State private var selectedPresetIndex: Int? = nil

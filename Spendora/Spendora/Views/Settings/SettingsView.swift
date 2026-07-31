@@ -2,6 +2,16 @@
 //  SettingsView.swift
 //  Spendora
 //
+//  Capstone 2026 - Mobile Application Development
+//  Author: Sheikh Naim
+//
+
+/**
+ * Main/Core Functions & Purpose:
+ * SettingsView screen presenting configuration options for user profile management,
+ * global currency conversion, appearance theme selection, notification alerts, iCloud Sync & Backup,
+ * data export (CSV/PDF), and Capstone project information.
+ */
 
 import SwiftUI
 import SwiftData
@@ -13,6 +23,7 @@ struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var subscriptions: [Subscription]
     
+    // UI presentation states
     @State private var showingResetAlert = false
     @State private var showingPrivacyPolicy = false
     @State private var showingResetConfirmation = false

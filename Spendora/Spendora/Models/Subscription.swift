@@ -2,6 +2,16 @@
 //  Subscription.swift
 //  Spendora
 //
+//  Capstone 2026 - Mobile Application Development
+//  Author: Sheikh Naim
+//
+
+/**
+ * Main/Core Functions & Purpose:
+ * SwiftData @Model schema representing a user's subscription item in Spendora.
+ * Encapsulates core financial metrics (monthly/yearly costs, billing cycles, currency conversion),
+ * trial countdown logic, usage ratings, price increase tracking, and direct cancellation portal resolution.
+ */
 
 import Foundation
 import SwiftData
@@ -9,8 +19,7 @@ import SwiftData
 @Model
 final class Subscription {
 
-    // MARK: - Core Properties
-
+    // Core identification and cost properties stored in local SQLite database
     var id: UUID
     var name: String
     var cost: Double

@@ -2,11 +2,22 @@
 //  BudgetService.swift
 //  Spendora
 //
+//  Capstone 2026 - Mobile Application Development
+//  Author: Sheikh Naim
+//
+
+/**
+ * Main/Core Functions & Purpose:
+ * BudgetService singleton class managing overall monthly and yearly spending caps.
+ * Handles category-level budget limits, spending alerts, budget status calculations (under/over budget),
+ * and persists configuration locally in UserDefaults.
+ */
 
 import Foundation
 import SwiftUI
 
 class BudgetService {
+    /// Shared singleton instance for app-wide budget calculations
     static let shared = BudgetService()
 
     private let defaults = UserDefaults.standard
@@ -14,6 +25,7 @@ class BudgetService {
     private let yearlyBudgetKey = "yearlyBudget"
     private let categoryBudgetsKey = "categoryBudgets"
 
+    /// Overall monthly spending budget limit
     var monthlyBudget: Double {
         get { defaults.double(forKey: budgetKey) }
         set { defaults.set(newValue, forKey: budgetKey) }
