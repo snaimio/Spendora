@@ -113,19 +113,19 @@ struct AddSubscriptionView: View {
         let newSubscription = Subscription(
             name: name.trimmingCharacters(in: .whitespacesAndNewlines),
             cost: costValue,
+            category: selectedCategory,
             isYearly: isYearly,
             nextBillingDate: nextBillingDate,
-            category: selectedCategory,
             notes: trimmedNotes.isEmpty ? nil : trimmedNotes,
+            colorHex: selectedColorHex,
             isTrial: false,
             trialEndDate: nil,
             expectedPrice: nil,
             priceAlertEnabled: false,
+            usageRating: 0,
             customCategory: nil,
             paymentMethod: selectedPaymentMethod.rawValue,
-            tags: nil,
-            colorHex: selectedColorHex,
-            usageRating: 0
+            tags: nil
         )
         
         modelContext.insert(newSubscription)

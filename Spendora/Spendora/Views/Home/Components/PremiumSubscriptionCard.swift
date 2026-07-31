@@ -49,9 +49,7 @@ struct PremiumSubscriptionCard: View {
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
                     
-                    if subscription.status == .paused {
-                        PremiumBadge(text: "Paused", color: .orange)
-                    } else if subscription.status == .cancelled {
+                    if subscription.isCancelled {
                         PremiumBadge(text: "Cancelled", color: .red)
                     } else if subscription.isUpcoming {
                         PremiumBadge(text: "Soon", color: Color(hex: "#FFE66D"))
@@ -70,7 +68,7 @@ struct PremiumSubscriptionCard: View {
                         .foregroundColor(.secondary)
                     
                     if subscription.isYearly {
-                        Text("(\(CurrencyManager.shared.format(subscription.monthlyCost, currency: subscription.currency))/mo)")
+                        Text("(\(subscription.monthlyCostFormatted)/mo)")
                             .font(.system(size: 12, weight: .regular, design: .rounded))
                             .foregroundColor(.secondary)
                     }

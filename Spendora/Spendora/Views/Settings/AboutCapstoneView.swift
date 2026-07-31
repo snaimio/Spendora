@@ -143,49 +143,7 @@ struct AboutCapstoneView: View {
                 .padding(.horizontal)
                 
                 // Architectural Highlights Card
-                VStack(alignment: .leading, spacing: 14) {
-                    Label("Core Architecture Highlights", systemImage: "cpu.fill")
-                        .font(.system(.headline, design: .rounded))
-                        .foregroundColor(.brandSecondary)
-                    
-                    Divider()
-                    
-                    VStack(spacing: 12) {
-                        FeatureHighlightRow(
-                            icon: "externaldrive.fill",
-                            title: "On-Device SwiftData Persistence",
-                            subtitle: "Encrypted, private local storage without external server dependencies."
-                        )
-                        
-                        FeatureHighlightRow(
-                            icon: "chart.line.uptrend.xyaxis.circle.fill",
-                            title: "Swift Charts & Financial Analytics",
-                            subtitle: "Dynamic expenditure breakdowns, yearly trends & savings score engine."
-                        )
-                        
-                        FeatureHighlightRow(
-                            icon: "bell.badge.fill",
-                            title: "Smart Notification Scheduler",
-                            subtitle: "Automated UNUserNotificationCenter billing date alerts & reminders."
-                        )
-                        
-                        FeatureHighlightRow(
-                            icon: "doc.text.fill",
-                            title: "CSV & PDF Export Pipeline",
-                            subtitle: "Native document generation engine for clean tax & budget exports."
-                        )
-                        
-                        FeatureHighlightRow(
-                            icon: "square.grid.2x2.fill",
-                            title: "WidgetKit Integration",
-                            subtitle: "Live app group data sync powering interactive iOS Home Screen widgets."
-                        )
-                    }
-                }
-                .padding(18)
-                .background(Color(.secondarySystemBackground))
-                .cornerRadius(20)
-                .padding(.horizontal)
+                AboutArchitecturalHighlightsCard()
                 
                 // Footer
                 Text("Designed & Built for iOS 2026 Mobile Capstone Project")
@@ -207,32 +165,6 @@ struct AboutCapstoneView: View {
         }
         .fullScreenCover(isPresented: $showingOnboarding) {
             PremiumOnboardingView(hasCompletedOnboarding: .constant(true))
-        }
-    }
-}
-
-// MARK: - Helper Feature Row
-struct FeatureHighlightRow: View {
-    let icon: String
-    let title: String
-    let subtitle: String
-    
-    var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(systemName: icon)
-                .font(.title3)
-                .foregroundColor(.brandPrimary)
-                .frame(width: 28)
-            
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.system(.subheadline, design: .rounded))
-                    .fontWeight(.semibold)
-                
-                Text(subtitle)
-                    .font(.system(.caption, design: .rounded))
-                    .foregroundColor(.secondary)
-            }
         }
     }
 }

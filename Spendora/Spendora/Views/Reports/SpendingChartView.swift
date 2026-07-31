@@ -29,7 +29,7 @@ struct SpendingChartView: View {
         case .monthly:
             let categories = Dictionary(grouping: subscriptions) { $0.effectiveCategory }
             return categories.map { (key: String, value: [Subscription]) in
-                let total = value.reduce(0) { $0 + $1.normalizedMonthlyCost }
+                let total = value.reduce(0.0) { $0 + $1.monthlyCost }
                 return (label: key, amount: total)
             }
             .sorted { $0.amount > $1.amount }
@@ -37,7 +37,7 @@ struct SpendingChartView: View {
         case .yearly:
             let categories = Dictionary(grouping: subscriptions) { $0.effectiveCategory }
             return categories.map { (key: String, value: [Subscription]) in
-                let total = value.reduce(0) { $0 + $1.normalizedYearlyCost }
+                let total = value.reduce(0.0) { $0 + $1.yearlyCost }
                 return (label: key, amount: total)
             }
             .sorted { $0.amount > $1.amount }
@@ -45,7 +45,7 @@ struct SpendingChartView: View {
     }
     
     var totalSpending: Double {
-        chartData.reduce(0) { $0 + $1.amount }
+        chartData.reduce(0.0) { $0 + $1.amount }
     }
     
     var body: some View {
@@ -164,45 +164,6 @@ struct SpendingBarChart: View {
                 AxisValueLabel()
                     .font(.caption)
                     .foregroundStyle(.secondary)
-            }
-        }
-    }
-}
-
-// MARK: - Chart Summary Cards
-struct ChartSummaryCards: View {
-    let chartData: [(label: String, amount: Double)]
-    let totalSpending: Double
-    let selectedTimeframe: ChartTimeframe
-    
-    var body: some View {
-        VStack(spacing: 12) {
-            HStack(spacing: 16) {
-                StatCard(
-                    icon: "chart.pie.fill",
-                    title: "Total \(selectedTimeframe.rawValue)",
-                    value: CurrencyManager.shared.format(totalSpending),
-                    color: .brandPrimary
-                )
-                
-                StatCard(
-                    icon: "number.circle.fill",
-                    title: "Categories",
-                    value: "\(chartData.count)",
-                    color: .brandSecondary
-                )
-            }
-            .padding(.horizontal)
-            
-            if let topCategory = chartData.first {
-                StatCard(
-                    icon: "star.fill",
-                    title: "Top Category",
-                    value: topCategory.label,
-                    subtitle: CurrencyManager.shared.format(topCategory.amount),
-                    color: .yellow
-                )
-                .padding(.horizontal)
             }
         }
     }

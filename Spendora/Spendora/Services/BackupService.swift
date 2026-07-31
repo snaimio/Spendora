@@ -107,18 +107,18 @@ class BackupService {
             let subscription = Subscription(
                 name: name,
                 cost: cost,
+                category: item["category"] as? String ?? "Other",
                 isYearly: item["isYearly"] as? Bool ?? false,
                 nextBillingDate: nextBillingDate,
-                category: item["category"] as? String ?? "Other",
                 notes: item["notes"] as? String,
+                colorHex: item["colorHex"] as? String,
                 isTrial: item["isTrial"] as? Bool ?? false,
                 trialEndDate: trialEndDate,
                 expectedPrice: item["expectedPrice"] as? Double,
                 priceAlertEnabled: item["priceAlertEnabled"] as? Bool ?? false,
                 customCategory: item["customCategory"] as? String,
                 paymentMethod: item["paymentMethod"] as? String,
-                tags: item["tags"] as? [String] ?? [],
-                colorHex: item["colorHex"] as? String
+                tags: item["tags"] as? [String] ?? []
             )
 
             modelContext.insert(subscription)
