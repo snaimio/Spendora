@@ -22,18 +22,31 @@ struct HeroCardView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            Rectangle()
-                .fill(
-                    LinearGradient(
-                        colors: [Color(hex: "#FF6B6B"), Color(hex: "#FFE66D")],
-                        startPoint: .leading,
-                        endPoint: .trailing
+            // Brand Header Row
+            HStack(spacing: 8) {
+                Image("AppLogo")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 32, height: 32)
+                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                    .shadow(color: Color.brandPrimary.opacity(0.3), radius: 4, x: 0, y: 2)
+                
+                Text("SPENDORA")
+                    .font(.system(size: 15, weight: .black, design: .rounded))
+                    .tracking(1.8)
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [.brandPrimary, .brandSecondary],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
                     )
-                )
-                .frame(height: 4)
-                .padding(.horizontal, 20)
-                .padding(.bottom, 12)
-            
+                
+                Spacer()
+            }
+            .padding(.horizontal, 20)
+            .padding(.bottom, 8)
+
             HStack(alignment: .top, spacing: 16) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("THIS MONTH")

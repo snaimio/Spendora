@@ -33,10 +33,10 @@ struct CloudSyncView: View {
             HStack(spacing: 12) {
                 ZStack {
                     Circle()
-                        .fill(Color.blue.opacity(0.12))
+                        .fill(Color.brandPrimary.opacity(0.12))
                         .frame(width: 40, height: 40)
                     Image(systemName: "icloud.fill")
-                        .foregroundColor(.blue)
+                        .foregroundColor(.brandPrimary)
                         .font(.title3)
                 }
 
@@ -81,14 +81,14 @@ struct CloudSyncView: View {
             Toggle(isOn: $cloudService.autoSyncEnabled) {
                 HStack(spacing: 8) {
                     Image(systemName: "arrow.triangle.2.circlepath.icloud.fill")
-                        .foregroundColor(.blue)
+                        .foregroundColor(.brandPrimary)
                         .font(.subheadline)
                     Text("Auto Cloud Sync")
                         .font(.system(.subheadline, design: .rounded))
                         .foregroundColor(.textPrimary)
                 }
             }
-            .tint(.blue)
+            .tint(.brandPrimary)
             
             Divider()
 
@@ -115,7 +115,13 @@ struct CloudSyncView: View {
                     .fontWeight(.semibold)
                     .frame(maxWidth: .infinity)
                     .frame(height: 44)
-                    .background(Color.blue)
+                    .background(
+                        LinearGradient(
+                            colors: [.brandPrimary, .brandSecondary],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
                     .foregroundColor(.white)
                     .cornerRadius(12)
                 }
@@ -134,8 +140,8 @@ struct CloudSyncView: View {
                     .fontWeight(.semibold)
                     .frame(maxWidth: .infinity)
                     .frame(height: 44)
-                    .background(Color.blue.opacity(0.12))
-                    .foregroundColor(.blue)
+                    .background(Color.brandPrimary.opacity(0.12))
+                    .foregroundColor(.brandPrimary)
                     .cornerRadius(12)
                 }
                 .disabled(cloudService.isSyncing)

@@ -7,57 +7,84 @@ import SwiftUI
 
 struct PremiumAppInfoRow: View {
     var body: some View {
-        HStack(spacing: 14) {
-            Image("AppLogo")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 52, height: 52)
-                .clipShape(RoundedRectangle(cornerRadius: 13, style: .continuous))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 13, style: .continuous)
-                        .stroke(
-                            LinearGradient(
-                                colors: [.brandPrimary.opacity(0.6), .brandSecondary.opacity(0.3)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ),
-                            lineWidth: 1.5
+        HStack(spacing: 16) {
+            ZStack {
+                // Background Ambient Glow Ring
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .fill(
+                        LinearGradient(
+                            colors: [.brandPrimary.opacity(0.3), .brandSecondary.opacity(0.15)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
                         )
-                )
-                .shadow(color: Color.brandPrimary.opacity(0.2), radius: 6, x: 0, y: 3)
-            
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Spendora")
-                    .font(.system(.headline, design: .rounded))
-                    .fontWeight(.bold)
+                    )
+                    .frame(width: 66, height: 66)
+                    .blur(radius: 4)
+
+                Image("AppLogo")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 60, height: 60)
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .stroke(
+                                LinearGradient(
+                                    colors: [.brandPrimary, .brandSecondary.opacity(0.8)],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                ),
+                                lineWidth: 2.0
+                            )
+                    )
+                    .shadow(color: Color.brandPrimary.opacity(0.35), radius: 8, x: 0, y: 4)
+            }
+
+            VStack(alignment: .leading, spacing: 3) {
+                HStack(spacing: 6) {
+                    Text("SPENDORA")
+                        .font(.system(size: 18, weight: .black, design: .rounded))
+                        .tracking(1.2)
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [.brandPrimary, .brandSecondary],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                    
+                    HStack(spacing: 3) {
+                        Image(systemName: "sparkles")
+                            .font(.system(size: 9))
+                        Text("CAPSTONE")
+                            .font(.system(size: 9, weight: .bold, design: .rounded))
+                    }
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 7)
+                    .padding(.vertical, 3)
+                    .background(
+                        LinearGradient(
+                            colors: [.brandPrimary, .brandSecondary],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .cornerRadius(8)
+                }
+
+                Text("Smart Subscription & Expense Intelligence")
+                    .font(.system(size: 11, weight: .medium, design: .rounded))
+                    .foregroundColor(.secondary)
+                    .lineLimit(1)
                 
                 Text("Version \(getAppVersion())")
-                    .font(.system(.caption, design: .rounded))
-                    .foregroundColor(.secondary)
+                    .font(.system(size: 10, weight: .regular, design: .rounded))
+                    .foregroundColor(.secondary.opacity(0.8))
             }
-            
-            Spacer()
-            
-            HStack(spacing: 4) {
-                Image(systemName: "sparkles")
-                    .font(.system(size: 10))
-                Text("PRO")
-                    .font(.system(.caption2, design: .rounded))
-                    .fontWeight(.bold)
-            }
-            .foregroundColor(.white)
-            .padding(.horizontal, 10)
-            .padding(.vertical, 4)
-            .background(
-                LinearGradient(
-                    colors: [.brandPrimary, .brandSecondary],
-                    startPoint: .leading,
-                    endPoint: .trailing
-                )
-            )
-            .cornerRadius(8)
+
+            Spacer(minLength: 0)
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 8)
     }
     
     private func getAppVersion() -> String {
