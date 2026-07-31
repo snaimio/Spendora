@@ -11,6 +11,8 @@ struct ProfileView: View {
     @ObservedObject private var profileManager = UserProfileManager.shared
     
     @State private var showingEmailSheet = false
+    @State private var showingAppleSheet = false
+    @State private var showingGoogleSheet = false
     @State private var showingEditSheet = false
     @State private var showingSignOutAlert = false
     
@@ -111,7 +113,7 @@ struct ProfileView: View {
                             // Sign in with Apple Button
                             Button {
                                 generator.impactOccurred()
-                                profileManager.signInWithApple()
+                                showingAppleSheet = true
                             } label: {
                                 HStack {
                                     Image(systemName: "apple.logo")
@@ -130,7 +132,7 @@ struct ProfileView: View {
                             // Google Sign-In Button
                             Button {
                                 generator.impactOccurred()
-                                profileManager.signInWithGoogle()
+                                showingGoogleSheet = true
                             } label: {
                                 HStack(spacing: 10) {
                                     Image(systemName: "g.circle.fill")
@@ -256,6 +258,12 @@ struct ProfileView: View {
             }
             .sheet(isPresented: $showingEmailSheet) {
                 EmailSignInSheet()
+            }
+            .sheet(isPresented: $showingAppleSheet) {
+                AppleSignInSheet()
+            }
+            .sheet(isPresented: $showingGoogleSheet) {
+                GoogleSignInSheet()
             }
             .sheet(isPresented: $showingEditSheet) {
                 EditProfileSheet()
