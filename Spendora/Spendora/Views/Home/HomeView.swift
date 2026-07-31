@@ -48,7 +48,14 @@ struct HomeView: View {
                 
                 ScrollView {
                     VStack(spacing: 16) {
-                        // Hero Section
+                        // Brand Header & Profile Avatar Bar
+                        DashboardBrandHeaderView {
+                            generator.impactOccurred()
+                            showingProfileSheet = true
+                        }
+                        .opacity(animateHeader ? 1 : 0)
+                        
+                        // Hero Spending Summary Card
                         HeroCardView(
                             totalMonthly: totalMonthly,
                             totalYearly: totalYearly,
@@ -56,7 +63,7 @@ struct HomeView: View {
                             subscriptionCount: subscriptionCount
                         )
                         .opacity(animateHeader ? 1 : 0)
-                        .offset(y: animateHeader ? 0 : 20)
+                        .offset(y: animateHeader ? 0 : 15)
                         
                         if !subscriptions.isEmpty {
                             if let next = nextSubscription {
@@ -113,33 +120,8 @@ struct HomeView: View {
                 }
             }
             .navigationTitle("Dashboard")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        generator.impactOccurred()
-                        showingProfileSheet = true
-                    } label: {
-                        ZStack {
-                            Circle()
-                                .fill(
-                                    LinearGradient(
-                                        colors: [
-                                            Color(hex: profileManager.profile.avatarColorHex),
-                                            Color(hex: profileManager.profile.avatarColorHex).opacity(0.6)
-                                        ],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                                .frame(width: 32, height: 32)
-                            
-                            Text(profileManager.profile.initials)
-                                .font(.system(size: 12, weight: .bold, design: .rounded))
-                                .foregroundColor(.white)
-                        }
-                    }
-                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         generator.impactOccurred()
