@@ -273,7 +273,13 @@ struct HomeView: View {
         defaults.set(total, forKey: "totalMonthly")
         defaults.set(next?.displayName ?? "None", forKey: "nextSubName")
         defaults.set(next?.nextBillingDate.timeIntervalSince1970 ?? 0, forKey: "nextSubDate")
+        defaults.set(next?.monthlyCost ?? 0.0, forKey: "nextSubCost")
+        
         WidgetCenter.shared.reloadAllTimelines()
+        
+        if CloudSyncService.shared.autoSyncEnabled {
+            CloudSyncService.shared.syncSubscriptions(subscriptions)
+        }
     }
 }
 
