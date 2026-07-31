@@ -18,6 +18,9 @@ struct HomeView: View {
     @State private var sortOption: SortOption = .alphabetical
     @State private var animateHeader = false
     
+    @ObservedObject private var profileManager = UserProfileManager.shared
+    @State private var showingProfileSheet = false
+    
     @State private var showingYearlyReport = false
     @State private var showingChallenges = false
     @State private var showingSavingsScore = false
@@ -144,6 +147,31 @@ struct HomeView: View {
             .navigationTitle("Dashboard")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        generator.impactOccurred()
+                        showingProfileSheet = true
+                    } label: {
+                        ZStack {
+                            Circle()
+                                .fill(
+                                    LinearGradient(
+                                        colors: [
+                                            Color(hex: profileManager.profile.avatarColorHex),
+                                            Color(hex: profileManager.profile.avatarColorHex).opacity(0.6)
+                                        ],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
+                                .frame(width: 32, height: 32)
+                            
+                            Text(profileManager.profile.initials)
+                                .font(.system(size: 12, weight: .bold, design: .rounded))
+                                .foregroundColor(.white)
+                        }
+                    }
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         generator.impactOccurred()
@@ -221,6 +249,9 @@ struct HomeView: View {
                 NavigationStack {
                     AIInsightsView(subscriptions: filteredSubscriptions)
                 }
+            }
+            .sheet(isPresented: $showingProfileSheet) {
+                ProfileView()
             }
             .onChange(of: subscriptions.count) { _, _ in
                 updateWidgetData()
