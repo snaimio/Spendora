@@ -1,8 +1,3 @@
-//
-//  Constants.swift
-//  Spendora
-//
-
 import Foundation
 
 struct AppConstants {

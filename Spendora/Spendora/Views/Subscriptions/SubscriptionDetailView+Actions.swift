@@ -1,11 +1,3 @@
-//
-//  SubscriptionDetailView+Actions.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * Extension for SubscriptionDetailView containing data mutation actions (save, delete, reset values, and get cancellation URL).

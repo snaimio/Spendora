@@ -1,8 +1,3 @@
-//
-//  SpendoraWidget.swift
-//  SpendoraWidget
-//
-
 import WidgetKit
 import SwiftUI
 

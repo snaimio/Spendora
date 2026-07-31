@@ -1,11 +1,3 @@
-//
-//  DetailRow.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * DetailRow reusable component displaying key-value rows with an SF Symbol icon.

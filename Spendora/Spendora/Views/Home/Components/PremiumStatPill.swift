@@ -1,8 +1,3 @@
-//
-//  PremiumStatPill.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct PremiumStatPill: View {

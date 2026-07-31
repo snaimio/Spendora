@@ -1,8 +1,3 @@
-//
-//  AddSubscriptionSaveButton.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct AddSubscriptionSaveButton: View {

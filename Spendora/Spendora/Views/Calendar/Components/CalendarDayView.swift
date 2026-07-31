@@ -1,11 +1,3 @@
-//
-//  CalendarDayView.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * CalendarDayView component displaying date numbers, today indicator circle, and subscription billing dots on the calendar grid.

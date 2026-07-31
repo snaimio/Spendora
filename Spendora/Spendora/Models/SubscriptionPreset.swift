@@ -1,11 +1,3 @@
-//
-//  SubscriptionPreset.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * Catalog of popular pre-configured subscription presets (Netflix, Spotify, Apple, ChatGPT, Amazon Prime, etc.).

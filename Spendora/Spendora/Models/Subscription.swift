@@ -1,11 +1,3 @@
-//
-//  Subscription.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * Subscription SwiftData model representing an active, trial, or cancelled subscription record.
@@ -18,50 +10,72 @@ import SwiftData
 @Model
 final class Subscription {
 
-    // MARK: - Properties
+    // MARK: - Core Subscription Metadata Properties
 
+    /// Unique identifier for each subscription record
     var id: UUID = UUID()
 
+    /// Display name of the subscription service (e.g. Netflix, Spotify, iCloud)
     var name: String = ""
 
+    /// Billing cost amount per billing cycle
     var cost: Double = 0.0
 
+    /// Category classification (e.g. Entertainment, Utilities, Productivity)
     var category: String = "Other"
 
+    /// Flag indicating whether billing cycle is yearly (true) or monthly (false)
     var isYearly: Bool = false
 
+    /// Next scheduled renewal / billing charge date
     var nextBillingDate: Date = Date()
 
+    /// Optional user notes or reminders regarding this subscription
     var notes: String?
 
+    /// Accent theme color hex code string for UI card rendering
     var colorHex: String?
 
+    /// Flag indicating if this subscription is currently on a free trial period
     var isTrial: Bool = false
 
+    /// Expiration date for free trial period if isTrial is true
     var trialEndDate: Date?
 
+    /// Tracks whether trial successfully converted into a paid subscription
     var trialConvertedToPaid: Bool = false
 
+    /// Expected baseline cost used for price change alert warnings
     var expectedPrice: Double?
 
+    /// Toggle flag to enable notification alerts when cost exceeds expected price
     var priceAlertEnabled: Bool = false
 
+    /// User utility rating from 1 to 5 stars measuring subscription value
     var usageRating: Int = 3
 
+    /// Custom user-defined category override string
     var customCategory: String?
 
+    /// Payment method used (e.g. Credit Card, Apple Pay, PayPal)
     var paymentMethod: String?
 
+    /// Optional search and filter tag strings
     var tags: [String]?
 
+    /// Currency code string (e.g. CAD, USD, EUR, GBP)
     var currency: String = "USD"
 
+    /// Status flag indicating if subscription was cancelled
     var isCancelled: Bool = false
 
+    /// Date when subscription was marked as cancelled
     var cancellationDate: Date?
 
+    /// User-provided reason for cancelling subscription
     var cancellationReason: String?
 
+    /// Timestamp when record was created in app
     var createdAt: Date = Date()
 
     // MARK: - Initializer

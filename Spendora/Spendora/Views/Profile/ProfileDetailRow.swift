@@ -1,11 +1,3 @@
-//
-//  ProfileDetailRow.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * ProfileDetailRow reusable row component displaying account key-value details (e.g. Member Since, Storage Enclave).

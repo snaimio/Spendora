@@ -1,11 +1,3 @@
-//
-//  EmailSignInSheet.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * EmailSignInSheet form modal allowing users to sign in or set up a profile with a custom full name and email address.

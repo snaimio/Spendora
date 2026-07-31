@@ -1,8 +1,3 @@
-//
-//  RatingView.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct RatingView: View {

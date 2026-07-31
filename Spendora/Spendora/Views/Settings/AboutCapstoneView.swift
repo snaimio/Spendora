@@ -1,11 +1,3 @@
-//
-//  AboutCapstoneView.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * AboutCapstoneView screen documenting project metadata, developer contact details (support@spendora.app),

@@ -1,8 +1,3 @@
-//
-//  SortChip.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct SortChip: View {

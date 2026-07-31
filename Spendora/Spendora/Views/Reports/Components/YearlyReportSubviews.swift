@@ -1,11 +1,3 @@
-//
-//  YearlyReportSubviews.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * YearlyReportSubviews component file containing MonthlyTrendChartView and TopCategoryView for financial report visualization.

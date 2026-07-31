@@ -1,8 +1,3 @@
-//
-//  PremiumOnboardingView.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct PremiumOnboardingView: View {

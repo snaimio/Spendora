@@ -1,8 +1,3 @@
-//
-//  ChartTimeframePicker.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct ChartTimeframePicker: View {

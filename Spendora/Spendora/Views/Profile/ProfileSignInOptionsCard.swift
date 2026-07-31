@@ -1,11 +1,3 @@
-//
-//  ProfileSignInOptionsCard.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * ProfileSignInOptionsCard subview component displaying Apple, Google, and Email authentication action buttons for guest users.

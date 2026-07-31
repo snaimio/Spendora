@@ -1,8 +1,3 @@
-//
-//  NextChargeCard.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct NextChargeCard: View {

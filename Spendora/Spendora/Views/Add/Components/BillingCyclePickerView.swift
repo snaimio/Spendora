@@ -1,8 +1,3 @@
-//
-//  BillingCyclePickerView.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct BillingCyclePickerView: View {

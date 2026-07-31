@@ -1,11 +1,3 @@
-//
-//  SpendoraApp.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * Entry point for the Spendora iOS application.

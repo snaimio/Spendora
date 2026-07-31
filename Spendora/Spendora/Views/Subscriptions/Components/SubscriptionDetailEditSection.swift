@@ -1,11 +1,3 @@
-//
-//  SubscriptionDetailEditSection.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * SubscriptionDetailEditSection component containing input form fields (Name, Cost, Category, Payment Method, Billing Cycle, Trial End Date, Notes) when editing a subscription.

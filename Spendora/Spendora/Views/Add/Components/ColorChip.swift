@@ -1,8 +1,3 @@
-//
-//  ColorChip.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct ColorChip: View {

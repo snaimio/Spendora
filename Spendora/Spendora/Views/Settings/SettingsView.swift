@@ -1,11 +1,3 @@
-//
-//  SettingsView.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * SettingsView screen presenting configuration options for user profile management,

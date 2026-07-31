@@ -1,8 +1,3 @@
-//
-//  CurrencySection.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct CurrencySection: View {

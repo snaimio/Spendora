@@ -1,11 +1,3 @@
-//
-//  MagicFinderService.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * MagicFinderService engine providing smart subscription detection from raw text or transaction descriptions.

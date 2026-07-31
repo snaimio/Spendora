@@ -1,8 +1,3 @@
-//
-//  PremiumBadge.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct PremiumBadge: View {

@@ -1,8 +1,3 @@
-//
-//  YearlyStatCard.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct YearlyStatCard: View {

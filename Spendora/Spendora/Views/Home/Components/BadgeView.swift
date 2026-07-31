@@ -1,8 +1,3 @@
-//
-//  BadgeView.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct BadgeView: View {

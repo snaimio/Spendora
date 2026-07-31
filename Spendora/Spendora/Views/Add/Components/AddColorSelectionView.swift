@@ -1,8 +1,3 @@
-//
-//  AddColorSelectionView.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct AddColorSelectionView: View {

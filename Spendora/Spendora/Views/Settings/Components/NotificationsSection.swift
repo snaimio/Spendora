@@ -1,8 +1,3 @@
-//
-//  NotificationsSection.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct NotificationsSection: View {

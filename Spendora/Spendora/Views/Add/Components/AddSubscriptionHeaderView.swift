@@ -1,8 +1,3 @@
-//
-//  AddSubscriptionHeaderView.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct AddSubscriptionHeaderView: View {

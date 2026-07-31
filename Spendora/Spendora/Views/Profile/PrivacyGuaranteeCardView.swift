@@ -1,11 +1,3 @@
-//
-//  PrivacyGuaranteeCardView.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * PrivacyGuaranteeCardView renders the 100% On-Device Privacy shield card on the Profile screen.

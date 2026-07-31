@@ -1,8 +1,3 @@
-//
-//  CategoryPickerView.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct CategoryPickerView: View {

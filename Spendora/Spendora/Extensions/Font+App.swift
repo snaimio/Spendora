@@ -1,8 +1,3 @@
-//
-//  Font+App.swift
-//  Spendora
-//
-
 import SwiftUI
 
 extension Font {

@@ -1,8 +1,3 @@
-//
-//  PremiumSubscriptionCard.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct PremiumSubscriptionCard: View {

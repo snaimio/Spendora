@@ -1,8 +1,3 @@
-//
-//  StringExtensions.swift
-//  Spendora
-//
-
 import Foundation
 
 extension String {

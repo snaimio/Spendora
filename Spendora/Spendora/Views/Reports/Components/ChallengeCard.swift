@@ -1,11 +1,3 @@
-//
-//  ChallengeCard.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * Challenge model definition and ChallengeCard view component displaying savings challenge progress and completion badge.

@@ -1,11 +1,3 @@
-//
-//  OnboardingPage.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * OnboardingPage model defining metadata, icon, title, description, accent color, and optional image asset name for welcome slides.

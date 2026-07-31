@@ -1,8 +1,3 @@
-//
-//  UsageRatingView.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct UsageRatingView: View {

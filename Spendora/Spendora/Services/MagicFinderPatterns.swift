@@ -1,11 +1,3 @@
-//
-//  MagicFinderPatterns.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * Extension for MagicFinderService providing keyword dictionaries for subscription and transaction detection.

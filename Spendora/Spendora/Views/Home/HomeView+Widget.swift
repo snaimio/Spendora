@@ -1,11 +1,3 @@
-//
-//  HomeView+Widget.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * Extension for HomeView providing updateWidgetData method for App Group shared storage and timeline refresh.

@@ -1,8 +1,3 @@
-//
-//  PremiumFloatingAddButton.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct PremiumFloatingAddButton: View {

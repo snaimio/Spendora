@@ -1,8 +1,3 @@
-//
-//  SavingsScoreView.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct SavingsScoreView: View {

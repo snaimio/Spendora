@@ -1,8 +1,3 @@
-//
-//  PremiumAppInfoRow.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct PremiumAppInfoRow: View {

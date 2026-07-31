@@ -1,8 +1,3 @@
-//
-//  AppTourSection.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct AppTourSection: View {

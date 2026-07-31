@@ -1,8 +1,3 @@
-//
-//  SubscriptionCalendarView.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct SubscriptionCalendarView: View {

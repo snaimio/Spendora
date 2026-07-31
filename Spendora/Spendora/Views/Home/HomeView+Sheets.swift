@@ -1,11 +1,3 @@
-//
-//  HomeView+Sheets.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * Extension for HomeView containing sheet presentation modifiers (Add Subscription, Details, Reports, Profile, AI Insights).

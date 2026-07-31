@@ -1,8 +1,3 @@
-//
-//  PrivacyPolicyView.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct PrivacyPolicyView: View {

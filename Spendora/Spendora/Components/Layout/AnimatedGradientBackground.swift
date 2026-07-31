@@ -1,8 +1,3 @@
-//
-//  AnimatedGradientBackground.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct AnimatedGradientBackground: View {

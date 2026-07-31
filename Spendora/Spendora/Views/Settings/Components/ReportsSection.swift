@@ -1,8 +1,3 @@
-//
-//  ReportsSection.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct ReportsSection: View {

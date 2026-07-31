@@ -1,11 +1,3 @@
-//
-//  SettingsUserProfileRow.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * SettingsUserProfileRow component displaying current user avatar, email, and authentication badge.

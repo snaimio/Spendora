@@ -1,8 +1,3 @@
-//
-//  MagicFinderServiceTests.swift
-//  SpendoraTests
-//
-
 import XCTest
 @testable import Spendora
 

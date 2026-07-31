@@ -1,11 +1,3 @@
-//
-//  PDFExportService.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * PDFExportService class using CoreGraphics and `UIGraphicsPDFRenderer` to render professional, formatted PDF financial reports.

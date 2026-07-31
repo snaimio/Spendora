@@ -1,8 +1,3 @@
-//
-//  ShareableChallenges.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct ShareableChallenges: View {

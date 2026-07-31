@@ -1,8 +1,3 @@
-//
-//  CostInputField.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct CostInputField: View {

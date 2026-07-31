@@ -1,11 +1,3 @@
-//
-//  HomeHeaderCards.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * HomeHeaderCards component file containing HeroCardView, HeroPill, and NextChargeCardView.

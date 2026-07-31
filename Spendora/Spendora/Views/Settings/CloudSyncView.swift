@@ -1,11 +1,3 @@
-//
-//  CloudSyncView.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * CloudSyncView card component embedded in Settings.

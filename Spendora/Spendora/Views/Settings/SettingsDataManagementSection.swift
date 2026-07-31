@@ -1,11 +1,3 @@
-//
-//  SettingsDataManagementSection.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * SettingsDataManagementSection component containing CSV/PDF export, JSON backup, file import, and master data reset triggers.

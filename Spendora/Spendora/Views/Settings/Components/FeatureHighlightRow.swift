@@ -1,11 +1,3 @@
-//
-//  FeatureHighlightRow.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * FeatureHighlightRow helper component displaying icon, title, and description for capstone highlights.

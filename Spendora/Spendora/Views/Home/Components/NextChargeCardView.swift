@@ -1,11 +1,3 @@
-//
-//  NextChargeCardView.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * NextChargeCardView component displaying the upcoming subscription payment amount, days remaining countdown badge, and service name.

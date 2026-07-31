@@ -1,11 +1,3 @@
-//
-//  UserProfileManager.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 import Foundation
 import SwiftUI
 import Combine

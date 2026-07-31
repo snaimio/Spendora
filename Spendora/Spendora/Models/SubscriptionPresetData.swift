@@ -1,11 +1,3 @@
-//
-//  SubscriptionPresetData.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * Extension providing the static list of pre-configured subscription presets.

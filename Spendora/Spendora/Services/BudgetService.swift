@@ -1,11 +1,3 @@
-//
-//  BudgetService.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * BudgetService singleton class managing overall monthly and yearly spending caps.

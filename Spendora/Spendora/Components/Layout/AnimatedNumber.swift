@@ -1,8 +1,3 @@
-//
-//  AnimatedNumber.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct AnimatedNumber: View {

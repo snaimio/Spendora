@@ -1,8 +1,3 @@
-//
-//  AIInsightCard.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct AIInsightCard: View {

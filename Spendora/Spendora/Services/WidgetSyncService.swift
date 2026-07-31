@@ -1,11 +1,3 @@
-//
-//  WidgetSyncService.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * WidgetSyncService class syncing live subscription statistics to iOS Home Screen Widgets.

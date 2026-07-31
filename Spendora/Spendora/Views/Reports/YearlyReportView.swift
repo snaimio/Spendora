@@ -1,8 +1,3 @@
-//
-//  YearlyReportView.swift
-//  Spendora
-//
-
 import SwiftUI
 import Charts
 

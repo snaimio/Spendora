@@ -1,10 +1,3 @@
-//
-//  SpendoraTests.swift
-//  SpendoraTests
-//
-//  Created by Sheikh Naim on 2026-07-17.
-//
-
 import Testing
 
 struct SpendoraTests {

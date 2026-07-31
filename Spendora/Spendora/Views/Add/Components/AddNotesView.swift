@@ -1,8 +1,3 @@
-//
-//  AddNotesView.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct AddNotesView: View {

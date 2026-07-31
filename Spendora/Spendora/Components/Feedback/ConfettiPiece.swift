@@ -1,8 +1,3 @@
-//
-//  ConfettiPiece.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct ConfettiPiece: View {

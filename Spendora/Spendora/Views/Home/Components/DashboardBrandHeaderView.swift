@@ -1,11 +1,3 @@
-//
-//  DashboardBrandHeaderView.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * DashboardBrandHeaderView header component displayed at top of main Home screen.

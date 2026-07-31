@@ -1,11 +1,3 @@
-//
-//  HomeSubviews.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * HomeSubviews extracted component file containing StatCardView, SearchBarView, SortChipsView, SubscriptionCardView, and EmptyStateView.

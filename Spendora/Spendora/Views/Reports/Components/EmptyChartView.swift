@@ -1,8 +1,3 @@
-//
-//  EmptyChartView.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct EmptyChartView: View {

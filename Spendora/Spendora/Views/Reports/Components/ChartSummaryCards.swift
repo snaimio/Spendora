@@ -1,11 +1,3 @@
-//
-//  ChartSummaryCards.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * ChartSummaryCards component displaying total spending, category count, and top category breakdown cards for financial charts.

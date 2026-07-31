@@ -1,8 +1,3 @@
-//
-//  PolicySection.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct PolicySection: View {

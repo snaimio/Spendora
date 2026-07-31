@@ -1,8 +1,3 @@
-//
-//  FlaggedSubscriptionsView.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct FlaggedSubscriptionsView: View {

@@ -1,8 +1,3 @@
-//
-//  ShareReportButton.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct ShareReportButton: View {

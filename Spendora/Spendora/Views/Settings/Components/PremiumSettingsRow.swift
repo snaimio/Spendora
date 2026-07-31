@@ -1,8 +1,3 @@
-//
-//  PremiumSettingsRow.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct PremiumSettingsRow<Content: View>: View {

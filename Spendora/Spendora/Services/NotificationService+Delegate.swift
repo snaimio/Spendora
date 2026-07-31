@@ -1,11 +1,3 @@
-//
-//  NotificationService+Delegate.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * Extension for NotificationService providing trial expiration reminders, price increase alerts,

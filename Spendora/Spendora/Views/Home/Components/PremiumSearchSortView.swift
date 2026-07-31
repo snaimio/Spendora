@@ -1,8 +1,3 @@
-//
-//  PremiumSearchSortView.swift
-//  Spendora
-//
-
 import SwiftUI
 
 // SortOption is now in Models/SortOption.swift

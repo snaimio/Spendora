@@ -1,11 +1,3 @@
-//
-//  HomeView+Calculations.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * Extension for HomeView containing search filtering, sorting logic, monthly/yearly spend aggregations,

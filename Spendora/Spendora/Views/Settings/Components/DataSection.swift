@@ -1,8 +1,3 @@
-//
-//  DataSection.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct DataSection: View {

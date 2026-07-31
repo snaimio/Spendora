@@ -1,11 +1,3 @@
-//
-//  OnboardingPageView.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * OnboardingPageView subview component displaying individual onboarding slide illustrations, title, description, and feature highlight bullets.

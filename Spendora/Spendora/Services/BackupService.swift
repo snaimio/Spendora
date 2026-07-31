@@ -1,8 +1,3 @@
-//
-//  BackupService.swift
-//  Spendora
-//
-
 import Foundation
 import SwiftData
 

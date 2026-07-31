@@ -1,8 +1,3 @@
-//
-//  ChallengeProgressView.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct ChallengeProgressView: View {

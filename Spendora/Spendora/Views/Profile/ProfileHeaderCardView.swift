@@ -1,11 +1,3 @@
-//
-//  ProfileHeaderCardView.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * ProfileHeaderCardView displays the user's avatar circle, display name, email, and authentication provider status badge.

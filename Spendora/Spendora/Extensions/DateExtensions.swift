@@ -1,8 +1,3 @@
-//
-//  DateExtensions.swift
-//  Spendora
-//
-
 import Foundation
 
 extension Date {

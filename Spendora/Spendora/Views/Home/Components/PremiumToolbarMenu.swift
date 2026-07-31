@@ -1,8 +1,3 @@
-//
-//  PremiumToolbarMenu.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct PremiumToolbarMenu: View {

@@ -1,11 +1,3 @@
-//
-//  SubscriptionDetailViewSection.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * SubscriptionDetailViewSection component displaying the read-only service details, billing dates,

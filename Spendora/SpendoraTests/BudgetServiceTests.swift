@@ -1,8 +1,3 @@
-//
-//  BudgetServiceTests.swift
-//  SpendoraTests
-//
-
 import XCTest
 import SwiftUI 
 @testable import Spendora

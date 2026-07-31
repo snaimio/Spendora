@@ -1,11 +1,3 @@
-//
-//  SettingsView+Actions.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * Extension for SettingsView containing data export/import actions (CSV, PDF, JSON backup) and application data reset routines.

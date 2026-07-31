@@ -1,11 +1,3 @@
-//
-//  EditProfileSheet.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * EditProfileSheet form sheet allowing users to modify their existing display name or email address.

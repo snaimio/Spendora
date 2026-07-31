@@ -1,11 +1,3 @@
-//
-//  HomeView.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * HomeView main dashboard view of the Spendora app.

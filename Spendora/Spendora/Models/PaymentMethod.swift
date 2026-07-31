@@ -1,11 +1,3 @@
-//
-//  PaymentMethod.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * PaymentMethod enum representing supported user payment methods (Credit Card, Debit Card, Apple Pay, PayPal, Bank Transfer).

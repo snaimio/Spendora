@@ -1,8 +1,3 @@
-//
-//  ShareableScoreCard.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct ShareableScoreCard: View {

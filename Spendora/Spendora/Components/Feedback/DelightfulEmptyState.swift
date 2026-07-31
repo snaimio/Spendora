@@ -1,8 +1,3 @@
-//
-//  DelightfulEmptyState.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct DelightfulEmptyState: View {

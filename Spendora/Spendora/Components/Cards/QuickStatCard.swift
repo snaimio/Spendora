@@ -1,8 +1,3 @@
-//
-//  QuickStatCard.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct QuickStatCard: View {

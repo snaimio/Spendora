@@ -1,8 +1,3 @@
-//
-//  Color+App.swift
-//  Spendora
-//
-
 import SwiftUI
 
 extension Color {

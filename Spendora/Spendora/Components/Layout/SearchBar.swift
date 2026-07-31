@@ -1,8 +1,3 @@
-//
-//  SearchBar.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct SearchBar: View {

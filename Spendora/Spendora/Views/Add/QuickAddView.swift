@@ -1,8 +1,3 @@
-//
-//  QuickAddView.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct QuickAddView: View {

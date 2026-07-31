@@ -1,11 +1,3 @@
-//
-//  AppleSignInSheet.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * AppleSignInSheet modal view handling Apple ID authentication flows.

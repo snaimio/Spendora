@@ -1,8 +1,3 @@
-//
-//  AppStyles.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct AppStyles {

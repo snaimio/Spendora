@@ -1,8 +1,3 @@
-//
-//  PremiumFormField.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct PremiumFormField<Content: View>: View {

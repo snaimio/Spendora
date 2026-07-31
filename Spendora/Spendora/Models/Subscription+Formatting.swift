@@ -1,11 +1,3 @@
-//
-//  Subscription+Formatting.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * Extension for Subscription model containing formatted string outputs, status descriptors,

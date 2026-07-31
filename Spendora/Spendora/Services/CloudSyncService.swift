@@ -1,8 +1,3 @@
-//
-//  CloudSyncService.swift
-//  Spendora
-//
-
 import Foundation
 import SwiftUI
 import Combine

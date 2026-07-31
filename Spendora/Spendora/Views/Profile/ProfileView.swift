@@ -1,11 +1,3 @@
-//
-//  ProfileView.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * ProfileView screen displaying active user profile identity (Guest Mode vs Signed-In Account),

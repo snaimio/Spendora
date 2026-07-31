@@ -1,8 +1,3 @@
-//
-//  AddSubscriptionFormView.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct AddSubscriptionFormView: View {

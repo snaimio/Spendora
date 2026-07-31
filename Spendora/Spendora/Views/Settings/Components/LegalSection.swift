@@ -1,8 +1,3 @@
-//
-//  LegalSection.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct LegalSection: View {

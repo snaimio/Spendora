@@ -1,8 +1,3 @@
-//
-//  AppearanceSection.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct AppearanceSection: View {

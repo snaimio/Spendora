@@ -1,8 +1,3 @@
-//
-//  ShareSheet.swift
-//  Spendora
-//
-
 import SwiftUI
 import UIKit
 

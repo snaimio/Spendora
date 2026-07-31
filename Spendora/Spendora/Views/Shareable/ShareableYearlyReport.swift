@@ -1,8 +1,3 @@
-//
-//  ShareableYearlyReport.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct ShareableYearlyReport: View {

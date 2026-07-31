@@ -1,8 +1,3 @@
-//
-//  HeroHeaderView.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct HeroHeaderView: View {

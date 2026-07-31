@@ -1,8 +1,3 @@
-//
-//  AddSubscriptionView.swift
-//  Spendora
-//
-
 import SwiftUI
 import SwiftData
 

@@ -1,8 +1,3 @@
-//
-//  StatCard.swift
-//  Spendora
-//
-
 import SwiftUI
 
 struct StatCard: View {

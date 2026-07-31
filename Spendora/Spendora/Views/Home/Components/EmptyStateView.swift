@@ -1,11 +1,3 @@
-//
-//  EmptyStateView.swift
-//  Spendora
-//
-//  Capstone 2026 - Mobile Application Development
-//  Author: Sheikh Naim
-//
-
 /**
  * Main/Core Functions & Purpose:
  * EmptyStateView component displaying friendly animated pulsing state when no subscriptions match search or exist in local DB.
