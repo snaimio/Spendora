@@ -8,7 +8,7 @@
 
 /**
  * Main/Core Functions & Purpose:
- * AboutCapstoneView screen documenting project metadata, developer contact details (Sheikh.Naim@triosstudent.com),
+ * AboutCapstoneView screen documenting project metadata, developer contact details (support@spendora.app),
  * triOS College 2026 Mobile Application Development Capstone goals, architecture overview, and privacy guarantees.
  */
 
@@ -113,7 +113,7 @@ struct AboutCapstoneView: View {
                             Text("Contact")
                                 .font(.system(.subheadline, design: .rounded))
                                 .foregroundColor(.secondary)
-                            Text("Sheikh.Naim@triosstudent.com")
+                            Text("support@spendora.app")
                                 .font(.system(.subheadline, design: .rounded))
                                 .fontWeight(.semibold)
                         }

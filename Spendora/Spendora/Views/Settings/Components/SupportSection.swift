@@ -58,7 +58,7 @@ struct SupportSection: View {
     }
     
     private func openMailSupport() {
-        let email = "Sheikh.Naim@triosstudent.com"
+        let email = "support@spendora.app"
         let subject = "Spendora Support Request"
         let body = "Please describe your issue here..."
         
@@ -78,7 +78,7 @@ struct SupportSection: View {
             // Show alert
             let alert = UIAlertController(
                 title: "Email Address Copied",
-                message: "Support email (Sheikh.Naim@triosstudent.com) has been copied to your clipboard.",
+                message: "Support email (support@spendora.app) has been copied to your clipboard.",
                 preferredStyle: .alert
             )
             alert.addAction(UIAlertAction(title: "OK", style: .default))

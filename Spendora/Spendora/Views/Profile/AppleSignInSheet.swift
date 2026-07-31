@@ -21,9 +21,9 @@ struct AppleSignInSheet: View {
     @ObservedObject private var profileManager = UserProfileManager.shared
     
     // User profile state variables
-    @State private var displayName = "Sheikh Naim"
+    @State private var displayName = "Apple User"
     @State private var useHideMyEmail = true
-    @State private var customEmail = "s.naim@privaterelay.appleid.com"
+    @State private var customEmail = "user@privaterelay.appleid.com"
     
     var body: some View {
         NavigationStack {
@@ -73,7 +73,7 @@ struct AppleSignInSheet: View {
                             Text("Hide My Email")
                                 .font(.system(.body, design: .rounded))
                                 .fontWeight(.semibold)
-                            Text("Forward to Sheikh.Naim@triosstudent.com")
+                            Text("Forward to user@icloud.com")
                                 .font(.system(.caption, design: .rounded))
                                 .foregroundColor(.textSecondary)
                         }

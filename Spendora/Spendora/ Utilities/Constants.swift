@@ -24,7 +24,7 @@ struct AppConstants {
     // MARK: - App Info
     struct AppInfo {
         static let appName = "Spendora"
-        static let supportEmail = "Sheikh.Naim@triosstudent.com"
+        static let supportEmail = "support@spendora.app"
         static let appStoreURL = "https://apps.apple.com/app/spendora"
     }
 

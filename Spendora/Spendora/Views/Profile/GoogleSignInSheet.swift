@@ -25,9 +25,9 @@ struct GoogleSignInSheet: View {
     @State private var selectedPresetIndex: Int? = nil
     
     private let presetAccounts = [
-        (name: "Sheikh Naim", email: "Sheikh.Naim@triosstudent.com"),
-        (name: "Sheikh Naim", email: "sheikh.naim@gmail.com"),
-        (name: "Naim Spendora", email: "naim@spendora.app")
+        (name: "Demo Account", email: "demo.user@gmail.com"),
+        (name: "Personal Account", email: "user@gmail.com"),
+        (name: "Work Account", email: "user@company.com")
     ]
     
     var isValid: Bool {
