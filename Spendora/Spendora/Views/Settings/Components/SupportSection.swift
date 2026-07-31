@@ -9,7 +9,24 @@ struct SupportSection: View {
     let shareApp: () -> Void
     
     var body: some View {
-        Section("Support") {
+        Section("Information & Support") {
+            NavigationLink {
+                AboutCapstoneView()
+            } label: {
+                HStack {
+                    Image(systemName: "info.circle.fill")
+                        .foregroundColor(.brandPrimary)
+                        .frame(width: 28)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("About Spendora & Capstone")
+                            .font(.system(.body, design: .rounded))
+                        Text("Capstone details & architecture")
+                            .font(.system(.caption, design: .rounded))
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
+            
             PremiumSettingsRow(
                 icon: "square.and.arrow.up",
                 title: "Share App",
@@ -41,7 +58,7 @@ struct SupportSection: View {
     }
     
     private func openMailSupport() {
-        let email = "support@spendora.com"
+        let email = "Sheikh.Naim@triosstudent.com"
         let subject = "Spendora Support Request"
         let body = "Please describe your issue here..."
         
@@ -61,7 +78,7 @@ struct SupportSection: View {
             // Show alert
             let alert = UIAlertController(
                 title: "Email Address Copied",
-                message: "No mail app found. The support email has been copied to your clipboard.",
+                message: "Support email (Sheikh.Naim@triosstudent.com) has been copied to your clipboard.",
                 preferredStyle: .alert
             )
             alert.addAction(UIAlertAction(title: "OK", style: .default))

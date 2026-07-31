@@ -455,15 +455,51 @@ enum SubscriptionCategory: String, CaseIterable, Identifiable {
 
 enum PaymentMethod: String, CaseIterable, Identifiable {
 
-    case creditCard = "💳 Credit Card"
-    case debitCard = "💳 Debit Card"
-    case paypal = "💰 PayPal"
-    case applePay = "📱 Apple Pay"
-    case googlePay = "📱 Google Pay"
-    case bankTransfer = "🏦 Bank Transfer"
-    case other = "🔵 Other"
+    case creditCard = "Credit Card"
+    case debitCard = "Debit Card"
+    case paypal = "PayPal"
+    case applePay = "Apple Pay"
+    case googlePay = "Google Pay"
+    case bankTransfer = "Bank Transfer"
+    case other = "Other"
 
     var id: String { rawValue }
+    var displayName: String { rawValue }
+
+    var icon: String {
+        switch self {
+        case .creditCard: return "creditcard.fill"
+        case .debitCard: return "creditcard.and.123"
+        case .paypal: return "dollarsign.arrow.circlepath"
+        case .applePay: return "apple.logo"
+        case .googlePay: return "g.circle.fill"
+        case .bankTransfer: return "building.columns.fill"
+        case .other: return "ellipsis.circle.fill"
+        }
+    }
+
+    var colorSystemName: String {
+        switch self {
+        case .creditCard: return "purple"
+        case .debitCard: return "blue"
+        case .paypal: return "indigo"
+        case .applePay: return "primary"
+        case .googlePay: return "orange"
+        case .bankTransfer: return "green"
+        case .other: return "gray"
+        }
+    }
+
+    static func from(_ raw: String?) -> PaymentMethod {
+        guard let raw = raw, !raw.isEmpty else { return .creditCard }
+        if raw.contains("Credit Card") { return .creditCard }
+        if raw.contains("Debit Card") { return .debitCard }
+        if raw.contains("PayPal") { return .paypal }
+        if raw.contains("Apple Pay") { return .applePay }
+        if raw.contains("Google Pay") { return .googlePay }
+        if raw.contains("Bank Transfer") { return .bankTransfer }
+        return .other
+    }
 }
 
 // MARK: - Subscription Status

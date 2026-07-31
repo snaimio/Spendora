@@ -152,8 +152,9 @@ struct SubscriptionDetailView: View {
             }
             
             Picker("Payment Method", selection: $paymentMethod) {
-                ForEach(PaymentMethod.allCases, id: \.self) { method in
-                    Text(method.rawValue).tag(method.rawValue)
+                ForEach(PaymentMethod.allCases) { method in
+                    Label(method.displayName, systemImage: method.icon)
+                        .tag(method.rawValue)
                 }
             }
             
@@ -231,7 +232,7 @@ struct SubscriptionDetailView: View {
             DetailRow(icon: "tag.fill", title: "Name", value: name)
             DetailRow(icon: "dollarsign.circle.fill", title: "Cost", value: "$\(cost)/\(isYearly ? "year" : "month")")
             DetailRow(icon: "folder.fill", title: "Category", value: category)
-            DetailRow(icon: "creditcard.fill", title: "Payment Method", value: paymentMethod)
+            DetailRow(icon: PaymentMethod.from(paymentMethod).icon, title: "Payment Method", value: PaymentMethod.from(paymentMethod).displayName)
             DetailRow(icon: "repeat.circle.fill", title: "Billing Cycle", value: isYearly ? "Yearly" : "Monthly")
         }
         

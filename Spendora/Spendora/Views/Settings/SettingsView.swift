@@ -239,7 +239,7 @@ struct SettingsView: View {
     }
     
     private func shareApp() {
-        let appStoreURL = "https://apps.apple.com/app/idYOUR_APP_ID"
+        let appStoreURL = AppConstants.AppInfo.appStoreURL
         
         let activityVC = UIActivityViewController(
             activityItems: [

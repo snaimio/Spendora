@@ -8,27 +8,23 @@ import SwiftUI
 struct PremiumAppInfoRow: View {
     var body: some View {
         HStack(spacing: 14) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(
-                        LinearGradient(
-                            colors: [.brandPrimary.opacity(0.12), .brandSecondary.opacity(0.05)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
+            Image("AppLogo")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 52, height: 52)
+                .clipShape(RoundedRectangle(cornerRadius: 13, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 13, style: .continuous)
+                        .stroke(
+                            LinearGradient(
+                                colors: [.brandPrimary.opacity(0.6), .brandSecondary.opacity(0.3)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 1.5
                         )
-                    )
-                    .frame(width: 50, height: 50)
-                
-                Image(systemName: "creditcard.and.123")
-                    .font(.title2)
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [.brandPrimary, .brandSecondary],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-            }
+                )
+                .shadow(color: Color.brandPrimary.opacity(0.2), radius: 6, x: 0, y: 3)
             
             VStack(alignment: .leading, spacing: 2) {
                 Text("Spendora")

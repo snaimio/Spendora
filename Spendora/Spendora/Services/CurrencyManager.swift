@@ -57,7 +57,13 @@ class CurrencyManager: ObservableObject {
         .AUD: 1.51,
         .CHF: 0.89,
         .INR: 83.5,
-        .BRL: 5.45
+        .BRL: 5.45,
+        .CNY: 7.25,
+        .MXN: 18.5,
+        .SGD: 1.35,
+        .NZD: 1.64,
+        .KRW: 1380.0,
+        .AED: 3.67
     ]
 
     func convert(amount: Double, from sourceCurrency: Currency, to targetCurrency: Currency) -> Double {
@@ -76,8 +82,8 @@ class CurrencyManager: ObservableObject {
 }
 
 enum Currency: String, CaseIterable, Identifiable {
-    case USD
     case CAD
+    case USD
     case EUR
     case GBP
     case JPY
@@ -85,13 +91,20 @@ enum Currency: String, CaseIterable, Identifiable {
     case CHF
     case INR
     case BRL
+    case CNY
+    case MXN
+    case SGD
+    case NZD
+    case KRW
+    case AED
 
     var id: String { code }
+    var code: String { rawValue }
 
     var symbol: String {
         switch self {
-        case .USD: return "$"
         case .CAD: return "C$"
+        case .USD: return "$"
         case .EUR: return "€"
         case .GBP: return "£"
         case .JPY: return "¥"
@@ -99,12 +112,60 @@ enum Currency: String, CaseIterable, Identifiable {
         case .CHF: return "CHF "
         case .INR: return "₹"
         case .BRL: return "R$"
+        case .CNY: return "¥"
+        case .MXN: return "Mex$"
+        case .SGD: return "S$"
+        case .NZD: return "NZ$"
+        case .KRW: return "₩"
+        case .AED: return "AED "
         }
     }
 
-    var code: String { rawValue }
+    var flag: String {
+        switch self {
+        case .CAD: return "🇨🇦"
+        case .USD: return "🇺🇸"
+        case .EUR: return "🇪🇺"
+        case .GBP: return "🇬🇧"
+        case .JPY: return "🇯🇵"
+        case .AUD: return "🇦🇺"
+        case .CHF: return "🇨🇭"
+        case .INR: return "🇮🇳"
+        case .BRL: return "🇧🇷"
+        case .CNY: return "🇨🇳"
+        case .MXN: return "🇲🇽"
+        case .SGD: return "🇸🇬"
+        case .NZD: return "🇳🇿"
+        case .KRW: return "🇰🇷"
+        case .AED: return "🇦🇪"
+        }
+    }
+
+    var name: String {
+        switch self {
+        case .CAD: return "Canadian Dollar"
+        case .USD: return "US Dollar"
+        case .EUR: return "Euro"
+        case .GBP: return "British Pound"
+        case .JPY: return "Japanese Yen"
+        case .AUD: return "Australian Dollar"
+        case .CHF: return "Swiss Franc"
+        case .INR: return "Indian Rupee"
+        case .BRL: return "Brazilian Real"
+        case .CNY: return "Chinese Yuan"
+        case .MXN: return "Mexican Peso"
+        case .SGD: return "Singapore Dollar"
+        case .NZD: return "New Zealand Dollar"
+        case .KRW: return "South Korean Won"
+        case .AED: return "UAE Dirham"
+        }
+    }
 
     var displayName: String {
-        "\(symbol) (\(code))"
+        "\(code) - \(name) (\(symbol.trimmingCharacters(in: .whitespaces)))"
+    }
+
+    var pickerLabel: String {
+        "\(flag)  \(code) - \(name) (\(symbol.trimmingCharacters(in: .whitespaces)))"
     }
 }

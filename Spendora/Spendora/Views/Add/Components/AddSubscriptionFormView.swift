@@ -36,6 +36,20 @@ struct AddSubscriptionFormView: View {
             BillingCyclePickerView(isYearly: $isYearly)
             
             PremiumFormField(
+                icon: "creditcard.circle.fill",
+                title: "Payment Method"
+            ) {
+                Picker("Payment Method", selection: $selectedPaymentMethod) {
+                    ForEach(PaymentMethod.allCases) { method in
+                        Label(method.displayName, systemImage: method.icon)
+                            .tag(method)
+                    }
+                }
+                .labelsHidden()
+                .tint(.brandPrimary)
+            }
+            
+            PremiumFormField(
                 icon: "calendar.circle.fill",
                 title: "Next Billing"
             ) {

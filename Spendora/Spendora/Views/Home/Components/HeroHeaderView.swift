@@ -41,6 +41,32 @@ struct HeroHeaderView: View {
                 .cornerRadius(2)
                 .padding(.horizontal, 16)
             
+            // Brand Logo & Header
+            HStack {
+                HStack(spacing: 8) {
+                    Image("AppLogo")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 26, height: 26)
+                        .clipShape(RoundedRectangle(cornerRadius: 7, style: .continuous))
+                        .shadow(color: .brandPrimary.opacity(0.3), radius: 4, x: 0, y: 2)
+                    
+                    Text("SPENDORA")
+                        .font(.system(size: 13, weight: .black, design: .rounded))
+                        .tracking(2.0)
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [.brandPrimary, .brandSecondary],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                }
+                Spacer()
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 2)
+            
             HStack(alignment: .top, spacing: 12) {
                 // Left: Monthly spend
                 VStack(alignment: .leading, spacing: 4) {
@@ -51,7 +77,7 @@ struct HeroHeaderView: View {
                         .tracking(1.5)
                     
                     Text(CurrencyManager.shared.format(totalMonthly))
-                        .font(.system(size: 34, weight: .bold, design: .rounded))
+                        .font(.appHeroPrice(size: 34))
                         .foregroundColor(.primary)
                         .contentTransition(.numericText())
                         .lineLimit(1)

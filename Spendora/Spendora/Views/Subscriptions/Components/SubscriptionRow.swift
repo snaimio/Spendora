@@ -57,7 +57,7 @@ struct SubscriptionRow: View {
             
             VStack(alignment: .trailing, spacing: 2) {
                 Text(CurrencyManager.shared.format(subscription.monthlyCost))
-                    .font(.system(.headline, design: .rounded))
+                    .font(.system(.headline, design: .rounded).monospacedDigit())
                     .fontWeight(.bold)
                     .foregroundColor(.brandPrimary)
                     .lineLimit(1)

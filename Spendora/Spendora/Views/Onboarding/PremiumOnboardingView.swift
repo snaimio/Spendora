@@ -194,22 +194,32 @@ struct OnboardingPageView: View {
                     .frame(width: 160, height: 160)
                     .scaleEffect(animate ? 1.0 : 0.8)
                 
-                Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: [page.color, page.color.opacity(0.6)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
+                if page.icon == "sparkles.rectangle.stack" {
+                    Image("AppLogo")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 120, height: 120)
+                        .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+                        .shadow(color: page.color.opacity(0.4), radius: 12, x: 0, y: 6)
+                        .scaleEffect(animate ? 1.0 : 0.8)
+                } else {
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: [page.color, page.color.opacity(0.6)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
                         )
-                    )
-                    .frame(width: 120, height: 120)
-                    .scaleEffect(animate ? 1.0 : 0.8)
-                
-                Image(systemName: page.icon)
-                    .font(.system(size: 50))
-                    .foregroundColor(.white)
-                    .scaleEffect(animate ? 1.0 : 0.6)
-                    .rotationEffect(.degrees(animate ? 0 : -10))
+                        .frame(width: 120, height: 120)
+                        .scaleEffect(animate ? 1.0 : 0.8)
+                    
+                    Image(systemName: page.icon)
+                        .font(.system(size: 50))
+                        .foregroundColor(.white)
+                        .scaleEffect(animate ? 1.0 : 0.6)
+                        .rotationEffect(.degrees(animate ? 0 : -10))
+                }
             }
             .onAppear {
                 withAnimation(.spring(response: 0.6, dampingFraction: 0.7)) {

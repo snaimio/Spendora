@@ -21,7 +21,7 @@ struct PremiumStatPill: View {
                 .foregroundColor(.secondary)
             
             Text(value)
-                .font(.system(size: 11, design: .rounded))
+                .font(.system(size: 11, design: .rounded).monospacedDigit())
                 .fontWeight(.semibold)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)

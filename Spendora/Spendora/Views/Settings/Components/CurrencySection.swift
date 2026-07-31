@@ -12,19 +12,16 @@ struct CurrencySection: View {
     var body: some View {
         Section {
             Picker("Select Currency", selection: $selectedCurrency) {
-                ForEach(Currency.allCases, id: \.self) { currency in
-                    HStack {
-                        Text(currency.symbol)
-                        Text(currency.code)
-                    }
-                    .tag(currency)
+                ForEach(Currency.allCases) { currency in
+                    Text(currency.pickerLabel)
+                        .tag(currency)
                 }
             }
             .onChange(of: selectedCurrency) { _, newValue in
                 currencyManager.setCurrency(newValue)
             }
             
-            Text("All amounts will be shown in \(currencyManager.currentCurrency.symbol) (\(currencyManager.currentCurrency.code))")
+            Text("All amounts will be formatted in \(currencyManager.currentCurrency.name) (\(currencyManager.currentCurrency.symbol.trimmingCharacters(in: .whitespaces)))")
                 .font(.system(.caption, design: .rounded))
                 .foregroundColor(.secondary)
         } header: {
