@@ -31,13 +31,13 @@ struct CancellationService {
         } else if name.contains("disney") {
             urlString = "https://www.disneyplus.com/account"
         } else if name.contains("hulu") {
-            urlString = "https://secure.hulu.com/account"
+            urlString = "https://www.hulu.com/account"
         } else if name.contains("youtube") {
             urlString = "https://www.youtube.com/paid_memberships"
         } else if name.contains("hbo") || name.contains("max") {
-            urlString = "https://auth.max.com/account"
+            urlString = "https://www.max.com"
         } else if name.contains("amazon") || name.contains("prime") {
-            urlString = "https://www.amazon.com/mc/manage"
+            urlString = "https://www.amazon.com/yourmembershipsandsubscriptions"
         } else if name.contains("paramount") {
             urlString = "https://www.paramountplus.com/account/"
         } else if name.contains("peacock") {
@@ -49,108 +49,108 @@ struct CancellationService {
         } else if name.contains("twitch") {
             urlString = "https://www.twitch.tv/subscriptions"
         } else if name.contains("starz") {
-            urlString = "https://www.starz.com/account"
+            urlString = "https://www.starz.com"
         } else if name.contains("showtime") {
-            urlString = "https://www.showtime.com/account"
+            urlString = "https://www.showtime.com"
         }
 
         // MARK: - AI & Tech Services
         else if name.contains("chatgpt") || name.contains("openai") {
-            urlString = "https://chatgpt.com/#settings/subscriptions"
+            urlString = "https://chatgpt.com"
         } else if name.contains("claude") || name.contains("anthropic") {
-            urlString = "https://claude.ai/settings/billing"
+            urlString = "https://claude.ai"
         } else if name.contains("perplexity") {
-            urlString = "https://www.perplexity.ai/settings/profile"
+            urlString = "https://www.perplexity.ai"
         } else if name.contains("github") || name.contains("copilot") {
             urlString = "https://github.com/settings/billing"
         } else if name.contains("midjourney") {
-            urlString = "https://www.midjourney.com/account"
+            urlString = "https://www.midjourney.com"
         }
 
         // MARK: - Productivity & Software
         else if name.contains("microsoft") || name.contains("office") || name.contains("office365") || name.contains("xbox") {
             urlString = "https://account.microsoft.com/services"
         } else if name.contains("google") || name.contains("workspace") || name.contains("drive") {
-            urlString = "https://one.google.com/settings"
+            urlString = "https://one.google.com/"
         } else if name.contains("dropbox") {
-            urlString = "https://www.dropbox.com/account/plan"
+            urlString = "https://www.dropbox.com/account"
         } else if name.contains("notion") {
-            urlString = "https://www.notion.so/settings/plans"
+            urlString = "https://www.notion.so"
         } else if name.contains("slack") {
-            urlString = "https://slack.com/account/settings"
+            urlString = "https://slack.com"
         } else if name.contains("zoom") {
-            urlString = "https://zoom.us/billing"
+            urlString = "https://zoom.us/profile"
         } else if name.contains("figma") {
-            urlString = "https://www.figma.com/settings"
+            urlString = "https://www.figma.com"
         } else if name.contains("adobe") || name.contains("creative cloud") || name.contains("photoshop") {
-            urlString = "https://account.adobe.com/plans"
+            urlString = "https://account.adobe.com"
         } else if name.contains("canva") {
-            urlString = "https://www.canva.com/settings/billing-and-teams"
+            urlString = "https://www.canva.com/settings"
         } else if name.contains("grammarly") {
-            urlString = "https://account.grammarly.com/subscription"
+            urlString = "https://account.grammarly.com"
         } else if name.contains("1password") {
-            urlString = "https://my.1password.com/profile/billing"
+            urlString = "https://my.1password.com"
         } else if name.contains("bitwarden") {
-            urlString = "https://vault.bitwarden.com/#/settings/subscription"
+            urlString = "https://vault.bitwarden.com"
         } else if name.contains("nordvpn") {
-            urlString = "https://my.nordaccount.com/billing/cancellation/"
+            urlString = "https://my.nordaccount.com"
         } else if name.contains("expressvpn") {
-            urlString = "https://www.expressvpn.com/subscriptions"
+            urlString = "https://www.expressvpn.com"
         } else if name.contains("surfshark") {
-            urlString = "https://my.surfshark.com/billing"
+            urlString = "https://my.surfshark.com"
         } else if name.contains("proton") {
-            urlString = "https://account.proton.me/u/0/mail/subscription"
+            urlString = "https://account.proton.me"
         } else if name.contains("linkedin") {
-            urlString = "https://www.linkedin.com/premium/cancel"
+            urlString = "https://www.linkedin.com/psettings/"
         }
 
         // MARK: - Delivery, Food & Shopping
         else if name.contains("doordash") || name.contains("dashpass") {
-            urlString = "https://www.doordash.com/consumer/subscriptions/dashpass"
+            urlString = "https://www.doordash.com"
         } else if name.contains("uber") {
-            urlString = "https://m.uber.com/pass"
+            urlString = "https://www.uber.com"
         } else if name.contains("instacart") {
-            urlString = "https://www.instacart.com/store/account/instacart-plus"
+            urlString = "https://www.instacart.com"
         } else if name.contains("hellofresh") {
-            urlString = "https://www.hellofresh.com/account/cancel"
+            urlString = "https://www.hellofresh.com"
         } else if name.contains("blue apron") {
-            urlString = "https://www.blueapron.com/account"
+            urlString = "https://www.blueapron.com"
         } else if name.contains("walmart") {
-            urlString = "https://www.walmart.com/account/plus"
+            urlString = "https://www.walmart.com/account"
         }
 
         // MARK: - Fitness & Health
         else if name.contains("fitbit") {
-            urlString = "https://www.fitbit.com/settings/subscription"
+            urlString = "https://www.fitbit.com"
         } else if name.contains("myfitnesspal") {
-            urlString = "https://www.myfitnesspal.com/account/subscription"
+            urlString = "https://www.myfitnesspal.com"
         } else if name.contains("strava") {
-            urlString = "https://www.strava.com/settings/billing"
+            urlString = "https://www.strava.com"
         } else if name.contains("peloton") {
-            urlString = "https://www.onepeloton.com/digital/checkout/manage-subscriptions"
+            urlString = "https://www.onepeloton.com"
         } else if name.contains("headspace") {
-            urlString = "https://www.headspace.com/account"
+            urlString = "https://www.headspace.com"
         } else if name.contains("calm") {
-            urlString = "https://www.calm.com/profile"
+            urlString = "https://www.calm.com"
         }
 
         // MARK: - Social & Gaming
         else if name.contains("tinder") {
-            urlString = "https://tinder.com/app/settings"
+            urlString = "https://tinder.com"
         } else if name.contains("bumble") {
-            urlString = "https://bumble.com/app/settings"
+            urlString = "https://bumble.com"
         } else if name.contains("playstation") {
-            urlString = "https://www.playstation.com/account"
+            urlString = "https://www.playstation.com"
         } else if name.contains("nintendo") {
             urlString = "https://accounts.nintendo.com"
         } else if name.contains("twitter") || name.contains("x premium") {
-            urlString = "https://x.com/settings/premium"
+            urlString = "https://x.com/settings"
         }
 
-        // Smart fallback: Formulate official domain account URL
+        // Guaranteed fallback for custom/unrecognized services: Google search for cancellation guide
         if urlString == nil {
-            let cleanDomain = name.replacingOccurrences(of: " ", with: "").lowercased()
-            urlString = "https://www.\(cleanDomain).com/account"
+            let query = "how to cancel \(subscriptionName) subscription".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+            urlString = "https://www.google.com/search?q=\(query)"
         }
 
         guard let validString = urlString, let url = URL(string: validString) else { return nil }
