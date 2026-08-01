@@ -55,6 +55,8 @@ struct HomeView: View {
     @State var showingChallenges = false
     @State var showingSavingsScore = false
     @State var showingAIInsights = false
+    @State var showingNotificationCenter = false
+    @ObservedObject var notificationCenterService = NotificationCenterService.shared
     
     let generator = UIImpactFeedbackGenerator(style: .medium)
     
