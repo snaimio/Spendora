@@ -123,7 +123,8 @@ class NotificationService: NSObject, UNUserNotificationCenterDelegate {
         content.sound = .default
         content.badge = 1
 
-        guard let reminderDate = Calendar.current.date(
+        // Calculate reminder target date (e.g. Aug 1 minus 1 day = July 31)
+        guard let baseReminderDate = Calendar.current.date(
             byAdding: .day,
             value: -days,
             to: subscription.nextBillingDate
@@ -131,15 +132,38 @@ class NotificationService: NSObject, UNUserNotificationCenterDelegate {
             return
         }
 
-        let triggerComponents = Calendar.current.dateComponents(
-            [.year, .month, .day, .hour, .minute],
-            from: reminderDate
-        )
+        // Get user's preferred notification hour/minute from Settings (default 9:00 AM)
+        var targetHour = 9
+        var targetMinute = 0
+        if let savedTime = UserDefaults.standard.object(forKey: "notificationTime") as? Date {
+            let components = Calendar.current.dateComponents([.hour, .minute], from: savedTime)
+            targetHour = components.hour ?? 9
+            targetMinute = components.minute ?? 0
+        }
 
-        let trigger = UNCalendarNotificationTrigger(
-            dateMatching: triggerComponents,
-            repeats: false
-        )
+        var scheduledDate = Calendar.current.date(
+            bySettingHour: targetHour,
+            minute: targetMinute,
+            second: 0,
+            of: baseReminderDate
+        ) ?? baseReminderDate
+
+        let now = Date()
+        let trigger: UNNotificationTrigger
+
+        if Calendar.current.isDateInToday(baseReminderDate) && scheduledDate <= now {
+            // If the reminder date is TODAY and the scheduled hour has already passed, trigger immediately in 5 seconds
+            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+        } else if scheduledDate > now {
+            let triggerComponents = Calendar.current.dateComponents(
+                [.year, .month, .day, .hour, .minute],
+                from: scheduledDate
+            )
+            trigger = UNCalendarNotificationTrigger(dateMatching: triggerComponents, repeats: false)
+        } else {
+            // Scheduled date is in the past (e.g. past days)
+            return
+        }
 
         let request = UNNotificationRequest(
             identifier: subscription.id.uuidString,
@@ -149,7 +173,9 @@ class NotificationService: NSObject, UNUserNotificationCenterDelegate {
 
         UNUserNotificationCenter.current().add(request) { error in
             if let error {
-                print("Error scheduling notification: \(error.localizedDescription)")
+                print("Error scheduling notification for \(subscription.displayName): \(error.localizedDescription)")
+            } else {
+                print("Successfully scheduled notification for \(subscription.displayName)")
             }
         }
     }
