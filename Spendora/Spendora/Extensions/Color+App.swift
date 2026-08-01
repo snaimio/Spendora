@@ -4,7 +4,6 @@
 
 import SwiftUI
 
-
 // MARK: - Color Extension
 
 /**
@@ -14,14 +13,14 @@ extension Color {
     
     // MARK: - Brand Colors (Sunset & Ocean Theme)
     static let brandPrimary = Color(hex: "#FF6B6B")      // Coral Red
-    static let brandSecondary = Color(hex: "#FF9A9E")    // Soft Pink
+    static let brandSecondary = Color(hex: "#FF8E53")    // Sunset Orange-Pink
     static let brandTertiary = Color(hex: "#4ECDC4")     // Mint Green
-    static let brandAccent = Color(hex: "#FFE66D")       // Sunshine Yellow
+    static let brandAccent = Color(hex: "#0EA5E9")       // Electric Sky Blue
     static let brandPurple = Color(hex: "#A29BFE")       // Lavender
     
     // MARK: - Gradients
     static let gradientSunset = LinearGradient(
-        colors: [Color(hex: "#FF6B6B"), Color(hex: "#FFE66D")],
+        colors: [Color(hex: "#FF6B6B"), Color(hex: "#FF8E53")],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
@@ -56,11 +55,11 @@ extension Color {
         endPoint: .bottomTrailing
     )
     
-    // MARK: - UI Colors (Adaptive Light & Dark Mode)
+    // MARK: - UI Colors (Adaptive Crisp Cool Light & Deep OLED Dark Mode)
     static let appBackground = Color(UIColor { traitCollection in
         traitCollection.userInterfaceStyle == .dark
             ? UIColor(red: 0.04, green: 0.05, blue: 0.07, alpha: 1.0) // Rich OLED Midnight (#0B0D11)
-            : UIColor(red: 0.99, green: 0.97, blue: 0.94, alpha: 1.0)
+            : UIColor(red: 0.96, green: 0.97, blue: 0.99, alpha: 1.0) // Cool Slate Ice Blue (#F4F6F9)
     })
     
     static let cardBackground = Color(UIColor { traitCollection in
@@ -72,7 +71,7 @@ extension Color {
     static let textPrimary = Color(UIColor { traitCollection in
         traitCollection.userInterfaceStyle == .dark
             ? UIColor.white
-            : UIColor(red: 0.17, green: 0.20, blue: 0.21, alpha: 1.0)
+            : UIColor(red: 0.12, green: 0.15, blue: 0.18, alpha: 1.0)
     })
     
     static let textSecondary = Color(UIColor { traitCollection in
@@ -87,19 +86,19 @@ extension Color {
             : UIColor(red: 0.70, green: 0.74, blue: 0.76, alpha: 1.0)
     })
     
-    // MARK: - Category Colors (Vibrant & Fun)
-    static let categoryEntertainment = Color(hex: "#FF6B6B")   // Coral
+    // MARK: - Category Colors (Vibrant & Clean)
+    static let categoryEntertainment = Color(hex: "#FF6B6B")   // Coral Red
     static let categoryProductivity = Color(hex: "#4ECDC4")    // Mint
     static let categoryHealth = Color(hex: "#FF9A9E")          // Soft Pink
-    static let categoryShopping = Color(hex: "#FFE66D")        // Yellow
+    static let categoryShopping = Color(hex: "#818CF8")        // Indigo Blue
     static let categoryFood = Color(hex: "#FF8A5C")            // Orange
     static let categoryEducation = Color(hex: "#A29BFE")       // Lavender
-    static let categoryOther = Color(hex: "#B2BEC3")           // Gray
+    static let categoryOther = Color(hex: "#94A3B8")           // Slate Gray
     
     // MARK: - Helper
     init(hex: String) {
         let hex = hex.trimmingCharacters(in: .alphanumerics.inverted)
-        var int: UInt64 = 0  // int property
+        var int: UInt64 = 0
         Scanner(string: hex).scanHexInt64(&int)
         
         let a, r, g, b: UInt64

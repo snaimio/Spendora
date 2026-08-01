@@ -71,8 +71,8 @@ struct SubscriptionCardView: View {
                             .font(.system(size: 7, weight: .bold, design: .rounded))
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
-                            .background(Color(hex: "#FFE66D").opacity(0.2))
-                            .foregroundColor(Color(hex: "#FFE66D"))
+                            .background(Color(hex: "#38BDF8").opacity(0.18))
+                            .foregroundColor(Color(hex: "#0EA5E9"))
                             .cornerRadius(6)
                     }
                     

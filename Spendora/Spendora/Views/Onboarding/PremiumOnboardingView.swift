@@ -83,7 +83,7 @@ struct PremiumOnboardingView: View {
                     colors: [
                         Color(hex: "#EEF2FF"),
                         Color(hex: "#F5F3FF"),
-                        Color(hex: "#FEF3C7")
+                        Color(hex: "#E0F2FE")
                     ],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
