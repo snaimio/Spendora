@@ -57,5 +57,8 @@ extension HomeView {
             .sheet(isPresented: $showingProfileSheet) {
                 ProfileView()
             }
+            .sheet(isPresented: $showingNotificationCenter) {
+                NotificationCenterSheet()
+            }
     }
 }

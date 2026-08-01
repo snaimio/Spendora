@@ -144,6 +144,26 @@ struct HomeView: View {
             .navigationTitle("Dashboard")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        generator.impactOccurred()
+                        showingNotificationCenter = true
+                    } label: {
+                        ZStack(alignment: .topTrailing) {
+                            Image(systemName: "bell.fill")
+                                .font(.title3)
+                                .foregroundColor(.brandPrimary)
+                            
+                            if notificationCenterService.unreadCount > 0 {
+                                Circle()
+                                    .fill(Color.red)
+                                    .frame(width: 9, height: 9)
+                                    .offset(x: 2, y: -2)
+                            }
+                        }
+                    }
+                }
+                
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         generator.impactOccurred()

@@ -176,6 +176,13 @@ class NotificationService: NSObject, UNUserNotificationCenterDelegate {
                 print("Error scheduling notification for \(subscription.displayName): \(error.localizedDescription)")
             } else {
                 print("Successfully scheduled notification for \(subscription.displayName)")
+                DispatchQueue.main.async {
+                    NotificationCenterService.shared.addNotification(
+                        title: content.title,
+                        body: content.body,
+                        subscriptionId: subscription.id.uuidString
+                    )
+                }
             }
         }
     }
