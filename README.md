@@ -36,7 +36,7 @@ Subscription fatigue is one of the fastest-growing personal financial challenges
   </a>
 </p>
 
-> 🎬 **2:30 Capstone Presentation Video**: Features smart-dressed AI presenter **Sheikh Naim (@naimbgd)** providing a 2-minute 30-second walkthrough covering Onboarding, Dashboard, Add Subscription, Managing & Cancelling Subscriptions, Swift Charts Analytics, Settings Export, and iOS 17 Home Screen Widgets.
+> 🎬 **2:30 Capstone Presentation Video**: Features smart-dressed AI presenter **Sheikh Naim** providing a 2-minute 30-second walkthrough covering Onboarding, Dashboard, Add Subscription, Managing & Cancelling Subscriptions, Swift Charts Analytics, Settings Export, and iOS 17 Home Screen Widgets.
 > 
 > 📁 **Video Location**: [`demo/Spendora_Demo.mp4`](demo/Spendora_Demo.mp4)  
 > 🖼️ **Thumbnail Location**: [`demo/thumbnail.png`](demo/thumbnail.png)
@@ -403,39 +403,9 @@ Contributions are welcome! Please follow these guidelines:
 
 ---
 
-## 🚀 Getting Started
-
-### Prerequisites
-
-| Requirement | Minimum Version |
-|---|---|
-| **Xcode** | 15.0+ (Xcode 16 recommended) |
-| **iOS Target** | iOS 17.0 or later |
-| **Swift Compiler** | Swift 5.9+ / Swift 6 |
-
-### Build Instructions
-
-1. **Clone Repository**:
-   ```bash
-   git clone https://github.com/snaimio/Spendora.git
-   cd Spendora
-   ```
-
-2. **Open in Xcode**:
-   ```bash
-   open Spendora/Spendora.xcodeproj
-   ```
-
-3. **Compile & Run**:
-   - Select `Spendora` target.
-   - Choose an iOS 17+ Simulator or connected iPhone device.
-   - Press **`Cmd + R`** to build and launch.
-
----
-
 ## 👨‍💻 Author
 
-**Sheikh Naim (@naimbgd)**  
+**Sheikh Naim**  
 Mobile Application Development Capstone 2026
 
 ---
