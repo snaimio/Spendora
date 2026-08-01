@@ -24,27 +24,24 @@ Subscription fatigue is one of the fastest-growing personal financial challenges
 
 ---
 
-## 📱 App Screenshots
+## 🎥 Demo Video
 
-<p align="center">
-  <img src="screenshots/dashboard.png" width="30%" alt="Dashboard Screen" />
-  <img src="screenshots/subscriptions.png" width="30%" alt="Subscriptions List" />
-  <img src="screenshots/reports.png" width="30%" alt="Reports & Analytics" />
-</p>
+[![YouTube - @TheResilientPulse](https://img.shields.io/badge/YouTube-@TheResilientPulse-red?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@TheResilientPulse)
 
-<p align="center">
-  <img src="screenshots/add_subscription.png" width="30%" alt="Add Subscription" />
-  <img src="screenshots/settings.png" width="30%" alt="Settings & Cloud Sync" />
-  <img src="screenshots/widget.png" width="30%" alt="iOS 17 Home Screen Widget" />
-</p>
+> 📹 **Capstone Showcase**: Watch video walkthroughs and demo presentations on YouTube channel [**@TheResilientPulse**](https://www.youtube.com/@TheResilientPulse) demonstrating live subscription tracking, receipt parsing via MagicFinder, automated PDF report generation, and iOS 17 home screen widgets.
 
 ---
 
-## 🎥 Demo Video
+## 📱 Key App Feature Modules
 
-[![Watch the Demo Video](https://img.shields.io/badge/YouTube-Watch%20Demo%20Video-red?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/your-video-link)
-
-> 📹 **Capstone Showcase**: Watch a 2-3 minute comprehensive walkthrough demonstrating live subscription tracking, smart receipt parsing via MagicFinder, automated PDF report generation, and iOS 17 home screen widgets.
+| View / Screen | Purpose & Feature Set |
+|---|---|
+| 📊 **Dashboard Screen** | Real-time monthly spend metrics, countdown cards for next upcoming charges, and quick stats. |
+| 💳 **Subscriptions List** | Searchable list categorized by provider, billing cycle, usage rating, and payment method. |
+| ➕ **Add Subscription** | Fast manual entry form & pre-populated template catalog for top 20 popular services. |
+| 📈 **Reports & Analytics** | Interactive Swift Charts sector graphs, savings score calculator, and one-tap PDF export. |
+| ⚙️ **Settings & Cloud Sync** | Currency engine selector, data backup/restore, privacy policy, and offline sync options. |
+| 📲 **iOS 17 Home Widget** | Interactive Small & Medium WidgetKit extensions displaying upcoming bills on your lock/home screen. |
 
 ---
 
@@ -358,8 +355,7 @@ Contributions are welcome! Please follow these guidelines:
 |---|:---:|---|
 | **App Source Code** | ✅ Complete | 100% native Swift & SwiftUI project targeting iOS 17+. |
 | **Documentation & Comments** | ✅ Complete | Full Xcode docstring coverage (`///`, `/** */`, `// MARK:`). |
-| **App Screenshots** | 📸 Ready | Place PNG screenshots in `/screenshots` folder. |
-| **Demo Video** | 🎥 Ready | Embed 2-3 minute video showcase link above. |
+| **Demo Channel** | 🎥 Ready | Linked to [@TheResilientPulse](https://www.youtube.com/@TheResilientPulse). |
 
 ---
 
