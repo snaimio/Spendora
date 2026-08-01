@@ -5,99 +5,93 @@
 import SwiftUI
 import Charts
 
-
 // MARK: - YearlyReportView
 
-/**
- `YearlyReportView` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for yearlyreportview handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `YearlyReportView` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
- */
 struct YearlyReportView: View {
-
-    // MARK: - Properties
-
-    let subscriptions: [Subscription]  // subscriptions property
+    let subscriptions: [Subscription]
     @Environment(\.dismiss) private var dismiss
     @State private var selectedYear = Calendar.current.component(.year, from: Date())
     @State private var showingShareSheet = false
     @State private var shareImage: UIImage?
-    
-    var monthlyData: [(month: String, amount: Double)] {  // monthlyData property
-        let calendar = Calendar.current
-        let currentDate = Date()
-        var result: [(month: String, amount: Double)] = []  // result property
-        
-        for i in 0..<12 {
-            guard let date = calendar.date(byAdding: .month, value: -i, to: currentDate) else {
-                continue
-            }
-            
-            let monthFormatter = DateFormatter()
-            monthFormatter.dateFormat = "MMM"
-            let month = monthFormatter.string(from: date)
-            let total = subscriptions.reduce(0) { $0 + $1.monthlyCost }
-            result.append((month: month, amount: total))
-        }
-        return result.reversed()
+
+    var totalMonthly: Double {
+        subscriptions.reduce(0) { $0 + $1.monthlyCost }
     }
-    
-    var totalYearly: Double {  // totalYearly property
+
+    var totalYearly: Double {
         subscriptions.reduce(0) { $0 + $1.yearlyCost }
     }
-    
-    var averageMonthly: Double {  // averageMonthly property
+
+    var averageMonthly: Double {
         guard !subscriptions.isEmpty else { return 0 }
-        return totalYearly / 12
+        return totalYearly / 12.0
     }
-    
-    var topCategory: String {  // topCategory property
+
+    var topCategory: String {
         let grouped = Dictionary(grouping: subscriptions) { $0.category }
         let totals = grouped.map { ($0.key, $0.value.reduce(0) { $0 + $1.monthlyCost }) }
         return totals.max { $0.1 < $1.1 }?.0 ?? "None"
     }
-    
 
-    // MARK: - Body
+    var monthlyData: [(month: String, amount: Double)] {
+        let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        return months.map { (month: $0, amount: totalMonthly) }
+    }
 
-    /// Main SwiftUI layout body property.
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 24) {
-                    YearSelectorView(selectedYear: $selectedYear)
+                VStack(spacing: 20) {
+                    // MARK: - Year Selector Header
+                    YearSelectorBar(selectedYear: $selectedYear)
                     
-                    YearlyReportSummary(
+                    // MARK: - Executive Financial Summary Card
+                    ExecutiveYearlySummaryCard(
                         totalYearly: totalYearly,
-                        averageMonthly: averageMonthly
+                        averageMonthly: averageMonthly,
+                        subscriptionCount: subscriptions.count,
+                        topCategory: topCategory
                     )
                     
                     if !subscriptions.isEmpty {
-                        MonthlyTrendChartView(monthlyData: monthlyData)
+                        // MARK: - Monthly Spending Trend Chart
+                        ExecutiveMonthlyChart(monthlyData: monthlyData)
+                        
+                        // MARK: - Category Breakdown Table
+                        ExecutiveCategoryTable(subscriptions: subscriptions)
                     }
                     
-                    if topCategory != "None" {
-                        TopCategoryView(topCategory: topCategory)
-                    }
-                    
-                    ShareReportButton {
+                    // MARK: - Share & Export Report Button
+                    Button {
                         generateShareImage()
+                    } label: {
+                        HStack(spacing: 10) {
+                            Image(systemName: "square.and.arrow.up.fill")
+                                .font(.headline)
+                            Text("Export Executive Annual Statement")
+                                .font(.system(.subheadline, design: .rounded))
+                                .fontWeight(.bold)
+                        }
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                        .background(
+                            LinearGradient(
+                                colors: [.brandPrimary, .brandSecondary],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                        .cornerRadius(18)
+                        .shadow(color: Color.brandPrimary.opacity(0.3), radius: 10, x: 0, y: 4)
                     }
+                    .padding(.top, 8)
                 }
-                .padding(.vertical)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 16)
             }
-            .navigationTitle("Yearly Report")
+            .background(Color.appBackground.ignoresSafeArea())
+            .navigationTitle("Annual Financial Report")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -105,7 +99,7 @@ struct YearlyReportView: View {
                         dismiss()
                     }
                     .font(.system(.body, design: .rounded))
-                    .fontWeight(.semibold)
+                    .fontWeight(.bold)
                     .foregroundColor(.brandPrimary)
                 }
             }
@@ -116,16 +110,7 @@ struct YearlyReportView: View {
             }
         }
     }
-    
 
-    /**
-     Executes `generateShareImage` for component logic.
-     
-     
-     ## Behavior
-     1. Validates method arguments and current state.
-     2. Executes core computation or state mutation.
-     */
     private func generateShareImage() {
         let shareableView = ShareableYearlyReport(
             year: selectedYear,
@@ -133,75 +118,233 @@ struct YearlyReportView: View {
             averageMonthly: averageMonthly,
             topCategory: topCategory
         )
-        
         let renderer = ImageRenderer(content: shareableView)
-        
-        // ✅ FIXED: Use windowScene instead of UIScreen.main (deprecated)
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
             renderer.scale = windowScene.screen.scale
         }
-        
         if let image = renderer.uiImage {
             shareImage = image
             showingShareSheet = true
-        } else {
-            print("Failed to generate share image")
         }
     }
 }
 
-// MARK: - Year Selector
+// MARK: - Year Selector Bar
 
-// MARK: - YearSelectorView
-
-/**
- `YearSelectorView` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for yearselectorview handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `YearSelectorView` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
- */
-struct YearSelectorView: View {
-
-    // MARK: - Properties
-
+struct YearSelectorBar: View {
     @Binding var selectedYear: Int
-    
 
-    // MARK: - Body
-
-    /// Main SwiftUI layout body property.
     var body: some View {
         HStack {
             Button {
                 selectedYear -= 1
             } label: {
-                Image(systemName: "chevron.left")
+                Image(systemName: "chevron.left.circle.fill")
+                    .font(.title3)
                     .foregroundColor(.brandPrimary)
             }
             
             Spacer()
             
-            Text("\(selectedYear)")
-                .font(.title2)
-                .fontWeight(.bold)
+            HStack(spacing: 6) {
+                Image(systemName: "calendar")
+                    .foregroundColor(.brandPrimary)
+                Text("\(selectedYear) Financial Year")
+                    .font(.system(.headline, design: .rounded))
+                    .fontWeight(.bold)
+                    .foregroundColor(.textPrimary)
+            }
+            
+            Spacer()
             
             Button {
                 selectedYear += 1
             } label: {
-                Image(systemName: "chevron.right")
+                Image(systemName: "chevron.right.circle.fill")
+                    .font(.title3)
                     .foregroundColor(.brandPrimary)
             }
         }
-        .padding(.horizontal)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(Color.cardBackground)
+        .cornerRadius(16)
+        .shadow(color: Color.black.opacity(0.03), radius: 6, x: 0, y: 2)
+    }
+}
+
+// MARK: - Executive Yearly Summary Card
+
+struct ExecutiveYearlySummaryCard: View {
+    let totalYearly: Double
+    let averageMonthly: Double
+    let subscriptionCount: Int
+    let topCategory: String
+
+    var body: some View {
+        VStack(spacing: 16) {
+            VStack(spacing: 4) {
+                Text("ANNUAL SUBSCRIPTION COMMITMENT")
+                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                    .foregroundColor(.textSecondary)
+                    .tracking(1.5)
+                
+                Text(CurrencyManager.shared.format(totalYearly))
+                    .font(.system(size: 36, weight: .bold, design: .rounded))
+                    .foregroundColor(.textPrimary)
+            }
+            
+            Divider()
+            
+            HStack(spacing: 16) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Average / Month")
+                        .font(.system(.caption2, design: .rounded))
+                        .foregroundColor(.textSecondary)
+                    Text(CurrencyManager.shared.format(averageMonthly))
+                        .font(.system(.headline, design: .rounded))
+                        .fontWeight(.bold)
+                        .foregroundColor(.brandPrimary)
+                }
+                
+                Spacer()
+                
+                VStack(alignment: .center, spacing: 4) {
+                    Text("Active Services")
+                        .font(.system(.caption2, design: .rounded))
+                        .foregroundColor(.textSecondary)
+                    Text("\(subscriptionCount)")
+                        .font(.system(.headline, design: .rounded))
+                        .fontWeight(.bold)
+                        .foregroundColor(.textPrimary)
+                }
+                
+                Spacer()
+                
+                VStack(alignment: .trailing, spacing: 4) {
+                    Text("Top Category")
+                        .font(.system(.caption2, design: .rounded))
+                        .foregroundColor(.textSecondary)
+                    Text(topCategory)
+                        .font(.system(.headline, design: .rounded))
+                        .fontWeight(.bold)
+                        .foregroundColor(.brandSecondary)
+                }
+            }
+        }
+        .padding(20)
+        .background(Color.cardBackground)
+        .cornerRadius(22)
+        .shadow(color: Color.black.opacity(0.05), radius: 12, x: 0, y: 4)
+    }
+}
+
+// MARK: - Executive Monthly Chart
+
+struct ExecutiveMonthlyChart: View {
+    let monthlyData: [(month: String, amount: Double)]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack {
+                Text("Monthly Run Rate Projection")
+                    .font(.system(.headline, design: .rounded))
+                    .foregroundColor(.textPrimary)
+                Spacer()
+                Text("12-Month Trend")
+                    .font(.caption2)
+                    .foregroundColor(.textSecondary)
+            }
+            
+            Chart(monthlyData, id: \.month) { item in
+                BarMark(
+                    x: .value("Month", item.month),
+                    y: .value("Amount", item.amount)
+                )
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [.brandPrimary, .brandSecondary],
+                        startPoint: .bottom,
+                        endPoint: .top
+                    )
+                )
+                .cornerRadius(6)
+            }
+            .frame(height: 180)
+            .chartYAxis {
+                AxisMarks(position: .leading)
+            }
+        }
+        .padding(18)
+        .background(Color.cardBackground)
+        .cornerRadius(20)
+        .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 3)
+    }
+}
+
+// MARK: - Executive Category Table
+
+struct ExecutiveCategoryTable: View {
+    let subscriptions: [Subscription]
+
+    var totalSpend: Double {
+        subscriptions.reduce(0) { $0 + $1.monthlyCost }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Text("Category Financial Breakdown")
+                .font(.system(.headline, design: .rounded))
+                .foregroundColor(.textPrimary)
+            
+            let grouped = Dictionary(grouping: subscriptions) { $0.category }
+            let sortedCategories = grouped.sorted {
+                $0.value.reduce(0) { $0 + $1.monthlyCost } >
+                $1.value.reduce(0) { $0 + $1.monthlyCost }
+            }
+            
+            VStack(spacing: 10) {
+                ForEach(sortedCategories, id: \.key) { category, subs in
+                    let monthlyTotal = subs.reduce(0) { $0 + $1.monthlyCost }
+                    let yearlyTotal = subs.reduce(0) { $0 + $1.yearlyCost }
+                    let share = totalSpend > 0 ? (monthlyTotal / totalSpend) * 100 : 0
+                    
+                    HStack(alignment: .center) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(category)
+                                .font(.system(.subheadline, design: .rounded))
+                                .fontWeight(.semibold)
+                                .foregroundColor(.textPrimary)
+                            
+                            Text("\(subs.count) \(subs.count == 1 ? "subscription" : "subscriptions")")
+                                .font(.caption2)
+                                .foregroundColor(.textSecondary)
+                        }
+                        
+                        Spacer()
+                        
+                        VStack(alignment: .trailing, spacing: 2) {
+                            Text("\(CurrencyManager.shared.format(yearlyTotal))/yr")
+                                .font(.system(.subheadline, design: .rounded))
+                                .fontWeight(.bold)
+                                .foregroundColor(.textPrimary)
+                            
+                            Text(String(format: "%.1f%% of total", share))
+                                .font(.caption2)
+                                .foregroundColor(.brandPrimary)
+                        }
+                    }
+                    .padding(.vertical, 4)
+                    
+                    if category != sortedCategories.last?.key {
+                        Divider()
+                    }
+                }
+            }
+        }
+        .padding(18)
+        .background(Color.cardBackground)
+        .cornerRadius(20)
+        .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 3)
     }
 }
