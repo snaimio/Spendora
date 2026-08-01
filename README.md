@@ -170,52 +170,130 @@ struct SubscriptionPreset: Identifiable {
 
 ```
 Spendora/
-├── SpendoraApp.swift                     # App entry point initializing SwiftData ModelContainer
+├── Spendora/
+│   ├── App/
+│   │   └── SpendoraApp.swift                 # App entry point initializing SwiftData ModelContainer
+│   │
+│   ├── Utilities/
+│   │   └── Constants.swift                   # Shared constants & app configuration
+│   │
+│   ├── Models/                               # SwiftData @Model & Data Structures
+│   │   ├── Subscription.swift                # Main SwiftData schema & properties
+│   │   ├── Subscription+Calculations.swift   # Financial calculation helper extensions
+│   │   ├── Subscription+Formatting.swift    # Currency & date formatting extensions
+│   │   ├── UserProfile.swift                 # User identity & preference settings (Codable)
+│   │   ├── SubscriptionPreset.swift          # Preset template protocol & structure
+│   │   ├── SubscriptionPresetData.swift      # Catalog of top 20 popular subscriptions
+│   │   ├── PaymentMethod.swift               # Payment method enum & SF Symbol mapping
+│   │   ├── SortOption.swift                  # Sorting modes for subscription lists
+│   │   └── OnboardingPage.swift              # Slide data model for onboarding flow
+│   │
+│   ├── Services/                             # Core Business Logic & Managers
+│   │   ├── CurrencyManager.swift             # Currency conversion & formatting engine
+│   │   ├── NotificationService.swift         # Local advance notification scheduler
+│   │   ├── NotificationService+Delegate.swift # UNUserNotificationCenter delegate
+│   │   ├── MagicFinderService.swift          # Smart text parsing subscription detector
+│   │   ├── MagicFinderPatterns.swift         # Regex patterns for receipt parsing
+│   │   ├── MagicFinderCategoryDetector.swift # Automated category classifier
+│   │   ├── WidgetSyncService.swift           # WidgetKit App Group sync manager
+│   │   ├── UserProfileManager.swift          # Local user profile state & persistence manager
+│   │   ├── BudgetService.swift               # Monthly spending budget calculator
+│   │   ├── BackupService.swift               # JSON export & restore engine
+│   │   ├── CancellationService.swift         # Provider cancellation URL builder
+│   │   ├── PDFExportService.swift            # Native vector PDF builder
+│   │   ├── ExportService.swift               # CSV spreadsheet generator & exporter
+│   │   └── CloudSyncService.swift            # Offline-first sync manager & simulator
+│   │
+│   ├── Extensions/                           # Utility Extensions
+│   │   ├── Color+App.swift                   # Hex color parser & app color tokens
+│   │   ├── Font+App.swift                    # Monospaced financial typography
+│   │   ├── DateExtensions.swift              # Date math, cycles & next charge helpers
+│   │   └── StringExtensions.swift            # Regex & string manipulation helpers
+│   │
+│   ├── Styles/                               # Design Tokens & Styles
+│   │   └── AppStyles.swift                   # Shared visual style definitions & card modifiers
+│   │
+│   ├── Components/                           # Reusable UI Components
+│   │   ├── Button/
+│   │   │   └── ShareReportButton.swift
+│   │   ├── Cards/
+│   │   │   ├── QuickStatCard.swift
+│   │   │   └── StatCard.swift
+│   │   ├── Feedback/
+│   │   │   ├── ConfettiPiece.swift
+│   │   │   ├── ConfettiView.swift
+│   │   │   ├── DelightfulEmptyState.swift
+│   │   │   └── ShareSheet.swift
+│   │   └── Layout/
+│   │       ├── AnimatedGradientBackground.swift
+│   │       ├── AnimatedNumber.swift
+│   │       ├── RatingView.swift
+│   │       └── SearchBar.swift
+│   │
+│   ├── Views/                                # SwiftUI User Interface Feature Screens
+│   │   ├── Home/                             # Dashboard view, calculations, sheets & widgets
+│   │   │   ├── HomeView.swift
+│   │   │   ├── HomeView+Calculations.swift
+│   │   │   ├── HomeView+Sheets.swift
+│   │   │   ├── HomeView+Widget.swift
+│   │   │   ├── NextChargeCard.swift
+│   │   │   ├── QuickStatsView.swift
+│   │   │   └── Components/                   # Hero header, stat pills, toolbar menu, etc.
+│   │   ├── Subscriptions/                    # Detailed list, Edit view, Rating cards
+│   │   │   ├── SubscriptionCard.swift
+│   │   │   ├── SubscriptionDetailView.swift
+│   │   │   ├── SubscriptionDetailView+Actions.swift
+│   │   │   ├── SubscriptionListView.swift
+│   │   │   └── Components/
+│   │   ├── Add/                              # Add Subscription form & preset picker
+│   │   │   ├── AddSubscriptionView.swift
+│   │   │   ├── QuickAddView.swift
+│   │   │   └── Components/
+│   │   ├── Reports/                          # Swift Charts analytics, PDF export, AI Insights
+│   │   │   ├── AIInsightsView.swift
+│   │   │   ├── ChallengesView.swift
+│   │   │   ├── SavingsScoreView.swift
+│   │   │   ├── SpendingChartView.swift
+│   │   │   ├── YearlyReportView.swift
+│   │   │   └── Components/
+│   │   ├── Calendar/                         # Renewal calendar
+│   │   │   ├── SubscriptionCalendarView.swift
+│   │   │   └── Components/
+│   │   ├── Onboarding/                       # First-launch onboarding
+│   │   │   ├── PremiumOnboardingView.swift
+│   │   │   └── Components/
+│   │   ├── Profile/                          # Profile settings & authentication sheets
+│   │   │   ├── ProfileView.swift
+│   │   │   ├── AppleSignInSheet.swift
+│   │   │   ├── EditProfileSheet.swift
+│   │   │   ├── EmailSignInSheet.swift
+│   │   │   ├── GoogleSignInSheet.swift
+│   │   │   └── PrivacyGuaranteeCardView.swift
+│   │   ├── Settings/                         # App options, Cloud sync, About Capstone
+│   │   │   ├── AboutCapstoneView.swift
+│   │   │   ├── CloudSyncView.swift
+│   │   │   ├── PrivacyPolicyView.swift
+│   │   │   ├── SettingsView.swift
+│   │   │   ├── SettingsView+Actions.swift
+│   │   │   └── Components/
+│   │   └── Shareable/                        # Social export cards for score & challenges
+│   │       ├── ShareableChallenges.swift
+│   │       ├── ShareableReportCard.swift
+│   │       ├── ShareableScoreCard.swift
+│   │       └── ShareableYearlyReport.swift
+│   │
+│   └── Assets.xcassets                       # App logo, icons, accent colors
 │
-├── Models/                               # SwiftData @Model & Data Structures
-│   ├── Subscription.swift                # Main SwiftData schema & properties
-│   ├── Subscription+Calculations.swift   # Financial calculation helper extensions
-│   ├── Subscription+Formatting.swift    # Currency & date formatting extensions
-│   ├── UserProfile.swift                 # User identity & preference settings
-│   ├── SubscriptionPreset.swift          # Preset template protocol & structure
-│   ├── SubscriptionPresetData.swift      # Catalog of top 20 popular subscriptions
-│   ├── PaymentMethod.swift               # Payment method enum & SF Symbol mapping
-│   ├── SortOption.swift                  # Sorting modes for subscription lists
-│   └── OnboardingPage.swift              # Slide data model for onboarding flow
+├── SpendoraWidget/                           # iOS 17 Home Screen Widget Extension
+│   ├── SpendoraWidget.swift                  # Small & Medium WidgetKit view layouts
+│   └── SpendoraWidgetBundle.swift            # Widget bundle entry point
 │
-├── Services/                             # Core Business Logic & Managers
-│   ├── CurrencyManager.swift             # Currency conversion & formatting engine
-│   ├── NotificationService.swift         # Local advance notification scheduler
-│   ├── MagicFinderService.swift          # Smart text parsing subscription detector
-│   ├── MagicFinderPatterns.swift         # Regex patterns for receipt parsing
-│   ├── MagicFinderCategoryDetector.swift # Automated category classifier
-│   ├── WidgetSyncService.swift           # WidgetKit App Group sync manager
-│   ├── BudgetService.swift               # Monthly spending budget calculator
-│   ├── BackupService.swift               # JSON export & restore engine
-│   ├── CancellationService.swift         # Provider cancellation URL builder
-│   ├── PDFExportService.swift            # Native vector PDF builder
-│   └── ExportService.swift               # CSV spreadsheet generator
-│
-├── Extensions/                           # Utility Extensions
-│   ├── Color+App.swift                   # Hex color parser & app color tokens
-│   ├── Font+App.swift                    # Monospaced financial typography
-│   ├── DateExtensions.swift              # Date math, cycles & next charge helpers
-│   └── StringExtensions.swift            # Regex & string manipulation helpers
-│
-├── Views/                                # SwiftUI User Interface Screens
-│   ├── Home/                             # Main Dashboard, Hero header, Quick stats
-│   ├── Subscriptions/                    # Detailed list, Edit view, Rating cards
-│   ├── Add/                              # Add Subscription form & preset picker
-│   ├── Reports/                          # Swift Charts analytics, PDF export, AI Insights
-│   ├── Calendar/                         # Interactive monthly renewal calendar
-│   ├── Onboarding/                       # First-launch welcome walkthrough
-│   ├── Profile/                          # Profile settings & authentication cards
-│   ├── Shareable/                        # Social export cards for score & challenges
-│   └── Settings/                         # App options, Cloud sync, About Capstone
-│
-└── SpendoraWidget/                       # iOS 17 Home Screen Widget Extension
-    ├── SpendoraWidget.swift              # Small & Medium WidgetKit view layouts
-    └── SpendoraWidgetBundle.swift        # Widget bundle entry point
+└── SpendoraTests/                            # Unit Test Suite
+    ├── BudgetServiceTests.swift
+    ├── CurrencyManagerTests.swift
+    ├── MagicFinderServiceTests.swift
+    ├── SpendoraTests.swift
+    └── SubscriptionTests.swift
 ```
 
 ---
@@ -252,7 +330,7 @@ Spendora/
 
 ## 👨‍💻 Author
 
-**Tanjin Sufi**  
+**Sheikh Naim**  
 Mobile Application Development Capstone 2026
 
 ---
