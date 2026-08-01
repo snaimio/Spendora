@@ -54,7 +54,7 @@ struct SubscriptionListView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                SearchBarView(searchText: $searchText)
+                SearchBarView(searchText: $searchText, sortOption: $sortOption)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 8)
                 
