@@ -167,9 +167,11 @@ struct SearchBarView: View {
     private func sortIcon(for option: SortOption) -> String {
         switch option {
         case .alphabetical: return "textformat"
-        case .costDescending: return "arrow.down.circle"
-        case .costAscending: return "arrow.up.circle"
-        case .nextBilling: return "calendar"
+        case .cost: return "arrow.down.circle"
+        case .cheapest: return "arrow.up.circle"
+        case .renewalDate: return "calendar"
+        case .category: return "tag"
+        case .recentlyAdded: return "clock"
         }
     }
 }
