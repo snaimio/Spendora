@@ -69,7 +69,7 @@ struct QuickAddView: View {
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 14)
                                 .padding(.horizontal, 6)
-                                .background(Color(.secondarySystemGroupedBackground))
+                                .background(Color.cardBackground)
                                 .cornerRadius(18)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 18)
@@ -85,15 +85,17 @@ struct QuickAddView: View {
                 .padding(.vertical, 12)
             }
             .searchable(text: $searchText, prompt: "Search popular providers...")
-            .background(Color(.systemGroupedBackground).ignoresSafeArea())
+            .background(Color.appBackground.ignoresSafeArea())
             .navigationTitle("Popular Providers")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                    Button("Done") {
                         dismiss()
                     }
                     .font(.system(.body, design: .rounded))
+                    .fontWeight(.semibold)
+                    .foregroundColor(.brandPrimary)
                 }
             }
         }

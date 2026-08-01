@@ -65,7 +65,7 @@ struct ProfileSignInOptionsCard: View {
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
                 .frame(height: 50)
-                .background(Color.primary)
+                .background(Color(UIColor { $0.userInterfaceStyle == .dark ? UIColor(red: 0.18, green: 0.20, blue: 0.24, alpha: 1.0) : UIColor.black }))
                 .cornerRadius(14)
             }
             

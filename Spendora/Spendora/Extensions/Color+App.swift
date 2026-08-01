@@ -59,13 +59,13 @@ extension Color {
     // MARK: - UI Colors (Adaptive Light & Dark Mode)
     static let appBackground = Color(UIColor { traitCollection in
         traitCollection.userInterfaceStyle == .dark
-            ? UIColor(red: 0.08, green: 0.09, blue: 0.11, alpha: 1.0)
+            ? UIColor(red: 0.04, green: 0.05, blue: 0.07, alpha: 1.0) // Rich OLED Midnight (#0B0D11)
             : UIColor(red: 0.99, green: 0.97, blue: 0.94, alpha: 1.0)
     })
     
     static let cardBackground = Color(UIColor { traitCollection in
         traitCollection.userInterfaceStyle == .dark
-            ? UIColor(red: 0.14, green: 0.15, blue: 0.18, alpha: 1.0)
+            ? UIColor(red: 0.10, green: 0.11, blue: 0.14, alpha: 1.0) // Deep Dark Elevation (#1A1C24)
             : UIColor.white
     })
     
@@ -77,13 +77,13 @@ extension Color {
     
     static let textSecondary = Color(UIColor { traitCollection in
         traitCollection.userInterfaceStyle == .dark
-            ? UIColor(red: 0.70, green: 0.73, blue: 0.76, alpha: 1.0)
+            ? UIColor(red: 0.72, green: 0.76, blue: 0.80, alpha: 1.0)
             : UIColor(red: 0.39, green: 0.43, blue: 0.45, alpha: 1.0)
     })
     
     static let textTertiary = Color(UIColor { traitCollection in
         traitCollection.userInterfaceStyle == .dark
-            ? UIColor(red: 0.45, green: 0.48, blue: 0.52, alpha: 1.0)
+            ? UIColor(red: 0.48, green: 0.52, blue: 0.56, alpha: 1.0)
             : UIColor(red: 0.70, green: 0.74, blue: 0.76, alpha: 1.0)
     })
     
