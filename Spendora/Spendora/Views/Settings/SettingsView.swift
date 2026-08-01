@@ -1,3 +1,7 @@
+//
+//  SettingsView.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * SettingsView screen presenting configuration options for user profile management,
@@ -11,7 +15,29 @@ import WidgetKit
 import UniformTypeIdentifiers
 import UIKit
 
+
+// MARK: - SettingsView
+
+/**
+ `SettingsView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for settingsview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SettingsView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct SettingsView: View {
+
+    // MARK: - Properties
+
     @Environment(\.modelContext) var modelContext
     @Query var subscriptions: [Subscription]
     
@@ -34,6 +60,10 @@ struct SettingsView: View {
     @ObservedObject var profileManager = UserProfileManager.shared
     @State var showingProfileSheet = false
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         NavigationStack {
             List {

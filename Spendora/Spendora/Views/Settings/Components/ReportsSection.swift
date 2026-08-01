@@ -1,13 +1,43 @@
+//
+//  ReportsSection.swift
+//
+
 import SwiftUI
 
+
+// MARK: - ReportsSection
+
+/**
+ `ReportsSection` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for reportssection handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `ReportsSection` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct ReportsSection: View {
-    let subscriptions: [Subscription]
+
+    // MARK: - Properties
+
+    let subscriptions: [Subscription]  // subscriptions property
     @Binding var showingYearlyReport: Bool
     @Binding var showingChallenges: Bool
     @Binding var showingSavingsScore: Bool
     @Binding var showingAIInsights: Bool
     @Binding var showingSpendingChart: Bool
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         Section("Reports") {
             PremiumSettingsRow(

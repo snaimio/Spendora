@@ -1,11 +1,41 @@
+//
+//  PremiumSearchSortView.swift
+//
+
 import SwiftUI
 
 // SortOption is now in Models/SortOption.swift
 
+
+// MARK: - PremiumSearchSortView
+
+/**
+ `PremiumSearchSortView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for premiumsearchsortview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `PremiumSearchSortView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct PremiumSearchSortView: View {
+
+    // MARK: - Properties
+
     @Binding var searchText: String
     @Binding var sortOption: SortOption
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         VStack(spacing: 12) {
             HStack {

@@ -1,9 +1,39 @@
+//
+//  AIInsightsView.swift
+//
+
 import SwiftUI
 
+
+// MARK: - AIInsightsView
+
+/**
+ `AIInsightsView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for aiinsightsview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `AIInsightsView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct AIInsightsView: View {
-    let subscriptions: [Subscription]
+
+    // MARK: - Properties
+
+    let subscriptions: [Subscription]  // subscriptions property
     @Environment(\.dismiss) private var dismiss
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -36,7 +66,33 @@ struct AIInsightsView: View {
 }
 
 // MARK: - AI Insights Header
+
+// MARK: - AIInsightsHeaderView
+
+/**
+ `AIInsightsHeaderView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for aiinsightsheaderview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `AIInsightsHeaderView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct AIInsightsHeaderView: View {
+
+    // MARK: - Properties
+
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         VStack(spacing: 8) {
             Image(systemName: "brain.head.profile")
@@ -62,7 +118,33 @@ struct AIInsightsHeaderView: View {
 }
 
 // MARK: - Empty Insights
+
+// MARK: - EmptyInsightsView
+
+/**
+ `EmptyInsightsView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for emptyinsightsview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `EmptyInsightsView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct EmptyInsightsView: View {
+
+    // MARK: - Properties
+
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         VStack(spacing: 16) {
             Image(systemName: "plus.circle")
@@ -85,9 +167,35 @@ struct EmptyInsightsView: View {
 }
 
 // MARK: - AI Insights Content
+
+// MARK: - AIInsightsContent
+
+/**
+ `AIInsightsContent` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for aiinsightscontent handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `AIInsightsContent` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct AIInsightsContent: View {
-    let subscriptions: [Subscription]
+
+    // MARK: - Properties
+
+    let subscriptions: [Subscription]  // subscriptions property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         VStack(spacing: 16) {
             AIInsightCard(
@@ -139,9 +247,35 @@ struct AIInsightsContent: View {
 }
 
 // MARK: - Spending Distribution
+
+// MARK: - SpendingDistributionView
+
+/**
+ `SpendingDistributionView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for spendingdistributionview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SpendingDistributionView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct SpendingDistributionView: View {
-    let subscriptions: [Subscription]
+
+    // MARK: - Properties
+
+    let subscriptions: [Subscription]  // subscriptions property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Spending by Category")
@@ -179,6 +313,16 @@ struct SpendingDistributionView: View {
         .cornerRadius(16)
     }
     
+
+    /**
+     Executes `categoryColor` for component logic.
+     
+     - Parameter category: Value passed to `categoryColor`.
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     private func categoryColor(for category: String) -> Color {
         switch category {
         case "Entertainment": return .categoryEntertainment

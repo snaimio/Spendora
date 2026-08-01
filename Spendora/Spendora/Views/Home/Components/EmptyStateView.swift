@@ -1,3 +1,7 @@
+//
+//  EmptyStateView.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * EmptyStateView component displaying friendly animated pulsing state when no subscriptions match search or exist in local DB.
@@ -5,9 +9,35 @@
 
 import SwiftUI
 
+
+// MARK: - EmptyStateView
+
+/**
+ `EmptyStateView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for emptystateview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `EmptyStateView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct EmptyStateView: View {
+
+    // MARK: - Properties
+
     @State private var pulse = false
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         VStack(spacing: 20) {
             ZStack {

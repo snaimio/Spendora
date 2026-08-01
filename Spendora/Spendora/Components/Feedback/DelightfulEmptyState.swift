@@ -1,10 +1,40 @@
+//
+//  DelightfulEmptyState.swift
+//
+
 import SwiftUI
 
+
+// MARK: - DelightfulEmptyState
+
+/**
+ `DelightfulEmptyState` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for delightfulemptystate handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `DelightfulEmptyState` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct DelightfulEmptyState: View {
+
+    // MARK: - Properties
+
     @State private var pulse = false
     @State private var rotate = false
     @State private var bounce = false
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         VStack(spacing: 28) {
             // Premium animated icon with gradient

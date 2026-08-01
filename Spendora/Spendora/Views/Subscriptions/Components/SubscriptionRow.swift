@@ -1,8 +1,38 @@
+//
+//  SubscriptionRow.swift
+//
+
 import SwiftUI
 
+
+// MARK: - SubscriptionRow
+
+/**
+ `SubscriptionRow` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for subscriptionrow handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SubscriptionRow` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct SubscriptionRow: View {
-    let subscription: Subscription
+
+    // MARK: - Properties
+
+    let subscription: Subscription  // subscription property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         HStack(spacing: 12) {
             // Color indicator

@@ -1,3 +1,7 @@
+//
+//  SettingsDataManagementSection.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * SettingsDataManagementSection component containing CSV/PDF export, JSON backup, file import, and master data reset triggers.
@@ -5,13 +9,39 @@
 
 import SwiftUI
 
+
+// MARK: - SettingsDataManagementSection
+
+/**
+ `SettingsDataManagementSection` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for settingsdatamanagementsection handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SettingsDataManagementSection` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct SettingsDataManagementSection: View {
-    let exportCSV: () -> Void
-    let exportPDF: () -> Void
-    let exportBackup: () -> Void
-    let importBackup: () -> Void
-    let resetData: () -> Void
+
+    // MARK: - Properties
+
+    let exportCSV: () -> Void  // exportCSV property
+    let exportPDF: () -> Void  // exportPDF property
+    let exportBackup: () -> Void  // exportBackup property
+    let importBackup: () -> Void  // importBackup property
+    let resetData: () -> Void  // resetData property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         Section("Data & Privacy") {
             // Export CSV

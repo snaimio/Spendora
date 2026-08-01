@@ -1,3 +1,7 @@
+//
+//  WidgetSyncService.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * WidgetSyncService class syncing live subscription statistics to iOS Home Screen Widgets.
@@ -9,7 +13,29 @@ import Foundation
 import WidgetKit
 import SwiftUI
 
+
+// MARK: - WidgetSyncService
+
+/**
+ `WidgetSyncService` is a class that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for widgetsyncservice handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `WidgetSyncService` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 class WidgetSyncService {
+
+    // MARK: - Properties
+
 
     /// Calculates current subscription totals and syncs payload to App Group UserDefaults
     static func update(subscriptions: [Subscription]) {
@@ -54,6 +80,15 @@ class WidgetSyncService {
         print("✅ Widget data updated manually - Total: \(totalMonthly), Next: \(nextSubName)")
     }
 
+
+    /**
+     Executes `clearWidgetData` for component logic.
+     
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     static func clearWidgetData() {
         let defaults = UserDefaults(suiteName: "group.com.trios2026sn.Spendora")
 

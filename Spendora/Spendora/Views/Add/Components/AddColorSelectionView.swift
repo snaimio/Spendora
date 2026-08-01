@@ -1,10 +1,40 @@
+//
+//  AddColorSelectionView.swift
+//
+
 import SwiftUI
 
+
+// MARK: - AddColorSelectionView
+
+/**
+ `AddColorSelectionView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for addcolorselectionview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `AddColorSelectionView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct AddColorSelectionView: View {
-    let colorOptions: [(name: String, hex: String)]
+
+    // MARK: - Properties
+
+    let colorOptions: [(name: String, hex: String)]  // colorOptions property
     @Binding var selectedColorHex: String
-    let generator: UIImpactFeedbackGenerator
+    let generator: UIImpactFeedbackGenerator  // generator property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Choose a Color")

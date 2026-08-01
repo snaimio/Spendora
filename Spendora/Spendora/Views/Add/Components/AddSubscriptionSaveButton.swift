@@ -1,10 +1,40 @@
+//
+//  AddSubscriptionSaveButton.swift
+//
+
 import SwiftUI
 
+
+// MARK: - AddSubscriptionSaveButton
+
+/**
+ `AddSubscriptionSaveButton` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for addsubscriptionsavebutton handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `AddSubscriptionSaveButton` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct AddSubscriptionSaveButton: View {
-    let isValid: Bool
-    let isSaving: Bool
-    let action: () -> Void
+
+    // MARK: - Properties
+
+    let isValid: Bool  // isValid property
+    let isSaving: Bool  // isSaving property
+    let action: () -> Void  // action property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         Button {
             action()

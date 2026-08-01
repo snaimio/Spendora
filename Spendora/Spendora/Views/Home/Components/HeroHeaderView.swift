@@ -1,9 +1,35 @@
+//
+//  HeroHeaderView.swift
+//
+
 import SwiftUI
 
+
+// MARK: - HeroHeaderView
+
+/**
+ `HeroHeaderView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for heroheaderview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `HeroHeaderView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct HeroHeaderView: View {
-    let totalMonthly: Double
-    let totalYearly: Double
-    let count: Int
+
+    // MARK: - Properties
+
+    let totalMonthly: Double  // totalMonthly property
+    let totalYearly: Double  // totalYearly property
+    let count: Int  // count property
     
     private var budget: Double {
         BudgetService.shared.monthlyBudget
@@ -21,6 +47,10 @@ struct HeroHeaderView: View {
         BudgetService.shared.budgetStatus(currentSpending: totalMonthly).color
     }
 
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         VStack(spacing: 14) {
             // Top gradient line

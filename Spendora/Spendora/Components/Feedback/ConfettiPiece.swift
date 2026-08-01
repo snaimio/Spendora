@@ -1,11 +1,41 @@
+//
+//  ConfettiPiece.swift
+//
+
 import SwiftUI
 
+
+// MARK: - ConfettiPiece
+
+/**
+ `ConfettiPiece` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for confettipiece handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `ConfettiPiece` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct ConfettiPiece: View {
-    let index: Int
-    let animate: Bool
+
+    // MARK: - Properties
+
+    let index: Int  // index property
+    let animate: Bool  // animate property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
-        let colors: [Color] = [
+        let colors: [Color] = [  // colors property
             Color(hex: "#6366F1"),  // Brand Primary
             Color(hex: "#8B5CF6"),  // Brand Secondary
             Color(hex: "#F59E0B"),  // Brand Accent

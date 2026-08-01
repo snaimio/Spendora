@@ -1,3 +1,7 @@
+//
+//  SettingsView+Actions.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * Extension for SettingsView containing data export/import actions (CSV, PDF, JSON backup) and application data reset routines.
@@ -7,8 +11,23 @@ import SwiftUI
 import SwiftData
 import WidgetKit
 
+
+// MARK: - SettingsView Extension
+
+/**
+ Extension on `SettingsView` providing utility methods and helpers.
+ */
 extension SettingsView {
     
+
+    /**
+     Executes `shareApp` for component logic.
+     
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     func shareApp() {
         let appStoreURL = AppConstants.AppInfo.appStoreURL
         let activityVC = UIActivityViewController(
@@ -24,6 +43,15 @@ extension SettingsView {
         }
     }
     
+
+    /**
+     Executes `resetAllData` for component logic.
+     
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     func resetAllData() {
         NotificationService.shared.cancelAll()
         for subscription in subscriptions {
@@ -42,6 +70,15 @@ extension SettingsView {
         }
     }
     
+
+    /**
+     Executes `exportCSV` for component logic.
+     
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     func exportCSV() {
         let csvString = ExportService.generateCSVString(subscriptions: subscriptions)
         let tempDir = FileManager.default.temporaryDirectory
@@ -58,6 +95,15 @@ extension SettingsView {
         }
     }
     
+
+    /**
+     Executes `exportPDF` for component logic.
+     
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     func exportPDF() {
         guard let fileURL = PDFExportService.generatePDF(subscriptions: subscriptions) else {
             print("Failed to generate PDF")
@@ -68,6 +114,15 @@ extension SettingsView {
         showingExportSuccess = true
     }
     
+
+    /**
+     Executes `exportBackup` for component logic.
+     
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     func exportBackup() {
         guard let fileURL = BackupService.shared.exportBackup(subscriptions: subscriptions) else {
             print("Failed to generate backup")
@@ -77,6 +132,16 @@ extension SettingsView {
         showingShareSheet = true
     }
     
+
+    /**
+     Executes `importBackup` for component logic.
+     
+     - Parameter url: Value passed to `importBackup`.
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     func importBackup(from url: URL) {
         do {
             let count = try BackupService.shared.importBackup(from: url, modelContext: modelContext)

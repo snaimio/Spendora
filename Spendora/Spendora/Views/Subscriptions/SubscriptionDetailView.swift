@@ -1,3 +1,7 @@
+//
+//  SubscriptionDetailView.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * SubscriptionDetailView screen managing subscription details, editing, and cancellation.
@@ -8,11 +12,33 @@
 import SwiftUI
 import SwiftData
 
+
+// MARK: - SubscriptionDetailView
+
+/**
+ `SubscriptionDetailView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for subscriptiondetailview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SubscriptionDetailView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct SubscriptionDetailView: View {
+
+    // MARK: - Properties
+
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
     
-    let subscription: Subscription
+    let subscription: Subscription  // subscription property
     
     // Editable subscription fields
     @State var name: String
@@ -49,12 +75,16 @@ struct SubscriptionDetailView: View {
         _paymentMethod = State(initialValue: subscription.paymentMethod ?? "Not Set")
     }
     
-    var costValue: Double? { Double(cost) }
-    var isValid: Bool {
+    var costValue: Double? { Double(cost) }  // costValue property
+    var isValid: Bool {  // isValid property
         !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
         (costValue ?? 0) > 0
     }
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         NavigationStack {
             Form {

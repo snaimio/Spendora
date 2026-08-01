@@ -1,3 +1,7 @@
+//
+//  PDFExportService.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * PDFExportService class using CoreGraphics and `UIGraphicsPDFRenderer` to render professional, formatted PDF financial reports.
@@ -8,7 +12,29 @@
 import UIKit
 import SwiftUI
 
+
+// MARK: - PDFExportService
+
+/**
+ `PDFExportService` is a class that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for pdfexportservice handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `PDFExportService` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 class PDFExportService {
+
+    // MARK: - Properties
+
     
     /// Renders a formatted PDF document binary Data object from an array of subscriptions
     static func generatePDFData(subscriptions: [Subscription]) -> Data? {
@@ -102,6 +128,16 @@ class PDFExportService {
         return pdfData
     }
     
+
+    /**
+     Executes `generatePDF` for component logic.
+     
+     - Parameter subscriptions: Value passed to `generatePDF`.
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     static func generatePDF(subscriptions: [Subscription]) -> URL? {
         guard let pdfData = generatePDFData(subscriptions: subscriptions) else {
             return nil

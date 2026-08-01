@@ -1,10 +1,40 @@
+//
+//  QuickAddView.swift
+//
+
 import SwiftUI
 
+
+// MARK: - QuickAddView
+
+/**
+ `QuickAddView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for quickaddview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `QuickAddView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct QuickAddView: View {
-    let onSelect: (SubscriptionPreset) -> Void
+
+    // MARK: - Properties
+
+    let onSelect: (SubscriptionPreset) -> Void  // onSelect property
 
     @Environment(\.dismiss) private var dismiss
 
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -58,6 +88,10 @@ struct QuickAddView: View {
     }
 }
 
+
+// MARK: - Preview
+
+/// Xcode Canvas Preview Provider.
 #Preview {
     QuickAddView { _ in }
 }

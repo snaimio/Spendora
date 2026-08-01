@@ -1,12 +1,38 @@
+//
+//  SavingsScoreView.swift
+//
+
 import SwiftUI
 
+
+// MARK: - SavingsScoreView
+
+/**
+ `SavingsScoreView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for savingsscoreview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SavingsScoreView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct SavingsScoreView: View {
-    let subscriptions: [Subscription]
+
+    // MARK: - Properties
+
+    let subscriptions: [Subscription]  // subscriptions property
     @Environment(\.dismiss) private var dismiss
     @State private var showingShareSheet = false
     @State private var shareImage: UIImage?
     
-    var savingsScore: Int {
+    var savingsScore: Int {  // savingsScore property
         let total = subscriptions.reduce(0) { $0 + $1.monthlyCost }
         let count = subscriptions.count
         let countScore = max(0, 100 - (count * 5))
@@ -14,8 +40,8 @@ struct SavingsScoreView: View {
         return min(100, (countScore + spendingScore) / 2)
     }
     
-    var recommendations: [String] {
-        var result: [String] = []
+    var recommendations: [String] {  // recommendations property
+        var result: [String] = []  // result property
         let total = subscriptions.reduce(0) { $0 + $1.monthlyCost }
         let count = subscriptions.count
         
@@ -35,6 +61,10 @@ struct SavingsScoreView: View {
         return result
     }
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -71,6 +101,15 @@ struct SavingsScoreView: View {
         }
     }
     
+
+    /**
+     Executes `generateShareImage` for component logic.
+     
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     private func generateShareImage() {
         let shareableView = ShareableScoreCard(
             score: savingsScore,
@@ -93,11 +132,37 @@ struct SavingsScoreView: View {
 }
 
 // MARK: - Savings Score Header
+
+// MARK: - SavingsScoreHeaderView
+
+/**
+ `SavingsScoreHeaderView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for savingsscoreheaderview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SavingsScoreHeaderView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct SavingsScoreHeaderView: View {
-    let savingsScore: Int
-    let recommendations: [String]
-    let subscriptions: [Subscription]
+
+    // MARK: - Properties
+
+    let savingsScore: Int  // savingsScore property
+    let recommendations: [String]  // recommendations property
+    let subscriptions: [Subscription]  // subscriptions property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {

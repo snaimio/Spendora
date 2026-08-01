@@ -1,10 +1,40 @@
+//
+//  ShareableScoreCard.swift
+//
+
 import SwiftUI
 
+
+// MARK: - ShareableScoreCard
+
+/**
+ `ShareableScoreCard` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for shareablescorecard handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `ShareableScoreCard` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct ShareableScoreCard: View {
-    let score: Int
-    let count: Int
-    let total: Double
+
+    // MARK: - Properties
+
+    let score: Int  // score property
+    let count: Int  // count property
+    let total: Double  // total property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         VStack(spacing: 24) {
             Spacer()

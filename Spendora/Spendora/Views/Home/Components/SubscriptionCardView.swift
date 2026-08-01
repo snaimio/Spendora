@@ -1,3 +1,7 @@
+//
+//  SubscriptionCardView.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * SubscriptionCardView component displaying individual subscription details, icon, trial/renewal badges, monthly cost, and next billing date.
@@ -5,9 +9,35 @@
 
 import SwiftUI
 
+
+// MARK: - SubscriptionCardView
+
+/**
+ `SubscriptionCardView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for subscriptioncardview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SubscriptionCardView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct SubscriptionCardView: View {
-    let subscription: Subscription
+
+    // MARK: - Properties
+
+    let subscription: Subscription  // subscription property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         HStack(spacing: 12) {
             ZStack {

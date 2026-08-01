@@ -1,14 +1,40 @@
+//
+//  SubscriptionListView.swift
+//
+
 import SwiftUI
 import SwiftData
 
+
+// MARK: - SubscriptionListView
+
+/**
+ `SubscriptionListView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for subscriptionlistview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SubscriptionListView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct SubscriptionListView: View {
+
+    // MARK: - Properties
+
     @Query private var subscriptions: [Subscription]
     @Environment(\.modelContext) private var modelContext
     @State private var searchText = ""
     @State private var selectedSubscription: Subscription?
     @State private var sortOption: SortOption = .alphabetical
     
-    var filteredSubscriptions: [Subscription] {
+    var filteredSubscriptions: [Subscription] {  // filteredSubscriptions property
         let sorted = sortSubscriptions(subscriptions)
         if searchText.isEmpty { return sorted }
         return sorted.filter {
@@ -17,10 +43,14 @@ struct SubscriptionListView: View {
         }
     }
     
-    var totalMonthly: Double {
+    var totalMonthly: Double {  // totalMonthly property
         filteredSubscriptions.reduce(0) { $0 + $1.monthlyCost }
     }
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -91,6 +121,16 @@ struct SubscriptionListView: View {
         }
     }
     
+
+    /**
+     Executes `sortSubscriptions` for component logic.
+     
+     - Parameter subs: Value passed to `sortSubscriptions`.
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     private func sortSubscriptions(_ subs: [Subscription]) -> [Subscription] {
         switch sortOption {
         case .alphabetical:
@@ -108,6 +148,16 @@ struct SubscriptionListView: View {
         }
     }
     
+
+    /**
+     Executes `deleteSubscription` for component logic.
+     
+     - Parameter subscription: Value passed to `deleteSubscription`.
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     private func deleteSubscription(_ subscription: Subscription) {
         NotificationService.shared.cancel(for: subscription)
         modelContext.delete(subscription)

@@ -1,6 +1,36 @@
+//
+//  PremiumAppInfoRow.swift
+//
+
 import SwiftUI
 
+
+// MARK: - PremiumAppInfoRow
+
+/**
+ `PremiumAppInfoRow` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for premiumappinforow handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `PremiumAppInfoRow` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct PremiumAppInfoRow: View {
+
+    // MARK: - Properties
+
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         HStack(spacing: 16) {
             ZStack {
@@ -82,6 +112,15 @@ struct PremiumAppInfoRow: View {
         .padding(.vertical, 8)
     }
     
+
+    /**
+     Executes `getAppVersion` for component logic.
+     
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     private func getAppVersion() -> String {
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
         let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"

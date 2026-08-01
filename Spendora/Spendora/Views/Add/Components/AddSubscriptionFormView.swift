@@ -1,6 +1,32 @@
+//
+//  AddSubscriptionFormView.swift
+//
+
 import SwiftUI
 
+
+// MARK: - AddSubscriptionFormView
+
+/**
+ `AddSubscriptionFormView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for addsubscriptionformview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `AddSubscriptionFormView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct AddSubscriptionFormView: View {
+
+    // MARK: - Properties
+
     @Binding var name: String
     @Binding var cost: String
     @Binding var selectedCategory: String
@@ -8,6 +34,10 @@ struct AddSubscriptionFormView: View {
     @Binding var nextBillingDate: Date
     @Binding var selectedPaymentMethod: PaymentMethod
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         VStack(spacing: 16) {
             PremiumFormField(

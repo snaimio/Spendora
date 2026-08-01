@@ -1,9 +1,45 @@
+//
+//  SpendoraWidget.swift
+//
+
 import WidgetKit
 import SwiftUI
 
 // MARK: - Timeline Provider
+
+// MARK: - Provider
+
+/**
+ `Provider` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for provider handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `Provider` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct Provider: TimelineProvider {
+
+    // MARK: - Properties
+
     
+
+    /**
+     Executes `placeholder` for component logic.
+     
+     - Parameter context: Value passed to `placeholder`.
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     func placeholder(in context: Context) -> SimpleEntry {
         SimpleEntry(
             date: Date(),
@@ -17,6 +53,17 @@ struct Provider: TimelineProvider {
         )
     }
     
+
+    /**
+     Executes `getSnapshot` for component logic.
+     
+     - Parameter context: Value passed to `getSnapshot`.
+     - Parameter completion: Value passed to `getSnapshot`.
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> Void) {
         let entry = SimpleEntry(
             date: Date(),
@@ -31,6 +78,17 @@ struct Provider: TimelineProvider {
         completion(entry)
     }
     
+
+    /**
+     Executes `getTimeline` for component logic.
+     
+     - Parameter context: Value passed to `getTimeline`.
+     - Parameter completion: Value passed to `getTimeline`.
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     func getTimeline(in context: Context, completion: @escaping (Timeline<SimpleEntry>) -> Void) {
         let defaults = UserDefaults(suiteName: "group.com.trios2026sn.Spendora")
         
@@ -64,27 +122,49 @@ struct Provider: TimelineProvider {
 }
 
 // MARK: - Entry Model
+
+// MARK: - SimpleEntry
+
+/**
+ `SimpleEntry` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for simpleentry handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SimpleEntry` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct SimpleEntry: TimelineEntry {
-    let date: Date
-    let totalSpending: Double
-    let totalYearly: Double
-    let activeCount: Int
-    let upcomingSubscription: String
-    let upcomingCost: Double
-    let upcomingDate: Date?
-    let currencySymbol: String
+
+    // MARK: - Properties
+
+    let date: Date  // date property
+    let totalSpending: Double  // totalSpending property
+    let totalYearly: Double  // totalYearly property
+    let activeCount: Int  // activeCount property
+    let upcomingSubscription: String  // upcomingSubscription property
+    let upcomingCost: Double  // upcomingCost property
+    let upcomingDate: Date?  // upcomingDate property
+    let currencySymbol: String  // currencySymbol property
     
-    var formattedMonthly: String {
+    var formattedMonthly: String {  // formattedMonthly property
         let amount = String(format: "%.2f", totalSpending)
         return "\(currencySymbol)\(amount)"
     }
     
-    var formattedUpcomingCost: String {
+    var formattedUpcomingCost: String {  // formattedUpcomingCost property
         let amount = String(format: "%.2f", upcomingCost)
         return "\(currencySymbol)\(amount)"
     }
     
-    var formattedUpcomingDate: String {
+    var formattedUpcomingDate: String {  // formattedUpcomingDate property
         guard let upcomingDate = upcomingDate else { return "No bills due" }
         if Calendar.current.isDateInToday(upcomingDate) {
             return "Due Today"
@@ -97,10 +177,36 @@ struct SimpleEntry: TimelineEntry {
 }
 
 // MARK: - Entry View
+
+// MARK: - SpendoraWidgetEntryView
+
+/**
+ `SpendoraWidgetEntryView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for spendorawidgetentryview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SpendoraWidgetEntryView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct SpendoraWidgetEntryView: View {
-    var entry: Provider.Entry
+
+    // MARK: - Properties
+
+    var entry: Provider.Entry  // entry property
     @Environment(\.widgetFamily) var family
 
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         switch family {
         case .systemMedium:
@@ -112,9 +218,35 @@ struct SpendoraWidgetEntryView: View {
 }
 
 // MARK: - Small Widget View
+
+// MARK: - SmallWidgetView
+
+/**
+ `SmallWidgetView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for smallwidgetview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SmallWidgetView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct SmallWidgetView: View {
-    let entry: SimpleEntry
+
+    // MARK: - Properties
+
+    let entry: SimpleEntry  // entry property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             // Header Bar
@@ -188,9 +320,35 @@ struct SmallWidgetView: View {
 }
 
 // MARK: - Medium Widget View
+
+// MARK: - MediumWidgetView
+
+/**
+ `MediumWidgetView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for mediumwidgetview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `MediumWidgetView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct MediumWidgetView: View {
-    let entry: SimpleEntry
+
+    // MARK: - Properties
+
+    let entry: SimpleEntry  // entry property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         HStack(spacing: 16) {
             // Left Half: Spending Summary
@@ -311,10 +469,32 @@ struct MediumWidgetView: View {
 
 // MARK: - Widget Main Configuration
 @main
+
+// MARK: - SpendoraWidget
+
+/**
+ `SpendoraWidget` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for spendorawidget handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SpendoraWidget` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct SpendoraWidget: Widget {
-    let kind: String = "SpendoraWidget"
+
+    // MARK: - Properties
+
+    let kind: String = "SpendoraWidget"  // kind property
     
-    var body: some WidgetConfiguration {
+    var body: some WidgetConfiguration {  // body property
         StaticConfiguration(
             kind: kind,
             provider: Provider()
@@ -331,7 +511,7 @@ struct SpendoraWidget: Widget {
 extension Color {
     init(hex: String) {
         let hex = hex.trimmingCharacters(in: .alphanumerics.inverted)
-        var int: UInt64 = 0
+        var int: UInt64 = 0  // int property
         Scanner(string: hex).scanHexInt64(&int)
         let a, r, g, b: UInt64
         switch hex.count {
@@ -370,6 +550,10 @@ extension Color {
     )
 }
 
+
+// MARK: - Preview
+
+/// Xcode Canvas Preview Provider.
 #Preview(as: .systemMedium) {
     SpendoraWidget()
 } timeline: {

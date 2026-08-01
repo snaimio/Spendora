@@ -1,3 +1,7 @@
+//
+//  ProfileSignInOptionsCard.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * ProfileSignInOptionsCard subview component displaying Apple, Google, and Email authentication action buttons for guest users.
@@ -5,13 +9,39 @@
 
 import SwiftUI
 
+
+// MARK: - ProfileSignInOptionsCard
+
+/**
+ `ProfileSignInOptionsCard` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for profilesigninoptionscard handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `ProfileSignInOptionsCard` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct ProfileSignInOptionsCard: View {
-    let onApple: () -> Void
-    let onGoogle: () -> Void
-    let onEmail: () -> Void
+
+    // MARK: - Properties
+
+    let onApple: () -> Void  // onApple property
+    let onGoogle: () -> Void  // onGoogle property
+    let onEmail: () -> Void  // onEmail property
     
     private let generator = UIImpactFeedbackGenerator(style: .medium)
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Authentication Options")

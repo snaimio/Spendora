@@ -1,7 +1,33 @@
+//
+//  AddSubscriptionView.swift
+//
+
 import SwiftUI
 import SwiftData
 
+
+// MARK: - AddSubscriptionView
+
+/**
+ `AddSubscriptionView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for addsubscriptionview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `AddSubscriptionView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct AddSubscriptionView: View {
+
+    // MARK: - Properties
+
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     
@@ -22,9 +48,9 @@ struct AddSubscriptionView: View {
     private let colorOptions = AddSubscriptionColorOptions.all
     
     // MARK: - Computed Properties
-    var costValue: Double? { Double(cost) }
+    var costValue: Double? { Double(cost) }  // costValue property
     
-    var isValid: Bool {
+    var isValid: Bool {  // isValid property
         !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
         (costValue ?? 0) > 0 &&
         nextBillingDate > Date()
@@ -140,7 +166,29 @@ struct AddSubscriptionView: View {
 }
 
 // MARK: - Color Options
+
+// MARK: - AddSubscriptionColorOptions
+
+/**
+ `AddSubscriptionColorOptions` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for addsubscriptioncoloroptions handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `AddSubscriptionColorOptions` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct AddSubscriptionColorOptions {
+
+    // MARK: - Properties
+
     static let all: [(name: String, hex: String)] = [
         ("Purple", "#6C63FF"),
         ("Blue", "#007AFF"),

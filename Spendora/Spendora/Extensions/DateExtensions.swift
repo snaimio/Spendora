@@ -1,23 +1,33 @@
+//
+//  DateExtensions.swift
+//
+
 import Foundation
 
+
+// MARK: - Date Extension
+
+/**
+ Extension on `Date` providing utility methods and helpers.
+ */
 extension Date {
     
     /// Format date as "MMM d, yyyy" (e.g., "Jan 15, 2025")
-    var formattedAsMonthDayYear: String {
+    var formattedAsMonthDayYear: String {  // formattedAsMonthDayYear property
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM d, yyyy"
         return formatter.string(from: self)
     }
     
     /// Format date as "EEEE, MMM d" (e.g., "Monday, Jan 15")
-    var formattedAsWeekdayMonthDay: String {
+    var formattedAsWeekdayMonthDay: String {  // formattedAsWeekdayMonthDay property
         let formatter = DateFormatter()
         formatter.dateFormat = "EEEE, MMM d"
         return formatter.string(from: self)
     }
     
     /// Format date as "MMM d" (e.g., "Jan 15")
-    var formattedAsMonthDay: String {
+    var formattedAsMonthDay: String {  // formattedAsMonthDay property
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM d"
         return formatter.string(from: self)
@@ -35,12 +45,12 @@ extension Date {
     }
     
     /// Start of day
-    var startOfDay: Date {
+    var startOfDay: Date {  // startOfDay property
         Calendar.current.startOfDay(for: self)
     }
     
     /// End of day
-    var endOfDay: Date {
+    var endOfDay: Date {  // endOfDay property
         var components = DateComponents()
         components.day = 1
         components.second = -1
@@ -58,12 +68,12 @@ extension Date {
     }
     
     /// Check if date is today
-    var isToday: Bool {
+    var isToday: Bool {  // isToday property
         Calendar.current.isDateInToday(self)
     }
     
     /// Check if date is in the future
-    var isFuture: Bool {
+    var isFuture: Bool {  // isFuture property
         self > Date()
     }
 }

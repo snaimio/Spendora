@@ -1,3 +1,7 @@
+//
+//  ChallengeCard.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * Challenge model definition and ChallengeCard view component displaying savings challenge progress and completion badge.
@@ -5,18 +9,66 @@
 
 import SwiftUI
 
+
+// MARK: - Challenge
+
+/**
+ `Challenge` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for challenge handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `Challenge` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct Challenge: Identifiable {
-    let id: String
-    let title: String
-    let description: String
-    let icon: String
-    let isCompleted: Bool
-    let color: Color
+
+    // MARK: - Properties
+
+    let id: String  // id property
+    let title: String  // title property
+    let description: String  // description property
+    let icon: String  // icon property
+    let isCompleted: Bool  // isCompleted property
+    let color: Color  // color property
 }
 
+
+// MARK: - ChallengeCard
+
+/**
+ `ChallengeCard` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for challengecard handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `ChallengeCard` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct ChallengeCard: View {
-    let challenge: Challenge
+
+    // MARK: - Properties
+
+    let challenge: Challenge  // challenge property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         VStack(spacing: 12) {
             ZStack {

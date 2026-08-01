@@ -1,10 +1,40 @@
+//
+//  PolicySection.swift
+//
+
 import SwiftUI
 
+
+// MARK: - PolicySection
+
+/**
+ `PolicySection` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for policysection handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `PolicySection` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct PolicySection: View {
-    let icon: String
-    let title: String
-    let content: String
+
+    // MARK: - Properties
+
+    let icon: String  // icon property
+    let title: String  // title property
+    let content: String  // content property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 12) {

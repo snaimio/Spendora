@@ -1,11 +1,41 @@
+//
+//  SearchBar.swift
+//
+
 import SwiftUI
 
+
+// MARK: - SearchBar
+
+/**
+ `SearchBar` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for searchbar handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SearchBar` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct SearchBar: View {
+
+    // MARK: - Properties
+
     @Binding var text: String
-    var placeholder: String = "Search subscriptions..."
+    var placeholder: String = "Search subscriptions..."  // placeholder property
     
     @FocusState private var isFocused: Bool
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         HStack(spacing: 10) {
             Image(systemName: "magnifyingglass")

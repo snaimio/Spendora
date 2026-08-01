@@ -1,8 +1,38 @@
+//
+//  FlaggedSubscriptionsView.swift
+//
+
 import SwiftUI
 
+
+// MARK: - FlaggedSubscriptionsView
+
+/**
+ `FlaggedSubscriptionsView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for flaggedsubscriptionsview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `FlaggedSubscriptionsView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct FlaggedSubscriptionsView: View {
-    let subscriptions: [Subscription]
+
+    // MARK: - Properties
+
+    let subscriptions: [Subscription]  // subscriptions property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {

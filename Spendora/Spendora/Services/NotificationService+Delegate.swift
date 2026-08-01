@@ -1,3 +1,7 @@
+//
+//  NotificationService+Delegate.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * Extension for NotificationService providing trial expiration reminders, price increase alerts,
@@ -7,6 +11,12 @@
 import Foundation
 import UserNotifications
 
+
+// MARK: - NotificationService Extension
+
+/**
+ Extension on `NotificationService` providing utility methods and helpers.
+ */
 extension NotificationService {
     
     /// Schedules a notification 3 days prior to free trial conversion

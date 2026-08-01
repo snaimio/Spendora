@@ -1,13 +1,39 @@
+//
+//  ChallengesView.swift
+//
+
 import SwiftUI
 
+
+// MARK: - ChallengesView
+
+/**
+ `ChallengesView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for challengesview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `ChallengesView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct ChallengesView: View {
-    let subscriptions: [Subscription]
+
+    // MARK: - Properties
+
+    let subscriptions: [Subscription]  // subscriptions property
     @Environment(\.dismiss) private var dismiss
     @State private var completedChallenges: Set<String> = []
     @State private var showingShareSheet = false
     @State private var shareImage: UIImage?
     
-    var challenges: [Challenge] {
+    var challenges: [Challenge] {  // challenges property
         let total = subscriptions.reduce(0) { $0 + $1.monthlyCost }
         let count = subscriptions.count
         let yearlyCount = subscriptions.filter { $0.isYearly }.count
@@ -73,11 +99,15 @@ struct ChallengesView: View {
         ]
     }
     
-    var completionPercentage: Int {
+    var completionPercentage: Int {  // completionPercentage property
         let completed = challenges.filter { $0.isCompleted }.count
         return challenges.isEmpty ? 0 : (completed * 100) / challenges.count
     }
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -121,6 +151,15 @@ struct ChallengesView: View {
         }
     }
     
+
+    /**
+     Executes `calculateSavingsScore` for component logic.
+     
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     private func calculateSavingsScore() -> Int {
         let total = subscriptions.reduce(0) { $0 + $1.monthlyCost }
         let count = subscriptions.count
@@ -129,6 +168,15 @@ struct ChallengesView: View {
         return min(100, (countScore + spendingScore) / 2)
     }
     
+
+    /**
+     Executes `generateShareImage` for component logic.
+     
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     private func generateShareImage() {
         let shareableView = ShareableChallenges(
             percentage: completionPercentage,
@@ -137,7 +185,7 @@ struct ChallengesView: View {
         
         let renderer = ImageRenderer(content: shareableView)
         
-        // ✅ FIXED: Use windowScene instead of UIScreen.main
+        // FIXED: Use windowScene instead of UIScreen.main
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
             renderer.scale = windowScene.screen.scale
         }

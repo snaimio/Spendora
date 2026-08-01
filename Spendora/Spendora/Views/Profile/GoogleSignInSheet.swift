@@ -1,3 +1,7 @@
+//
+//  GoogleSignInSheet.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * GoogleSignInSheet modal view rendering an authentic Google Account selection portal.
@@ -7,7 +11,29 @@
 
 import SwiftUI
 
+
+// MARK: - GoogleSignInSheet
+
+/**
+ `GoogleSignInSheet` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for googlesigninsheet handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `GoogleSignInSheet` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct GoogleSignInSheet: View {
+
+    // MARK: - Properties
+
     @Environment(\.dismiss) private var dismiss
     @ObservedObject private var profileManager = UserProfileManager.shared
     
@@ -22,11 +48,15 @@ struct GoogleSignInSheet: View {
         (name: "Work Account", email: "user@company.com")
     ]
     
-    var isValid: Bool {
+    var isValid: Bool {  // isValid property
         !displayName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
         !email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         NavigationStack {
             ScrollView {

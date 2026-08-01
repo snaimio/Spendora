@@ -1,3 +1,7 @@
+//
+//  MagicFinderCategoryDetector.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * Extension for MagicFinderService containing automated text-based subscription category detection logic.
@@ -5,8 +9,24 @@
 
 import Foundation
 
+
+// MARK: - MagicFinderService Extension
+
+/**
+ Extension on `MagicFinderService` providing utility methods and helpers.
+ */
 extension MagicFinderService {
     
+
+    /**
+     Executes `detectCategory` for component logic.
+     
+     - Parameter text: Value passed to `detectCategory`.
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     func detectCategory(from text: String) -> String? {
         let lowercased = text.lowercased()
         

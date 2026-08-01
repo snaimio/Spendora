@@ -1,3 +1,7 @@
+//
+//  HomeSubviews.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * HomeSubviews extracted component file containing StatCardView, SearchBarView, SortChipsView, SubscriptionCardView, and EmptyStateView.
@@ -6,12 +10,38 @@
 import SwiftUI
 
 // MARK: - Stat Card
+
+// MARK: - StatCardView
+
+/**
+ `StatCardView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for statcardview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `StatCardView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct StatCardView: View {
-    let icon: String
-    let title: String
-    let value: String
-    let colors: [Color]
+
+    // MARK: - Properties
+
+    let icon: String  // icon property
+    let title: String  // title property
+    let value: String  // value property
+    let colors: [Color]  // colors property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         HStack(spacing: 10) {
             ZStack {
@@ -56,9 +86,35 @@ struct StatCardView: View {
 }
 
 // MARK: - Search Bar
+
+// MARK: - SearchBarView
+
+/**
+ `SearchBarView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for searchbarview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SearchBarView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct SearchBarView: View {
+
+    // MARK: - Properties
+
     @Binding var searchText: String
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         HStack(spacing: 10) {
             Image(systemName: "magnifyingglass")
@@ -91,9 +147,35 @@ struct SearchBarView: View {
 }
 
 // MARK: - Sort Chips
+
+// MARK: - SortChipsView
+
+/**
+ `SortChipsView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for sortchipsview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SortChipsView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct SortChipsView: View {
+
+    // MARK: - Properties
+
     @Binding var sortOption: SortOption
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {

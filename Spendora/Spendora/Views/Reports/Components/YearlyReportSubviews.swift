@@ -1,3 +1,7 @@
+//
+//  YearlyReportSubviews.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * YearlyReportSubviews component file containing MonthlyTrendChartView and TopCategoryView for financial report visualization.
@@ -7,9 +11,35 @@ import SwiftUI
 import Charts
 
 // MARK: - Monthly Trend Chart
+
+// MARK: - MonthlyTrendChartView
+
+/**
+ `MonthlyTrendChartView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for monthlytrendchartview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `MonthlyTrendChartView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct MonthlyTrendChartView: View {
-    let monthlyData: [(month: String, amount: Double)]
+
+    // MARK: - Properties
+
+    let monthlyData: [(month: String, amount: Double)]  // monthlyData property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Monthly Trend")
@@ -48,9 +78,35 @@ struct MonthlyTrendChartView: View {
 }
 
 // MARK: - Top Category View
+
+// MARK: - TopCategoryView
+
+/**
+ `TopCategoryView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for topcategoryview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `TopCategoryView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct TopCategoryView: View {
-    let topCategory: String
+
+    // MARK: - Properties
+
+    let topCategory: String  // topCategory property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Top Category")

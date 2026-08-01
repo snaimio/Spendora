@@ -1,3 +1,7 @@
+//
+//  SubscriptionDetailViewSection.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * SubscriptionDetailViewSection component displaying the read-only service details, billing dates,
@@ -7,16 +11,42 @@
 import SwiftUI
 import SwiftData
 
+
+// MARK: - SubscriptionDetailViewSection
+
+/**
+ `SubscriptionDetailViewSection` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for subscriptiondetailviewsection handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SubscriptionDetailViewSection` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct SubscriptionDetailViewSection: View {
-    let subscription: Subscription
-    let name: String
-    let cost: String
-    let isYearly: Bool
-    let category: String
-    let paymentMethod: String
-    let getCancellationURL: () -> URL?
+
+    // MARK: - Properties
+
+    let subscription: Subscription  // subscription property
+    let name: String  // name property
+    let cost: String  // cost property
+    let isYearly: Bool  // isYearly property
+    let category: String  // category property
+    let paymentMethod: String  // paymentMethod property
+    let getCancellationURL: () -> URL?  // getCancellationURL property
     @Binding var showingCancelSheet: Bool
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         Group {
             Section("Service Info") {

@@ -1,3 +1,7 @@
+//
+//  NextChargeCardView.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * NextChargeCardView component displaying the upcoming subscription payment amount, days remaining countdown badge, and service name.
@@ -5,9 +9,35 @@
 
 import SwiftUI
 
+
+// MARK: - NextChargeCardView
+
+/**
+ `NextChargeCardView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for nextchargecardview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `NextChargeCardView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct NextChargeCardView: View {
-    let subscription: Subscription
+
+    // MARK: - Properties
+
+    let subscription: Subscription  // subscription property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         HStack(spacing: 12) {
             ZStack {

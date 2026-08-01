@@ -1,9 +1,35 @@
+//
+//  UsageRatingView.swift
+//
+
 import SwiftUI
 
+
+// MARK: - UsageRatingView
+
+/**
+ `UsageRatingView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for usageratingview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `UsageRatingView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct UsageRatingView: View {
+
+    // MARK: - Properties
+
     @Binding var rating: Int
-    let maximumRating: Int
-    let onRatingChanged: ((Int) -> Void)?
+    let maximumRating: Int  // maximumRating property
+    let onRatingChanged: ((Int) -> Void)?  // onRatingChanged property
     
     init(rating: Binding<Int>, maximumRating: Int = 5, onRatingChanged: ((Int) -> Void)? = nil) {
         self._rating = rating
@@ -11,6 +37,10 @@ struct UsageRatingView: View {
         self.onRatingChanged = onRatingChanged
     }
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         HStack(spacing: 8) {
             ForEach(1...maximumRating, id: \.self) { index in

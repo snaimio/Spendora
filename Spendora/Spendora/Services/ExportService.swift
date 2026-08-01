@@ -1,3 +1,7 @@
+//
+//  ExportService.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * ExportService class providing CSV data export capabilities.
@@ -8,7 +12,29 @@
 import Foundation
 import UIKit
 
+
+// MARK: - ExportService
+
+/**
+ `ExportService` is a class that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for exportservice handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `ExportService` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 class ExportService {
+
+    // MARK: - Properties
+
     
     /// Generates a CSV formatted string from an array of Subscription models
     static func generateCSVString(subscriptions: [Subscription]) -> String {
@@ -37,6 +63,16 @@ class ExportService {
         return csvString
     }
     
+
+    /**
+     Executes `generateCSV` for component logic.
+     
+     - Parameter subscriptions: Value passed to `generateCSV`.
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     static func generateCSV(subscriptions: [Subscription]) -> URL? {
         let csvString = generateCSVString(subscriptions: subscriptions)
         

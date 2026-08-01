@@ -1,11 +1,37 @@
+//
+//  CancelSubscriptionView.swift
+//
+
 import SwiftUI
 import SwiftData
 
+
+// MARK: - CancelSubscriptionView
+
+/**
+ `CancelSubscriptionView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for cancelsubscriptionview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `CancelSubscriptionView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct CancelSubscriptionView: View {
+
+    // MARK: - Properties
+
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     
-    let subscription: Subscription
+    let subscription: Subscription  // subscription property
     
     @State private var cancellationDate = Date()
     @State private var reason = ""
@@ -22,6 +48,10 @@ struct CancelSubscriptionView: View {
         "Other"
     ]
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         NavigationStack {
             Form {
@@ -105,6 +135,15 @@ struct CancelSubscriptionView: View {
         }
     }
     
+
+    /**
+     Executes `cancelSubscription` for component logic.
+     
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     private func cancelSubscription() {
         isSaving = true
         

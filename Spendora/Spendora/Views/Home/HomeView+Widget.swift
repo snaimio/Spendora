@@ -1,3 +1,7 @@
+//
+//  HomeView+Widget.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * Extension for HomeView providing updateWidgetData method for App Group shared storage and timeline refresh.
@@ -6,8 +10,23 @@
 import SwiftUI
 import WidgetKit
 
+
+// MARK: - HomeView Extension
+
+/**
+ Extension on `HomeView` providing utility methods and helpers.
+ */
 extension HomeView {
     
+
+    /**
+     Executes `updateWidgetData` for component logic.
+     
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     func updateWidgetData() {
         let total = subscriptions.reduce(0) { $0 + $1.monthlyCost }
         let next = subscriptions

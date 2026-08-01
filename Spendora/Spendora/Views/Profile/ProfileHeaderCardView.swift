@@ -1,3 +1,7 @@
+//
+//  ProfileHeaderCardView.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * ProfileHeaderCardView displays the user's avatar circle, display name, email, and authentication provider status badge.
@@ -5,9 +9,35 @@
 
 import SwiftUI
 
+
+// MARK: - ProfileHeaderCardView
+
+/**
+ `ProfileHeaderCardView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for profileheadercardview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `ProfileHeaderCardView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct ProfileHeaderCardView: View {
+
+    // MARK: - Properties
+
     @ObservedObject var profileManager = UserProfileManager.shared
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         VStack(spacing: 12) {
             ZStack {

@@ -1,10 +1,40 @@
+//
+//  QuickStatsView.swift
+//
+
 import SwiftUI
 
+
+// MARK: - QuickStatsView
+
+/**
+ `QuickStatsView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for quickstatsview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `QuickStatsView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct QuickStatsView: View {
-    let count: Int
-    let totalMonthly: Double
-    let totalYearly: Double
+
+    // MARK: - Properties
+
+    let count: Int  // count property
+    let totalMonthly: Double  // totalMonthly property
+    let totalYearly: Double  // totalYearly property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         HStack(spacing: 12) {
             QuickStatsStatCard(
@@ -24,13 +54,39 @@ struct QuickStatsView: View {
     }
 }
 
+
+// MARK: - QuickStatsStatCard
+
+/**
+ `QuickStatsStatCard` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for quickstatsstatcard handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `QuickStatsStatCard` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct QuickStatsStatCard: View {
-    let icon: String
-    let title: String
-    let value: String
-    let color: Color
+
+    // MARK: - Properties
+
+    let icon: String  // icon property
+    let title: String  // title property
+    let value: String  // value property
+    let color: Color  // color property
     @State private var isPressed = false
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         HStack(spacing: 10) {
             ZStack {

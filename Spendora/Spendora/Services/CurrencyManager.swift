@@ -1,3 +1,7 @@
+//
+//  CurrencyManager.swift
+//
+
 import Foundation
 import SwiftUI
 import Combine
@@ -6,7 +10,29 @@ import Combine
  CurrencyManager class handling global currency selection, exchange rate conversions, and price formatting.
  Supports popular global currencies (CAD, USD, EUR, GBP, JPY, AUD, INR, etc.) and persists user preferences in UserDefaults.
 */
+
+// MARK: - CurrencyManager
+
+/**
+ `CurrencyManager` is a class that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for currencymanager handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `CurrencyManager` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 class CurrencyManager: ObservableObject {
+
+    // MARK: - Properties
+
     /// Shared singleton instance for app-wide currency conversion and formatting
     static let shared = CurrencyManager()
 
@@ -30,16 +56,47 @@ class CurrencyManager: ObservableObject {
         }
     }
 
+
+    /**
+     Executes `format` for component logic.
+     
+     - Parameter amount: Value passed to `format`.
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     func format(_ amount: Double) -> String {
         let formattedAmount = String(format: "%.2f", amount)
         return "\(currentCurrency.symbol)\(formattedAmount)"
     }
 
+
+    /**
+     Executes `format` for component logic.
+     
+     - Parameter amount: Value passed to `format`.
+     - Parameter currency: Value passed to `format`.
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     func format(_ amount: Double, currency: Currency) -> String {
         let formattedAmount = String(format: "%.2f", amount)
         return "\(currency.symbol)\(formattedAmount)"
     }
 
+
+    /**
+     Executes `setCurrency` for component logic.
+     
+     - Parameter currency: Value passed to `setCurrency`.
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     func setCurrency(_ currency: Currency) {
         currentCurrency = currency
         UserDefaults.standard.set(
@@ -68,6 +125,18 @@ class CurrencyManager: ObservableObject {
         .AED: 3.67
     ]
 
+
+    /**
+     Executes `convert` for component logic.
+     
+     - Parameter amount: Value passed to `convert`.
+     - Parameter sourceCurrency: Value passed to `convert`.
+     - Parameter targetCurrency: Value passed to `convert`.
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     func convert(amount: Double, from sourceCurrency: Currency, to targetCurrency: Currency) -> Double {
         guard let sourceRate = ratesToUSD[sourceCurrency],
               let targetRate = ratesToUSD[targetCurrency],
@@ -78,12 +147,45 @@ class CurrencyManager: ObservableObject {
         return amountInUSD * targetRate
     }
 
+
+    /**
+     Executes `convertToCurrent` for component logic.
+     
+     - Parameter amount: Value passed to `convertToCurrent`.
+     - Parameter sourceCurrency: Value passed to `convertToCurrent`.
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     func convertToCurrent(amount: Double, from sourceCurrency: Currency) -> Double {
         convert(amount: amount, from: sourceCurrency, to: currentCurrency)
     }
 }
 
+
+// MARK: - Currency
+
+/**
+ `Currency` is a enum that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for currency handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `Currency` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 enum Currency: String, CaseIterable, Identifiable {
+
+    // MARK: - Properties
+
     case CAD
     case USD
     case EUR
@@ -100,10 +202,10 @@ enum Currency: String, CaseIterable, Identifiable {
     case KRW
     case AED
 
-    var id: String { code }
-    var code: String { rawValue }
+    var id: String { code }  // id property
+    var code: String { rawValue }  // code property
 
-    var symbol: String {
+    var symbol: String {  // symbol property
         switch self {
         case .CAD: return "C$"
         case .USD: return "$"
@@ -123,7 +225,7 @@ enum Currency: String, CaseIterable, Identifiable {
         }
     }
 
-    var flag: String {
+    var flag: String {  // flag property
         switch self {
         case .CAD: return "🇨🇦"
         case .USD: return "🇺🇸"
@@ -143,7 +245,7 @@ enum Currency: String, CaseIterable, Identifiable {
         }
     }
 
-    var name: String {
+    var name: String {  // name property
         switch self {
         case .CAD: return "Canadian Dollar"
         case .USD: return "US Dollar"
@@ -163,11 +265,11 @@ enum Currency: String, CaseIterable, Identifiable {
         }
     }
 
-    var displayName: String {
+    var displayName: String {  // displayName property
         "\(code) - \(name) (\(symbol.trimmingCharacters(in: .whitespaces)))"
     }
 
-    var pickerLabel: String {
+    var pickerLabel: String {  // pickerLabel property
         "\(flag)  \(code) - \(name) (\(symbol.trimmingCharacters(in: .whitespaces)))"
     }
 }

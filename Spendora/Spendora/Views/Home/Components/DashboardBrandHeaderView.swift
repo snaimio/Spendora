@@ -1,3 +1,7 @@
+//
+//  DashboardBrandHeaderView.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * DashboardBrandHeaderView header component displayed at top of main Home screen.
@@ -6,10 +10,36 @@
 
 import SwiftUI
 
+
+// MARK: - DashboardBrandHeaderView
+
+/**
+ `DashboardBrandHeaderView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for dashboardbrandheaderview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `DashboardBrandHeaderView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct DashboardBrandHeaderView: View {
+
+    // MARK: - Properties
+
     @ObservedObject var profileManager = UserProfileManager.shared
-    let onProfileTap: () -> Void
+    let onProfileTap: () -> Void  // onProfileTap property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         HStack(spacing: 12) {
             ZStack {

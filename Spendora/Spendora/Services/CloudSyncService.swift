@@ -1,9 +1,35 @@
+//
+//  CloudSyncService.swift
+//
+
 import Foundation
 import SwiftUI
 import Combine
 import SwiftData
 
+
+// MARK: - CloudSyncService
+
+/**
+ `CloudSyncService` is a class that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for cloudsyncservice handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `CloudSyncService` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 class CloudSyncService: ObservableObject {
+
+    // MARK: - Properties
+
     static let shared = CloudSyncService()
     
     @Published var isSyncing = false
@@ -16,13 +42,35 @@ class CloudSyncService: ObservableObject {
         }
     }
     
+
+// MARK: - SyncStatus
+
+/**
+ `SyncStatus` is a enum that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for syncstatus handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SyncStatus` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
     enum SyncStatus: Equatable {
+
+    // MARK: - Properties
+
         case idle
         case syncing
         case success(Int)
         case failed(String)
         
-        var message: String {
+        var message: String {  // message property
             switch self {
             case .idle: return "Ready to sync with iCloud"
             case .syncing: return "Syncing with iCloud..."
@@ -125,6 +173,16 @@ class CloudSyncService: ObservableObject {
         }
     }
     
+
+    /**
+     Executes `saveLocalDocumentBackup` for component logic.
+     
+     - Parameter payload: Value passed to `saveLocalDocumentBackup`.
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     private func saveLocalDocumentBackup(payload: Data) {
         if let docsDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             let backupFile = docsDir.appendingPathComponent("Spendora_Auto_iCloud_Backup.json")

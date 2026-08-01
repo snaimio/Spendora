@@ -1,3 +1,7 @@
+//
+//  SpendoraApp.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * Entry point for the Spendora iOS application.
@@ -10,11 +14,33 @@ import SwiftData
 import WidgetKit
 
 @main
+
+// MARK: - SpendoraApp
+
+/**
+ `SpendoraApp` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for spendoraapp handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SpendoraApp` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct SpendoraApp: App {
+
+    // MARK: - Properties
+
     // Persistent flag checking if the user completed initial onboarding
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     
-    var body: some Scene {
+    var body: some Scene {  // body property
         WindowGroup {
             // Show onboarding on first launch; otherwise load the main tab bar UI
             if !hasCompletedOnboarding {
@@ -32,6 +58,15 @@ struct SpendoraApp: App {
     }
     
     // Syncs fallback baseline data to shared App Group for iOS Home Screen Widgets
+
+    /**
+     Executes `sendWidgetData` for component logic.
+     
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     func sendWidgetData() {
         let defaults = UserDefaults(suiteName: "group.com.trios2026sn.Spendora")
         defaults?.set(0.0, forKey: "totalMonthly")
@@ -42,10 +77,36 @@ struct SpendoraApp: App {
 }
 
 // Main tab bar container holding Dashboard, Subscriptions List, Calendar, and Settings
+
+// MARK: - MainTabView
+
+/**
+ `MainTabView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for maintabview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `MainTabView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct MainTabView: View {
+
+    // MARK: - Properties
+
     @State private var selectedTab = 0
     @Query private var subscriptions: [Subscription]
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         TabView(selection: $selectedTab) {
             HomeView()

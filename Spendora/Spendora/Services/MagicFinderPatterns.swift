@@ -1,3 +1,7 @@
+//
+//  MagicFinderPatterns.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * Extension for MagicFinderService providing keyword dictionaries for subscription and transaction detection.
@@ -5,10 +9,16 @@
 
 import Foundation
 
+
+// MARK: - MagicFinderService Extension
+
+/**
+ Extension on `MagicFinderService` providing utility methods and helpers.
+ */
 extension MagicFinderService {
     
     /// Keyword mapping for subscription merchants
-    var subscriptionPatterns: [String: String] {
+    var subscriptionPatterns: [String: String] {  // subscriptionPatterns property
         [
             "chatgpt": "ChatGPT Plus",
             "openai": "ChatGPT Plus",
@@ -56,7 +66,7 @@ extension MagicFinderService {
     }
 
     /// Email keywords associated with recurring bill receipts
-    var emailPatterns: [String] {
+    var emailPatterns: [String] {  // emailPatterns property
         [
             "subscription",
             "renewal",

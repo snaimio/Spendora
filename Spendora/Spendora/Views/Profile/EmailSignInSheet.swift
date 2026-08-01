@@ -1,3 +1,7 @@
+//
+//  EmailSignInSheet.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * EmailSignInSheet form modal allowing users to sign in or set up a profile with a custom full name and email address.
@@ -6,18 +10,44 @@
 
 import SwiftUI
 
+
+// MARK: - EmailSignInSheet
+
+/**
+ `EmailSignInSheet` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for emailsigninsheet handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `EmailSignInSheet` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct EmailSignInSheet: View {
+
+    // MARK: - Properties
+
     @Environment(\.dismiss) private var dismiss
     @ObservedObject private var profileManager = UserProfileManager.shared
     
     @State private var displayName = ""
     @State private var email = ""
     
-    var isValid: Bool {
+    var isValid: Bool {  // isValid property
         !displayName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
         !email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         NavigationStack {
             Form {

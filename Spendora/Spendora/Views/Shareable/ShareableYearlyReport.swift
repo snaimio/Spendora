@@ -1,11 +1,41 @@
+//
+//  ShareableYearlyReport.swift
+//
+
 import SwiftUI
 
+
+// MARK: - ShareableYearlyReport
+
+/**
+ `ShareableYearlyReport` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for shareableyearlyreport handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `ShareableYearlyReport` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct ShareableYearlyReport: View {
-    let year: Int
-    let totalYearly: Double
-    let averageMonthly: Double
-    let topCategory: String
+
+    // MARK: - Properties
+
+    let year: Int  // year property
+    let totalYearly: Double  // totalYearly property
+    let averageMonthly: Double  // averageMonthly property
+    let topCategory: String  // topCategory property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         VStack(spacing: 24) {
             Spacer()

@@ -1,3 +1,7 @@
+//
+//  SettingsUserProfileRow.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * SettingsUserProfileRow component displaying current user avatar, email, and authentication badge.
@@ -5,10 +9,36 @@
 
 import SwiftUI
 
+
+// MARK: - SettingsUserProfileRow
+
+/**
+ `SettingsUserProfileRow` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for settingsuserprofilerow handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SettingsUserProfileRow` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct SettingsUserProfileRow: View {
+
+    // MARK: - Properties
+
     @ObservedObject var profileManager = UserProfileManager.shared
-    let onTap: () -> Void
+    let onTap: () -> Void  // onTap property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         Button(action: onTap) {
             HStack(spacing: 12) {

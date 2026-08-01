@@ -1,3 +1,7 @@
+//
+//  SubscriptionPreset.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * Catalog of popular pre-configured subscription presets (Netflix, Spotify, Apple, ChatGPT, Amazon Prime, etc.).
@@ -7,15 +11,37 @@
 import Foundation
 import SwiftUI
 
-struct SubscriptionPreset: Identifiable {
-    let id = UUID()
-    let name: String
-    let icon: String
-    let color: Color
-    let category: String
-    let cancellationUrl: String?
 
-    var systemIcon: String {
+// MARK: - SubscriptionPreset
+
+/**
+ `SubscriptionPreset` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for subscriptionpreset handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SubscriptionPreset` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
+struct SubscriptionPreset: Identifiable {
+
+    // MARK: - Properties
+
+    let id = UUID()
+    let name: String  // name property
+    let icon: String  // icon property
+    let color: Color  // color property
+    let category: String  // category property
+    let cancellationUrl: String?  // cancellationUrl property
+
+    var systemIcon: String {  // systemIcon property
         switch icon {
         case "netflix": return "tv.fill"
         case "spotify": return "music.note"

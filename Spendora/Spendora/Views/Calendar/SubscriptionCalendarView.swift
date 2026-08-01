@@ -1,13 +1,43 @@
+//
+//  SubscriptionCalendarView.swift
+//
+
 import SwiftUI
 
+
+// MARK: - SubscriptionCalendarView
+
+/**
+ `SubscriptionCalendarView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for subscriptioncalendarview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SubscriptionCalendarView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct SubscriptionCalendarView: View {
-    let subscriptions: [Subscription]
+
+    // MARK: - Properties
+
+    let subscriptions: [Subscription]  // subscriptions property
     @State private var selectedDate = Date()
     @State private var selectedSubscription: Subscription?
     
     private let calendar = Calendar.current
     private let daysInWeek = 7
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         NavigationStack {
             VStack {
@@ -128,12 +158,32 @@ struct SubscriptionCalendarView: View {
             .sorted { $0.nextBillingDate < $1.nextBillingDate }
     }
     
+
+    /**
+     Executes `subscriptionsForDate` for component logic.
+     
+     - Parameter date: Value passed to `subscriptionsForDate`.
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     private func subscriptionsForDate(_ date: Date) -> [Subscription] {
         subscriptions.filter {
             calendar.isDate($0.nextBillingDate, inSameDayAs: date)
         }
     }
     
+
+    /**
+     Executes `daysInMonth` for component logic.
+     
+     - Parameter date: Value passed to `daysInMonth`.
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     private func daysInMonth(date: Date) -> [Date] {
         guard let monthInterval = calendar.dateInterval(of: .month, for: date) else { return [] }
         guard let monthFirstWeek = calendar.dateInterval(of: .weekOfMonth, for: monthInterval.start) else { return [] }
@@ -141,7 +191,7 @@ struct SubscriptionCalendarView: View {
         let startDate = monthFirstWeek.start
         let endDate = calendar.date(byAdding: .day, value: 41, to: startDate) ?? Date()
         
-        var dates: [Date] = []
+        var dates: [Date] = []  // dates property
         var currentDate = startDate
         
         while currentDate < endDate {
@@ -153,6 +203,10 @@ struct SubscriptionCalendarView: View {
     }
 }
 
+
+// MARK: - Preview
+
+/// Xcode Canvas Preview Provider.
 #Preview {
     SubscriptionCalendarView(subscriptions: [])
 }

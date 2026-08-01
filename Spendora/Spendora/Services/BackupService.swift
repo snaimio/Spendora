@@ -1,14 +1,50 @@
+//
+//  BackupService.swift
+//
+
 import Foundation
 import SwiftData
 
+
+// MARK: - BackupService
+
+/**
+ `BackupService` is a class that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for backupservice handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `BackupService` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 class BackupService {
+
+    // MARK: - Properties
+
     static let shared = BackupService()
 
+
+    /**
+     Executes `exportBackupData` for component logic.
+     
+     - Parameter subscriptions: Value passed to `exportBackupData`.
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     func exportBackupData(subscriptions: [Subscription]) -> Data? {
-        var backupData: [[String: Any]] = []
+        var backupData: [[String: Any]] = []  // backupData property
 
         for sub in subscriptions {
-            let dict: [String: Any] = [
+            let dict: [String: Any] = [  // dict property
                 "id": sub.id.uuidString,
                 "name": sub.name,
                 "cost": sub.cost,
@@ -42,6 +78,16 @@ class BackupService {
         }
     }
 
+
+    /**
+     Executes `exportBackup` for component logic.
+     
+     - Parameter subscriptions: Value passed to `exportBackup`.
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     func exportBackup(subscriptions: [Subscription]) -> URL? {
         guard let data = exportBackupData(subscriptions: subscriptions) else {
             return nil
@@ -82,7 +128,7 @@ class BackupService {
                 continue
             }
 
-            let nextBillingDate: Date
+            let nextBillingDate: Date  // nextBillingDate property
 
             if let timestamp = item["nextBillingDate"] as? TimeInterval {
                 nextBillingDate = Date(timeIntervalSince1970: timestamp)
@@ -90,7 +136,7 @@ class BackupService {
                 nextBillingDate = Date()
             }
 
-            let trialEndDate: Date?
+            let trialEndDate: Date?  // trialEndDate property
 
             if let timestamp = item["trialEndDate"] as? TimeInterval,
                timestamp > 0 {

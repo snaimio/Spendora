@@ -1,5 +1,15 @@
+//
+//  Color+App.swift
+//
+
 import SwiftUI
 
+
+// MARK: - Color Extension
+
+/**
+ Extension on `Color` providing utility methods and helpers.
+ */
 extension Color {
     
     // MARK: - Brand Colors (Sunset & Ocean Theme)
@@ -65,7 +75,7 @@ extension Color {
     // MARK: - Helper
     init(hex: String) {
         let hex = hex.trimmingCharacters(in: .alphanumerics.inverted)
-        var int: UInt64 = 0
+        var int: UInt64 = 0  // int property
         Scanner(string: hex).scanHexInt64(&int)
         
         let a, r, g, b: UInt64

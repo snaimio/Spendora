@@ -1,3 +1,7 @@
+//
+//  SubscriptionDetailView+Actions.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * Extension for SubscriptionDetailView containing data mutation actions (save, delete, reset values, and get cancellation URL).
@@ -6,8 +10,23 @@
 import SwiftUI
 import SwiftData
 
+
+// MARK: - SubscriptionDetailView Extension
+
+/**
+ Extension on `SubscriptionDetailView` providing utility methods and helpers.
+ */
 extension SubscriptionDetailView {
     
+
+    /**
+     Executes `getCancellationURL` for component logic.
+     
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     func getCancellationURL() -> URL? {
         CancellationService.shared.getDirectCancellationURL(
             for: subscription.displayName,
@@ -15,6 +34,15 @@ extension SubscriptionDetailView {
         )
     }
     
+
+    /**
+     Executes `resetValues` for component logic.
+     
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     func resetValues() {
         name = subscription.name
         cost = String(format: "%.2f", subscription.cost)
@@ -28,7 +56,7 @@ extension SubscriptionDetailView {
         paymentMethod = subscription.paymentMethod ?? "Not Set"
     }
     
-    var ratingDescription: String {
+    var ratingDescription: String {  // ratingDescription property
         switch usageRating {
         case 5: return "You use this daily - Great value!"
         case 4: return "You use this often - Good value"
@@ -39,6 +67,15 @@ extension SubscriptionDetailView {
         }
     }
     
+
+    /**
+     Executes `saveChanges` for component logic.
+     
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     func saveChanges() {
         guard isValid else {
             errorMessage = "Please fill in all fields correctly"
@@ -77,6 +114,15 @@ extension SubscriptionDetailView {
         }
     }
     
+
+    /**
+     Executes `deleteSubscription` for component logic.
+     
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     func deleteSubscription() {
         NotificationService.shared.cancel(for: subscription)
         modelContext.delete(subscription)

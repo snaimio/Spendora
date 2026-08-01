@@ -1,3 +1,7 @@
+//
+//  AppleSignInSheet.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * AppleSignInSheet modal view handling Apple ID authentication flows.
@@ -8,7 +12,29 @@
 import SwiftUI
 import AuthenticationServices
 
+
+// MARK: - AppleSignInSheet
+
+/**
+ `AppleSignInSheet` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for applesigninsheet handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `AppleSignInSheet` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct AppleSignInSheet: View {
+
+    // MARK: - Properties
+
     @Environment(\.dismiss) private var dismiss
     @ObservedObject private var profileManager = UserProfileManager.shared
     
@@ -17,6 +43,10 @@ struct AppleSignInSheet: View {
     @State private var useHideMyEmail = true
     @State private var customEmail = "user@privaterelay.appleid.com"
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         NavigationStack {
             VStack(spacing: 24) {

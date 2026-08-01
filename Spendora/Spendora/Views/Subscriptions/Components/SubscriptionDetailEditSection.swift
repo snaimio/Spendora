@@ -1,3 +1,7 @@
+//
+//  SubscriptionDetailEditSection.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * SubscriptionDetailEditSection component containing input form fields (Name, Cost, Category, Payment Method, Billing Cycle, Trial End Date, Notes) when editing a subscription.
@@ -6,9 +10,31 @@
 import SwiftUI
 import SwiftData
 
+
+// MARK: - SubscriptionDetailEditSection
+
+/**
+ `SubscriptionDetailEditSection` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for subscriptiondetaileditsection handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SubscriptionDetailEditSection` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct SubscriptionDetailEditSection: View {
+
+    // MARK: - Properties
+
     @Environment(\.modelContext) private var modelContext
-    let subscription: Subscription
+    let subscription: Subscription  // subscription property
     
     @Binding var name: String
     @Binding var cost: String
@@ -21,10 +47,14 @@ struct SubscriptionDetailEditSection: View {
     @Binding var usageRating: Int
     @Binding var isSaving: Bool
     
-    let isValid: Bool
-    let saveChangesAction: () -> Void
-    let ratingDescription: String
+    let isValid: Bool  // isValid property
+    let saveChangesAction: () -> Void  // saveChangesAction property
+    let ratingDescription: String  // ratingDescription property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         Group {
             Section("Service Info") {

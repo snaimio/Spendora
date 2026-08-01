@@ -1,3 +1,7 @@
+//
+//  CancellationService.swift
+//
+
 import Foundation
 import SwiftUI
 
@@ -5,7 +9,29 @@ import SwiftUI
  CancellationService provides direct deep-link cancellation portal URLs for 100+ popular subscription services.
  Prevents broken 404 links by mapping services to verified primary account hubs, and falls back to a targeted Google cancellation search for custom user subscriptions.
 */
+
+// MARK: - CancellationService
+
+/**
+ `CancellationService` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for cancellationservice handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `CancellationService` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct CancellationService {
+
+    // MARK: - Properties
+
     /// Shared singleton instance
     static let shared = CancellationService()
 
@@ -18,7 +44,7 @@ struct CancellationService {
     /// - Returns: A valid URL pointing directly to the cancellation portal or Google search fallback.
     func getDirectCancellationURL(for subscriptionName: String, notes: String? = nil) -> URL? {
         let name = subscriptionName.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-        var urlString: String?
+        var urlString: String?  // urlString property
 
         // Check if the user entered an explicit website link in notes or name
         if let customURL = extractURL(from: name) ?? extractURL(from: notes ?? "") {
@@ -161,6 +187,16 @@ struct CancellationService {
         return url
     }
 
+
+    /**
+     Executes `extractURL` for component logic.
+     
+     - Parameter text: Value passed to `extractURL`.
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     private func extractURL(from text: String) -> URL? {
         let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
         let matches = detector?.matches(in: text, options: [], range: NSRange(location: 0, length: text.utf8.count))

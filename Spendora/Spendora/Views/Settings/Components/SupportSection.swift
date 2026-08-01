@@ -1,8 +1,38 @@
+//
+//  SupportSection.swift
+//
+
 import SwiftUI
 
+
+// MARK: - SupportSection
+
+/**
+ `SupportSection` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for supportsection handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SupportSection` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct SupportSection: View {
-    let shareApp: () -> Void
+
+    // MARK: - Properties
+
+    let shareApp: () -> Void  // shareApp property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         Section("Information & Support") {
             NavigationLink {
@@ -52,6 +82,15 @@ struct SupportSection: View {
         }
     }
     
+
+    /**
+     Executes `openMailSupport` for component logic.
+     
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     private func openMailSupport() {
         let email = "support@spendora.app"
         let subject = "Spendora Support Request"

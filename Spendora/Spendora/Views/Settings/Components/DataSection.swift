@@ -1,13 +1,43 @@
+//
+//  DataSection.swift
+//
+
 import SwiftUI
 
+
+// MARK: - DataSection
+
+/**
+ `DataSection` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for datasection handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `DataSection` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct DataSection: View {
-    let subscriptions: [Subscription]
-    let exportCSV: () -> Void
-    let exportPDF: () -> Void
-    let exportBackup: () -> Void
-    let onRestore: () -> Void
-    let onReset: () -> Void
+
+    // MARK: - Properties
+
+    let subscriptions: [Subscription]  // subscriptions property
+    let exportCSV: () -> Void  // exportCSV property
+    let exportPDF: () -> Void  // exportPDF property
+    let exportBackup: () -> Void  // exportBackup property
+    let onRestore: () -> Void  // onRestore property
+    let onReset: () -> Void  // onReset property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         Section("Export & Backup") {
             // Export Options - Consolidated

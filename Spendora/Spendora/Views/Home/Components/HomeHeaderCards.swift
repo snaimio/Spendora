@@ -1,3 +1,7 @@
+//
+//  HomeHeaderCards.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * HomeHeaderCards component file containing HeroCardView, HeroPill, and NextChargeCardView.
@@ -6,12 +10,38 @@
 import SwiftUI
 
 // MARK: - Hero Card View
+
+// MARK: - HeroCardView
+
+/**
+ `HeroCardView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for herocardview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `HeroCardView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct HeroCardView: View {
-    let totalMonthly: Double
-    let totalYearly: Double
-    let count: Int
-    let subscriptionCount: Int
+
+    // MARK: - Properties
+
+    let totalMonthly: Double  // totalMonthly property
+    let totalYearly: Double  // totalYearly property
+    let count: Int  // count property
+    let subscriptionCount: Int  // subscriptionCount property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         VStack(spacing: 0) {
             Rectangle()
@@ -80,12 +110,38 @@ struct HeroCardView: View {
     }
 }
 
+
+// MARK: - HeroPill
+
+/**
+ `HeroPill` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for heropill handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `HeroPill` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct HeroPill: View {
-    let icon: String
-    let label: String
-    let value: String
-    let color: Color
+
+    // MARK: - Properties
+
+    let icon: String  // icon property
+    let label: String  // label property
+    let value: String  // value property
+    let color: Color  // color property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         HStack(spacing: 4) {
             Image(systemName: icon)

@@ -1,3 +1,7 @@
+//
+//  UserProfileManager.swift
+//
+
 import Foundation
 import SwiftUI
 import Combine
@@ -7,7 +11,29 @@ import Combine
  Implements ObservableObject so SwiftUI views update automatically when the active profile changes.
  All user credentials and preferences are saved strictly to local UserDefaults to maintain offline privacy.
 */
+
+// MARK: - UserProfileManager
+
+/**
+ `UserProfileManager` is a class that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for userprofilemanager handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `UserProfileManager` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 class UserProfileManager: ObservableObject {
+
+    // MARK: - Properties
+
     /// Shared singleton instance for app-wide profile management
     static let shared = UserProfileManager()
     

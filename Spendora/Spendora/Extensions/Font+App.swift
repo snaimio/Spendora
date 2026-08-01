@@ -1,5 +1,15 @@
+//
+//  Font+App.swift
+//
+
 import SwiftUI
 
+
+// MARK: - Font Extension
+
+/**
+ Extension on `Font` providing utility methods and helpers.
+ */
 extension Font {
     
     // MARK: - Premium Spendora Typography System
@@ -35,6 +45,12 @@ extension Font {
     static let appCaptionBold = Font.system(.caption, design: .rounded).weight(.bold)
 }
 
+
+// MARK: - View Extension
+
+/**
+ Extension on `View` providing utility methods and helpers.
+ */
 extension View {
     /// Applies premium monospaced digit formatting to any view containing currency/numbers
     func appTabularNumbers() -> some View {

@@ -1,25 +1,95 @@
+//
+//  SpendingChartView.swift
+//
+
 import SwiftUI
 import Charts
 
 // MARK: - Chart Timeframe Enum
+
+// MARK: - ChartTimeframe
+
+/**
+ `ChartTimeframe` is a enum that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for charttimeframe handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `ChartTimeframe` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 enum ChartTimeframe: String, CaseIterable {
+
+    // MARK: - Properties
+
     case monthly = "Monthly"
     case yearly = "Yearly"
 }
 
 // MARK: - Chart Style Enum
+
+// MARK: - ChartStyle
+
+/**
+ `ChartStyle` is a enum that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for chartstyle handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `ChartStyle` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 enum ChartStyle: String, CaseIterable {
+
+    // MARK: - Properties
+
     case bar = "Bar"
     case donut = "Donut"
 }
 
+
+// MARK: - SpendingChartView
+
+/**
+ `SpendingChartView` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for spendingchartview handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SpendingChartView` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct SpendingChartView: View {
-    let subscriptions: [Subscription]
+
+    // MARK: - Properties
+
+    let subscriptions: [Subscription]  // subscriptions property
     @Environment(\.dismiss) private var dismiss
     @State private var selectedTimeframe: ChartTimeframe = .monthly
     @State private var selectedStyle: ChartStyle = .donut
     
-    var chartData: [(label: String, amount: Double)] {
+    var chartData: [(label: String, amount: Double)] {  // chartData property
         switch selectedTimeframe {
         case .monthly:
             let categories = Dictionary(grouping: subscriptions) { $0.effectiveCategory }
@@ -39,10 +109,14 @@ struct SpendingChartView: View {
         }
     }
     
-    var totalSpending: Double {
+    var totalSpending: Double {  // totalSpending property
         chartData.reduce(0.0) { $0 + $1.amount }
     }
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
@@ -99,10 +173,36 @@ struct SpendingChartView: View {
 }
 
 // MARK: - Spending Donut Chart
+
+// MARK: - SpendingDonutChart
+
+/**
+ `SpendingDonutChart` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for spendingdonutchart handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SpendingDonutChart` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct SpendingDonutChart: View {
-    let data: [(label: String, amount: Double)]
-    let totalSpending: Double
+
+    // MARK: - Properties
+
+    let data: [(label: String, amount: Double)]  // data property
+    let totalSpending: Double  // totalSpending property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         ZStack {
             Chart(data, id: \.label) { item in
@@ -131,9 +231,35 @@ struct SpendingDonutChart: View {
 }
 
 // MARK: - Spending Bar Chart
+
+// MARK: - SpendingBarChart
+
+/**
+ `SpendingBarChart` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for spendingbarchart handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `SpendingBarChart` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct SpendingBarChart: View {
-    let data: [(label: String, amount: Double)]
+
+    // MARK: - Properties
+
+    let data: [(label: String, amount: Double)]  // data property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         Chart(data, id: \.label) { item in
             BarMark(

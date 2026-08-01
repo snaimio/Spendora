@@ -1,12 +1,42 @@
+//
+//  ShareableReportCard.swift
+//
+
 import SwiftUI
 
+
+// MARK: - ShareableReportCard
+
+/**
+ `ShareableReportCard` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for shareablereportcard handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `ShareableReportCard` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct ShareableReportCard: View {
-    let totalMonthly: Double
-    let totalYearly: Double
-    let subscriptionCount: Int
-    let topCategory: String
-    let topCategoryAmount: Double
+
+    // MARK: - Properties
+
+    let totalMonthly: Double  // totalMonthly property
+    let totalYearly: Double  // totalYearly property
+    let subscriptionCount: Int  // subscriptionCount property
+    let topCategory: String  // topCategory property
+    let topCategoryAmount: Double  // topCategoryAmount property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         VStack(spacing: 24) {
             Spacer()
@@ -87,13 +117,39 @@ struct ShareableReportCard: View {
     }
 }
 
+
+// MARK: - ReportStatCard
+
+/**
+ `ReportStatCard` is a struct that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for reportstatcard handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `ReportStatCard` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 struct ReportStatCard: View {
-    let icon: String
-    let title: String
-    let value: String
-    var subtitle: String? = nil
-    let color: Color
+
+    // MARK: - Properties
+
+    let icon: String  // icon property
+    let title: String  // title property
+    let value: String  // value property
+    var subtitle: String? = nil  // subtitle property
+    let color: Color  // color property
     
+
+    // MARK: - Body
+
+    /// Main SwiftUI layout body property.
     var body: some View {
         HStack(spacing: 14) {
             ZStack {

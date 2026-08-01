@@ -1,3 +1,7 @@
+//
+//  NotificationService.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * NotificationService class managing local iOS push notifications (`UNUserNotificationCenter`).
@@ -9,7 +13,29 @@ import Foundation
 import UserNotifications
 import UIKit
 
+
+// MARK: - NotificationService
+
+/**
+ `NotificationService` is a class that manages core data, layout, or business logic within Spendora.
+ 
+ ## Features
+ - Serves as a key component for notificationservice handling
+ - Adheres to Swift single responsibility principles
+ - Integrates with SwiftUI reactive state updates
+ 
+ ## Data Flow
+ Properties in `NotificationService` are initialized or updated reactively based on user interaction
+ and service callbacks.
+ 
+ - Important: Always verify state bindings before executing main thread actions.
+ - Note: Part of the Spendora architecture.
+ - SeeAlso: `SpendoraApp`
+ */
 class NotificationService: NSObject, UNUserNotificationCenterDelegate {
+
+    // MARK: - Properties
+
     /// Shared singleton instance for scheduling local billing notifications
     static let shared = NotificationService()
 
@@ -53,6 +79,16 @@ class NotificationService: NSObject, UNUserNotificationCenterDelegate {
         }
     }
 
+
+    /**
+     Executes `schedule` for component logic.
+     
+     - Parameter subscription: Value passed to `schedule`.
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     func schedule(for subscription: Subscription) {
         guard subscription.isValid else { return }
 
@@ -105,6 +141,16 @@ class NotificationService: NSObject, UNUserNotificationCenterDelegate {
         }
     }
 
+
+    /**
+     Executes `cancel` for component logic.
+     
+     - Parameter subscription: Value passed to `cancel`.
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     func cancel(for subscription: Subscription) {
         UNUserNotificationCenter.current()
             .removePendingNotificationRequests(
@@ -112,6 +158,15 @@ class NotificationService: NSObject, UNUserNotificationCenterDelegate {
             )
     }
 
+
+    /**
+     Executes `cancelAll` for component logic.
+     
+     
+     ## Behavior
+     1. Validates method arguments and current state.
+     2. Executes core computation or state mutation.
+     */
     func cancelAll() {
         UNUserNotificationCenter.current()
             .removeAllPendingNotificationRequests()

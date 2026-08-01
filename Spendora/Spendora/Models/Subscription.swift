@@ -1,3 +1,7 @@
+//
+//  Subscription.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * Subscription SwiftData model representing an active, trial, or cancelled subscription record.
@@ -13,70 +17,70 @@ final class Subscription {
     // MARK: - Core Subscription Metadata Properties
 
     /// Unique identifier for each subscription record
-    var id: UUID = UUID()
+    var id: UUID = UUID()  // id property
 
     /// Display name of the subscription service (e.g. Netflix, Spotify, iCloud)
-    var name: String = ""
+    var name: String = ""  // name property
 
     /// Billing cost amount per billing cycle
-    var cost: Double = 0.0
+    var cost: Double = 0.0  // cost property
 
     /// Category classification (e.g. Entertainment, Utilities, Productivity)
-    var category: String = "Other"
+    var category: String = "Other"  // category property
 
     /// Flag indicating whether billing cycle is yearly (true) or monthly (false)
-    var isYearly: Bool = false
+    var isYearly: Bool = false  // isYearly property
 
     /// Next scheduled renewal / billing charge date
-    var nextBillingDate: Date = Date()
+    var nextBillingDate: Date = Date()  // nextBillingDate property
 
     /// Optional user notes or reminders regarding this subscription
-    var notes: String?
+    var notes: String?  // notes property
 
     /// Accent theme color hex code string for UI card rendering
-    var colorHex: String?
+    var colorHex: String?  // colorHex property
 
     /// Flag indicating if this subscription is currently on a free trial period
-    var isTrial: Bool = false
+    var isTrial: Bool = false  // isTrial property
 
     /// Expiration date for free trial period if isTrial is true
-    var trialEndDate: Date?
+    var trialEndDate: Date?  // trialEndDate property
 
     /// Tracks whether trial successfully converted into a paid subscription
-    var trialConvertedToPaid: Bool = false
+    var trialConvertedToPaid: Bool = false  // trialConvertedToPaid property
 
     /// Expected baseline cost used for price change alert warnings
-    var expectedPrice: Double?
+    var expectedPrice: Double?  // expectedPrice property
 
     /// Toggle flag to enable notification alerts when cost exceeds expected price
-    var priceAlertEnabled: Bool = false
+    var priceAlertEnabled: Bool = false  // priceAlertEnabled property
 
     /// User utility rating from 1 to 5 stars measuring subscription value
-    var usageRating: Int = 3
+    var usageRating: Int = 3  // usageRating property
 
     /// Custom user-defined category override string
-    var customCategory: String?
+    var customCategory: String?  // customCategory property
 
     /// Payment method used (e.g. Credit Card, Apple Pay, PayPal)
-    var paymentMethod: String?
+    var paymentMethod: String?  // paymentMethod property
 
     /// Optional search and filter tag strings
-    var tags: [String]?
+    var tags: [String]?  // tags property
 
     /// Currency code string (e.g. CAD, USD, EUR, GBP)
-    var currency: String = "USD"
+    var currency: String = "USD"  // currency property
 
     /// Status flag indicating if subscription was cancelled
-    var isCancelled: Bool = false
+    var isCancelled: Bool = false  // isCancelled property
 
     /// Date when subscription was marked as cancelled
-    var cancellationDate: Date?
+    var cancellationDate: Date?  // cancellationDate property
 
     /// User-provided reason for cancelling subscription
-    var cancellationReason: String?
+    var cancellationReason: String?  // cancellationReason property
 
     /// Timestamp when record was created in app
-    var createdAt: Date = Date()
+    var createdAt: Date = Date()  // createdAt property
 
     // MARK: - Initializer
 

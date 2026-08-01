@@ -1,3 +1,7 @@
+//
+//  SubscriptionPresetData.swift
+//
+
 /**
  * Main/Core Functions & Purpose:
  * Extension providing the static list of pre-configured subscription presets.
@@ -5,6 +9,12 @@
 
 import SwiftUI
 
+
+// MARK: - SubscriptionPreset Extension
+
+/**
+ Extension on `SubscriptionPreset` providing utility methods and helpers.
+ */
 extension SubscriptionPreset {
     static var all: [SubscriptionPreset] { allPresets }
     
