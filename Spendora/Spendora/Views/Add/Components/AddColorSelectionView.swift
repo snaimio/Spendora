@@ -4,63 +4,48 @@
 
 import SwiftUI
 
-
 // MARK: - AddColorSelectionView
 
-/**
- `AddColorSelectionView` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for addcolorselectionview handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `AddColorSelectionView` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
- */
 struct AddColorSelectionView: View {
-
-    // MARK: - Properties
-
-    let colorOptions: [(name: String, hex: String)]  // colorOptions property
+    let colorOptions: [(name: String, hex: String)]
     @Binding var selectedColorHex: String
-    let generator: UIImpactFeedbackGenerator  // generator property
-    
+    let generator: UIImpactFeedbackGenerator
 
-    // MARK: - Body
-
-    /// Main SwiftUI layout body property.
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Choose a Color")
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Theme Color")
                 .font(.system(.subheadline, design: .rounded))
                 .fontWeight(.medium)
                 .foregroundColor(.secondary)
                 .padding(.horizontal, 16)
             
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 16) {
-                    ForEach(colorOptions, id: \.hex) { color in
-                        ColorChip(
-                            color: Color(hex: color.hex),
-                            isSelected: selectedColorHex == color.hex,
-                            name: color.name
-                        )
-                        .onTapGesture {
-                            withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
-                                selectedColorHex = color.hex
-                                generator.impactOccurred()
+            HStack {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 14) {
+                        ForEach(colorOptions, id: \.hex) { item in
+                            Button {
+                                withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                                    selectedColorHex = item.hex
+                                    generator.impactOccurred()
+                                }
+                            } label: {
+                                ColorChip(
+                                    color: Color(hex: item.hex),
+                                    isSelected: selectedColorHex == item.hex,
+                                    name: item.name
+                                )
                             }
+                            .buttonStyle(.plain)
                         }
                     }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
                 }
-                .padding(.horizontal, 16)
             }
+            .background(Color(.systemBackground))
+            .cornerRadius(16)
+            .shadow(color: Color.black.opacity(0.03), radius: 8, x: 0, y: 2)
+            .padding(.horizontal, 16)
         }
     }
 }

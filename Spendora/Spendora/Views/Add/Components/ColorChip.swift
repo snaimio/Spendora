@@ -4,56 +4,31 @@
 
 import SwiftUI
 
-
 // MARK: - ColorChip
 
-/**
- `ColorChip` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for colorchip handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `ColorChip` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
- */
 struct ColorChip: View {
+    let color: Color
+    let isSelected: Bool
+    let name: String
 
-    // MARK: - Properties
-
-    let color: Color  // color property
-    let isSelected: Bool  // isSelected property
-    let name: String  // name property
-    
-
-    // MARK: - Body
-
-    /// Main SwiftUI layout body property.
     var body: some View {
-        VStack(spacing: 6) {
+        ZStack {
             Circle()
                 .fill(color)
-                .frame(width: 44, height: 44)
+                .frame(width: 32, height: 32)
                 .overlay(
                     Circle()
-                        .stroke(Color.white, lineWidth: isSelected ? 3 : 0)
-                        .shadow(color: .black.opacity(0.15), radius: 4)
+                        .stroke(Color.primary.opacity(0.15), lineWidth: 1)
                 )
-                .overlay(
-                    Circle()
-                        .stroke(color, lineWidth: isSelected ? 1 : 0)
-                )
-                .scaleEffect(isSelected ? 1.1 : 1.0)
-            
-            Text(name)
-                .font(.system(.caption2, design: .rounded))
-                .foregroundColor(isSelected ? .primary : .secondary)
+                .shadow(color: color.opacity(0.3), radius: isSelected ? 6 : 2, x: 0, y: 2)
+
+            if isSelected {
+                Image(systemName: "checkmark")
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundColor(.white)
+            }
         }
+        .scaleEffect(isSelected ? 1.15 : 1.0)
+        .padding(.vertical, 4)
     }
 }
