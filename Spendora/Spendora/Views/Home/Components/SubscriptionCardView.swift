@@ -44,15 +44,16 @@ struct SubscriptionCardView: View {
                 Circle()
                     .fill(
                         LinearGradient(
-                            colors: [categoryColor, categoryColor.opacity(0.6)],
+                            colors: [cardColor, cardColor.opacity(0.7)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
                     )
                     .frame(width: 40, height: 40)
+                    .shadow(color: cardColor.opacity(0.3), radius: 4, x: 0, y: 2)
                 
-                Image(systemName: categoryIcon)
-                    .font(.system(size: 13, weight: .medium))
+                Image(systemName: cardIcon)
+                    .font(.system(size: 14, weight: .semibold))
                     .foregroundColor(.white)
             }
             .frame(width: 40)
@@ -132,19 +133,53 @@ struct SubscriptionCardView: View {
         )
     }
     
-    private var categoryIcon: String {
-        SubscriptionCategory(rawValue: subscription.category)?.icon ?? "tag.fill"
+    // MARK: - Dynamic Icon & Color Resolvers
+    private var matchingPreset: SubscriptionPreset? {
+        SubscriptionPreset.all.first {
+            $0.name.localizedCaseInsensitiveCompare(subscription.displayName) == .orderedSame ||
+            subscription.displayName.localizedCaseInsensitiveContains($0.name)
+        }
     }
     
-    private var categoryColor: Color {
+    private var cardIcon: String {
+        if let preset = matchingPreset {
+            return preset.systemIcon
+        }
+        if let category = SubscriptionCategory(rawValue: subscription.category) {
+            return category.icon
+        }
+        switch subscription.category.lowercased() {
+        case "music": return "music.note"
+        case "ai & tools", "ai", "tools": return "sparkles"
+        case "entertainment", "streaming": return "tv.fill"
+        case "productivity": return "doc.text.fill"
+        case "health & fitness", "fitness", "health": return "figure.run"
+        case "shopping": return "cart.fill"
+        case "food & dining", "food": return "bag.fill"
+        case "education": return "book.fill"
+        case "services": return "gear"
+        default: return "creditcard.fill"
+        }
+    }
+    
+    private var cardColor: Color {
+        if let hex = subscription.colorHex, !hex.isEmpty {
+            return Color(hex: hex)
+        }
+        if let preset = matchingPreset {
+            return preset.color
+        }
         switch subscription.category {
         case "Entertainment": return .categoryEntertainment
+        case "Music": return Color(hex: "#1DB954")
+        case "AI & Tools": return Color(hex: "#8B5CF6")
         case "Productivity": return .categoryProductivity
         case "Health & Fitness": return .categoryHealth
         case "Shopping": return .categoryShopping
         case "Food & Dining": return .categoryFood
         case "Education": return .categoryEducation
-        default: return .categoryOther
+        case "Services": return Color(hex: "#0EA5E9")
+        default: return Color(hex: "#6C63FF")
         }
     }
 }
