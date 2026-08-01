@@ -44,6 +44,7 @@ struct AddSubscriptionView: View {
     @State private var showingError = false
     @State private var errorMessage = ""
     @State private var isSaving = false
+    @State private var showingQuickAddSheet = false
     
     private let generator = UIImpactFeedbackGenerator(style: .medium)
     private let colorOptions = AddSubscriptionColorOptions.all
@@ -63,8 +64,62 @@ struct AddSubscriptionView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 24) {
+                VStack(spacing: 20) {
                     AddSubscriptionHeaderView()
+                    
+                    // Popular Providers Preset Selector
+                    VStack(alignment: .leading, spacing: 10) {
+                        HStack {
+                            Text("Popular Providers")
+                                .font(.system(.subheadline, design: .rounded))
+                                .fontWeight(.bold)
+                                .foregroundColor(.secondary)
+                            Spacer()
+                            Button {
+                                generator.impactOccurred()
+                                showingQuickAddSheet = true
+                            } label: {
+                                Text("See All (40+)")
+                                    .font(.system(.footnote, design: .rounded))
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.brandPrimary)
+                            }
+                        }
+                        .padding(.horizontal, 20)
+                        
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 12) {
+                                ForEach(SubscriptionPreset.all.prefix(12)) { preset in
+                                    Button {
+                                        generator.impactOccurred()
+                                        applyPreset(preset)
+                                    } label: {
+                                        HStack(spacing: 8) {
+                                            Image(systemName: preset.systemIcon)
+                                                .foregroundColor(preset.color)
+                                                .font(.subheadline)
+                                            
+                                            Text(preset.name)
+                                                .font(.system(.subheadline, design: .rounded))
+                                                .fontWeight(.medium)
+                                                .foregroundColor(.primary)
+                                        }
+                                        .padding(.horizontal, 14)
+                                        .padding(.vertical, 10)
+                                        .background(Color.cardBackground)
+                                        .cornerRadius(14)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 14)
+                                                .stroke(name == preset.name ? preset.color : Color.clear, lineWidth: 2)
+                                        )
+                                        .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 2)
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                            }
+                            .padding(.horizontal, 16)
+                        }
+                    }
                     
                     AddSubscriptionFormView(
                         name: $name,
@@ -93,6 +148,11 @@ struct AddSubscriptionView: View {
                 .padding(.bottom, 32)
             }
             .background(Color(.systemGroupedBackground).ignoresSafeArea())
+            .sheet(isPresented: $showingQuickAddSheet) {
+                QuickAddView { preset in
+                    applyPreset(preset)
+                }
+            }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -116,6 +176,13 @@ struct AddSubscriptionView: View {
                 Text(errorMessage)
             }
         }
+    }
+    
+    // MARK: - Preset Helper
+    private func applyPreset(_ preset: SubscriptionPreset) {
+        name = preset.name
+        selectedCategory = preset.category
+        selectedColorHex = preset.colorHex
     }
     
     // MARK: - Save Function

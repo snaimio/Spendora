@@ -4,94 +4,92 @@
 
 import SwiftUI
 
-
 // MARK: - QuickAddView
 
-/**
- `QuickAddView` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for quickaddview handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `QuickAddView` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
- */
 struct QuickAddView: View {
-
-    // MARK: - Properties
-
-    let onSelect: (SubscriptionPreset) -> Void  // onSelect property
-
+    let onSelect: (SubscriptionPreset) -> Void
     @Environment(\.dismiss) private var dismiss
+    @State private var searchText = ""
 
+    var filteredPresets: [SubscriptionPreset] {
+        if searchText.isEmpty {
+            return SubscriptionPreset.all
+        }
+        return SubscriptionPreset.all.filter {
+            $0.name.localizedCaseInsensitiveContains(searchText) ||
+            $0.category.localizedCaseInsensitiveContains(searchText)
+        }
+    }
 
-    // MARK: - Body
-
-    /// Main SwiftUI layout body property.
     var body: some View {
         NavigationStack {
             ScrollView {
-                LazyVGrid(
-                    columns: Array(
-                        repeating: GridItem(.flexible()),
-                        count: 3
-                    ),
-                    spacing: 16
-                ) {
-                    ForEach(SubscriptionPreset.all) { preset in
-                        Button {
-                            onSelect(preset)
-                            dismiss()
-                        } label: {
-                            VStack(spacing: 8) {
-                                ZStack {
-                                    Circle()
-                                        .fill(preset.color.opacity(0.2))
-                                        .frame(width: 64, height: 64)
+                VStack(alignment: .leading, spacing: 20) {
+                    Text("Select from 40+ popular subscription providers to auto-fill details.")
+                        .font(.system(.subheadline, design: .rounded))
+                        .foregroundColor(.secondary)
+                        .padding(.horizontal)
+                    
+                    LazyVGrid(
+                        columns: Array(
+                            repeating: GridItem(.flexible(), spacing: 14),
+                            count: 3
+                        ),
+                        spacing: 16
+                    ) {
+                        ForEach(filteredPresets) { preset in
+                            Button {
+                                onSelect(preset)
+                                dismiss()
+                            } label: {
+                                VStack(spacing: 10) {
+                                    ZStack {
+                                        Circle()
+                                            .fill(preset.color.opacity(0.18))
+                                            .frame(width: 58, height: 58)
 
-                                    Image(systemName: preset.systemIcon)
-                                        .font(.title2)
-                                        .foregroundColor(preset.color)
+                                        Image(systemName: preset.systemIcon)
+                                            .font(.title2)
+                                            .foregroundColor(preset.color)
+                                    }
+
+                                    Text(preset.name)
+                                        .font(.system(.caption, design: .rounded))
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.primary)
+                                        .lineLimit(1)
+                                        .minimumScaleFactor(0.8)
                                 }
-
-                                Text(preset.name)
-                                    .font(.caption)
-                                    .foregroundColor(.primary)
-                                    .lineLimit(1)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                                .background(Color(.secondarySystemGroupedBackground))
+                                .cornerRadius(16)
+                                .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 2)
                             }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 8)
-                            .background(Color(.systemBackground))
-                            .cornerRadius(12)
+                            .buttonStyle(.plain)
                         }
-                        .buttonStyle(.plain)
                     }
+                    .padding(.horizontal)
                 }
-                .padding()
+                .padding(.vertical, 12)
             }
-            .navigationTitle("Quick Add")
+            .searchable(text: $searchText, prompt: "Search 40+ popular providers...")
+            .background(Color(.systemGroupedBackground).ignoresSafeArea())
+            .navigationTitle("Popular Providers")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
                         dismiss()
                     }
+                    .font(.system(.body, design: .rounded))
                 }
             }
         }
     }
 }
 
-
 // MARK: - Preview
-
-/// Xcode Canvas Preview Provider.
 #Preview {
     QuickAddView { _ in }
 }
