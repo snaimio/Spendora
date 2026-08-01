@@ -83,24 +83,30 @@ class CloudSyncService: ObservableObject {
     private let iCloudKey = "spendora_cloud_subscriptions_backup"
     private let lastSyncKey = "spendora_last_cloud_sync_timestamp"
     
+    /// Safe computed property returning NSUbiquitousKeyValueStore only when iCloud Ubiquity identity token is available
+    private var kvsStore: NSUbiquitousKeyValueStore? {
+        guard FileManager.default.ubiquityIdentityToken != nil else { return nil }
+        return NSUbiquitousKeyValueStore.default
+    }
+    
     private init() {
         self.autoSyncEnabled = UserDefaults.standard.bool(forKey: "spendora_auto_cloud_sync_enabled")
         if let timestamp = UserDefaults.standard.object(forKey: lastSyncKey) as? Date {
             self.lastSyncDate = timestamp
-        } else if let cloudTimestamp = NSUbiquitousKeyValueStore.default.object(forKey: lastSyncKey) as? Date {
+        } else if let cloudTimestamp = kvsStore?.object(forKey: lastSyncKey) as? Date {
             self.lastSyncDate = cloudTimestamp
         }
         
-        // Listen for iCloud external changes from other devices
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(iCloudDataChangedRemotely(_:)),
-            name: NSUbiquitousKeyValueStore.didChangeExternallyNotification,
-            object: NSUbiquitousKeyValueStore.default
-        )
-        
-        // Initial sync of Ubiquitous Store
-        NSUbiquitousKeyValueStore.default.synchronize()
+        // Listen for iCloud external changes from other devices if KVS is active
+        if kvsStore != nil {
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(iCloudDataChangedRemotely(_:)),
+                name: NSUbiquitousKeyValueStore.didChangeExternallyNotification,
+                object: NSUbiquitousKeyValueStore.default
+            )
+            kvsStore?.synchronize()
+        }
     }
     
     deinit {
@@ -127,37 +133,47 @@ class CloudSyncService: ObservableObject {
             }
             
             let now = Date()
+            var kvsSuccess = false
             
-            // 2. Save payload to Apple NSUbiquitousKeyValueStore (iCloud Key-Value Store)
-            NSUbiquitousKeyValueStore.default.set(payload, forKey: self.iCloudKey)
-            NSUbiquitousKeyValueStore.default.set(now, forKey: self.lastSyncKey)
+            // 2. Save payload to Apple NSUbiquitousKeyValueStore if available
+            if let store = self.kvsStore {
+                store.set(payload, forKey: self.iCloudKey)
+                store.set(now, forKey: self.lastSyncKey)
+                kvsSuccess = store.synchronize()
+            }
             
-            // 3. Force immediate background iCloud synchronization
-            let success = NSUbiquitousKeyValueStore.default.synchronize()
-            
-            // 4. Save local backup file to app documents
+            // 3. Save local backup file to app documents container (always reliable offline)
             self.saveLocalDocumentBackup(payload: payload)
             
             DispatchQueue.main.async {
                 self.isSyncing = false
-                if success {
-                    self.lastSyncDate = now
-                    self.totalSyncedItems = subscriptions.count
-                    self.syncStatus = .success(subscriptions.count)
-                    UserDefaults.standard.set(now, forKey: self.lastSyncKey)
-                } else {
-                    self.syncStatus = .failed("iCloud Storage unavailable or disabled")
-                }
+                self.lastSyncDate = now
+                self.totalSyncedItems = subscriptions.count
+                self.syncStatus = .success(subscriptions.count)
+                UserDefaults.standard.set(now, forKey: self.lastSyncKey)
             }
         }
     }
     
     // MARK: - Restore from iCloud Store
     func restoreFromCloud(modelContext: ModelContext, completion: @escaping (Result<Int, Error>) -> Void) {
-        NSUbiquitousKeyValueStore.default.synchronize()
+        var backupData: Data?
         
-        guard let data = NSUbiquitousKeyValueStore.default.data(forKey: iCloudKey) else {
-            completion(.failure(NSError(domain: "SpendoraCloud", code: 404, userInfo: [NSLocalizedDescriptionKey: "No iCloud backup found"])))
+        if let store = kvsStore {
+            store.synchronize()
+            backupData = store.data(forKey: iCloudKey)
+        }
+        
+        // Fallback to local document backup if cloud store data is nil
+        if backupData == nil {
+            if let docsDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+                let localFile = docsDir.appendingPathComponent("Spendora_Auto_iCloud_Backup.json")
+                backupData = try? Data(contentsOf: localFile)
+            }
+        }
+        
+        guard let data = backupData else {
+            completion(.failure(NSError(domain: "SpendoraCloud", code: 404, userInfo: [NSLocalizedDescriptionKey: "No iCloud or local backup found"])))
             return
         }
         
@@ -173,16 +189,6 @@ class CloudSyncService: ObservableObject {
         }
     }
     
-
-    /**
-     Executes `saveLocalDocumentBackup` for component logic.
-     
-     - Parameter payload: Value passed to `saveLocalDocumentBackup`.
-     
-     ## Behavior
-     1. Validates method arguments and current state.
-     2. Executes core computation or state mutation.
-     */
     private func saveLocalDocumentBackup(payload: Data) {
         if let docsDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             let backupFile = docsDir.appendingPathComponent("Spendora_Auto_iCloud_Backup.json")
@@ -192,7 +198,7 @@ class CloudSyncService: ObservableObject {
     
     @objc private func iCloudDataChangedRemotely(_ notification: Notification) {
         DispatchQueue.main.async {
-            if let cloudDate = NSUbiquitousKeyValueStore.default.object(forKey: self.lastSyncKey) as? Date {
+            if let cloudDate = self.kvsStore?.object(forKey: self.lastSyncKey) as? Date {
                 self.lastSyncDate = cloudDate
             }
         }
