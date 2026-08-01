@@ -24,6 +24,30 @@ Subscription fatigue is one of the fastest-growing personal financial challenges
 
 ---
 
+## 📱 App Screenshots
+
+<p align="center">
+  <img src="screenshots/dashboard.png" width="30%" alt="Dashboard Screen" />
+  <img src="screenshots/subscriptions.png" width="30%" alt="Subscriptions List" />
+  <img src="screenshots/reports.png" width="30%" alt="Reports & Analytics" />
+</p>
+
+<p align="center">
+  <img src="screenshots/add_subscription.png" width="30%" alt="Add Subscription" />
+  <img src="screenshots/settings.png" width="30%" alt="Settings & Cloud Sync" />
+  <img src="screenshots/widget.png" width="30%" alt="iOS 17 Home Screen Widget" />
+</p>
+
+---
+
+## 🎥 Demo Video
+
+[![Watch the Demo Video](https://img.shields.io/badge/YouTube-Watch%20Demo%20Video-red?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/your-video-link)
+
+> 📹 **Capstone Showcase**: Watch a 2-3 minute comprehensive walkthrough demonstrating live subscription tracking, smart receipt parsing via MagicFinder, automated PDF report generation, and iOS 17 home screen widgets.
+
+---
+
 ## 🏗️ System Architecture & Data Flow
 
 ```mermaid
@@ -295,6 +319,47 @@ Spendora/
     ├── SpendoraTests.swift
     └── SubscriptionTests.swift
 ```
+
+---
+
+## 🗺️ Roadmap & Future Enhancements
+
+- [x] iOS 17 SwiftData persistence & WidgetKit sync
+- [x] Multi-currency conversion engine
+- [x] Native PDF report & CSV export builder
+- [ ] iCloud Keychain encrypted backup sync
+- [ ] VisionOS / iPadOS optimized layout extensions
+- [ ] Siri Shortcuts integration (`"Hey Siri, what subscriptions are due this week?"`)
+
+---
+
+## 🤝 Contributing Guidelines
+
+Contributions are welcome! Please follow these guidelines:
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes using conventional commits (`git commit -m 'feat: Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 🐛 Known Issues & Considerations
+
+- **WidgetKit App Group Sandbox**: In Xcode simulator environments, App Group shared container sync requires building via Xcode scheme `SpendoraWidgetExtension`.
+- **Local Notifications**: Requires notification permissions enabled in iOS Settings (`Settings -> Spendora -> Notifications`).
+
+---
+
+## 📋 Capstone Submission Checklist
+
+| Deliverable | Status | Details |
+|---|:---:|---|
+| **App Source Code** | ✅ Complete | 100% native Swift & SwiftUI project targeting iOS 17+. |
+| **Documentation & Comments** | ✅ Complete | Full Xcode docstring coverage (`///`, `/** */`, `// MARK:`). |
+| **App Screenshots** | 📸 Ready | Place PNG screenshots in `/screenshots` folder. |
+| **Demo Video** | 🎥 Ready | Embed 2-3 minute video showcase link above. |
 
 ---
 
