@@ -24,6 +24,16 @@ Subscription fatigue is one of the fastest-growing personal financial challenges
 
 ---
 
+## 🎥 Demo Video Showcase
+
+[![YouTube - @TheResilientPulse](https://img.shields.io/badge/YouTube-@TheResilientPulse-red?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@TheResilientPulse)
+
+> 🎬 **Generated Video Showcase**: High-definition presentation video [**`screenshots/demo_video.mp4`**](screenshots/demo_video.mp4) rendering feature highlights, dashboard metrics, receipt parsing via MagicFinder, Swift Charts analytics, and iOS 17 home screen widgets.
+> 
+> 📺 Watch more walkthroughs on YouTube channel [**@TheResilientPulse**](https://www.youtube.com/@TheResilientPulse).
+
+---
+
 ## 📱 App Screenshots
 
 <p align="center">
@@ -37,14 +47,6 @@ Subscription fatigue is one of the fastest-growing personal financial challenges
   <img src="screenshots/settings.png" width="30%" alt="Settings & Cloud Sync" />
   <img src="screenshots/widget.png" width="30%" alt="iOS 17 Home Screen Widget" />
 </p>
-
----
-
-## 🎥 Demo Video
-
-[![YouTube - @TheResilientPulse](https://img.shields.io/badge/YouTube-@TheResilientPulse-red?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@TheResilientPulse)
-
-> 📹 **Capstone Showcase**: Watch video walkthroughs and demo presentations on YouTube channel [**@TheResilientPulse**](https://www.youtube.com/@TheResilientPulse) demonstrating live subscription tracking, receipt parsing via MagicFinder, automated PDF report generation, and iOS 17 home screen widgets.
 
 ---
 
@@ -327,6 +329,7 @@ Spendora/
 - [x] iOS 17 SwiftData persistence & WidgetKit sync
 - [x] Multi-currency conversion engine
 - [x] Native PDF report & CSV export builder
+- [x] Generated HD Demo Presentation Video (`screenshots/demo_video.mp4`)
 - [ ] iCloud Keychain encrypted backup sync
 - [ ] VisionOS / iPadOS optimized layout extensions
 - [ ] Siri Shortcuts integration (`"Hey Siri, what subscriptions are due this week?"`)
@@ -359,6 +362,7 @@ Contributions are welcome! Please follow these guidelines:
 | **App Source Code** | ✅ Complete | 100% native Swift & SwiftUI project targeting iOS 17+. |
 | **Documentation & Comments** | ✅ Complete | Full Xcode docstring coverage (`///`, `/** */`, `// MARK:`). |
 | **App Screenshots** | 📱 Complete | Live screenshots embedded in `screenshots/`. |
+| **Demo Presentation Video** | 🎬 Complete | Generated 1080p HD video file [`screenshots/demo_video.mp4`](screenshots/demo_video.mp4). |
 | **Demo Channel** | 🎥 Ready | Linked to [@TheResilientPulse](https://www.youtube.com/@TheResilientPulse). |
 
 ---
