@@ -26,11 +26,22 @@ Subscription fatigue is one of the fastest-growing personal financial challenges
 
 ## 🎥 Demo Video Showcase
 
-[![YouTube - @TheResilientPulse](https://img.shields.io/badge/YouTube-@TheResilientPulse-red?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@TheResilientPulse)
+<p align="center">
+  <img src="screenshots/demo_preview.gif" width="100%" alt="Spendora Live Demo Preview" />
+</p>
 
-> 🎬 **Generated Video Showcase**: High-definition presentation video [**`screenshots/demo_video.mp4`**](screenshots/demo_video.mp4) rendering feature highlights, dashboard metrics, receipt parsing via MagicFinder, Swift Charts analytics, and iOS 17 home screen widgets.
+<p align="center">
+  <a href="https://www.youtube.com/@TheResilientPulse">
+    <img src="https://img.shields.io/badge/YouTube-@TheResilientPulse-red?style=for-the-badge&logo=youtube&logoColor=white" alt="YouTube Channel" />
+  </a>
+  <a href="screenshots/demo_video.mp4">
+    <img src="https://img.shields.io/badge/Download-Full%201080p%20HD%20Video-007AFF?style=for-the-badge&logo=apple&logoColor=white" alt="Download Video" />
+  </a>
+</p>
+
+> 🎬 **Animated Preview**: The GIF above demonstrates key features including real-time spend metrics, search & filter, preset catalogs, Swift Charts analytics, and iOS 17 home screen widgets.
 > 
-> 📺 Watch more walkthroughs on YouTube channel [**@TheResilientPulse**](https://www.youtube.com/@TheResilientPulse).
+> 📺 Watch full video showcases on YouTube channel [**@TheResilientPulse**](https://www.youtube.com/@TheResilientPulse) or download the full 1080p MP4 [`screenshots/demo_video.mp4`](screenshots/demo_video.mp4).
 
 ---
 
@@ -329,7 +340,8 @@ Spendora/
 - [x] iOS 17 SwiftData persistence & WidgetKit sync
 - [x] Multi-currency conversion engine
 - [x] Native PDF report & CSV export builder
-- [x] Generated HD Demo Presentation Video (`screenshots/demo_video.mp4`)
+- [x] Animated GIF Demo Showcase (`screenshots/demo_preview.gif`)
+- [x] Full 1080p HD Video File (`screenshots/demo_video.mp4`)
 - [ ] iCloud Keychain encrypted backup sync
 - [ ] VisionOS / iPadOS optimized layout extensions
 - [ ] Siri Shortcuts integration (`"Hey Siri, what subscriptions are due this week?"`)
@@ -362,7 +374,7 @@ Contributions are welcome! Please follow these guidelines:
 | **App Source Code** | ✅ Complete | 100% native Swift & SwiftUI project targeting iOS 17+. |
 | **Documentation & Comments** | ✅ Complete | Full Xcode docstring coverage (`///`, `/** */`, `// MARK:`). |
 | **App Screenshots** | 📱 Complete | Live screenshots embedded in `screenshots/`. |
-| **Demo Presentation Video** | 🎬 Complete | Generated 1080p HD video file [`screenshots/demo_video.mp4`](screenshots/demo_video.mp4). |
+| **Inline Demo GIF** | 🎬 Complete | Lightweight animated GIF [`screenshots/demo_preview.gif`](screenshots/demo_preview.gif). |
 | **Demo Channel** | 🎥 Ready | Linked to [@TheResilientPulse](https://www.youtube.com/@TheResilientPulse). |
 
 ---
