@@ -58,7 +58,7 @@ struct SubscriptionPreset: Identifiable {
         self.colorHex = colorHex
     }
 
-    var systemIcon: String {  // systemIcon property
+    var systemIcon: String {
         switch icon {
         case "netflix": return "tv.fill"
         case "spotify": return "music.note"
@@ -71,14 +71,21 @@ struct SubscriptionPreset: Identifiable {
         case "microsoft": return "building.columns.fill"
         case "google": return "globe"
         case "dropbox": return "folder.fill"
-        case "notion": return "rectangle.inset.checked"
+        case "notion": return "doc.text.fill"
         case "fitbit": return "heart.circle.fill"
-        case "fitness": return "figure.walk"
+        case "fitness": return "figure.run"
         case "amazon": return "cart.fill"
         case "hellofresh": return "leaf.fill"
         case "adobe": return "pencil.circle.fill"
-        case "playstation": return "gamecontroller.fill"
-        case "xbox": return "gamecontroller.fill"
+        case "playstation", "xbox", "nintendo", "gaming": return "gamecontroller.fill"
+        case "openai", "anthropic", "gemini", "ai", "sparkles": return "sparkles"
+        case "cursor", "copilot", "code": return "chevron.left.forwardslash.chevron.right"
+        case "cloud": return "cloud.fill"
+        case "news": return "newspaper.fill"
+        case "food", "bag": return "bag.fill"
+        case "lock", "security": return "lock.shield.fill"
+        case "learn", "education": return "book.fill"
+        case "car": return "car.fill"
         default: return "creditcard.fill"
         }
     }

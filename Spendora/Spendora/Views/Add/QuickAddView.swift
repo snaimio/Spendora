@@ -25,7 +25,7 @@ struct QuickAddView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                    Text("Select from 40+ popular subscription providers to auto-fill details.")
+                    Text("Select any subscription provider to automatically populate details and theme colors.")
                         .font(.system(.subheadline, design: .rounded))
                         .foregroundColor(.secondary)
                         .padding(.horizontal)
@@ -45,8 +45,14 @@ struct QuickAddView: View {
                                 VStack(spacing: 10) {
                                     ZStack {
                                         Circle()
-                                            .fill(preset.color.opacity(0.18))
-                                            .frame(width: 58, height: 58)
+                                            .fill(
+                                                LinearGradient(
+                                                    colors: [preset.color.opacity(0.25), preset.color.opacity(0.1)],
+                                                    startPoint: .topLeading,
+                                                    endPoint: .bottomTrailing
+                                                )
+                                            )
+                                            .frame(width: 56, height: 56)
 
                                         Image(systemName: preset.systemIcon)
                                             .font(.title2)
@@ -58,13 +64,18 @@ struct QuickAddView: View {
                                         .fontWeight(.semibold)
                                         .foregroundColor(.primary)
                                         .lineLimit(1)
-                                        .minimumScaleFactor(0.8)
+                                        .minimumScaleFactor(0.75)
                                 }
                                 .frame(maxWidth: .infinity)
-                                .padding(.vertical, 12)
+                                .padding(.vertical, 14)
+                                .padding(.horizontal, 6)
                                 .background(Color(.secondarySystemGroupedBackground))
-                                .cornerRadius(16)
-                                .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 2)
+                                .cornerRadius(18)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 18)
+                                        .stroke(preset.color.opacity(0.25), lineWidth: 1)
+                                )
+                                .shadow(color: preset.color.opacity(0.08), radius: 8, x: 0, y: 3)
                             }
                             .buttonStyle(.plain)
                         }
@@ -73,7 +84,7 @@ struct QuickAddView: View {
                 }
                 .padding(.vertical, 12)
             }
-            .searchable(text: $searchText, prompt: "Search 40+ popular providers...")
+            .searchable(text: $searchText, prompt: "Search popular providers...")
             .background(Color(.systemGroupedBackground).ignoresSafeArea())
             .navigationTitle("Popular Providers")
             .navigationBarTitleDisplayMode(.inline)

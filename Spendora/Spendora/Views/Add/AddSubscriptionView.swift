@@ -79,9 +79,9 @@ struct AddSubscriptionView: View {
                                 generator.impactOccurred()
                                 showingQuickAddSheet = true
                             } label: {
-                                Text("See All (40+)")
-                                    .font(.system(.footnote, design: .rounded))
-                                    .fontWeight(.semibold)
+                                Text("See All")
+                                    .font(.system(.subheadline, design: .rounded))
+                                    .fontWeight(.bold)
                                     .foregroundColor(.brandPrimary)
                             }
                         }
@@ -89,28 +89,35 @@ struct AddSubscriptionView: View {
                         
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 12) {
-                                ForEach(SubscriptionPreset.all.prefix(12)) { preset in
+                                ForEach(SubscriptionPreset.all.prefix(15)) { preset in
                                     Button {
                                         generator.impactOccurred()
                                         applyPreset(preset)
                                     } label: {
                                         HStack(spacing: 8) {
-                                            Image(systemName: preset.systemIcon)
-                                                .foregroundColor(preset.color)
-                                                .font(.subheadline)
+                                            ZStack {
+                                                Circle()
+                                                    .fill(preset.color.opacity(0.16))
+                                                    .frame(width: 28, height: 28)
+                                                
+                                                Image(systemName: preset.systemIcon)
+                                                    .foregroundColor(preset.color)
+                                                    .font(.system(size: 13, weight: .semibold))
+                                            }
                                             
                                             Text(preset.name)
                                                 .font(.system(.subheadline, design: .rounded))
-                                                .fontWeight(.medium)
+                                                .fontWeight(.semibold)
                                                 .foregroundColor(.primary)
                                         }
-                                        .padding(.horizontal, 14)
-                                        .padding(.vertical, 10)
+                                        .padding(.leading, 6)
+                                        .padding(.trailing, 14)
+                                        .padding(.vertical, 8)
                                         .background(Color.cardBackground)
                                         .cornerRadius(14)
                                         .overlay(
                                             RoundedRectangle(cornerRadius: 14)
-                                                .stroke(name == preset.name ? preset.color : Color.clear, lineWidth: 2)
+                                                .stroke(name == preset.name ? preset.color : Color.secondary.opacity(0.12), lineWidth: name == preset.name ? 2 : 1)
                                         )
                                         .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 2)
                                     }
