@@ -31,17 +31,14 @@ Subscription fatigue is one of the fastest-growing personal financial challenges
 </p>
 
 <p align="center">
-  <a href="https://www.youtube.com/@TheResilientPulse">
-    <img src="https://img.shields.io/badge/YouTube-@TheResilientPulse-red?style=for-the-badge&logo=youtube&logoColor=white" alt="YouTube Channel" />
-  </a>
   <a href="screenshots/demo_video.mp4">
     <img src="https://img.shields.io/badge/Download-Full%201080p%20HD%20Video-007AFF?style=for-the-badge&logo=apple&logoColor=white" alt="Download Video" />
   </a>
 </p>
 
-> 🎬 **Animated Preview**: The GIF above demonstrates key features including real-time spend metrics, search & filter, preset catalogs, Swift Charts analytics, and iOS 17 home screen widgets.
+> 🎬 **Animated Preview & Voiceover Presentation**: The preview above demonstrates key features including real-time spend metrics, search & filter, preset catalogs, Swift Charts analytics, and iOS 17 home screen widgets.
 > 
-> 📺 Watch full video showcases on YouTube channel [**@TheResilientPulse**](https://www.youtube.com/@TheResilientPulse) or download the full 1080p MP4 [`screenshots/demo_video.mp4`](screenshots/demo_video.mp4).
+> 🔊 Download the full 1080p narrated MP4 presentation with spoken voiceover [`screenshots/demo_video.mp4`](screenshots/demo_video.mp4).
 
 ---
 
@@ -375,7 +372,7 @@ Contributions are welcome! Please follow these guidelines:
 | **Documentation & Comments** | ✅ Complete | Full Xcode docstring coverage (`///`, `/** */`, `// MARK:`). |
 | **App Screenshots** | 📱 Complete | Live screenshots embedded in `screenshots/`. |
 | **Inline Demo GIF** | 🎬 Complete | Lightweight animated GIF [`screenshots/demo_preview.gif`](screenshots/demo_preview.gif). |
-| **Demo Channel** | 🎥 Ready | Linked to [@TheResilientPulse](https://www.youtube.com/@TheResilientPulse). |
+| **Demo Video** | 🔊 Complete | 1080p HD Narrated Video File [`screenshots/demo_video.mp4`](screenshots/demo_video.mp4). |
 
 ---
 

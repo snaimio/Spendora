@@ -48,12 +48,14 @@ struct AddSubscriptionView: View {
     private let colorOptions = AddSubscriptionColorOptions.all
     
     // MARK: - Computed Properties
-    var costValue: Double? { Double(cost) }  // costValue property
+    var costValue: Double? {
+        let sanitized = cost.replacingOccurrences(of: ",", with: ".").trimmingCharacters(in: .whitespacesAndNewlines)
+        return Double(sanitized)
+    }
     
-    var isValid: Bool {  // isValid property
+    var isValid: Bool {
         !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
-        (costValue ?? 0) > 0 &&
-        nextBillingDate > Date()
+        (costValue ?? 0) > 0
     }
     
     // MARK: - Body
@@ -117,13 +119,13 @@ struct AddSubscriptionView: View {
     // MARK: - Save Function
     private func saveSubscription() {
         guard isValid else {
-            errorMessage = "Please fill in all fields correctly"
+            errorMessage = "Please enter a valid subscription name and price."
             showingError = true
             return
         }
         
         guard let costValue = costValue else {
-            errorMessage = "Please enter a valid cost"
+            errorMessage = "Please enter a valid numeric cost."
             showingError = true
             return
         }
@@ -143,10 +145,11 @@ struct AddSubscriptionView: View {
             trialEndDate: nil,
             expectedPrice: nil,
             priceAlertEnabled: false,
-            usageRating: 0,
+            usageRating: 3,
             customCategory: nil,
             paymentMethod: selectedPaymentMethod.rawValue,
-            tags: nil
+            tags: nil,
+            currency: CurrencyManager.shared.currentCurrency.code
         )
         
         modelContext.insert(newSubscription)
