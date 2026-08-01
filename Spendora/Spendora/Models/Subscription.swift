@@ -31,6 +31,12 @@ final class Subscription {
     /// Flag indicating whether billing cycle is yearly (true) or monthly (false)
     var isYearly: Bool = false  // isYearly property
 
+    /// Flag indicating whether this is a one-time / lifetime purchase
+    var isOneTime: Bool = false  // isOneTime property
+
+    /// Direct web link URL for cancellation or managing account (e.g. https://netflix.com/account)
+    var linkURL: String?  // linkURL property
+
     /// Next scheduled renewal / billing charge date
     var nextBillingDate: Date = Date()  // nextBillingDate property
 

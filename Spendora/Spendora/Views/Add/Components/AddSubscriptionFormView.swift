@@ -31,6 +31,8 @@ struct AddSubscriptionFormView: View {
     @Binding var cost: String
     @Binding var selectedCategory: String
     @Binding var isYearly: Bool
+    @Binding var isOneTime: Bool
+    @Binding var linkURL: String
     @Binding var nextBillingDate: Date
     @Binding var selectedPaymentMethod: PaymentMethod
     @Binding var reminderDaysBefore: Int
@@ -59,7 +61,18 @@ struct AddSubscriptionFormView: View {
             
             CategoryPickerView(selectedCategory: $selectedCategory)
             
-            BillingCyclePickerView(isYearly: $isYearly)
+            BillingCyclePickerView(isYearly: $isYearly, isOneTime: $isOneTime)
+            
+            PremiumFormField(
+                icon: "link.circle.fill",
+                title: "Manage / Website URL"
+            ) {
+                TextField("https://netflix.com/account", text: $linkURL)
+                    .keyboardType(.URL)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+                    .font(.system(.body, design: .rounded))
+            }
             
             PremiumFormField(
                 icon: "creditcard.circle.fill",
@@ -75,21 +88,23 @@ struct AddSubscriptionFormView: View {
                 .tint(.brandPrimary)
             }
             
-            PremiumFormField(
-                icon: "calendar.circle.fill",
-                title: "Next Billing"
-            ) {
-                DatePicker(
-                    "",
-                    selection: $nextBillingDate,
-                    displayedComponents: .date
-                )
-                .labelsHidden()
-                .datePickerStyle(.compact)
-                .tint(.brandPrimary)
+            if !isOneTime {
+                PremiumFormField(
+                    icon: "calendar.circle.fill",
+                    title: "Next Billing"
+                ) {
+                    DatePicker(
+                        "",
+                        selection: $nextBillingDate,
+                        displayedComponents: .date
+                    )
+                    .labelsHidden()
+                    .datePickerStyle(.compact)
+                    .tint(.brandPrimary)
+                }
+                
+                ReminderPickerView(reminderDaysBefore: $reminderDaysBefore)
             }
-            
-            ReminderPickerView(reminderDaysBefore: $reminderDaysBefore)
         }
     }
 }

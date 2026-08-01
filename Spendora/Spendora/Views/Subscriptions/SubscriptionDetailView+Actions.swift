@@ -28,7 +28,14 @@ extension SubscriptionDetailView {
      2. Executes core computation or state mutation.
      */
     func getCancellationURL() -> URL? {
-        CancellationService.shared.getDirectCancellationURL(
+        if let link = subscription.linkURL, !link.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            let trimmed = link.trimmingCharacters(in: .whitespacesAndNewlines)
+            let formatted = trimmed.lowercased().hasPrefix("http") ? trimmed : "https://\(trimmed)"
+            if let url = URL(string: formatted) {
+                return url
+            }
+        }
+        return CancellationService.shared.getDirectCancellationURL(
             for: subscription.displayName,
             notes: subscription.notes
         )

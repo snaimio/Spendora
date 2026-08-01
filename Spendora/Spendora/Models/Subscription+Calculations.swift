@@ -18,14 +18,16 @@ import Foundation
  */
 extension Subscription {
     
-    /// Normalizes cost to a monthly figure (divides yearly cost by 12, or returns monthly cost as is)
-    var monthlyCost: Double {  // monthlyCost property
-        isYearly ? cost / 12.0 : cost
+    /// Normalizes cost to a monthly figure (returns 0 for one-time purchases, divides yearly by 12, or returns cost as is)
+    var monthlyCost: Double {
+        if isOneTime { return 0.0 }
+        return isYearly ? cost / 12.0 : cost
     }
 
-    /// Normalizes cost to a yearly total (multiplies monthly cost by 12, or returns yearly cost as is)
-    var yearlyCost: Double {  // yearlyCost property
-        isYearly ? cost : cost * 12.0
+    /// Normalizes cost to a yearly total (returns cost as is for one-time, multiplies monthly by 12, or returns yearly cost as is)
+    var yearlyCost: Double {
+        if isOneTime { return cost }
+        return isYearly ? cost : cost * 12.0
     }
 
     /// Calculated average monthly expenditure for analytics

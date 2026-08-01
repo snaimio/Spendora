@@ -51,10 +51,10 @@ struct SubscriptionDetailViewSection: View {
         Group {
             Section("Service Info") {
                 DetailRow(icon: "tag.fill", title: "Name", value: name)
-                DetailRow(icon: "dollarsign.circle.fill", title: "Cost", value: "$\(cost)/\(isYearly ? "year" : "month")")
+                DetailRow(icon: "dollarsign.circle.fill", title: "Cost", value: subscription.isOneTime ? "$\(cost) (One-Time)" : "$\(cost)/\(isYearly ? "year" : "month")")
                 DetailRow(icon: "folder.fill", title: "Category", value: category)
                 DetailRow(icon: PaymentMethod.from(paymentMethod).icon, title: "Payment Method", value: PaymentMethod.from(paymentMethod).displayName)
-                DetailRow(icon: "repeat.circle.fill", title: "Billing Cycle", value: isYearly ? "Yearly" : "Monthly")
+                DetailRow(icon: "repeat.circle.fill", title: "Billing Cycle", value: subscription.isOneTime ? "One-Time (Lifetime)" : (isYearly ? "Yearly" : "Monthly"))
             }
             
             Section("Billing") {

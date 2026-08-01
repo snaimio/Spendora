@@ -88,33 +88,51 @@ struct SubscriptionCardView: View {
                 }
                 
                 HStack(spacing: 4) {
-                    Text(CurrencyManager.shared.format(subscription.monthlyCost))
+                    Text(CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost))
                         .font(.system(size: 13, weight: .bold, design: .rounded))
                         .foregroundColor(.brandPrimary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                     
-                    Text("/month")
-                        .font(.system(size: 10, weight: .regular, design: .rounded))
-                        .foregroundColor(.textSecondary)
-                    
-                    if subscription.isYearly {
-                        Text("• Yearly")
-                            .font(.system(size: 9, weight: .regular, design: .rounded))
+                    if subscription.isOneTime {
+                        Text("• One-Time")
+                            .font(.system(size: 10, weight: .semibold, design: .rounded))
+                            .foregroundColor(.brandSecondary)
+                    } else {
+                        Text("/month")
+                            .font(.system(size: 10, weight: .regular, design: .rounded))
                             .foregroundColor(.textSecondary)
+                        
+                        if subscription.isYearly {
+                            Text("• Yearly")
+                                .font(.system(size: 9, weight: .regular, design: .rounded))
+                                .foregroundColor(.textSecondary)
+                        }
                     }
                 }
                 
-                HStack(spacing: 3) {
-                    Image(systemName: "calendar")
-                        .font(.system(size: 7))
-                        .foregroundColor(.textSecondary)
-                    
-                    Text("Next: \(subscription.formattedNextBillingDate)")
-                        .font(.system(size: 9, weight: .regular, design: .rounded))
-                        .foregroundColor(.textSecondary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.6)
+                if !subscription.isOneTime {
+                    HStack(spacing: 3) {
+                        Image(systemName: "calendar")
+                            .font(.system(size: 7))
+                            .foregroundColor(.textSecondary)
+                        
+                        Text("Next: \(subscription.formattedNextBillingDate)")
+                            .font(.system(size: 9, weight: .regular, design: .rounded))
+                            .foregroundColor(.textSecondary)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.6)
+                    }
+                } else {
+                    HStack(spacing: 3) {
+                        Image(systemName: "checkmark.seal.fill")
+                            .font(.system(size: 8))
+                            .foregroundColor(.brandTertiary)
+                        
+                        Text("Lifetime Purchase")
+                            .font(.system(size: 9, weight: .semibold, design: .rounded))
+                            .foregroundColor(.textSecondary)
+                    }
                 }
             }
             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)

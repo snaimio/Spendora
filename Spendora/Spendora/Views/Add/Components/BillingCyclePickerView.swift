@@ -4,47 +4,55 @@
 
 import SwiftUI
 
+// MARK: - BillingCycleType Enum
+
+enum BillingCycleType: String, CaseIterable, Identifiable {
+    case monthly = "Monthly"
+    case yearly = "Yearly"
+    case oneTime = "One-Time"
+
+    var id: String { rawValue }
+}
 
 // MARK: - BillingCyclePickerView
 
-/**
- `BillingCyclePickerView` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for billingcyclepickerview handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `BillingCyclePickerView` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
- */
 struct BillingCyclePickerView: View {
-
-    // MARK: - Properties
-
     @Binding var isYearly: Bool
-    
+    @Binding var isOneTime: Bool
 
-    // MARK: - Body
+    var selectedCycle: BillingCycleType {
+        if isOneTime { return .oneTime }
+        return isYearly ? .yearly : .monthly
+    }
 
-    /// Main SwiftUI layout body property.
     var body: some View {
         PremiumFormField(
             icon: "repeat.circle.fill",
             title: "Billing Cycle"
         ) {
-            Picker("", selection: $isYearly) {
-                Text("Monthly").tag(false)
-                Text("Yearly").tag(true)
+            Picker("", selection: Binding(
+                get: { selectedCycle },
+                set: { newCycle in
+                    switch newCycle {
+                    case .monthly:
+                        isYearly = false
+                        isOneTime = false
+                    case .yearly:
+                        isYearly = true
+                        isOneTime = false
+                    case .oneTime:
+                        isYearly = false
+                        isOneTime = true
+                    }
+                }
+            )) {
+                ForEach(BillingCycleType.allCases) { cycle in
+                    Text(cycle.rawValue).tag(cycle)
+                }
             }
             .pickerStyle(.segmented)
             .tint(.brandPrimary)
-            .frame(maxWidth: 200)
+            .frame(maxWidth: 240)
         }
     }
 }

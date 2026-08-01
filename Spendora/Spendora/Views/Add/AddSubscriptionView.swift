@@ -36,6 +36,8 @@ struct AddSubscriptionView: View {
     @State private var cost = ""
     @State private var selectedCategory: String = SubscriptionCategory.other.rawValue
     @State private var isYearly = false
+    @State private var isOneTime = false
+    @State private var linkURL = ""
     @State private var nextBillingDate = Calendar.current.date(byAdding: .day, value: 30, to: Date()) ?? Date()
     @State private var selectedColorHex = "#6C63FF"
     @State private var notes = ""
@@ -133,6 +135,8 @@ struct AddSubscriptionView: View {
                         cost: $cost,
                         selectedCategory: $selectedCategory,
                         isYearly: $isYearly,
+                        isOneTime: $isOneTime,
+                        linkURL: $linkURL,
                         nextBillingDate: $nextBillingDate,
                         selectedPaymentMethod: $selectedPaymentMethod,
                         reminderDaysBefore: $reminderDaysBefore
@@ -154,12 +158,13 @@ struct AddSubscriptionView: View {
                 }
                 .padding(.bottom, 32)
             }
-            .background(Color(.systemGroupedBackground).ignoresSafeArea())
+            .background(Color.appBackground.ignoresSafeArea())
             .sheet(isPresented: $showingQuickAddSheet) {
                 QuickAddView { preset in
                     applyPreset(preset)
                 }
             }
+            .navigationTitle("Add Subscription")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -208,6 +213,7 @@ struct AddSubscriptionView: View {
         
         isSaving = true
         let trimmedNotes = notes.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedLink = linkURL.trimmingCharacters(in: .whitespacesAndNewlines)
         
         let newSubscription = Subscription(
             name: name.trimmingCharacters(in: .whitespacesAndNewlines),
@@ -218,16 +224,12 @@ struct AddSubscriptionView: View {
             notes: trimmedNotes.isEmpty ? nil : trimmedNotes,
             colorHex: selectedColorHex,
             isTrial: false,
-            trialEndDate: nil,
-            expectedPrice: nil,
-            priceAlertEnabled: false,
-            usageRating: 3,
-            customCategory: nil,
             paymentMethod: selectedPaymentMethod.rawValue,
-            tags: nil,
             currency: CurrencyManager.shared.currentCurrency.code,
             reminderDaysBefore: reminderDaysBefore
         )
+        newSubscription.isOneTime = isOneTime
+        newSubscription.linkURL = trimmedLink.isEmpty ? nil : trimmedLink
         
         modelContext.insert(newSubscription)
         
