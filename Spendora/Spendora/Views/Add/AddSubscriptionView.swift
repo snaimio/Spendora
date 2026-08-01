@@ -40,6 +40,7 @@ struct AddSubscriptionView: View {
     @State private var selectedColorHex = "#6C63FF"
     @State private var notes = ""
     @State private var selectedPaymentMethod: PaymentMethod = .creditCard
+    @State private var reminderDaysBefore = 3
     @State private var showingError = false
     @State private var errorMessage = ""
     @State private var isSaving = false
@@ -71,7 +72,8 @@ struct AddSubscriptionView: View {
                         selectedCategory: $selectedCategory,
                         isYearly: $isYearly,
                         nextBillingDate: $nextBillingDate,
-                        selectedPaymentMethod: $selectedPaymentMethod
+                        selectedPaymentMethod: $selectedPaymentMethod,
+                        reminderDaysBefore: $reminderDaysBefore
                     )
                     
                     AddColorSelectionView(
@@ -149,7 +151,8 @@ struct AddSubscriptionView: View {
             customCategory: nil,
             paymentMethod: selectedPaymentMethod.rawValue,
             tags: nil,
-            currency: CurrencyManager.shared.currentCurrency.code
+            currency: CurrencyManager.shared.currentCurrency.code,
+            reminderDaysBefore: reminderDaysBefore
         )
         
         modelContext.insert(newSubscription)

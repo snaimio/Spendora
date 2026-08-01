@@ -51,6 +51,7 @@ struct SubscriptionDetailView: View {
     @State var isTrial: Bool
     @State var usageRating: Int
     @State var paymentMethod: String
+    @State var reminderDaysBefore: Int
     
     @State var showingDeleteAlert = false
     @State var isSaving = false
@@ -73,6 +74,7 @@ struct SubscriptionDetailView: View {
         _isTrial = State(initialValue: subscription.isTrial)
         _usageRating = State(initialValue: subscription.usageRating)
         _paymentMethod = State(initialValue: subscription.paymentMethod ?? "Not Set")
+        _reminderDaysBefore = State(initialValue: subscription.reminderDaysBefore)
     }
     
     var costValue: Double? { Double(cost) }  // costValue property
@@ -174,6 +176,7 @@ struct SubscriptionDetailView: View {
             paymentMethod: $paymentMethod,
             isYearly: $isYearly,
             nextBillingDate: $nextBillingDate,
+            reminderDaysBefore: $reminderDaysBefore,
             isTrial: $isTrial,
             notes: $notes,
             usageRating: $usageRating,

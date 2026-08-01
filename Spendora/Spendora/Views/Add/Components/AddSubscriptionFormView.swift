@@ -33,6 +33,7 @@ struct AddSubscriptionFormView: View {
     @Binding var isYearly: Bool
     @Binding var nextBillingDate: Date
     @Binding var selectedPaymentMethod: PaymentMethod
+    @Binding var reminderDaysBefore: Int
     
 
     // MARK: - Body
@@ -81,13 +82,14 @@ struct AddSubscriptionFormView: View {
                 DatePicker(
                     "",
                     selection: $nextBillingDate,
-                    in: Date()...,
                     displayedComponents: .date
                 )
                 .labelsHidden()
                 .datePickerStyle(.compact)
                 .tint(.brandPrimary)
             }
+            
+            ReminderPickerView(reminderDaysBefore: $reminderDaysBefore)
         }
     }
 }

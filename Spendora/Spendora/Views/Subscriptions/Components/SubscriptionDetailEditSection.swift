@@ -42,6 +42,7 @@ struct SubscriptionDetailEditSection: View {
     @Binding var paymentMethod: String
     @Binding var isYearly: Bool
     @Binding var nextBillingDate: Date
+    @Binding var reminderDaysBefore: Int
     @Binding var isTrial: Bool
     @Binding var notes: String
     @Binding var usageRating: Int
@@ -87,8 +88,10 @@ struct SubscriptionDetailEditSection: View {
                 Toggle("Yearly Billing", isOn: $isYearly)
                     .tint(.brandPrimary)
                 
-                DatePicker("Next Billing Date", selection: $nextBillingDate, in: Date()..., displayedComponents: .date)
+                DatePicker("Next Billing Date", selection: $nextBillingDate, displayedComponents: .date)
                     .tint(.brandPrimary)
+                
+                ReminderPickerView(reminderDaysBefore: $reminderDaysBefore)
                 
                 Toggle("Free Trial", isOn: $isTrial)
                     .tint(.brandPrimary)

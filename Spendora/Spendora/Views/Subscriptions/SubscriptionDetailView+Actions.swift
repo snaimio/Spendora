@@ -54,6 +54,7 @@ extension SubscriptionDetailView {
         isTrial = subscription.isTrial
         usageRating = subscription.usageRating
         paymentMethod = subscription.paymentMethod ?? "Not Set"
+        reminderDaysBefore = subscription.reminderDaysBefore
     }
     
     var ratingDescription: String {  // ratingDescription property
@@ -101,9 +102,11 @@ extension SubscriptionDetailView {
         subscription.isTrial = isTrial
         subscription.usageRating = usageRating
         subscription.paymentMethod = paymentMethod
+        subscription.reminderDaysBefore = reminderDaysBefore
         
         do {
             try modelContext.save()
+            NotificationService.shared.schedule(for: subscription)
             isSaving = false
             generator.impactOccurred()
             isEditing = false

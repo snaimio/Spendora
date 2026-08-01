@@ -79,6 +79,9 @@ final class Subscription {
     /// User-provided reason for cancelling subscription
     var cancellationReason: String?  // cancellationReason property
 
+    /// Customizable notification reminder days before billing date (e.g. 0, 1, 3, 7 days, or -1 for disabled)
+    var reminderDaysBefore: Int = 3  // reminderDaysBefore property
+
     /// Timestamp when record was created in app
     var createdAt: Date = Date()  // createdAt property
 
@@ -105,7 +108,8 @@ final class Subscription {
         currency: String = "USD",
         isCancelled: Bool = false,
         cancellationDate: Date? = nil,
-        cancellationReason: String? = nil
+        cancellationReason: String? = nil,
+        reminderDaysBefore: Int = 3
     ) {
         self.id = id
         self.name = name
@@ -128,6 +132,7 @@ final class Subscription {
         self.isCancelled = isCancelled
         self.cancellationDate = cancellationDate
         self.cancellationReason = cancellationReason
+        self.reminderDaysBefore = reminderDaysBefore
         self.createdAt = Date()
     }
 }

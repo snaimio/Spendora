@@ -90,36 +90,49 @@ class NotificationService: NSObject, UNUserNotificationCenterDelegate {
      2. Executes core computation or state mutation.
      */
     func schedule(for subscription: Subscription) {
+        cancel(for: subscription)
+        
+        guard subscription.reminderDaysBefore != -1 else { return }
         guard subscription.isValid else { return }
 
         let content = UNMutableNotificationContent()
-        content.title = "💳 Upcoming Charge"
+        content.title = "💳 Upcoming Charge Reminder"
 
         let chargeAmount = subscription.isYearly
             ? subscription.cost
             : subscription.monthlyCost
 
+        let currencySymbol = CurrencyManager.shared.currencySymbol(for: subscription.currency)
         let formattedCost = String(format: "%.2f", chargeAmount)
         let billingText = subscription.isYearly ? "yearly" : "monthly"
 
-        content.body =
-            "\(subscription.displayName) will charge $\(formattedCost) in 3 days (\(billingText) billing)"
+        let days = subscription.reminderDaysBefore
+        let timeText: String
+        switch days {
+        case 0:
+            timeText = "today"
+        case 1:
+            timeText = "tomorrow"
+        case 7:
+            timeText = "in 1 week"
+        default:
+            timeText = "in \(days) days"
+        }
 
+        content.body = "\(subscription.displayName) \(billingText) billing charge of \(currencySymbol)\(formattedCost) is due \(timeText)!"
         content.sound = .default
         content.badge = 1
 
         guard let reminderDate = Calendar.current.date(
             byAdding: .day,
-            value: -3,
+            value: -days,
             to: subscription.nextBillingDate
         ) else {
             return
         }
 
-        guard reminderDate > Date() else { return }
-
         let triggerComponents = Calendar.current.dateComponents(
-            [.year, .month, .day],
+            [.year, .month, .day, .hour, .minute],
             from: reminderDate
         )
 
