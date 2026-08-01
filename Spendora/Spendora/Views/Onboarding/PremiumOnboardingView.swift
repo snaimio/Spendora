@@ -42,7 +42,7 @@ struct PremiumOnboardingView: View {
         OnboardingPage(
             icon: "bell.badge.fill",
             title: "Smart Reminders",
-            description: "Get notified 3 days before each billing date. Never miss a charge again.",
+            description: "Get customizable advance alerts before each billing date. Never miss a charge again.",
             color: .categoryProductivity
         ),
         OnboardingPage(

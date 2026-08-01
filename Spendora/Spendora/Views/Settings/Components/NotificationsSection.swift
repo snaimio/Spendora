@@ -39,7 +39,7 @@ struct NotificationsSection: View {
             PremiumSettingsRow(
                 icon: "bell.fill",
                 title: "Enable Reminders",
-                subtitle: "Get notified 3 days before renewal"
+                subtitle: "Receive custom billing renewal alerts"
             ) {
                 Toggle("", isOn: $notificationsEnabled)
                     .toggleStyle(SwitchToggleStyle(tint: .brandPrimary))
