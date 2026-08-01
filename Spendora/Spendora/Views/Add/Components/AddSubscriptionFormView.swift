@@ -33,6 +33,7 @@ struct AddSubscriptionFormView: View {
     @Binding var isYearly: Bool
     @Binding var isOneTime: Bool
     @Binding var linkURL: String
+    @Binding var isUserEditedLink: Bool
     @Binding var nextBillingDate: Date
     @Binding var selectedPaymentMethod: PaymentMethod
     @Binding var reminderDaysBefore: Int
@@ -47,7 +48,7 @@ struct AddSubscriptionFormView: View {
                 icon: "sparkles",
                 title: "Service Name"
             ) {
-                TextField("e.g. Netflix, Spotify", text: $name)
+                TextField("e.g. Netflix, Spotify, GitHub", text: $name)
                     .textInputAutocapitalization(.words)
                     .autocorrectionDisabled()
                     .font(.system(.body, design: .rounded))
@@ -65,18 +66,47 @@ struct AddSubscriptionFormView: View {
             
             PremiumFormField(
                 icon: "link.circle.fill",
-                title: "Website URL (Optional)"
+                title: "Website URL"
             ) {
-                VStack(alignment: .leading, spacing: 2) {
-                    TextField("https://your-service.com/account", text: $linkURL)
-                        .keyboardType(.URL)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled()
-                        .font(.system(.subheadline, design: .rounded))
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack {
+                        TextField("https://your-service.com/account", text: $linkURL)
+                            .keyboardType(.URL)
+                            .textInputAutocapitalization(.never)
+                            .autocorrectionDisabled()
+                            .font(.system(.subheadline, design: .rounded))
+                            .onChange(of: linkURL) { _, newValue in
+                                if !newValue.isEmpty {
+                                    isUserEditedLink = true
+                                }
+                            }
+                        
+                        if !linkURL.isEmpty {
+                            Button {
+                                linkURL = ""
+                                isUserEditedLink = true
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundColor(.secondary)
+                                    .font(.caption)
+                            }
+                        }
+                    }
                     
-                    Text("Auto-detects official page if left blank")
-                        .font(.system(size: 10, design: .rounded))
-                        .foregroundColor(.secondary.opacity(0.8))
+                    if !linkURL.isEmpty && !isUserEditedLink {
+                        HStack(spacing: 3) {
+                            Image(systemName: "sparkles")
+                                .font(.system(size: 9))
+                                .foregroundColor(.brandPrimary)
+                            Text("Auto-generated website portal link")
+                                .font(.system(size: 10, weight: .medium, design: .rounded))
+                                .foregroundColor(.brandPrimary)
+                        }
+                    } else {
+                        Text("Auto-generates official portal link when typing service name")
+                            .font(.system(size: 10, design: .rounded))
+                            .foregroundColor(.secondary.opacity(0.8))
+                    }
                 }
             }
             

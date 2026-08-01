@@ -38,6 +38,7 @@ struct AddSubscriptionView: View {
     @State private var isYearly = false
     @State private var isOneTime = false
     @State private var linkURL = ""
+    @State private var isUserEditedLink = false
     @State private var nextBillingDate = Calendar.current.date(byAdding: .day, value: 30, to: Date()) ?? Date()
     @State private var selectedColorHex = "#6C63FF"
     @State private var notes = ""
@@ -137,10 +138,14 @@ struct AddSubscriptionView: View {
                         isYearly: $isYearly,
                         isOneTime: $isOneTime,
                         linkURL: $linkURL,
+                        isUserEditedLink: $isUserEditedLink,
                         nextBillingDate: $nextBillingDate,
                         selectedPaymentMethod: $selectedPaymentMethod,
                         reminderDaysBefore: $reminderDaysBefore
                     )
+                    .onChange(of: name) { _, newName in
+                        autoGenerateLinkIfNeeded(for: newName)
+                    }
                     
                     AddColorSelectionView(
                         colorOptions: colorOptions,
@@ -190,12 +195,37 @@ struct AddSubscriptionView: View {
         }
     }
     
+    // MARK: - Auto Generate URL Helper
+    private func autoGenerateLinkIfNeeded(for serviceName: String) {
+        guard !isUserEditedLink else { return }
+        let trimmed = serviceName.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmed.isEmpty {
+            linkURL = ""
+        } else if let detectedURL = CancellationService.shared.getDirectCancellationURL(for: trimmed)?.absoluteString {
+            // Only auto fill if it's a direct portal link (not a Google search fallback)
+            if !detectedURL.contains("google.com/search") {
+                linkURL = detectedURL
+            } else {
+                linkURL = ""
+            }
+        } else {
+            linkURL = ""
+        }
+    }
+    
     // MARK: - Preset Helper
     private func applyPreset(_ preset: SubscriptionPreset) {
         name = preset.name
         selectedCategory = preset.category
         selectedColorHex = preset.colorHex
-        linkURL = "" // Keep empty so faded example placeholder is shown
+        isUserEditedLink = false
+        if let presetURL = preset.cancellationUrl {
+            linkURL = presetURL
+        } else if let detectedURL = CancellationService.shared.getDirectCancellationURL(for: preset.name)?.absoluteString, !detectedURL.contains("google.com/search") {
+            linkURL = detectedURL
+        } else {
+            linkURL = ""
+        }
     }
     
     // MARK: - Save Function
