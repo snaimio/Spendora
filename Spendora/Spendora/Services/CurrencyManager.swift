@@ -70,6 +70,10 @@ class CurrencyManager: ObservableObject {
         let formattedAmount = String(format: "%.2f", amount)
         return "\(currentCurrency.symbol)\(formattedAmount)"
     }
+    
+    func currencySymbol(for code: String) -> String {
+        Currency(rawValue: code)?.symbol ?? currentCurrency.symbol
+    }
 
 
     /**
