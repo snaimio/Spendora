@@ -45,30 +45,77 @@ Subscription fatigue is one of the fastest-growing personal financial challenges
 
 ## 📱 App Screenshots & Feature Showcase
 
-### 1. Dashboard & Subscription Management
+### 1. 🚀 Onboarding Experience
+
+| Welcome Slide 1 | Welcome Slide 2 |
+|:---:|:---:|
+| <img src="screenshots/onboarding_1.png" width="360" alt="Onboarding Slide 1" /> | <img src="screenshots/onboarding_2.png" width="360" alt="Onboarding Slide 2" /> |
+| *Track all subscriptions in one central hub* | *Get advance renewal reminders & notifications* |
+
+| Welcome Slide 3 | Welcome Slide 4 |
+|:---:|:---:|
+| <img src="screenshots/onboarding_3.png" width="360" alt="Onboarding Slide 3" /> | <img src="screenshots/onboarding_4.png" width="360" alt="Onboarding Slide 4" /> |
+| *Discover savings with AI-powered insights* | *Visualize spending on an intuitive calendar* |
+
+<br>
+
+### 2. 📊 Dashboard & Subscription Management
 
 | Dashboard & Monthly Metrics | Active Subscriptions List |
 |:---:|:---:|
-| <img src="screenshots/dashboard.png" width="380" alt="Dashboard Screen" /> | <img src="screenshots/subscriptions.png" width="380" alt="Subscriptions List" /> |
-| *Real-time spend metrics & countdown cards* | *Categorized list with SF Symbols & payment options* |
+| <img src="screenshots/dashboard.png" width="360" alt="Dashboard Screen" /> | <img src="screenshots/subscriptions.png" width="360" alt="Subscriptions List" /> |
+| *Real-time spend metrics & countdown cards* | *Categorized list with SF Symbols & sorting options* |
+
+| Service Detail View | Subscription Editor |
+|:---:|:---:|
+| <img src="screenshots/service_details.png" width="360" alt="Service Details" /> | <img src="screenshots/edit_subscriptions.png" width="360" alt="Edit Subscriptions" /> |
+| *One-tap cancellation & provider web link* | *Customize cost, cycle, category & color accent* |
 
 <br>
 
-### 2. Fast Add & Swift Charts Analytics
+### 3. ➕ Smart Add & Renewal Calendar
 
-| Smart Add & Presets Catalog | Analytics & PDF Export |
+| Fast Preset Creator | Interactive Renewal Calendar |
 |:---:|:---:|
-| <img src="screenshots/add_subscription.png" width="380" alt="Add Subscription" /> | <img src="screenshots/reports.png" width="380" alt="Reports & Analytics" /> |
-| *One-tap creation with popular service presets* | *Interactive Swift Charts graphs & PDF generator* |
+| <img src="screenshots/add_subscription.png" width="360" alt="Add Subscription" /> | <img src="screenshots/calendar.png" width="360" alt="Renewal Calendar" /> |
+| *Pre-populated catalog for 20+ top services* | *Visual monthly calendar marking charge dates* |
 
 <br>
 
-### 3. Settings & Home Screen Widgets
+### 4. 📈 Swift Charts Analytics & Reports
 
-| Preferences & Cloud Sync | iOS 17 Home Screen Widget |
+| Yearly Overview & Trends | Monthly Spend Breakdown |
 |:---:|:---:|
-| <img src="screenshots/settings.png" width="380" alt="Settings & Cloud Sync" /> | <img src="screenshots/widget.png" width="380" alt="iOS 17 Home Screen Widget" /> |
-| *Multi-currency engine & JSON backup options* | *WidgetKit Small & Medium live desktop widgets* |
+| <img src="screenshots/reports.png" width="360" alt="Reports Screen" /> | <img src="screenshots/spending_breakdown_1.png" width="360" alt="Spending Breakdown" /> |
+| *Interactive Swift Charts graphs & PDF generator* | *Category percentage breakdown & velocity metrics* |
+
+<br>
+
+### 5. 🤖 AI Insights, Savings Score & Gamified Challenges
+
+| AI Financial Insights | Savings Score |
+|:---:|:---:|
+| <img src="screenshots/ai_insights_1.png" width="360" alt="AI Insights" /> | <img src="screenshots/savings_score.png" width="360" alt="Savings Score" /> |
+| *Rule-based engine detecting unused & high-cost subs* | *Gamified financial health score card* |
+
+| Financial Challenges | User Profile & Security |
+|:---:|:---:|
+| <img src="screenshots/challenges.png" width="360" alt="Challenges" /> | <img src="screenshots/profile.png" width="360" alt="Profile Screen" /> |
+| *Gamified savings goals & achievement badges* | *Local user identity & Face ID security options* |
+
+<br>
+
+### 6. ⚙️ Customization, Dark Mode & iOS 17 Widgets
+
+| Multi-Currency Engine | Dark Mode Theme |
+|:---:|:---:|
+| <img src="screenshots/currency_selection.png" width="360" alt="Currency Selection" /> | <img src="screenshots/dark_mode.png" width="360" alt="Dark Mode" /> |
+| *Instant conversion across 10+ global currencies* | *Sleek dark theme UI optimized for OLED screens* |
+
+| Preferences & Backup | iOS 17 Home Screen Widget |
+|:---:|:---:|
+| <img src="screenshots/settings.png" width="360" alt="Settings Screen" /> | <img src="screenshots/widget.png" width="360" alt="iOS 17 Widget" /> |
+| *JSON backup/restore & CSV data exporter* | *WidgetKit Small & Medium live desktop widgets* |
 
 ---
 
@@ -224,12 +271,23 @@ Spendora/
 │   └── avatar_presenter.png                  # AI Presenter avatar image (Sheikh Naim)
 │
 ├── screenshots/                              # Live iOS Screen Previews
-│   ├── dashboard.png
-│   ├── subscriptions.png
-│   ├── reports.png
-│   ├── add_subscription.png
-│   ├── settings.png
-│   └── widget.png
+│   ├── onboarding_1.png ... onboarding_4.png # 4-slide onboarding walkthrough
+│   ├── dashboard.png                         # Core dashboard overview
+│   ├── subscriptions.png                     # Subscriptions list & sorting
+│   ├── service_details.png                   # Provider details & 1-tap cancellation
+│   ├── edit_subscriptions.png                # Subscription editor
+│   ├── add_subscription.png                  # Fast preset creator
+│   ├── calendar.png                          # Interactive renewal calendar
+│   ├── reports.png                           # Swift Charts analytics & PDF export
+│   ├── spending_breakdown_1.png              # Category spend velocity metrics
+│   ├── ai_insights_1.png                     # Rule-based AI financial insights
+│   ├── savings_score.png                     # Financial health score card
+│   ├── challenges.png                        # Gamified savings achievements
+│   ├── profile.png                           # User identity & security options
+│   ├── currency_selection.png                # Multi-currency engine selector
+│   ├── dark_mode.png                         # OLED Dark theme preview
+│   ├── settings.png                          # Backup & CSV exporter settings
+│   └── widget.png                            # iOS 17 WidgetKit desktop widgets
 │
 ├── Spendora/
 │   ├── App/
@@ -400,6 +458,36 @@ Contributions are welcome! Please follow these guidelines:
 | **App Screenshots** | 📱 Complete | Live screenshots embedded in `screenshots/`. |
 | **Demo Video (2:30)** | 🎬 Complete | Full 2:30 HD Video [`demo/Spendora_Demo.mp4`](demo/Spendora_Demo.mp4). |
 | **Video Thumbnail** | 🖼️ Complete | High-res cover image [`demo/thumbnail.png`](demo/thumbnail.png). |
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+| Requirement | Minimum Version |
+|---|---|
+| **Xcode** | 15.0+ (Xcode 16 recommended) |
+| **iOS Target** | iOS 17.0 or later |
+| **Swift Compiler** | Swift 5.9+ / Swift 6 |
+
+### Build Instructions
+
+1. **Clone Repository**:
+   ```bash
+   git clone https://github.com/snaimio/Spendora.git
+   cd Spendora
+   ```
+
+2. **Open in Xcode**:
+   ```bash
+   open Spendora/Spendora.xcodeproj
+   ```
+
+3. **Compile & Run**:
+   - Select `Spendora` target.
+   - Choose an iOS 17+ Simulator or connected iPhone device.
+   - Press **`Cmd + R`** to build and launch.
 
 ---
 
