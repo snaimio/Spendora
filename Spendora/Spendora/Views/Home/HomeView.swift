@@ -95,30 +95,27 @@ struct HomeView: View {
                                     .transition(.move(edge: .top).combined(with: .opacity))
                             }
                             
-                            // Stats Grid
-                            HStack(spacing: 12) {
-                                StatCardView(
-                                    icon: "calendar",
-                                    title: "Yearly",
-                                    value: CurrencyManager.shared.format(totalYearly),
-                                    colors: [Color(hex: "#FF6B6B"), Color(hex: "#FFE66D")]
-                                )
-                                
-                                StatCardView(
-                                    icon: "chart.bar.fill",
-                                    title: "Average",
-                                    value: CurrencyManager.shared.format(subscriptionCount > 0 ? totalMonthly / Double(subscriptionCount) : 0),
-                                    colors: [Color(hex: "#4ECDC4"), Color(hex: "#45B7D1")]
-                                )
+                            // Search Bar & Filters
+                            VStack(spacing: 10) {
+                                SearchBarView(searchText: $searchText)
+                                SortChipsView(sortOption: $sortOption)
                             }
+                            .padding(.vertical, 4)
                             
-                            // Search Bar
-                            SearchBarView(searchText: $searchText)
+                            // Subscriptions List Header
+                            HStack {
+                                Text("Subscriptions")
+                                    .font(.system(.headline, design: .rounded))
+                                    .foregroundColor(.textPrimary)
+                                Spacer()
+                                Text("\(filteredSubscriptions.count) Total")
+                                    .font(.system(.caption, design: .rounded))
+                                    .foregroundColor(.textSecondary)
+                            }
+                            .padding(.horizontal, 4)
+                            .padding(.top, 4)
                             
-                            // Sort Options
-                            SortChipsView(sortOption: $sortOption)
-                            
-                            // Subscriptions List
+                            // Subscriptions Cards List
                             VStack(spacing: 12) {
                                 ForEach(filteredSubscriptions) { subscription in
                                     SubscriptionCardView(subscription: subscription)
@@ -133,11 +130,12 @@ struct HomeView: View {
                         }
                     }
                     .padding(.horizontal, 16)
-                    .padding(.bottom, 20)
+                    .padding(.bottom, 24)
                 }
                 .id(refreshID)
                 .onAppear {
                     updateWidgetData()
+                    NotificationCenterService.shared.syncWithSystemNotifications()
                     withAnimation(.easeOut(duration: 0.6)) {
                         animateHeader = true
                     }

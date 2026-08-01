@@ -25,6 +25,22 @@ class NotificationCenterService: ObservableObject {
     
     private init() {
         loadNotifications()
+        syncWithSystemNotifications()
+    }
+    
+    func syncWithSystemNotifications() {
+        UNUserNotificationCenter.current().getDeliveredNotifications { delivered in
+            DispatchQueue.main.async {
+                for item in delivered {
+                    let title = item.request.content.title
+                    let body = item.request.content.body
+                    let id = item.request.identifier
+                    if !self.notifications.contains(where: { $0.subscriptionId == id }) {
+                        self.addNotification(title: title, body: body, subscriptionId: id)
+                    }
+                }
+            }
+        }
     }
     
     private func loadNotifications() {
