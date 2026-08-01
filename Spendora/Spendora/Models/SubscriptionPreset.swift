@@ -35,11 +35,28 @@ struct SubscriptionPreset: Identifiable {
     // MARK: - Properties
 
     let id = UUID()
-    let name: String  // name property
-    let icon: String  // icon property
-    let color: Color  // color property
-    let category: String  // category property
-    let cancellationUrl: String?  // cancellationUrl property
+    let name: String
+    let icon: String
+    let color: Color
+    let category: String
+    let cancellationUrl: String?
+    let colorHex: String
+
+    init(
+        name: String,
+        icon: String,
+        color: Color,
+        category: String,
+        cancellationUrl: String? = nil,
+        colorHex: String = "#6C63FF"
+    ) {
+        self.name = name
+        self.icon = icon
+        self.color = color
+        self.category = category
+        self.cancellationUrl = cancellationUrl
+        self.colorHex = colorHex
+    }
 
     var systemIcon: String {  // systemIcon property
         switch icon {
