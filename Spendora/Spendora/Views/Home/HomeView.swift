@@ -84,8 +84,11 @@ struct HomeView: View {
                         .offset(y: animateHeader ? 0 : 12)
                         
                         if !subscriptions.isEmpty {
-                            // Single Integrated Search & Sort Filter Bar
-                            SearchBarView(searchText: $searchText, sortOption: $sortOption)
+                            // Search Bar & Sort Chips
+                            VStack(spacing: 12) {
+                                SearchBarView(searchText: $searchText)
+                                SortChipsView(sortOption: $sortOption)
+                            }
                             
                             // Subscriptions List Header
                             HStack {
@@ -128,38 +131,25 @@ struct HomeView: View {
                     }
                 }
             }
+            .navigationTitle("Dashboard")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    HStack(spacing: 10) {
-                        Button {
-                            generator.impactOccurred()
-                            showingNotificationCenter = true
-                        } label: {
-                            ZStack(alignment: .topTrailing) {
-                                Image(systemName: "bell.fill")
-                                    .font(.system(size: 18))
-                                    .foregroundColor(.brandPrimary)
-                                
-                                if notificationCenterService.unreadCount > 0 {
-                                    Circle()
-                                        .fill(Color.red)
-                                        .frame(width: 8, height: 8)
-                                        .offset(x: 2, y: -2)
-                                }
-                            }
-                        }
-                        
-                        HStack(spacing: 6) {
-                            Image("AppLogo")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 24, height: 24)
-                                .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+                    Button {
+                        generator.impactOccurred()
+                        showingNotificationCenter = true
+                    } label: {
+                        ZStack(alignment: .topTrailing) {
+                            Image(systemName: "bell.fill")
+                                .font(.system(size: 18))
+                                .foregroundColor(.brandPrimary)
                             
-                            Text("Spendora")
-                                .font(.system(size: 18, weight: .bold, design: .rounded))
-                                .foregroundColor(.textPrimary)
+                            if notificationCenterService.unreadCount > 0 {
+                                Circle()
+                                    .fill(Color.red)
+                                    .frame(width: 8, height: 8)
+                                    .offset(x: 2, y: -2)
+                            }
                         }
                     }
                 }
