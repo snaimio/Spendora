@@ -27,7 +27,7 @@ Subscription fatigue is one of the fastest-growing personal financial challenges
 ## 🎥 Capstone Demo Video Showcase
 
 <p align="center">
-  <img src="demo/thumbnail.png" width="100%" alt="Spendora Capstone Demo Thumbnail" />
+  <img src="demo/thumbnail.png" width="90%" alt="Spendora Capstone Demo Thumbnail" />
 </p>
 
 <p align="center">
@@ -43,19 +43,32 @@ Subscription fatigue is one of the fastest-growing personal financial challenges
 
 ---
 
-## 📱 App Screenshots
+## 📱 App Screenshots & Feature Showcase
 
-<p align="center">
-  <img src="screenshots/dashboard.png" width="30%" alt="Dashboard Screen" />
-  <img src="screenshots/subscriptions.png" width="30%" alt="Subscriptions List" />
-  <img src="screenshots/reports.png" width="30%" alt="Reports & Analytics" />
-</p>
+### 1. Dashboard & Subscription Management
 
-<p align="center">
-  <img src="screenshots/add_subscription.png" width="30%" alt="Add Subscription" />
-  <img src="screenshots/settings.png" width="30%" alt="Settings & Cloud Sync" />
-  <img src="screenshots/widget.png" width="30%" alt="iOS 17 Home Screen Widget" />
-</p>
+| Dashboard & Monthly Metrics | Active Subscriptions List |
+|:---:|:---:|
+| <img src="screenshots/dashboard.png" width="380" alt="Dashboard Screen" /> | <img src="screenshots/subscriptions.png" width="380" alt="Subscriptions List" /> |
+| *Real-time spend metrics & countdown cards* | *Categorized list with SF Symbols & payment options* |
+
+<br>
+
+### 2. Fast Add & Swift Charts Analytics
+
+| Smart Add & Presets Catalog | Analytics & PDF Export |
+|:---:|:---:|
+| <img src="screenshots/add_subscription.png" width="380" alt="Add Subscription" /> | <img src="screenshots/reports.png" width="380" alt="Reports & Analytics" /> |
+| *One-tap creation with popular service presets* | *Interactive Swift Charts graphs & PDF generator* |
+
+<br>
+
+### 3. Settings & Home Screen Widgets
+
+| Preferences & Cloud Sync | iOS 17 Home Screen Widget |
+|:---:|:---:|
+| <img src="screenshots/settings.png" width="380" alt="Settings & Cloud Sync" /> | <img src="screenshots/widget.png" width="380" alt="iOS 17 Home Screen Widget" /> |
+| *Multi-currency engine & JSON backup options* | *WidgetKit Small & Medium live desktop widgets* |
 
 ---
 
