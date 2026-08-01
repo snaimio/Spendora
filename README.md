@@ -24,21 +24,22 @@ Subscription fatigue is one of the fastest-growing personal financial challenges
 
 ---
 
-## 🎥 Demo Video Showcase
+## 🎥 Capstone Demo Video Showcase
 
 <p align="center">
-  <img src="screenshots/demo_preview.gif" width="100%" alt="Spendora Live Demo Preview" />
+  <img src="demo/thumbnail.png" width="100%" alt="Spendora Capstone Demo Thumbnail" />
 </p>
 
 <p align="center">
-  <a href="screenshots/demo_video.mp4">
-    <img src="https://img.shields.io/badge/Download-Full%201080p%20HD%20Video-007AFF?style=for-the-badge&logo=apple&logoColor=white" alt="Download Video" />
+  <a href="demo/Spendora_Demo.mp4">
+    <img src="https://img.shields.io/badge/Download-Full%202%3A30%20Capstone%20Demo%20Video-007AFF?style=for-the-badge&logo=apple&logoColor=white" alt="Download Capstone Demo Video" />
   </a>
 </p>
 
-> 🎬 **Animated Preview & Voiceover Presentation**: The preview above demonstrates key features including real-time spend metrics, search & filter, preset catalogs, Swift Charts analytics, and iOS 17 home screen widgets.
+> 🎬 **2:30 Capstone Presentation Video**: Features smart-dressed AI presenter **Sheikh Naim (@naimbgd)** providing a 2-minute 30-second walkthrough covering Onboarding, Dashboard, Add Subscription, Managing & Cancelling Subscriptions, Swift Charts Analytics, Settings Export, and iOS 17 Home Screen Widgets.
 > 
-> 🔊 Download the full 1080p narrated MP4 presentation with spoken voiceover [`screenshots/demo_video.mp4`](screenshots/demo_video.mp4).
+> 📁 **Video Location**: [`demo/Spendora_Demo.mp4`](demo/Spendora_Demo.mp4)  
+> 🖼️ **Thumbnail Location**: [`demo/thumbnail.png`](demo/thumbnail.png)
 
 ---
 
@@ -204,6 +205,19 @@ struct SubscriptionPreset: Identifiable {
 
 ```
 Spendora/
+├── demo/                                     # Capstone Presentation Video & Assets
+│   ├── Spendora_Demo.mp4                     # Full 2:30 1080p HD Video (Sheikh Naim Presenter)
+│   ├── thumbnail.png                         # High-res video presentation cover thumbnail
+│   └── avatar_presenter.png                  # AI Presenter avatar image (Sheikh Naim)
+│
+├── screenshots/                              # Live iOS Screen Previews
+│   ├── dashboard.png
+│   ├── subscriptions.png
+│   ├── reports.png
+│   ├── add_subscription.png
+│   ├── settings.png
+│   └── widget.png
+│
 ├── Spendora/
 │   ├── App/
 │   │   └── SpendoraApp.swift                 # App entry point initializing SwiftData ModelContainer
@@ -337,8 +351,8 @@ Spendora/
 - [x] iOS 17 SwiftData persistence & WidgetKit sync
 - [x] Multi-currency conversion engine
 - [x] Native PDF report & CSV export builder
-- [x] Animated GIF Demo Showcase (`screenshots/demo_preview.gif`)
-- [x] Full 1080p HD Video File (`screenshots/demo_video.mp4`)
+- [x] Full 2:30 Capstone Presentation Video (`demo/Spendora_Demo.mp4`)
+- [x] Presenter Cover Thumbnail (`demo/thumbnail.png`)
 - [ ] iCloud Keychain encrypted backup sync
 - [ ] VisionOS / iPadOS optimized layout extensions
 - [ ] Siri Shortcuts integration (`"Hey Siri, what subscriptions are due this week?"`)
@@ -371,8 +385,8 @@ Contributions are welcome! Please follow these guidelines:
 | **App Source Code** | ✅ Complete | 100% native Swift & SwiftUI project targeting iOS 17+. |
 | **Documentation & Comments** | ✅ Complete | Full Xcode docstring coverage (`///`, `/** */`, `// MARK:`). |
 | **App Screenshots** | 📱 Complete | Live screenshots embedded in `screenshots/`. |
-| **Inline Demo GIF** | 🎬 Complete | Lightweight animated GIF [`screenshots/demo_preview.gif`](screenshots/demo_preview.gif). |
-| **Demo Video** | 🔊 Complete | 1080p HD Narrated Video File [`screenshots/demo_video.mp4`](screenshots/demo_video.mp4). |
+| **Demo Video (2:30)** | 🎬 Complete | Full 2:30 HD Video [`demo/Spendora_Demo.mp4`](demo/Spendora_Demo.mp4). |
+| **Video Thumbnail** | 🖼️ Complete | High-res cover image [`demo/thumbnail.png`](demo/thumbnail.png). |
 
 ---
 
@@ -408,7 +422,7 @@ Contributions are welcome! Please follow these guidelines:
 
 ## 👨‍💻 Author
 
-**Sheikh Naim**  
+**Sheikh Naim (@naimbgd)**  
 Mobile Application Development Capstone 2026
 
 ---
