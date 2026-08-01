@@ -79,7 +79,7 @@ struct ShareableReportCard: View {
                     icon: "number.circle.fill",
                     title: "Active Subscriptions",
                     value: "\(subscriptionCount)",
-                    color: Color(hex: "#FFE66D")
+                    color: Color(hex: "#38BDF8")
                 )
                 
                 if topCategory != "None" {
