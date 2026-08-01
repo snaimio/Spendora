@@ -195,11 +195,7 @@ struct AddSubscriptionView: View {
         name = preset.name
         selectedCategory = preset.category
         selectedColorHex = preset.colorHex
-        if let presetURL = preset.cancellationUrl {
-            linkURL = presetURL
-        } else if let detectedURL = CancellationService.shared.getDirectCancellationURL(for: preset.name)?.absoluteString {
-            linkURL = detectedURL
-        }
+        linkURL = "" // Keep empty so faded example placeholder is shown
     }
     
     // MARK: - Save Function
