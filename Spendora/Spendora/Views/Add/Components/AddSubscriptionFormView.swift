@@ -67,7 +67,7 @@ struct AddSubscriptionFormView: View {
                 icon: "link.circle.fill",
                 title: "Manage / Website URL"
             ) {
-                TextField("https://netflix.com/account", text: $linkURL)
+                TextField("e.g. https://github.com/settings/billing", text: $linkURL)
                     .keyboardType(.URL)
                     .textInputAutocapitalization(.never)
                     .autocorrectionDisabled()

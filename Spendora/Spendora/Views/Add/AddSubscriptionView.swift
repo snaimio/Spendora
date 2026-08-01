@@ -195,6 +195,11 @@ struct AddSubscriptionView: View {
         name = preset.name
         selectedCategory = preset.category
         selectedColorHex = preset.colorHex
+        if let presetURL = preset.cancellationUrl {
+            linkURL = presetURL
+        } else if let detectedURL = CancellationService.shared.getDirectCancellationURL(for: preset.name)?.absoluteString {
+            linkURL = detectedURL
+        }
     }
     
     // MARK: - Save Function
@@ -213,7 +218,12 @@ struct AddSubscriptionView: View {
         
         isSaving = true
         let trimmedNotes = notes.trimmingCharacters(in: .whitespacesAndNewlines)
-        let trimmedLink = linkURL.trimmingCharacters(in: .whitespacesAndNewlines)
+        var trimmedLink = linkURL.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        // If user left link blank, auto-resolve direct management link for known services (e.g. GitHub, ChatGPT, Netflix)
+        if trimmedLink.isEmpty, let resolvedURL = CancellationService.shared.getDirectCancellationURL(for: name.trimmingCharacters(in: .whitespacesAndNewlines))?.absoluteString {
+            trimmedLink = resolvedURL
+        }
         
         let newSubscription = Subscription(
             name: name.trimmingCharacters(in: .whitespacesAndNewlines),
