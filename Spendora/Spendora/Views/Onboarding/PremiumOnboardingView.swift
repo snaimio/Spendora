@@ -30,6 +30,7 @@ struct PremiumOnboardingView: View {
     @Binding var hasCompletedOnboarding: Bool
     @State private var currentPage = 0
     @State private var showButtons = false
+    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.dismiss) private var dismiss
     
     private let pages: [OnboardingPage] = [
@@ -65,17 +66,30 @@ struct PremiumOnboardingView: View {
     /// Main SwiftUI layout body property.
     var body: some View {
         ZStack {
-            // Premium Gradient Background
-            LinearGradient(
-                colors: [
-                    Color(hex: "#EEF2FF"),
-                    Color(hex: "#F5F3FF"),
-                    Color(hex: "#FEF3C7")
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
+            // Adaptive Dark & Light Mode Background Gradient
+            if colorScheme == .dark {
+                LinearGradient(
+                    colors: [
+                        Color(hex: "#0F172A"),
+                        Color(hex: "#1E1B4B"),
+                        Color(hex: "#0F172A")
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
+            } else {
+                LinearGradient(
+                    colors: [
+                        Color(hex: "#EEF2FF"),
+                        Color(hex: "#F5F3FF"),
+                        Color(hex: "#FEF3C7")
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
+            }
             
             VStack {
                 // Skip Button

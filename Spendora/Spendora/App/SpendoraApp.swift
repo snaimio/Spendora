@@ -39,21 +39,25 @@ struct SpendoraApp: App {
 
     // Persistent flag checking if the user completed initial onboarding
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+    @AppStorage("isDarkMode") private var isDarkMode = false
     
     var body: some Scene {  // body property
         WindowGroup {
             // Show onboarding on first launch; otherwise load the main tab bar UI
-            if !hasCompletedOnboarding {
-                PremiumOnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
-            } else {
-                MainTabView()
-                    .modelContainer(for: Subscription.self) // Attaches local SwiftData SQLite database
-                    .onAppear {
-                        // Request notification permissions for upcoming bill alerts
-                        NotificationService.shared.requestPermission()
-                        sendWidgetData()
-                    }
+            Group {
+                if !hasCompletedOnboarding {
+                    PremiumOnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
+                } else {
+                    MainTabView()
+                        .modelContainer(for: Subscription.self) // Attaches local SwiftData SQLite database
+                        .onAppear {
+                            // Request notification permissions for upcoming bill alerts
+                            NotificationService.shared.requestPermission()
+                            sendWidgetData()
+                        }
+                }
             }
+            .preferredColorScheme(isDarkMode ? .dark : nil)
         }
     }
     

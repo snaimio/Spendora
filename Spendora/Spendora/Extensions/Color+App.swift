@@ -56,12 +56,36 @@ extension Color {
         endPoint: .bottomTrailing
     )
     
-    // MARK: - UI Colors (Light & Airy)
-    static let appBackground = Color(hex: "#FFF8F0")     // Warm White
-    static let cardBackground = Color.white
-    static let textPrimary = Color(hex: "#2D3436")       // Dark Gray
-    static let textSecondary = Color(hex: "#636E72")     // Medium Gray
-    static let textTertiary = Color(hex: "#B2BEC3")      // Light Gray
+    // MARK: - UI Colors (Adaptive Light & Dark Mode)
+    static let appBackground = Color(UIColor { traitCollection in
+        traitCollection.userInterfaceStyle == .dark
+            ? UIColor(red: 0.08, green: 0.09, blue: 0.11, alpha: 1.0)
+            : UIColor(red: 0.99, green: 0.97, blue: 0.94, alpha: 1.0)
+    })
+    
+    static let cardBackground = Color(UIColor { traitCollection in
+        traitCollection.userInterfaceStyle == .dark
+            ? UIColor(red: 0.14, green: 0.15, blue: 0.18, alpha: 1.0)
+            : UIColor.white
+    })
+    
+    static let textPrimary = Color(UIColor { traitCollection in
+        traitCollection.userInterfaceStyle == .dark
+            ? UIColor.white
+            : UIColor(red: 0.17, green: 0.20, blue: 0.21, alpha: 1.0)
+    })
+    
+    static let textSecondary = Color(UIColor { traitCollection in
+        traitCollection.userInterfaceStyle == .dark
+            ? UIColor(red: 0.70, green: 0.73, blue: 0.76, alpha: 1.0)
+            : UIColor(red: 0.39, green: 0.43, blue: 0.45, alpha: 1.0)
+    })
+    
+    static let textTertiary = Color(UIColor { traitCollection in
+        traitCollection.userInterfaceStyle == .dark
+            ? UIColor(red: 0.45, green: 0.48, blue: 0.52, alpha: 1.0)
+            : UIColor(red: 0.70, green: 0.74, blue: 0.76, alpha: 1.0)
+    })
     
     // MARK: - Category Colors (Vibrant & Fun)
     static let categoryEntertainment = Color(hex: "#FF6B6B")   // Coral
