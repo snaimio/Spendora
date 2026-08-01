@@ -110,6 +110,7 @@ struct SearchBarView: View {
     // MARK: - Properties
 
     @Binding var searchText: String
+    @Binding var sortOption: SortOption
     
 
     // MARK: - Body
@@ -135,6 +136,24 @@ struct SearchBarView: View {
                         .font(.subheadline)
                 }
             }
+            
+            Divider()
+                .frame(height: 16)
+            
+            Menu {
+                Picker("Sort By", selection: $sortOption) {
+                    ForEach(SortOption.allCases, id: \.self) { option in
+                        Label(option.rawValue, systemImage: sortIcon(for: option))
+                            .tag(option)
+                    }
+                }
+            } label: {
+                HStack(spacing: 4) {
+                    Image(systemName: "line.3.horizontal.decrease.circle.fill")
+                        .font(.title3)
+                        .foregroundColor(.brandPrimary)
+                }
+            }
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 12)
@@ -143,6 +162,15 @@ struct SearchBarView: View {
                 .fill(Color.cardBackground)
                 .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 3)
         )
+    }
+    
+    private func sortIcon(for option: SortOption) -> String {
+        switch option {
+        case .alphabetical: return "textformat"
+        case .costDescending: return "arrow.down.circle"
+        case .costAscending: return "arrow.up.circle"
+        case .nextBilling: return "calendar"
+        }
     }
 }
 

@@ -71,36 +71,21 @@ struct HomeView: View {
                     .ignoresSafeArea()
                 
                 ScrollView {
-                    VStack(spacing: 16) {
-                        // Brand Header & Profile Avatar Bar
-                        DashboardBrandHeaderView {
-                            generator.impactOccurred()
-                            showingProfileSheet = true
-                        }
-                        .opacity(animateHeader ? 1 : 0)
-                        
-                        // Hero Spending Summary Card
+                    VStack(spacing: 20) {
+                        // Single Integrated Hero Summary Card (Monthly Spend, Stats & Next Charge)
                         HeroCardView(
                             totalMonthly: totalMonthly,
                             totalYearly: totalYearly,
                             count: filteredSubscriptions.count,
-                            subscriptionCount: subscriptionCount
+                            subscriptionCount: subscriptionCount,
+                            nextSubscription: nextSubscription
                         )
                         .opacity(animateHeader ? 1 : 0)
-                        .offset(y: animateHeader ? 0 : 15)
+                        .offset(y: animateHeader ? 0 : 12)
                         
                         if !subscriptions.isEmpty {
-                            if let next = nextSubscription {
-                                NextChargeCardView(subscription: next)
-                                    .transition(.move(edge: .top).combined(with: .opacity))
-                            }
-                            
-                            // Search Bar & Filters
-                            VStack(spacing: 10) {
-                                SearchBarView(searchText: $searchText)
-                                SortChipsView(sortOption: $sortOption)
-                            }
-                            .padding(.vertical, 4)
+                            // Single Integrated Search & Sort Filter Bar
+                            SearchBarView(searchText: $searchText, sortOption: $sortOption)
                             
                             // Subscriptions List Header
                             HStack {
@@ -108,8 +93,9 @@ struct HomeView: View {
                                     .font(.system(.headline, design: .rounded))
                                     .foregroundColor(.textPrimary)
                                 Spacer()
-                                Text("\(filteredSubscriptions.count) Total")
+                                Text("\(filteredSubscriptions.count) Active")
                                     .font(.system(.caption, design: .rounded))
+                                    .fontWeight(.medium)
                                     .foregroundColor(.textSecondary)
                             }
                             .padding(.horizontal, 4)
@@ -130,6 +116,7 @@ struct HomeView: View {
                         }
                     }
                     .padding(.horizontal, 16)
+                    .padding(.top, 12)
                     .padding(.bottom, 24)
                 }
                 .id(refreshID)
@@ -141,69 +128,107 @@ struct HomeView: View {
                     }
                 }
             }
-            .navigationTitle("Dashboard")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        generator.impactOccurred()
-                        showingNotificationCenter = true
-                    } label: {
-                        ZStack(alignment: .topTrailing) {
-                            Image(systemName: "bell.fill")
-                                .font(.title3)
-                                .foregroundColor(.brandPrimary)
-                            
-                            if notificationCenterService.unreadCount > 0 {
-                                Circle()
-                                    .fill(Color.red)
-                                    .frame(width: 9, height: 9)
-                                    .offset(x: 2, y: -2)
+                    HStack(spacing: 10) {
+                        Button {
+                            generator.impactOccurred()
+                            showingNotificationCenter = true
+                        } label: {
+                            ZStack(alignment: .topTrailing) {
+                                Image(systemName: "bell.fill")
+                                    .font(.system(size: 18))
+                                    .foregroundColor(.brandPrimary)
+                                
+                                if notificationCenterService.unreadCount > 0 {
+                                    Circle()
+                                        .fill(Color.red)
+                                        .frame(width: 8, height: 8)
+                                        .offset(x: 2, y: -2)
+                                }
                             }
                         }
+                        
+                        HStack(spacing: 6) {
+                            Image("AppLogo")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 24, height: 24)
+                                .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+                            
+                            Text("Spendora")
+                                .font(.system(size: 18, weight: .bold, design: .rounded))
+                                .foregroundColor(.textPrimary)
+                        }
                     }
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        generator.impactOccurred()
-                        showingAddSheet = true
-                    } label: {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.title2)
-                            .foregroundColor(.brandPrimary)
-                    }
-                }
-                
-                ToolbarItem(placement: .topBarTrailing) {
-                    Menu {
+                    HStack(spacing: 12) {
                         Button {
-                            showingYearlyReport = true
+                            generator.impactOccurred()
+                            showingAddSheet = true
                         } label: {
-                            Label("Yearly Report", systemImage: "calendar")
+                            Image(systemName: "plus.circle.fill")
+                                .font(.title3)
+                                .foregroundColor(.brandPrimary)
                         }
                         
-                        Button {
-                            showingChallenges = true
+                        Menu {
+                            Button {
+                                showingYearlyReport = true
+                            } label: {
+                                Label("Yearly Report", systemImage: "calendar")
+                            }
+                            
+                            Button {
+                                showingChallenges = true
+                            } label: {
+                                Label("Challenges", systemImage: "trophy")
+                            }
+                            
+                            Button {
+                                showingSavingsScore = true
+                            } label: {
+                                Label("Savings Score", systemImage: "star.circle.fill")
+                            }
+                            
+                            Button {
+                                showingAIInsights = true
+                            } label: {
+                                Label("AI Insights", systemImage: "brain.head.profile")
+                            }
                         } label: {
-                            Label("Challenges", systemImage: "trophy")
+                            Image(systemName: "ellipsis.circle")
+                                .font(.title3)
+                                .foregroundColor(.brandSecondary)
                         }
                         
+                        // Profile Avatar Button
                         Button {
-                            showingSavingsScore = true
+                            generator.impactOccurred()
+                            showingProfileSheet = true
                         } label: {
-                            Label("Savings Score", systemImage: "star.circle.fill")
+                            ZStack {
+                                Circle()
+                                    .fill(
+                                        LinearGradient(
+                                            colors: [
+                                                Color(hex: profileManager.profile.avatarColorHex),
+                                                Color(hex: profileManager.profile.avatarColorHex).opacity(0.7)
+                                            ],
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        )
+                                    )
+                                    .frame(width: 30, height: 30)
+                                
+                                Text(profileManager.profile.initials)
+                                    .font(.system(size: 11, weight: .bold, design: .rounded))
+                                    .foregroundColor(.white)
+                            }
                         }
-                        
-                        Button {
-                            showingAIInsights = true
-                        } label: {
-                            Label("AI Insights", systemImage: "brain.head.profile")
-                        }
-                    } label: {
-                        Image(systemName: "ellipsis.circle.fill")
-                            .font(.title2)
-                            .foregroundColor(.brandSecondary)
                     }
                 }
             }

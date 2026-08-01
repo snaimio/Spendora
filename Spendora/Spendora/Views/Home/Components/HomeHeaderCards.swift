@@ -37,6 +37,7 @@ struct HeroCardView: View {
     let totalYearly: Double  // totalYearly property
     let count: Int  // count property
     let subscriptionCount: Int  // subscriptionCount property
+    var nextSubscription: Subscription? = nil
     
 
     // MARK: - Body
@@ -102,7 +103,37 @@ struct HeroCardView: View {
                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .trailing)
             }
             .padding(.horizontal, 20)
-            .padding(.bottom, 12)
+            .padding(.bottom, nextSubscription != nil ? 4 : 12)
+            
+            if let next = nextSubscription {
+                Divider()
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 8)
+                
+                HStack(spacing: 6) {
+                    Image(systemName: "bell.badge.fill")
+                        .font(.caption2)
+                        .foregroundColor(.brandPrimary)
+                    
+                    Text("Next Charge:")
+                        .font(.system(.caption2, design: .rounded))
+                        .foregroundColor(.textSecondary)
+                    
+                    Text(next.displayName)
+                        .font(.system(.caption, design: .rounded))
+                        .fontWeight(.semibold)
+                        .foregroundColor(.textPrimary)
+                    
+                    Spacer()
+                    
+                    Text("\(next.formattedCost) • \(next.formattedNextBillingDate)")
+                        .font(.system(.caption2, design: .rounded))
+                        .fontWeight(.medium)
+                        .foregroundColor(.brandPrimary)
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 12)
+            }
         }
         .background(Color.cardBackground)
         .cornerRadius(20)
