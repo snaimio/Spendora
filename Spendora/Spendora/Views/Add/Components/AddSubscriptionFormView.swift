@@ -65,13 +65,19 @@ struct AddSubscriptionFormView: View {
             
             PremiumFormField(
                 icon: "link.circle.fill",
-                title: "Manage / Website URL"
+                title: "Website URL (Optional)"
             ) {
-                TextField("e.g. https://github.com/settings/billing", text: $linkURL)
-                    .keyboardType(.URL)
-                    .textInputAutocapitalization(.never)
-                    .autocorrectionDisabled()
-                    .font(.system(.body, design: .rounded))
+                VStack(alignment: .leading, spacing: 2) {
+                    TextField("https://your-service.com/account", text: $linkURL)
+                        .keyboardType(.URL)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                        .font(.system(.subheadline, design: .rounded))
+                    
+                    Text("Auto-detects official page if left blank")
+                        .font(.system(size: 10, design: .rounded))
+                        .foregroundColor(.secondary.opacity(0.8))
+                }
             }
             
             PremiumFormField(
