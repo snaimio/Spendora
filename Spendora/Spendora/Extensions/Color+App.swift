@@ -15,6 +15,7 @@ extension Color {
     // MARK: - Signature Bold Teal Palette
     static let brandPrimary = Color(hex: "#00D4AA")      // Electric Bold Teal (Cash App Energy)
     static let brandSecondary = Color(hex: "#0EA5E9")    // Vibrant Sky Blue
+    static let brandAccent = Color(hex: "#0EA5E9")       // Electric Cyan Accent
     static let brandTertiary = Color(hex: "#10B981")     // Emerald Mint
     static let brandCoral = Color(hex: "#FF6B6B")        // Vibrant Coral Alert
     static let brandGold = Color(hex: "#FFD93D")         // Warm Sunshine Gold
