@@ -18,7 +18,13 @@ struct SubscriptionCardView: View {
     // MARK: - Body
 
     var body: some View {
-        HStack(spacing: 14) {
+        HStack(spacing: 12) {
+            // Category Color Strip (Left Accent Edge)
+            RoundedRectangle(cornerRadius: 3, style: .continuous)
+                .fill(cardColor)
+                .frame(width: 4, height: 48)
+            
+            // App / Service Icon Badge
             ZStack {
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .fill(
@@ -37,6 +43,7 @@ struct SubscriptionCardView: View {
             }
             .frame(width: 44)
             
+            // Middle Details: Name, Price, Date
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 6) {
                     Text(subscription.displayName)
@@ -46,25 +53,7 @@ struct SubscriptionCardView: View {
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                     
-                    if subscription.isUpcoming {
-                        Text("Due Soon")
-                            .font(AppStyles.Typography.badge)
-                            .padding(.horizontal, 7)
-                            .padding(.vertical, 3)
-                            .background(Color(hex: "#0EA5E9").opacity(0.22))
-                            .foregroundColor(Color(hex: "#0EA5E9"))
-                            .cornerRadius(8)
-                    }
-                    
-                    if subscription.isTrial && !subscription.trialConvertedToPaid {
-                        Text("Trial")
-                            .font(AppStyles.Typography.badge)
-                            .padding(.horizontal, 7)
-                            .padding(.vertical, 3)
-                            .background(Color(hex: "#F59E0B").opacity(0.22))
-                            .foregroundColor(Color(hex: "#F59E0B"))
-                            .cornerRadius(8)
-                    }
+                    CountdownChip(daysRemaining: subscription.daysUntilBilling)
                 }
                 
                 HStack(spacing: 4) {
@@ -121,11 +110,12 @@ struct SubscriptionCardView: View {
             }
             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
             
-            Image(systemName: "chevron.right")
-                .font(.system(size: 12, weight: .semibold))
-                .foregroundColor(.textTertiary)
+            // Subby 1-Tap "Mark as Paid" Action Button
+            if !subscription.isOneTime {
+                MarkAsPaidButton(subscription: subscription)
+            }
         }
-        .padding(.horizontal, 16)
+        .padding(.horizontal, 14)
         .padding(.vertical, 14)
         .background(
             ZStack {

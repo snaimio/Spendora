@@ -7,36 +7,44 @@ import SwiftUI
 // MARK: - AppStyles
 
 /**
- `AppStyles` provides a unified design system architecture for Spendora.
- Implements SF Pro typography scale, glassmorphism tokens, and ambient glow shadows.
+ `AppStyles` provides Spendora's design system tokens, typography scale, spring physics, and glassmorphism specs.
  */
 struct AppStyles {
 
     // MARK: - Typography System
     struct Typography {
-        /// Hero Display Price: 38pt Black
+        /// Hero Display Price: 38pt Black Rounded
         static let hero = Font.system(size: 38, weight: .black, design: .rounded)
         
-        /// Title: 28pt Semibold
+        /// Large Title: 34pt Bold Rounded
+        static let largeTitle = Font.system(size: 34, weight: .bold, design: .rounded)
+        
+        /// Title: 28pt Semibold Rounded
         static let title = Font.system(size: 28, weight: .semibold, design: .rounded)
         
-        /// Headline: 20pt Semibold
+        /// Headline: 20pt Semibold Rounded
         static let headline = Font.system(size: 20, weight: .semibold, design: .rounded)
         
-        /// Body: 16pt Regular
+        /// Body: 16pt Regular Rounded
         static let body = Font.system(size: 16, weight: .regular, design: .rounded)
         
-        /// Subheadline: 15pt Regular
+        /// Subheadline: 15pt Regular Rounded
         static let subheadline = Font.system(size: 15, weight: .regular, design: .rounded)
         
-        /// Caption: 13pt Regular
+        /// Caption: 13pt Regular Rounded
         static let caption = Font.system(size: 13, weight: .regular, design: .rounded)
         
-        /// Footnote: 11pt Regular
+        /// Footnote: 11pt Regular Rounded
         static let footnote = Font.system(size: 11, weight: .regular, design: .rounded)
         
-        /// Status Badge Pill: 11pt Heavy
+        /// Status Badge Pill: 11pt Heavy Rounded
         static let badge = Font.system(size: 11, weight: .heavy, design: .rounded)
+    }
+
+    // MARK: - Animation System
+    struct AnimationTokens {
+        /// Signature Spring Animation (.spring response: 0.3, dampingFraction: 0.7)
+        static let signatureSpring = Animation.spring(response: 0.3, dampingFraction: 0.7)
     }
 
     // MARK: - Spacing System
@@ -71,13 +79,13 @@ struct AppStyles {
         static let modal: CGFloat = 24
     }
 
-    // MARK: - Glassmorphism Shadow Elevation System
+    // MARK: - Glassmorphism Shadow System
     struct Shadow {
         /// Soft subtle card shadow
         static let soft = Color.black.opacity(0.04)
         /// Medium glass shadow
         static let medium = Color.black.opacity(0.08)
         /// Glowing hero shadow
-        static let heroGlow = Color(hex: "#6366F1").opacity(0.38)
+        static let heroGlow = Color(hex: "#00D4AA").opacity(0.38)
     }
 }
