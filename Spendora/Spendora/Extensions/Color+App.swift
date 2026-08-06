@@ -19,6 +19,7 @@ extension Color {
     static let brandTertiary = Color(hex: "#10B981")     // Emerald Mint
     static let brandCoral = Color(hex: "#FF6B6B")        // Vibrant Coral Alert
     static let brandGold = Color(hex: "#FFD93D")         // Warm Sunshine Gold
+    static let brandAmber = Color(hex: "#FFD93D")        // Warm Amber Gold
     static let brandPurple = Color(hex: "#8B5CF6")       // Electric Violet
     static let brandRose = Color(hex: "#F43F5E")         // Rose Red
     
