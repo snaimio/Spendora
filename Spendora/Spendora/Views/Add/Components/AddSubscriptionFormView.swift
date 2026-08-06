@@ -70,13 +70,15 @@ struct AddSubscriptionFormView: View {
             ) {
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
-                        TextField("https://your-service.com/account", text: $linkURL)
-                            .keyboardType(.URL)
-                            .textInputAutocapitalization(.never)
-                            .autocorrectionDisabled()
-                            .font(.system(.subheadline, design: .rounded))
-                            .foregroundColor(.primary)
-                            .tint(.brandPrimary)
+                        TextField(text: $linkURL, prompt: Text("https://your-service.com/account").foregroundColor(.secondary)) {
+                            Text("Website URL")
+                        }
+                        .keyboardType(.emailAddress)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                        .font(.system(.subheadline, design: .rounded))
+                        .foregroundColor(.primary)
+                        .tint(.primary)
                             .onChange(of: linkURL) { _, newValue in
                                 if !newValue.isEmpty {
                                     isUserEditedLink = true
