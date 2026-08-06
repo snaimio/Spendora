@@ -7,10 +7,11 @@ import SwiftUI
 // MARK: - CountdownChip
 
 /**
- `CountdownChip` renders a practical status pill badge on subscription cards:
+ `CountdownChip` renders a single-line status pill badge on subscription cards:
  - Red (#FF3B30) if Due Today or Overdue
  - Amber (#FF9500) if Due within 7 Days
- - Apple Green (#34C759) with "Paid • Next in Xd" when paid & safe (> 7 days)
+ - Apple Green (#34C759) with "Paid • 60d left" when paid & safe (> 7 days)
+ Always guaranteed to fit on a single line!
  */
 struct CountdownChip: View {
     let daysRemaining: Int
@@ -37,26 +38,28 @@ struct CountdownChip: View {
         } else if daysRemaining == 0 {
             return "Due Today"
         } else if daysRemaining == 1 {
-            return "Due in 1 Day"
+            return "Due in 1d"
         } else if daysRemaining <= 7 {
-            return "Due in \(daysRemaining) Days"
+            return "Due in \(daysRemaining)d"
         } else {
-            return "Paid • Next in \(daysRemaining)d"
+            return "Paid • \(daysRemaining)d left"
         }
     }
     
     var body: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: 5) {
             Image(systemName: isSafePaid ? "checkmark.circle.fill" : "clock.fill")
-                .font(.system(size: 9, weight: .bold))
+                .font(.system(size: 10, weight: .bold))
                 .foregroundColor(badgeColor)
             
             Text(badgeText)
-                .font(.system(size: 10, weight: .bold, design: .rounded))
+                .font(.system(size: 12, weight: .bold, design: .rounded))
                 .foregroundColor(badgeColor)
+                .lineLimit(1)
+                .fixedSize(horizontal: true, vertical: false)
         }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 4)
+        .padding(.horizontal, 9)
+        .padding(.vertical, 5)
         .background(badgeColor.opacity(0.14))
         .cornerRadius(10)
     }

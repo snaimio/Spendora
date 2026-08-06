@@ -18,15 +18,15 @@ struct SubscriptionCardView: View {
     // MARK: - Body
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 14) {
             // Category Color Strip (Left Accent Edge)
             RoundedRectangle(cornerRadius: 3, style: .continuous)
                 .fill(cardColor)
-                .frame(width: 4, height: 48)
+                .frame(width: 4, height: 52)
             
-            // App / Service Icon Badge
+            // App / Service Icon Badge Container
             ZStack {
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
                     .fill(
                         LinearGradient(
                             colors: [cardColor, cardColor.opacity(0.8)],
@@ -34,17 +34,17 @@ struct SubscriptionCardView: View {
                             endPoint: .bottomTrailing
                         )
                     )
-                    .frame(width: 44, height: 44)
+                    .frame(width: 48, height: 48)
                     .shadow(color: cardColor.opacity(0.35), radius: 6, x: 0, y: 3)
                 
                 Image(systemName: cardIcon)
-                    .font(.system(size: 17, weight: .bold))
+                    .font(.system(size: 20, weight: .bold))
                     .foregroundColor(.white)
             }
-            .frame(width: 44)
+            .frame(width: 48)
             
             // Middle Details: Name, Price, Date
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 5) {
                 HStack(spacing: 6) {
                     Text(subscription.displayName)
                         .font(AppStyles.Typography.body)
@@ -53,30 +53,31 @@ struct SubscriptionCardView: View {
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                     
+                    Spacer()
+                    
                     CountdownChip(daysRemaining: subscription.daysUntilBilling)
                 }
                 
-                HStack(spacing: 4) {
+                HStack(spacing: 5) {
                     Text(CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost))
-                        .font(AppStyles.Typography.subheadline)
-                        .fontWeight(.bold)
+                        .font(.system(size: 17, weight: .heavy, design: .rounded))
                         .foregroundColor(.textPrimary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                     
                     if subscription.isOneTime {
                         Text("• Lifetime")
-                            .font(AppStyles.Typography.footnote)
+                            .font(AppStyles.Typography.caption)
                             .fontWeight(.bold)
                             .foregroundColor(.brandPurple)
                     } else {
                         Text("/month")
-                            .font(AppStyles.Typography.footnote)
+                            .font(AppStyles.Typography.caption)
                             .foregroundColor(.textSecondary)
                         
                         if subscription.isYearly {
                             Text("• Yearly")
-                                .font(AppStyles.Typography.footnote)
+                                .font(AppStyles.Typography.caption)
                                 .foregroundColor(.textSecondary)
                         }
                     }
@@ -85,12 +86,12 @@ struct SubscriptionCardView: View {
                 if !subscription.isOneTime {
                     HStack(spacing: 4) {
                         Image(systemName: "calendar")
-                            .font(.system(size: 9, weight: .semibold))
+                            .font(.system(size: 11, weight: .semibold))
                             .foregroundColor(.textSecondary)
                         
                         Text("Next: \(subscription.formattedNextBillingDate)")
-                            .font(AppStyles.Typography.footnote)
-                            .fontWeight(.semibold)
+                            .font(AppStyles.Typography.caption)
+                            .fontWeight(.medium)
                             .foregroundColor(.textSecondary)
                             .lineLimit(1)
                             .minimumScaleFactor(0.6)
@@ -98,11 +99,11 @@ struct SubscriptionCardView: View {
                 } else {
                     HStack(spacing: 4) {
                         Image(systemName: "checkmark.seal.fill")
-                            .font(.system(size: 10, weight: .bold))
+                            .font(.system(size: 11, weight: .bold))
                             .foregroundColor(.brandTertiary)
                         
                         Text("One-Time Purchase")
-                            .font(AppStyles.Typography.footnote)
+                            .font(AppStyles.Typography.caption)
                             .fontWeight(.bold)
                             .foregroundColor(.brandTertiary)
                     }
@@ -112,12 +113,12 @@ struct SubscriptionCardView: View {
             
             // Clickable Chevron Indicator to Detail & Edit Sheet
             Image(systemName: "chevron.right")
-                .font(.system(size: 13, weight: .bold))
+                .font(.system(size: 14, weight: .bold))
                 .foregroundColor(.textSecondary)
-                .padding(.trailing, 4)
+                .padding(.leading, 2)
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 14)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 16)
         .background(
             ZStack {
                 Color.cardBackground
@@ -128,10 +129,10 @@ struct SubscriptionCardView: View {
                 )
             }
         )
-        .cornerRadius(16)
+        .cornerRadius(18)
         .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 3)
         .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .stroke(cardColor.opacity(0.22), lineWidth: 1)
         )
     }
