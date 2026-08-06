@@ -4,149 +4,85 @@
 
 import SwiftUI
 
-
 // MARK: - AppStyles
 
 /**
- `AppStyles` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for appstyles handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `AppStyles` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
+ `AppStyles` provides a unified, enterprise-grade design system token architecture for Spendora.
+ Inspired by Apple's HIG and premier financial applications (Copilot, Monzo, Robinhood).
  */
 struct AppStyles {
 
-    // MARK: - Properties
-
-    
-    // MARK: - Typography
-
-// MARK: - Typography
-
-/**
- `Typography` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for typography handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `Typography` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
- */
+    // MARK: - Typography System (SF Pro Rounded & Text)
     struct Typography {
-
-    // MARK: - Properties
-
+        /// Hero Price Display (36pt, Black, Rounded)
+        static let heroPrice = Font.system(size: 36, weight: .black, design: .rounded)
+        
+        /// Large Title (34pt, Bold, Rounded)
         static let largeTitle = Font.system(size: 34, weight: .bold, design: .rounded)
-        static let title = Font.system(size: 28, weight: .semibold, design: .rounded)
-        static let headline = Font.system(size: 20, weight: .semibold, design: .rounded)
+        
+        /// Screen Title 1 (28pt, Bold, Rounded)
+        static let title1 = Font.system(size: 28, weight: .bold, design: .rounded)
+        
+        /// Group Header Title 2 (22pt, SemiBold, Rounded)
+        static let title2 = Font.system(size: 22, weight: .semibold, design: .rounded)
+        
+        /// Item Headline (18pt, SemiBold, Rounded)
+        static let headline = Font.system(size: 18, weight: .semibold, design: .rounded)
+        
+        /// Form Label Subheadline (15pt, SemiBold, Rounded)
+        static let subheadline = Font.system(size: 15, weight: .semibold, design: .rounded)
+        
+        /// Standard Body Text (16pt, Regular, Rounded)
         static let body = Font.system(size: 16, weight: .regular, design: .rounded)
-        static let caption = Font.system(size: 13, weight: .regular, design: .rounded)
-        static let captionBold = Font.system(size: 13, weight: .semibold, design: .rounded)
+        
+        /// Caption Description (13pt, Medium, Rounded)
+        static let caption = Font.system(size: 13, weight: .medium, design: .rounded)
+        
+        /// Status Badge Pill (11pt, Heavy, Rounded)
+        static let badge = Font.system(size: 11, weight: .heavy, design: .rounded)
     }
-    
-    // MARK: - Spacing
 
-// MARK: - Spacing
-
-/**
- `Spacing` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for spacing handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `Spacing` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
- */
+    // MARK: - Spacing System
     struct Spacing {
-
-    // MARK: - Properties
-
-        static let tiny: CGFloat = 4
-        static let small: CGFloat = 8
+        /// 4pt micro gap
+        static let xxSmall: CGFloat = 4
+        /// 8pt tight spacing
+        static let xSmall: CGFloat = 8
+        /// 12pt compact spacing
+        static let small: CGFloat = 12
+        /// 16pt standard padding
         static let medium: CGFloat = 16
+        /// 24pt section spacing
         static let large: CGFloat = 24
+        /// 32pt container gap
         static let xLarge: CGFloat = 32
+        /// 48pt hero spacing
+        static let xxLarge: CGFloat = 48
     }
-    
-    // MARK: - Corner Radius
 
-// MARK: - Radius
-
-/**
- `Radius` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for radius handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `Radius` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
- */
+    // MARK: - Corner Radius Tokens
     struct Radius {
-
-    // MARK: - Properties
-
-        static let small: CGFloat = 8
-        static let medium: CGFloat = 16
-        static let large: CGFloat = 24
-        static let xLarge: CGFloat = 32
+        /// 6pt badge pill radius
+        static let small: CGFloat = 6
+        /// 10pt icon container radius
+        static let icon: CGFloat = 10
+        /// 14pt button radius
+        static let button: CGFloat = 14
+        /// 18pt form field radius
+        static let field: CGFloat = 18
+        /// 20pt card radius
+        static let card: CGFloat = 20
+        /// 24pt hero banner radius
+        static let hero: CGFloat = 24
     }
-    
-    // MARK: - Shadows
 
-// MARK: - Shadow
-
-/**
- `Shadow` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for shadow handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `Shadow` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
- */
+    // MARK: - Shadow Elevation System
     struct Shadow {
-
-    // MARK: - Properties
-
-        static let soft = Color.white.opacity(0.03)
-        static let medium = Color.white.opacity(0.06)
-        static let strong = Color.white.opacity(0.10)
+        /// Soft subtle card shadow
+        static let soft = Color.black.opacity(0.04)
+        /// Medium glass shadow
+        static let medium = Color.black.opacity(0.08)
+        /// Strong hero glow shadow
+        static let heroGlow = Color(hex: "#6366F1").opacity(0.35)
     }
 }
