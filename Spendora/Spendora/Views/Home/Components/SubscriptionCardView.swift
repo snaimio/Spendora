@@ -47,7 +47,7 @@ struct SubscriptionCardView: View {
                     
                     if subscription.isUpcoming {
                         Text("Due Soon")
-                            .font(.system(size: 8, weight: .extrabold, design: .rounded))
+                            .font(.system(size: 8, weight: .heavy, design: .rounded))
                             .padding(.horizontal, 7)
                             .padding(.vertical, 3)
                             .background(Color(hex: "#0EA5E9").opacity(0.18))
@@ -57,7 +57,7 @@ struct SubscriptionCardView: View {
                     
                     if subscription.isTrial && !subscription.trialConvertedToPaid {
                         Text("Trial")
-                            .font(.system(size: 8, weight: .extrabold, design: .rounded))
+                            .font(.system(size: 8, weight: .heavy, design: .rounded))
                             .padding(.horizontal, 7)
                             .padding(.vertical, 3)
                             .background(Color(hex: "#F59E0B").opacity(0.18))
