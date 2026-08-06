@@ -26,6 +26,9 @@ struct AppStyles {
         /// Body: 16pt Regular
         static let body = Font.system(size: 16, weight: .regular, design: .rounded)
         
+        /// Subheadline: 15pt Regular
+        static let subheadline = Font.system(size: 15, weight: .regular, design: .rounded)
+        
         /// Caption: 13pt Regular
         static let caption = Font.system(size: 13, weight: .regular, design: .rounded)
         
