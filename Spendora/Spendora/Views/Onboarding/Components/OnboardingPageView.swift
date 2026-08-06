@@ -78,14 +78,14 @@ struct OnboardingPageView: View {
             VStack(spacing: 12) {
                 Text(page.title)
                     .font(.system(size: 28, weight: .bold, design: .rounded))
-                    .foregroundColor(.primary)
+                    .foregroundColor(.textPrimary)
                     .multilineTextAlignment(.center)
                     .opacity(animate ? 1 : 0)
                     .offset(y: animate ? 0 : 20)
                 
                 Text(page.description)
                     .font(.system(.body, design: .rounded))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.textSecondary)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 32)
                     .opacity(animate ? 1 : 0)
@@ -93,9 +93,9 @@ struct OnboardingPageView: View {
             }
             
             VStack(spacing: 12) {
-                FeatureHighlight(icon: "checkmark.circle.fill", text: "100% Privacy - No bank connections")
-                FeatureHighlight(icon: "checkmark.circle.fill", text: "Free forever - No hidden charges")
-                FeatureHighlight(icon: "checkmark.circle.fill", text: "Cancel anytime with one tap")
+                FeatureHighlight(icon: "checkmark.circle.fill", text: "100% Privacy - Zero bank credentials required")
+                FeatureHighlight(icon: "checkmark.circle.fill", text: "Free & Private - No hidden cloud sync tracking")
+                FeatureHighlight(icon: "checkmark.circle.fill", text: "Customizable billing alerts & analytics")
             }
             .padding(.horizontal, 24)
             .opacity(animate ? 1 : 0)
@@ -116,33 +116,15 @@ struct OnboardingPageView: View {
 
 // MARK: - FeatureHighlight
 
-/**
- `FeatureHighlight` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for featurehighlight handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `FeatureHighlight` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
- */
 struct FeatureHighlight: View {
 
     // MARK: - Properties
 
-    let icon: String  // icon property
-    let text: String  // text property
-    
+    let icon: String
+    let text: String
 
     // MARK: - Body
 
-    /// Main SwiftUI layout body property.
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: icon)
@@ -151,7 +133,7 @@ struct FeatureHighlight: View {
             
             Text(text)
                 .font(.system(.subheadline, design: .rounded))
-                .foregroundColor(.secondary)
+                .foregroundColor(.textSecondary)
             
             Spacer()
         }

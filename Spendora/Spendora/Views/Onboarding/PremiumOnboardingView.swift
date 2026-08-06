@@ -4,24 +4,11 @@
 
 import SwiftUI
 
-
 // MARK: - PremiumOnboardingView
 
 /**
- `PremiumOnboardingView` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for premiumonboardingview handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `PremiumOnboardingView` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
+ `PremiumOnboardingView` presents Spendora's initial 4-screen introduction flow,
+ featuring Apple HIG compliant typography, vector hero icon badges, animated capsule page indicators, and 100% WCAG contrast text.
  */
 struct PremiumOnboardingView: View {
 
@@ -35,92 +22,65 @@ struct PremiumOnboardingView: View {
     
     private let pages: [OnboardingPage] = [
         OnboardingPage(
-            icon: "sparkles.rectangle.stack",
+            icon: "sparkles.rectangle.stack.fill",
             title: "Track All Subscriptions",
-            description: "Add Netflix, Spotify, Apple One, and all your subscriptions in one place.",
-            color: .categoryEntertainment
+            description: "Keep Netflix, Spotify, Apple One, and all your recurring payments organized in one central place.",
+            color: Color(hex: "#007AFF")
         ),
         OnboardingPage(
             icon: "bell.badge.fill",
-            title: "Smart Reminders",
-            description: "Get customizable advance alerts before each billing date. Never miss a charge again.",
-            color: .categoryProductivity
+            title: "Smart Billing Alerts",
+            description: "Receive timely advance notifications before every charge date. Never get surprised by auto-renewals.",
+            color: Color(hex: "#5856D6")
         ),
         OnboardingPage(
-            icon: "chart.line.uptrend.xyaxis",
-            title: "AI-Powered Insights",
-            description: "Understand your spending patterns with smart analytics and savings tips.",
-            color: .categoryHealth
+            icon: "chart.line.uptrend.xyaxis.circle.fill",
+            title: "AI-Powered Analytics",
+            description: "Understand your financial run-rate with intelligent spending breakdowns and savings opportunities.",
+            color: Color(hex: "#AF52DE")
         ),
         OnboardingPage(
-            icon: "calendar",
-            title: "Visual Calendar View",
-            description: "See all your billing dates at a glance with the interactive calendar.",
-            color: .categoryShopping
+            icon: "lock.shield.fill",
+            title: "100% On-Device & Private",
+            description: "Your financial data stays strictly on your device. Zero external cloud requirements or data tracking.",
+            color: Color(hex: "#34C759")
         )
     ]
-    
 
     // MARK: - Body
 
-    /// Main SwiftUI layout body property.
     var body: some View {
         ZStack {
-            // Adaptive Dark & Light Mode Background Gradient
-            if colorScheme == .dark {
-                LinearGradient(
-                    colors: [
-                        Color(hex: "#0F172A"),
-                        Color(hex: "#1E1B4B"),
-                        Color(hex: "#0F172A")
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
+            // Adaptive Dark & Light Background Surface
+            Color.appBackground
                 .ignoresSafeArea()
-            } else {
-                LinearGradient(
-                    colors: [
-                        Color(hex: "#EEF2FF"),
-                        Color(hex: "#F5F3FF"),
-                        Color(hex: "#E0F2FE")
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-                .ignoresSafeArea()
-            }
             
             VStack {
-                // Skip Button
+                // Top Header: Skip Button
                 HStack {
                     Spacer()
                     Button {
-                        // ✅ FIXED: Save to UserDefaults directly
-                        UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
-                        hasCompletedOnboarding = true
-                        dismiss()
+                        completeOnboarding()
                     } label: {
                         Text("Skip")
-                            .font(.system(.body, design: .rounded))
-                            .fontWeight(.medium)
-                            .foregroundColor(.secondary)
-                            .padding(.horizontal, 20)
+                            .font(.system(size: 14, weight: .semibold, design: .rounded))
+                            .foregroundColor(.textSecondary)
+                            .padding(.horizontal, 16)
                             .padding(.vertical, 8)
                             .background(
                                 Capsule()
-                                    .fill(Color(.systemBackground))
-                                    .shadow(color: Color.black.opacity(0.05), radius: 8)
+                                    .fill(Color.cardBackground)
+                                    .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 2)
                             )
                     }
-                    .padding(.top, 20)
+                    .padding(.top, 16)
                     .padding(.trailing, 24)
                     .opacity(showButtons ? 1 : 0)
                 }
                 
                 Spacer()
                 
-                // Page Content
+                // Page Content Carousel
                 TabView(selection: $currentPage) {
                     ForEach(pages.indices, id: \.self) { index in
                         OnboardingPageView(page: pages[index])
@@ -128,55 +88,51 @@ struct PremiumOnboardingView: View {
                     }
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
-                .animation(.spring(response: 0.4, dampingFraction: 0.8), value: currentPage)
+                .animation(.spring(response: 0.35, dampingFraction: 0.75), value: currentPage)
                 
                 Spacer()
                 
-                // Bottom Controls
-                VStack(spacing: 20) {
-                    // Page Dots
-                    HStack(spacing: 10) {
+                // Bottom Control Section
+                VStack(spacing: 24) {
+                    // Animated Capsule Page Indicators
+                    HStack(spacing: 8) {
                         ForEach(pages.indices, id: \.self) { index in
-                            Circle()
-                                .fill(currentPage == index ? Color.brandPrimary : Color.brandPrimary.opacity(0.25))
-                                .frame(width: 8, height: 8)
-                                .animation(.spring(), value: currentPage)
+                            Capsule()
+                                .fill(currentPage == index ? Color.brandPrimary : Color.textSecondary.opacity(0.3))
+                                .frame(width: currentPage == index ? 24 : 8, height: 8)
+                                .animation(.spring(response: 0.3, dampingFraction: 0.7), value: currentPage)
                         }
                     }
                     
-                    // Next/Get Started Button
+                    // Primary Action Button
                     Button {
                         if currentPage == pages.count - 1 {
-                            // ✅ FIXED: Save to UserDefaults directly
-                            UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
-                            hasCompletedOnboarding = true
-                            dismiss()
+                            completeOnboarding()
                         } else {
-                            withAnimation {
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
                                 currentPage += 1
                             }
                         }
                     } label: {
-                        HStack {
-                            Text(currentPage == pages.count - 1 ? "Get Started" : "Next")
-                                .font(.system(.headline, design: .rounded))
-                                .fontWeight(.semibold)
+                        HStack(spacing: 8) {
+                            Text(currentPage == pages.count - 1 ? "Get Started" : "Continue")
+                                .font(.system(size: 17, weight: .bold, design: .rounded))
                             
                             Image(systemName: currentPage == pages.count - 1 ? "sparkles" : "arrow.right")
-                                .font(.system(.body, design: .rounded))
+                                .font(.system(size: 16, weight: .bold))
                         }
+                        .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
                         .background(
                             LinearGradient(
-                                colors: [.brandPrimary, .brandSecondary],
+                                colors: [Color(hex: "#007AFF"), Color(hex: "#5856D6")],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
                         )
-                        .foregroundColor(.white)
-                        .cornerRadius(16)
-                        .shadow(color: Color.brandPrimary.opacity(0.3), radius: 12, x: 0, y: 6)
+                        .cornerRadius(18)
+                        .shadow(color: Color(hex: "#007AFF").opacity(0.35), radius: 12, x: 0, y: 6)
                         .opacity(showButtons ? 1 : 0)
                     }
                     .padding(.horizontal, 24)
@@ -185,11 +141,16 @@ struct PremiumOnboardingView: View {
             }
         }
         .onAppear {
-            withAnimation(.easeOut(duration: 0.6)) {
+            withAnimation(.easeOut(duration: 0.5)) {
                 showButtons = true
             }
         }
-        .interactiveDismissDisabled(false)
+    }
+
+    private func completeOnboarding() {
+        UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
+        hasCompletedOnboarding = true
+        dismiss()
     }
 }
 

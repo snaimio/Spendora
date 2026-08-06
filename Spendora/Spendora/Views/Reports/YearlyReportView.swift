@@ -241,13 +241,15 @@ struct ExecutiveYearlySummaryCard: View {
                     .tracking(1.5)
                 
                 Text(CurrencyManager.shared.format(totalYearly))
-                    .font(.system(size: 36, weight: .black, design: .rounded))
+                    .font(.system(size: 34, weight: .black, design: .rounded))
                     .foregroundColor(.textPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
             }
             
             Divider()
             
-            HStack(spacing: 16) {
+            HStack(spacing: 12) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Average / Month")
                         .font(.system(.caption2, design: .rounded))
@@ -256,6 +258,8 @@ struct ExecutiveYearlySummaryCard: View {
                         .font(.system(.headline, design: .rounded))
                         .fontWeight(.bold)
                         .foregroundColor(.brandPrimary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.5)
                 }
                 
                 Spacer()
@@ -268,6 +272,7 @@ struct ExecutiveYearlySummaryCard: View {
                         .font(.system(.headline, design: .rounded))
                         .fontWeight(.bold)
                         .foregroundColor(.textPrimary)
+                        .lineLimit(1)
                 }
                 
                 Spacer()
@@ -280,6 +285,8 @@ struct ExecutiveYearlySummaryCard: View {
                         .font(.system(.headline, design: .rounded))
                         .fontWeight(.bold)
                         .foregroundColor(.brandPurple)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.6)
                 }
             }
         }
@@ -465,6 +472,8 @@ struct ExecutiveCategoryTable: View {
                                 .font(.system(.subheadline, design: .rounded))
                                 .fontWeight(.bold)
                                 .foregroundColor(.textPrimary)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.6)
                             
                             Text(String(format: "%.1f%% of total", share))
                                 .font(.caption2)
