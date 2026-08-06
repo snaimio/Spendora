@@ -1,5 +1,6 @@
 //
 //  CountdownChip.swift
+//  Spendora
 //
 
 import SwiftUI
@@ -7,11 +8,10 @@ import SwiftUI
 // MARK: - CountdownChip
 
 /**
- `CountdownChip` renders a single-line status pill badge on subscription cards:
- - Red (#FF3B30) if Due Today or Overdue
- - Amber (#FF9500) if Due within 7 Days
- - Apple Green (#34C759) with "Paid • 60d left" when paid & safe (> 7 days)
- Always guaranteed to fit on a single line!
+ `CountdownChip` renders a status badge on its own dedicated row below card details:
+ - Red (#FF6B6B) if Due Today or Overdue
+ - Gold/Amber (#FFD93D) if Due within 7 Days
+ - Mint Green (#00D4AA) if Paid / Safe (> 7 Days)
  */
 struct CountdownChip: View {
     let daysRemaining: Int
@@ -22,13 +22,13 @@ struct CountdownChip: View {
     
     private var badgeColor: Color {
         if daysRemaining < 0 {
-            return Color(hex: "#FF3B30")   // Overdue Red
+            return Color.brandDanger       // Overdue Red (#FF6B6B)
         } else if daysRemaining == 0 {
-            return Color(hex: "#FF3B30")   // Due Today Red
+            return Color.brandDanger       // Due Today Red
         } else if daysRemaining <= 7 {
-            return Color(hex: "#FF9500")   // Soon Amber
+            return Color.brandWarning      // Soon Gold (#FFD93D)
         } else {
-            return Color(hex: "#34C759")   // Paid / Safe Green
+            return Color.brandSuccess      // Safe Teal (#00D4AA)
         }
     }
     
@@ -38,11 +38,11 @@ struct CountdownChip: View {
         } else if daysRemaining == 0 {
             return "Due Today"
         } else if daysRemaining == 1 {
-            return "Due in 1d"
+            return "Due in 1 day"
         } else if daysRemaining <= 7 {
-            return "Due in \(daysRemaining)d"
+            return "Due in \(daysRemaining) days"
         } else {
-            return "Paid • \(daysRemaining)d left"
+            return "Paid • Next in \(daysRemaining)d"
         }
     }
     
@@ -53,14 +53,13 @@ struct CountdownChip: View {
                 .foregroundColor(badgeColor)
             
             Text(badgeText)
-                .font(.system(size: 12, weight: .bold, design: .rounded))
+                .font(AppStyles.Typography.caption2)
                 .foregroundColor(badgeColor)
                 .lineLimit(1)
-                .fixedSize(horizontal: true, vertical: false)
         }
         .padding(.horizontal, 9)
-        .padding(.vertical, 5)
+        .padding(.vertical, 4)
         .background(badgeColor.opacity(0.14))
-        .cornerRadius(10)
+        .cornerRadius(8)
     }
 }

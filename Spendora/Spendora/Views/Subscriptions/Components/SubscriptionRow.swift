@@ -1,5 +1,6 @@
 //
 //  SubscriptionRow.swift
+//  Spendora
 //
 
 import SwiftUI
@@ -7,7 +8,11 @@ import SwiftUI
 // MARK: - SubscriptionRow
 
 /**
- `SubscriptionRow` renders a single subscription row in list view with vibrant brand colors, category badges, and dynamic cost formatting.
+ `SubscriptionRow` renders a subscription card matching `SubscriptionCardView`'s exact hierarchy:
+ 1. Subscription Name: Headline (17pt Bold) - LARGEST, PROMINENT & FULL WIDTH
+ 2. Cost & Cycle: Subheadline (15pt Regular)
+ 3. Next Billing Date: Caption (13pt Regular)
+ 4. Status Badge ("Due in X days" / "Paid • Xd left"): Caption2 (12pt Semibold) - ALWAYS ON A NEW ROW!
  */
 struct SubscriptionRow: View {
 
@@ -26,13 +31,13 @@ struct SubscriptionRow: View {
     // MARK: - Body
 
     var body: some View {
-        HStack(spacing: 14) {
+        HStack(alignment: .top, spacing: 14) {
             // Category Color Strip (Left Accent Edge)
             RoundedRectangle(cornerRadius: 3, style: .continuous)
                 .fill(rowColor)
-                .frame(width: 4, height: 52)
+                .frame(width: 4, height: 68)
             
-            // Icon Badge Container
+            // Icon Badge Container (48x48pt)
             ZStack {
                 RoundedRectangle(cornerRadius: 14, style: .continuous)
                     .fill(
@@ -51,97 +56,94 @@ struct SubscriptionRow: View {
             }
             .frame(width: 48)
             
-            // Middle Details: Name, Category, Date
-            VStack(alignment: .leading, spacing: 5) {
-                HStack(spacing: 6) {
+            // Card Content Stack
+            VStack(alignment: .leading, spacing: 4) {
+                // ROW 1: SUBSCRIPTION NAME (Headline 17pt Bold - LARGEST TEXT)
+                HStack(alignment: .center) {
                     Text(subscription.displayName)
-                        .font(AppStyles.Typography.body)
-                        .fontWeight(.bold)
+                        .font(AppStyles.Typography.headline)
                         .foregroundColor(.textPrimary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                     
                     Spacer()
                     
-                    CountdownChip(daysRemaining: subscription.daysUntilBilling)
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundColor(.textSecondary)
                 }
                 
-                HStack(spacing: 5) {
+                // ROW 2: COST & BILLING CYCLE (Subheadline 15pt Regular)
+                HStack(spacing: 4) {
                     Text(CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost))
-                        .font(.system(size: 17, weight: .heavy, design: .rounded))
+                        .font(AppStyles.Typography.subheadline)
+                        .fontWeight(.bold)
                         .foregroundColor(.textPrimary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.7)
                     
                     if subscription.isOneTime {
                         Text("• Lifetime")
-                            .font(AppStyles.Typography.caption)
-                            .fontWeight(.bold)
+                            .font(AppStyles.Typography.subheadline)
                             .foregroundColor(.brandPurple)
                     } else {
                         Text("/month")
-                            .font(AppStyles.Typography.caption)
+                            .font(AppStyles.Typography.subheadline)
                             .foregroundColor(.textSecondary)
                         
                         if subscription.isYearly {
                             Text("• Yearly")
-                                .font(AppStyles.Typography.caption)
+                                .font(AppStyles.Typography.subheadline)
                                 .foregroundColor(.textSecondary)
                         }
                     }
                 }
                 
+                // ROW 3: NEXT BILLING DATE (Caption 13pt Regular)
                 if !subscription.isOneTime {
                     HStack(spacing: 4) {
                         Image(systemName: "calendar")
-                            .font(.system(size: 11, weight: .semibold))
+                            .font(.system(size: 11, weight: .medium))
                             .foregroundColor(.textSecondary)
                         
                         Text("Next: \(subscription.formattedNextBillingDate)")
                             .font(AppStyles.Typography.caption)
-                            .fontWeight(.medium)
                             .foregroundColor(.textSecondary)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.6)
                     }
                 } else {
                     HStack(spacing: 4) {
                         Image(systemName: "checkmark.seal.fill")
                             .font(.system(size: 11, weight: .bold))
-                            .foregroundColor(.brandTertiary)
+                            .foregroundColor(.brandSuccess)
                         
                         Text("One-Time Purchase")
                             .font(AppStyles.Typography.caption)
                             .fontWeight(.bold)
-                            .foregroundColor(.brandTertiary)
+                            .foregroundColor(.brandSuccess)
                     }
                 }
+                
+                // ROW 4: STATUS BADGE ("Due in X Days" / "Paid • Xd left") - ALWAYS ON ITS OWN NEW ROW!
+                CountdownChip(daysRemaining: subscription.daysUntilBilling)
+                    .padding(.top, 2)
             }
             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-            
-            // Clickable Chevron Indicator
-            Image(systemName: "chevron.right")
-                .font(.system(size: 14, weight: .bold))
-                .foregroundColor(.textSecondary)
-                .padding(.leading, 2)
         }
         .padding(.horizontal, 16)
-        .padding(.vertical, 16)
+        .padding(.vertical, 14)
         .background(
             ZStack {
                 Color.cardBackground
                 LinearGradient(
-                    colors: [rowColor.opacity(0.12), rowColor.opacity(0.03)],
+                    colors: [rowColor.opacity(0.1), rowColor.opacity(0.02)],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )
             }
         )
         .cornerRadius(18)
-        .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 3)
+        .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 3)
         .overlay(
             RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .stroke(rowColor.opacity(0.22), lineWidth: 1)
+                .stroke(rowColor.opacity(0.18), lineWidth: 1)
         )
     }
 }

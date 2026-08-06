@@ -1,5 +1,6 @@
 //
 //  HeroHeaderView.swift
+//  Spendora
 //
 
 import SwiftUI
@@ -17,12 +18,12 @@ enum BillingPeriodFilter: String, CaseIterable, Identifiable {
 // MARK: - HeroHeaderView
 
 /**
- `HeroHeaderView` renders the main executive hero card featuring:
- - "100% On-Device & Private" Privacy Badge (Subby & Tilla inspiration)
- - Cash App Energy Electric Bold Teal Gradient (#00D4AA ➔ #0EA5E9)
+ `HeroHeaderView` renders the main executive dashboard hero card featuring:
+ - Signature Bold Teal Gradient (#00D4AA → #00B4D8 → #6C5CE7)
  - 38pt Black Hero Price Counter
- - Time Period Menu Dropdown (Monthly ⌄, Yearly ⌄)
+ - Period Selector Dropdown (Monthly ⌄, Yearly ⌄)
  - Budget Progress Bar
+ - Next Charge Card with proper multi-line layout rules (Name prominent 20pt Bold, due days on NEW ROW!)
  */
 struct HeroHeaderView: View {
 
@@ -30,7 +31,8 @@ struct HeroHeaderView: View {
 
     let totalMonthly: Double
     let totalYearly: Double
-    let count: Int
+    let subscriptionCount: Int
+    let nextSubscription: Subscription?
     
     @State private var selectedPeriod: BillingPeriodFilter = .monthly
 
@@ -52,9 +54,9 @@ struct HeroHeaderView: View {
 
     private var periodLabel: String {
         switch selectedPeriod {
-        case .monthly: return "monthly run rate"
-        case .yearly: return "yearly commitment"
-        case .total: return "total expenditure"
+        case .monthly: return "THIS MONTH"
+        case .yearly: return "YEARLY COMMITMENT"
+        case .total: return "TOTAL EXPENDITURE"
         }
     }
 
@@ -62,103 +64,78 @@ struct HeroHeaderView: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            // Header Top Brand Bar + 100% On-Device Privacy Badge
-            HStack {
-                HStack(spacing: 8) {
-                    Image("AppLogo")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 30, height: 30)
-                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                        .shadow(color: Color(hex: "#00D4AA").opacity(0.4), radius: 6, x: 0, y: 3)
-                    
-                    Text("SPENDORA")
-                        .font(.system(size: 15, weight: .black, design: .rounded))
-                        .tracking(2.4)
-                        .foregroundStyle(
-                            LinearGradient(
-                                colors: [Color(hex: "#4F46E5"), Color(hex: "#2563EB")],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                }
-                
-                Spacer()
-                
-                // 100% On-Device Privacy Badge
-                HStack(spacing: 4) {
-                    Image(systemName: "lock.shield.fill")
-                        .font(.system(size: 10, weight: .bold))
-                    Text("100% On-Device")
-                        .font(.system(size: 10, weight: .bold, design: .rounded))
-                }
-                .foregroundColor(Color(hex: "#4F46E5"))
-                .padding(.horizontal, 9)
-                .padding(.vertical, 5)
-                .background(Color(hex: "#4F46E5").opacity(0.12))
-                .cornerRadius(12)
-                
-                // Period Menu Dropdown Pill
-                Menu {
-                    Picker("Period", selection: $selectedPeriod) {
-                        ForEach(BillingPeriodFilter.allCases) { period in
-                            Text(period.rawValue).tag(period)
-                        }
-                    }
-                } label: {
-                    HStack(spacing: 4) {
-                        Text(selectedPeriod.rawValue)
-                            .font(.system(size: 12, weight: .bold, design: .rounded))
-                        Image(systemName: "chevron.down")
-                            .font(.system(size: 10, weight: .bold))
-                    }
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 6)
-                    .background(Color.white.opacity(0.18))
-                    .cornerRadius(12)
-                }
-            }
-            .padding(.horizontal, 16)
-            
-            // Executive Hero Banner Card (Cash App Electric Teal Gradient)
+            // Executive Hero Banner Card
             VStack(alignment: .leading, spacing: 18) {
-                HStack(alignment: .center, spacing: 16) {
-                    // Left Figure: Spending Average (38pt Hero Black Typography)
-                    VStack(alignment: .leading, spacing: 4) {
+                // Header Row: Period Menu & Active Count
+                HStack {
+                    HStack(spacing: 6) {
+                        Image(systemName: "calendar")
+                            .font(.system(size: 13, weight: .bold))
+                        Text(periodLabel)
+                            .font(AppStyles.Typography.footnote)
+                            .fontWeight(.bold)
+                            .tracking(1.5)
+                    }
+                    .foregroundColor(.white.opacity(0.85))
+                    
+                    Spacer()
+                    
+                    // Period Menu Dropdown Pill
+                    Menu {
+                        Picker("Period", selection: $selectedPeriod) {
+                            ForEach(BillingPeriodFilter.allCases) { period in
+                                Text(period.rawValue).tag(period)
+                            }
+                        }
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text(selectedPeriod.rawValue)
+                                .font(AppStyles.Typography.caption2)
+                            Image(systemName: "chevron.down")
+                                .font(.system(size: 10, weight: .bold))
+                        }
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background(Color.white.opacity(0.2))
+                        .cornerRadius(12)
+                    }
+                }
+                
+                // Hero Price & Subscription Count
+                HStack(alignment: .bottom) {
+                    VStack(alignment: .leading, spacing: 2) {
                         Text(CurrencyManager.shared.format(displayedAmount))
-                            .font(AppStyles.Typography.hero)
+                            .font(AppStyles.Typography.heroPrice)
                             .foregroundColor(.white)
                             .contentTransition(.numericText())
                             .lineLimit(1)
-                            .minimumScaleFactor(0.7)
+                            .minimumScaleFactor(0.6)
                         
-                        Text(periodLabel)
+                        Text("\(subscriptionCount) \(subscriptionCount == 1 ? "active subscription" : "active subscriptions")")
                             .font(AppStyles.Typography.caption)
-                            .fontWeight(.bold)
-                            .foregroundColor(.white.opacity(0.88))
+                            .foregroundColor(.white.opacity(0.85))
                     }
                     
                     Spacer()
                     
-                    // Vertical Separator Divider
-                    Rectangle()
-                        .fill(Color.white.opacity(0.3))
-                        .frame(width: 1, height: 46)
-                    
-                    Spacer()
-                    
-                    // Right Figure: Subscription Count
                     VStack(alignment: .trailing, spacing: 4) {
-                        Text("\(count)")
-                            .font(AppStyles.Typography.hero)
-                            .foregroundColor(.white)
+                        HStack(spacing: 4) {
+                            Image(systemName: "chart.line.uptrend.xyaxis")
+                                .font(.system(size: 11, weight: .bold))
+                            Text("Avg: \(CurrencyManager.shared.format(subscriptionCount > 0 ? totalMonthly / Double(subscriptionCount) : 0))")
+                                .font(AppStyles.Typography.caption2)
+                        }
+                        .foregroundColor(.white.opacity(0.9))
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color.white.opacity(0.18))
+                        .cornerRadius(8)
                         
-                        Text(count == 1 ? "subscription" : "subscriptions")
-                            .font(AppStyles.Typography.caption)
-                            .fontWeight(.bold)
-                            .foregroundColor(.white.opacity(0.88))
+                        Text("Yearly: \(CurrencyManager.shared.format(totalYearly))")
+                            .font(AppStyles.Typography.caption2)
+                            .foregroundColor(.white.opacity(0.85))
+                            .lineLimit(1)
                     }
                 }
                 
@@ -169,11 +146,10 @@ struct HeroHeaderView: View {
                             Text("Monthly Budget (\(CurrencyManager.shared.format(budget)))")
                                 .font(AppStyles.Typography.footnote)
                                 .fontWeight(.bold)
-                                .foregroundColor(.white.opacity(0.92))
+                                .foregroundColor(.white.opacity(0.9))
                             Spacer()
                             Text("\(Int(budgetRatio * 100))% used")
-                                .font(AppStyles.Typography.footnote)
-                                .fontWeight(.black)
+                                .font(AppStyles.Typography.caption2)
                                 .foregroundColor(budgetRatio > 0.9 ? Color(hex: "#FF6B6B") : Color(hex: "#FFD93D"))
                         }
                         
@@ -198,13 +174,48 @@ struct HeroHeaderView: View {
                     }
                     .padding(.top, 2)
                 }
+                
+                // Next Charge Section Card (Proper Multi-Line Layout Structure)
+                if let next = nextSubscription {
+                    Divider()
+                        .background(Color.white.opacity(0.25))
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        // ROW 1: Header Label (Caption 12pt Semibold)
+                        HStack(spacing: 5) {
+                            Image(systemName: "bell.fill")
+                                .font(.system(size: 11, weight: .bold))
+                                .foregroundColor(Color(hex: "#FFD93D"))
+                            
+                            Text("NEXT CHARGE")
+                                .font(AppStyles.Typography.caption2)
+                                .foregroundColor(.white.opacity(0.85))
+                                .tracking(1.2)
+                        }
+                        
+                        // ROW 2: Subscription Name (Title 3 20pt Bold - PROMINENT)
+                        Text(next.displayName)
+                            .font(AppStyles.Typography.title3)
+                            .foregroundColor(.white)
+                            .lineLimit(1)
+                        
+                        // ROW 3: Cost & Billing Date (Body 16pt Regular)
+                        Text("\(CurrencyManager.shared.format(next.isOneTime ? next.cost : next.monthlyCost)) • \(next.formattedNextBillingDate)")
+                            .font(AppStyles.Typography.body)
+                            .foregroundColor(.white.opacity(0.9))
+                        
+                        // ROW 4: Status Badge ("Due in X days") - NEW ROW!
+                        CountdownChip(daysRemaining: next.daysUntilBilling)
+                            .padding(.top, 2)
+                    }
+                }
             }
-            .padding(22)
+            .padding(20)
             .background(Color.gradientHero)
-            .cornerRadius(20)
-            .shadow(color: Color(hex: "#00D4AA").opacity(0.38), radius: 18, x: 0, y: 8)
+            .cornerRadius(22)
+            .shadow(color: Color(hex: "#00D4AA").opacity(0.35), radius: 18, x: 0, y: 8)
             .overlay(
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                RoundedRectangle(cornerRadius: 22, style: .continuous)
                     .stroke(Color.white.opacity(0.25), lineWidth: 1)
             )
             .padding(.horizontal, 16)
