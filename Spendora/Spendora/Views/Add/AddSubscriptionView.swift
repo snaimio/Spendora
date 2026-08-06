@@ -201,13 +201,20 @@ struct AddSubscriptionView: View {
         let trimmed = serviceName.trimmingCharacters(in: .whitespacesAndNewlines)
         if trimmed.isEmpty {
             linkURL = ""
-        } else if let detectedURL = CancellationService.shared.getDirectCancellationURL(for: trimmed)?.absoluteString {
-            // Only auto fill if it's a direct portal link (not a Google search fallback)
-            if !detectedURL.contains("google.com/search") {
-                linkURL = detectedURL
-            } else {
-                linkURL = ""
-            }
+            return
+        }
+        
+        // 1. Check matching preset in 100 Popular Presets library
+        if let matchingPreset = SubscriptionPreset.all.first(where: {
+            $0.name.localizedCaseInsensitiveContains(trimmed) || trimmed.localizedCaseInsensitiveContains($0.name)
+        }), let presetURL = matchingPreset.cancellationUrl, !presetURL.isEmpty {
+            linkURL = presetURL
+            return
+        }
+        
+        // 2. Fallback to CancellationService direct lookup
+        if let detectedURL = CancellationService.shared.getDirectCancellationURL(for: trimmed)?.absoluteString, !detectedURL.contains("google.com/search") {
+            linkURL = detectedURL
         } else {
             linkURL = ""
         }

@@ -66,12 +66,12 @@ struct AddSubscriptionFormView: View {
             
             PremiumFormField(
                 icon: "link.circle.fill",
-                title: "Website URL"
+                title: "Manage & Cancel Link"
             ) {
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
-                        TextField(text: $linkURL, prompt: Text("https://your-service.com/account").foregroundColor(.secondary)) {
-                            Text("Website URL")
+                        TextField(text: $linkURL, prompt: Text("https://provider.com/account").foregroundColor(.secondary)) {
+                            Text("Manage & Cancel Link")
                         }
                         .keyboardType(.emailAddress)
                         .textInputAutocapitalization(.never)
@@ -79,11 +79,11 @@ struct AddSubscriptionFormView: View {
                         .font(.system(.subheadline, design: .rounded))
                         .foregroundColor(.primary)
                         .tint(.primary)
-                            .onChange(of: linkURL) { _, newValue in
-                                if !newValue.isEmpty {
-                                    isUserEditedLink = true
-                                }
+                        .onChange(of: linkURL) { _, newValue in
+                            if !newValue.isEmpty {
+                                isUserEditedLink = true
                             }
+                        }
                         
                         if !linkURL.isEmpty {
                             Button {
@@ -102,12 +102,12 @@ struct AddSubscriptionFormView: View {
                             Image(systemName: "sparkles")
                                 .font(.system(size: 9))
                                 .foregroundColor(.secondary)
-                            Text("Auto-generated website portal link")
+                            Text("Auto-linked 1-tap cancellation portal")
                                 .font(.system(size: 10, weight: .medium, design: .rounded))
                                 .foregroundColor(.secondary)
                         }
                     } else {
-                        Text("Auto-generates official portal link when typing service name")
+                        Text("Auto-links official cancellation portal when typing service name")
                             .font(.system(size: 10, design: .rounded))
                             .foregroundColor(.secondary.opacity(0.8))
                     }
