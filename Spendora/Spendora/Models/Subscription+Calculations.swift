@@ -68,9 +68,9 @@ extension Subscription {
         nextBillingDate < Calendar.current.startOfDay(for: Date())
     }
 
-    /// Validates that name is not empty, cost is positive, and next billing date is in the future
+    /// Validates that name is not empty and cost is positive
     var isValid: Bool {  // isValid property
-        !displayName.isEmpty && cost > 0 && nextBillingDate > Date()
+        !displayName.isEmpty && cost > 0
     }
 
     /// Clamps user usage rating between 0 and 5 stars
