@@ -77,7 +77,7 @@ struct HeroHeaderView: View {
                         .tracking(2.4)
                         .foregroundStyle(
                             LinearGradient(
-                                colors: [Color(hex: "#00D4AA"), Color(hex: "#0EA5E9")],
+                                colors: [Color(hex: "#4F46E5"), Color(hex: "#2563EB")],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
@@ -93,10 +93,10 @@ struct HeroHeaderView: View {
                     Text("100% On-Device")
                         .font(.system(size: 10, weight: .bold, design: .rounded))
                 }
-                .foregroundColor(Color(hex: "#00D4AA"))
+                .foregroundColor(Color(hex: "#4F46E5"))
                 .padding(.horizontal, 9)
                 .padding(.vertical, 5)
-                .background(Color(hex: "#00D4AA").opacity(0.14))
+                .background(Color(hex: "#4F46E5").opacity(0.12))
                 .cornerRadius(12)
                 
                 // Period Menu Dropdown Pill

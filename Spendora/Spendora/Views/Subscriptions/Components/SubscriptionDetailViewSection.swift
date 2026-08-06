@@ -61,6 +61,19 @@ struct SubscriptionDetailViewSection: View {
                 DetailRow(icon: "calendar", title: "Next Billing Date", value: subscription.formattedNextBillingDate)
                 DetailRow(icon: "clock.fill", title: "Days Until Billing", value: "\(subscription.daysUntilBilling) days")
                 
+                if !subscription.isOneTime {
+                    HStack {
+                        Image(systemName: "creditcard.circle.fill")
+                            .foregroundColor(.brandPrimary)
+                        Text("Record Payment")
+                            .font(.system(.body, design: .rounded))
+                            .foregroundColor(.textPrimary)
+                        Spacer()
+                        MarkAsPaidButton(subscription: subscription)
+                    }
+                    .padding(.vertical, 2)
+                }
+                
                 if subscription.isOverdue {
                     DetailRow(icon: "exclamationmark.triangle.fill", title: "Status", value: "Overdue")
                 } else if subscription.isUpcoming {

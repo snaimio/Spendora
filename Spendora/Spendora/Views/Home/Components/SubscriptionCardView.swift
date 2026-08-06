@@ -110,10 +110,11 @@ struct SubscriptionCardView: View {
             }
             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
             
-            // Subby 1-Tap "Mark as Paid" Action Button
-            if !subscription.isOneTime {
-                MarkAsPaidButton(subscription: subscription)
-            }
+            // Clickable Chevron Indicator to Detail & Edit Sheet
+            Image(systemName: "chevron.right")
+                .font(.system(size: 13, weight: .bold))
+                .foregroundColor(.textSecondary)
+                .padding(.trailing, 4)
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 14)

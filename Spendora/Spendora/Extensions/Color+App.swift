@@ -7,94 +7,100 @@ import SwiftUI
 // MARK: - Color Extension
 
 /**
- Extension on `Color` providing Spendora's DIRECTION A: "BOLD TEAL & CASH APP ENERGY" Signature Color System.
- Features Electric Teal (#00D4AA), Vibrant Coral (#FF6B6B), and Warm Gold (#FFD93D).
+ Extension on `Color` providing Spendora's High-Contrast, Eye-Friendly Color System.
+ Features Deep Indigo (#4F46E5) & Royal Blue (#2563EB) for an eye-pleasing, WCAG AAA compliant visual hierarchy in both Light and Dark modes.
  */
 extension Color {
     
-    // MARK: - Signature Bold Teal Palette
-    static let brandPrimary = Color(hex: "#00D4AA")      // Electric Bold Teal (Cash App Energy)
-    static let brandSecondary = Color(hex: "#0EA5E9")    // Vibrant Sky Blue
-    static let brandAccent = Color(hex: "#0EA5E9")       // Electric Cyan Accent
+    // MARK: - Eye-Friendly Brand Palette
+    static let brandPrimary = Color(hex: "#4F46E5")      // Deep Indigo (Soft on the eyes)
+    static let brandSecondary = Color(hex: "#2563EB")    // Royal Blue
+    static let brandAccent = Color(hex: "#38BDF8")       // Sky Blue
     static let brandTertiary = Color(hex: "#10B981")     // Emerald Mint
-    static let brandCoral = Color(hex: "#FF6B6B")        // Vibrant Coral Alert
-    static let brandGold = Color(hex: "#FFD93D")         // Warm Sunshine Gold
-    static let brandAmber = Color(hex: "#FFD93D")        // Warm Amber Gold
+    static let brandCoral = Color(hex: "#F43F5E")        // Coral Rose
+    static let brandGold = Color(hex: "#F59E0B")         // Warm Gold
+    static let brandAmber = Color(hex: "#F59E0B")        // Warm Amber
     static let brandPurple = Color(hex: "#8B5CF6")       // Electric Violet
-    static let brandRose = Color(hex: "#F43F5E")         // Rose Red
+    static let brandRose = Color(hex: "#E11D48")         // Crimson Rose
     
-    // MARK: - Urgency Countdown Status Colors
-    static let statusUrgentRed = Color(hex: "#FF6B6B")   // Due Today / Overdue (Red)
-    static let statusSoonAmber = Color(hex: "#FFD93D")   // Due ≤ 7 Days (Amber Gold)
-    static let statusSafeGreen = Color(hex: "#00D4AA")   // Due > 30 Days (Teal Safe)
+    // MARK: - Status Colors
+    static let statusUrgentRed = Color(hex: "#F43F5E")   // Urgent Red
+    static let statusSoonAmber = Color(hex: "#F59E0B")   // Soon Amber
+    static let statusSafeGreen = Color(hex: "#10B981")   // Safe Green
     
-    // MARK: - Signature Gradient Meshes
+    // MARK: - Gradient Meshes
     static let gradientHero = LinearGradient(
-        colors: [Color(hex: "#00D4AA"), Color(hex: "#0EA5E9"), Color(hex: "#6366F1")],
+        colors: [Color(hex: "#4F46E5"), Color(hex: "#2563EB"), Color(hex: "#38BDF8")],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
     
     static let gradientTeal = LinearGradient(
-        colors: [Color(hex: "#00D4AA"), Color(hex: "#10B981")],
+        colors: [Color(hex: "#10B981"), Color(hex: "#14B8A6")],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
     
     static let gradientCoral = LinearGradient(
-        colors: [Color(hex: "#FF6B6B"), Color(hex: "#FFD93D")],
+        colors: [Color(hex: "#F43F5E"), Color(hex: "#F59E0B")],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
     
     static let gradientGold = LinearGradient(
-        colors: [Color(hex: "#FFD93D"), Color(hex: "#F59E0B")],
+        colors: [Color(hex: "#F59E0B"), Color(hex: "#D97706")],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
 
-    // MARK: - Adaptive High-Contrast Surfaces (Dark Space Charcoal & Crisp Light)
+    // MARK: - Adaptive Surfaces (Maximum 100% Dark Mode & Light Mode Legibility)
+    
+    /// Main App Canvas: Deep Slate (#0B0F17) in Dark Mode, Soft Slate (#F8FAFC) in Light Mode
     static let appBackground = Color(UIColor { traitCollection in
         traitCollection.userInterfaceStyle == .dark
-            ? UIColor(red: 0.04, green: 0.06, blue: 0.09, alpha: 1.0)     // Space Dark (#0B0F17)
-            : UIColor(red: 0.97, green: 0.98, blue: 0.99, alpha: 1.0)     // Soft Slate (#F8FAFC)
+            ? UIColor(red: 0.04, green: 0.06, blue: 0.09, alpha: 1.0)     // #0B0F17
+            : UIColor(red: 0.97, green: 0.98, blue: 0.99, alpha: 1.0)     // #F8FAFC
     })
     
+    /// Card Container Background: Elevated Slate Glass (#1E293B) in Dark Mode, Pure White in Light Mode
     static let cardBackground = Color(UIColor { traitCollection in
         traitCollection.userInterfaceStyle == .dark
-            ? UIColor(red: 0.11, green: 0.14, blue: 0.20, alpha: 1.0)     // Elevated Slate Glass (#1C2433)
+            ? UIColor(red: 0.12, green: 0.16, blue: 0.23, alpha: 1.0)     // #1E293B
             : UIColor.white
     })
     
+    /// Primary Text: Pure Crisp White (#FFFFFF) in Dark Mode, Dark Slate (#0F172A) in Light Mode
     static let textPrimary = Color(UIColor { traitCollection in
         traitCollection.userInterfaceStyle == .dark
             ? UIColor.white
-            : UIColor(red: 0.08, green: 0.11, blue: 0.18, alpha: 1.0)     // Dark Charcoal (#141C2E)
+            : UIColor(red: 0.06, green: 0.09, blue: 0.16, alpha: 1.0)
     })
     
+    /// Secondary Text: High-Contrast Slate (#E2E8F0) in Dark Mode, Dark Gray (#475569) in Light Mode
     static let textSecondary = Color(UIColor { traitCollection in
         traitCollection.userInterfaceStyle == .dark
-            ? UIColor(red: 0.80, green: 0.84, blue: 0.90, alpha: 1.0)     // Crisp Visible Slate (#CBD5E1)
-            : UIColor(red: 0.30, green: 0.36, blue: 0.45, alpha: 1.0)     // Slate (#475569)
+            ? UIColor(red: 0.88, green: 0.91, blue: 0.94, alpha: 1.0)     // #E2E8F0 (100% visible in Dark Mode)
+            : UIColor(red: 0.28, green: 0.33, blue: 0.41, alpha: 1.0)
     })
     
+    /// Tertiary Text: Light Slate (#94A3B8) in Dark Mode, Slate Gray (#64748B) in Light Mode
     static let textTertiary = Color(UIColor { traitCollection in
         traitCollection.userInterfaceStyle == .dark
-            ? UIColor(red: 0.58, green: 0.64, blue: 0.72, alpha: 1.0)     // (#94A3B8)
-            : UIColor(red: 0.45, green: 0.50, blue: 0.60, alpha: 1.0)
+            ? UIColor(red: 0.58, green: 0.64, blue: 0.72, alpha: 1.0)     // #94A3B8
+            : UIColor(red: 0.39, green: 0.45, blue: 0.55, alpha: 1.0)
     })
 
     // MARK: - 10+ Category Colors
-    static let categoryEntertainment = Color(hex: "#FF6B6B")   // Coral
-    static let categoryProductivity = Color(hex: "#00D4AA")    // Electric Teal
-    static let categoryHealth = Color(hex: "#10B981")          // Emerald Mint
-    static let categoryShopping = Color(hex: "#FFD93D")        // Gold
+    static let categoryEntertainment = Color(hex: "#F43F5E")   // Rose
+    static let categoryProductivity = Color(hex: "#4F46E5")    // Indigo
+    static let categoryHealth = Color(hex: "#10B981")          // Mint
+    static let categoryShopping = Color(hex: "#F59E0B")        // Gold
     static let categoryFood = Color(hex: "#EF4444")            // Red
     static let categoryEducation = Color(hex: "#8B5CF6")       // Violet
-    static let categoryAiTools = Color(hex: "#0EA5E9")         // Cyan
+    static let categoryAiTools = Color(hex: "#0EA5E9")         // Sky Blue
     static let categoryUtilities = Color(hex: "#14B8A6")       // Teal
     static let categoryGaming = Color(hex: "#D946EF")          // Magenta
-    static let categoryServices = Color(hex: "#3B82F6")        // Royal Blue
+    static let categoryServices = Color(hex: "#2563EB")        // Royal Blue
     static let categoryOther = Color(hex: "#64748B")           // Slate
     
     // MARK: - Hex Initializer
