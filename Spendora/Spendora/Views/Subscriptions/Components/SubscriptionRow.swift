@@ -16,14 +16,11 @@ struct SubscriptionRow: View {
     let subscription: Subscription
 
     private var rowColor: Color {
-        Color(hex: subscription.colorHex ?? "#6366F1")
+        UniqueSubscriptionThemeHelper.resolveColor(for: subscription)
     }
 
     private var rowIcon: String {
-        SubscriptionPreset.all.first(where: {
-            $0.name.localizedCaseInsensitiveContains(subscription.displayName) ||
-            subscription.displayName.localizedCaseInsensitiveContains($0.name)
-        })?.systemIcon ?? "creditcard.fill"
+        UniqueSubscriptionThemeHelper.resolveIcon(for: subscription)
     }
 
     // MARK: - Body
