@@ -4,11 +4,21 @@
 
 import SwiftUI
 
+// MARK: - BillingPeriodFilter Enum
+
+enum BillingPeriodFilter: String, CaseIterable, Identifiable {
+    case monthly = "Monthly"
+    case yearly = "Yearly"
+    case total = "Total"
+    
+    var id: String { rawValue }
+}
+
 // MARK: - HeroHeaderView
 
 /**
- `HeroHeaderView` renders the main dashboard executive summary hero card with vibrant gradients,
- high-contrast typography, live currency formatting, budget progress bar, and glass stat pills.
+ `HeroHeaderView` renders the executive summary hero card with vibrant blue gradients,
+ time period toggle (`Monthly ⌄`, `Yearly ⌄`), monthly average, active count, and budget progress.
  */
 struct HeroHeaderView: View {
 
@@ -18,6 +28,8 @@ struct HeroHeaderView: View {
     let totalYearly: Double
     let count: Int
     
+    @State private var selectedPeriod: BillingPeriodFilter = .monthly
+
     private var budget: Double {
         BudgetService.shared.monthlyBudget
     }
@@ -25,20 +37,28 @@ struct HeroHeaderView: View {
     private var budgetRatio: Double {
         BudgetService.shared.progressRatio(currentSpending: totalMonthly)
     }
-    
-    private var budgetStatusText: String {
-        BudgetService.shared.budgetStatus(currentSpending: totalMonthly).status
+
+    private var displayedAmount: Double {
+        switch selectedPeriod {
+        case .monthly: return totalMonthly
+        case .yearly: return totalYearly
+        case .total: return totalYearly
+        }
     }
-    
-    private var budgetStatusColor: Color {
-        BudgetService.shared.budgetStatus(currentSpending: totalMonthly).color
+
+    private var periodLabel: String {
+        switch selectedPeriod {
+        case .monthly: return "monthly avg."
+        case .yearly: return "yearly total"
+        case .total: return "total run rate"
+        }
     }
 
     // MARK: - Body
 
     var body: some View {
         VStack(spacing: 16) {
-            // Header Top Bar with App Logo
+            // Header Top Brand Bar
             HStack {
                 HStack(spacing: 8) {
                     Image("AppLogo")
@@ -61,71 +81,69 @@ struct HeroHeaderView: View {
                 }
                 Spacer()
                 
-                // Active Subscriptions Count Pill
-                HStack(spacing: 4) {
-                    Circle()
-                        .fill(Color(hex: "#10B981"))
-                        .frame(width: 6, height: 6)
-                    Text("\(count) Active")
-                        .font(.system(size: 11, weight: .bold, design: .rounded))
-                        .foregroundColor(.primary)
+                // Period Menu Dropdown (Inspired by SubX Screenshot 3)
+                Menu {
+                    Picker("Period", selection: $selectedPeriod) {
+                        ForEach(BillingPeriodFilter.allCases) { period in
+                            Text(period.rawValue).tag(period)
+                        }
+                    }
+                } label: {
+                    HStack(spacing: 4) {
+                        Text(selectedPeriod.rawValue)
+                            .font(.system(size: 12, weight: .bold, design: .rounded))
+                        Image(systemName: "chevron.down")
+                            .font(.system(size: 10, weight: .bold))
+                    }
+                    .foregroundColor(.brandPrimary)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(Color.brandPrimary.opacity(0.12))
+                    .cornerRadius(12)
                 }
-                .padding(.horizontal, 10)
-                .padding(.vertical, 5)
-                .background(Color.cardBackground)
-                .cornerRadius(12)
-                .shadow(color: Color.black.opacity(0.04), radius: 4, x: 0, y: 2)
             }
             .padding(.horizontal, 16)
             
-            // Executive Hero Spending Card
-            VStack(alignment: .leading, spacing: 14) {
-                HStack(alignment: .top) {
+            // Executive Hero Banner Card
+            VStack(alignment: .leading, spacing: 16) {
+                // Top Executive Figures Split (Inspired by SubX Screenshot 3)
+                HStack(alignment: .center, spacing: 16) {
+                    // Left Figure: Spending Average
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("TOTAL MONTHLY RUN RATE")
-                            .font(.system(size: 11, weight: .heavy, design: .rounded))
-                            .foregroundColor(.white.opacity(0.85))
-                            .tracking(1.2)
-                        
-                        Text(CurrencyManager.shared.format(totalMonthly))
-                            .font(.system(size: 36, weight: .black, design: .rounded))
+                        Text(CurrencyManager.shared.format(displayedAmount))
+                            .font(.system(size: 34, weight: .black, design: .rounded))
                             .foregroundColor(.white)
                             .contentTransition(.numericText())
                             .lineLimit(1)
                             .minimumScaleFactor(0.7)
+                        
+                        Text(periodLabel)
+                            .font(.system(size: 12, weight: .semibold, design: .rounded))
+                            .foregroundColor(.white.opacity(0.85))
                     }
                     
                     Spacer()
                     
-                    // Glass Stat Pills (Yearly & Avg)
-                    VStack(alignment: .trailing, spacing: 6) {
-                        HStack(spacing: 4) {
-                            Image(systemName: "calendar")
-                                .font(.system(size: 10, weight: .bold))
-                            Text("Yr: \(CurrencyManager.shared.format(totalYearly))")
-                                .font(.system(size: 11, weight: .bold, design: .rounded))
-                        }
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 6)
-                        .background(Color.white.opacity(0.18))
-                        .cornerRadius(10)
+                    // Vertical Separator Divider
+                    Rectangle()
+                        .fill(Color.white.opacity(0.25))
+                        .frame(width: 1, height: 42)
+                    
+                    Spacer()
+                    
+                    // Right Figure: Subscription Count
+                    VStack(alignment: .trailing, spacing: 4) {
+                        Text("\(count)")
+                            .font(.system(size: 34, weight: .black, design: .rounded))
+                            .foregroundColor(.white)
                         
-                        HStack(spacing: 4) {
-                            Image(systemName: "chart.line.uptrend.xyaxis")
-                                .font(.system(size: 10, weight: .bold))
-                            Text("Avg: \(CurrencyManager.shared.format(count > 0 ? totalMonthly / Double(count) : 0))")
-                                .font(.system(size: 11, weight: .bold, design: .rounded))
-                        }
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 6)
-                        .background(Color.white.opacity(0.18))
-                        .cornerRadius(10)
+                        Text(count == 1 ? "subscription" : "subscriptions")
+                            .font(.system(size: 12, weight: .semibold, design: .rounded))
+                            .foregroundColor(.white.opacity(0.85))
                     }
                 }
                 
-                // Budget Progress Bar
+                // Budget Progress Bar (If Budget Set)
                 if budget > 0 {
                     VStack(alignment: .leading, spacing: 6) {
                         HStack {
@@ -157,7 +175,7 @@ struct HeroHeaderView: View {
                         }
                         .frame(height: 8)
                     }
-                    .padding(.top, 4)
+                    .padding(.top, 2)
                 }
             }
             .padding(20)
