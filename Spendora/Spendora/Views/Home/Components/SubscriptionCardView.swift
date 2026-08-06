@@ -2,42 +2,21 @@
 //  SubscriptionCardView.swift
 //
 
-/**
- * Main/Core Functions & Purpose:
- * SubscriptionCardView component displaying individual subscription details, icon, trial/renewal badges, monthly cost, and next billing date.
- */
-
 import SwiftUI
-
 
 // MARK: - SubscriptionCardView
 
 /**
- `SubscriptionCardView` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for subscriptioncardview handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `SubscriptionCardView` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
+ `SubscriptionCardView` renders a single subscription card with vibrant brand colors, rounded 20pt glass containers, and glowing icon circles.
  */
 struct SubscriptionCardView: View {
 
     // MARK: - Properties
 
-    let subscription: Subscription  // subscription property
-    
+    let subscription: Subscription
 
     // MARK: - Body
 
-    /// Main SwiftUI layout body property.
     var body: some View {
         HStack(spacing: 14) {
             ZStack {
@@ -138,11 +117,26 @@ struct SubscriptionCardView: View {
             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
             
             Image(systemName: "chevron.right")
-        .padding(12)
+                .font(.system(size: 11, weight: .semibold))
+                .foregroundColor(.textTertiary)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
         .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(Color.cardBackground)
-                .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 2)
+            ZStack {
+                Color.cardBackground
+                LinearGradient(
+                    colors: [cardColor.opacity(0.08), cardColor.opacity(0.02)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            }
+        )
+        .cornerRadius(20)
+        .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 3)
+        .overlay(
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .stroke(cardColor.opacity(0.18), lineWidth: 1)
         )
     }
     
