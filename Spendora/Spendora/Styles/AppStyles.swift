@@ -7,33 +7,33 @@ import SwiftUI
 // MARK: - AppStyles
 
 /**
- `AppStyles` provides a unified, enterprise-grade design system token architecture for Spendora.
- Features SF Pro Display/Text typographic hierarchy, glassmorphism tokens, and micro-shadow systems.
+ `AppStyles` provides a unified design system architecture for Spendora.
+ Implements SF Pro typography scale, glassmorphism tokens, and ambient glow shadows.
  */
 struct AppStyles {
 
-    // MARK: - Typography Hierarchy
+    // MARK: - Typography System
     struct Typography {
-        /// Hero Price Display (38pt, Black, Display)
-        static let heroPrice = Font.system(size: 38, weight: .black, design: .default)
+        /// Hero Display Price: 38pt Black
+        static let hero = Font.system(size: 38, weight: .black, design: .rounded)
         
-        /// Large Title: SF Pro Display Bold, 34pt
-        static let largeTitle = Font.system(size: 34, weight: .bold, design: .default)
+        /// Title: 28pt Semibold
+        static let title = Font.system(size: 28, weight: .semibold, design: .rounded)
         
-        /// Title: SF Pro Display Semibold, 28pt
-        static let title = Font.system(size: 28, weight: .semibold, design: .default)
+        /// Headline: 20pt Semibold
+        static let headline = Font.system(size: 20, weight: .semibold, design: .rounded)
         
-        /// Headline: SF Pro Display Semibold, 20pt
-        static let headline = Font.system(size: 20, weight: .semibold, design: .default)
+        /// Body: 16pt Regular
+        static let body = Font.system(size: 16, weight: .regular, design: .rounded)
         
-        /// Body: SF Pro Text Regular, 16pt
-        static let body = Font.system(size: 16, weight: .regular, design: .default)
+        /// Caption: 13pt Regular
+        static let caption = Font.system(size: 13, weight: .regular, design: .rounded)
         
-        /// Caption: SF Pro Text Regular, 13pt
-        static let caption = Font.system(size: 13, weight: .regular, design: .default)
+        /// Footnote: 11pt Regular
+        static let footnote = Font.system(size: 11, weight: .regular, design: .rounded)
         
-        /// Footnote: SF Pro Text Regular, 11pt
-        static let footnote = Font.system(size: 11, weight: .regular, design: .default)
+        /// Status Badge Pill: 11pt Heavy
+        static let badge = Font.system(size: 11, weight: .heavy, design: .rounded)
     }
 
     // MARK: - Spacing System
@@ -54,27 +54,27 @@ struct AppStyles {
         static let xxLarge: CGFloat = 48
     }
 
-    // MARK: - Corner Radius Tokens (12-16px Card Standard)
+    // MARK: - Corner Radius Tokens (16pt Standard Card)
     struct Radius {
         /// 6pt badge pill radius
         static let small: CGFloat = 6
-        /// 10pt icon container radius
-        static let icon: CGFloat = 10
-        /// 14pt button radius
-        static let button: CGFloat = 14
-        /// 16pt card standard radius
+        /// 12pt icon container radius
+        static let icon: CGFloat = 12
+        /// 16pt standard card radius
         static let card: CGFloat = 16
         /// 20pt hero banner radius
         static let hero: CGFloat = 20
+        /// 24pt modal radius
+        static let modal: CGFloat = 24
     }
 
-    // MARK: - Shadow Elevation System
+    // MARK: - Glassmorphism Shadow Elevation System
     struct Shadow {
         /// Soft subtle card shadow
         static let soft = Color.black.opacity(0.04)
         /// Medium glass shadow
         static let medium = Color.black.opacity(0.08)
-        /// Strong hero glow shadow
-        static let heroGlow = Color(hex: "#2563EB").opacity(0.35)
+        /// Glowing hero shadow
+        static let heroGlow = Color(hex: "#6366F1").opacity(0.38)
     }
 }
