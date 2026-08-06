@@ -17,6 +17,7 @@ extension Color {
     static let brandPrimary = Color(hex: "#00D4AA")      // Bold Teal - SIGNATURE COLOR
     static let brandSecondary = Color(hex: "#FF6B6B")    // Coral - Alerts & Actions
     static let brandAccent = Color(hex: "#FFD93D")       // Gold - Highlights
+    static let brandAmber = Color(hex: "#FFD93D")        // Amber Gold
     static let brandDark = Color(hex: "#0F0F1A")         // Deep Navy
     static let brandLight = Color(hex: "#F8F9FE")        // Light Lavender
     static let brandCard = Color(hex: "#FFFFFF")         // Pure White Cards
