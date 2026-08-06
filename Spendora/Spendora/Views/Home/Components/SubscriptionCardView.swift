@@ -40,51 +40,51 @@ struct SubscriptionCardView: View {
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 6) {
                     Text(subscription.displayName)
-                        .font(.system(size: 16, weight: .semibold, design: .default))
+                        .font(.system(size: 16, weight: .bold, design: .rounded))
                         .foregroundColor(.textPrimary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                     
                     if subscription.isUpcoming {
                         Text("Due Soon")
-                            .font(.system(size: 8, weight: .heavy, design: .default))
+                            .font(.system(size: 8, weight: .heavy, design: .rounded))
                             .padding(.horizontal, 7)
                             .padding(.vertical, 3)
-                            .background(Color(hex: "#2563EB").opacity(0.15))
-                            .foregroundColor(Color(hex: "#2563EB"))
+                            .background(Color(hex: "#0EA5E9").opacity(0.25))
+                            .foregroundColor(Color(hex: "#38BDF8"))
                             .cornerRadius(8)
                     }
                     
                     if subscription.isTrial && !subscription.trialConvertedToPaid {
                         Text("Trial")
-                            .font(.system(size: 8, weight: .heavy, design: .default))
+                            .font(.system(size: 8, weight: .heavy, design: .rounded))
                             .padding(.horizontal, 7)
                             .padding(.vertical, 3)
-                            .background(Color(hex: "#F59E0B").opacity(0.18))
-                            .foregroundColor(Color(hex: "#F59E0B"))
+                            .background(Color(hex: "#F59E0B").opacity(0.25))
+                            .foregroundColor(Color(hex: "#FBBF24"))
                             .cornerRadius(8)
                     }
                 }
                 
                 HStack(spacing: 4) {
                     Text(CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost))
-                        .font(.system(size: 15, weight: .bold, design: .default))
-                        .foregroundColor(Color(hex: "#2563EB"))
+                        .font(.system(size: 15, weight: .heavy, design: .rounded))
+                        .foregroundColor(.brandPrimary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                     
                     if subscription.isOneTime {
                         Text("• Lifetime")
-                            .font(.system(size: 10, weight: .bold, design: .default))
-                            .foregroundColor(Color(hex: "#7C3AED"))
+                            .font(.system(size: 10, weight: .bold, design: .rounded))
+                            .foregroundColor(.brandPurple)
                     } else {
                         Text("/month")
-                            .font(.system(size: 10, weight: .regular, design: .default))
+                            .font(.system(size: 10, weight: .medium, design: .rounded))
                             .foregroundColor(.textSecondary)
                         
                         if subscription.isYearly {
                             Text("• Yearly")
-                                .font(.system(size: 9, weight: .regular, design: .default))
+                                .font(.system(size: 9, weight: .medium, design: .rounded))
                                 .foregroundColor(.textSecondary)
                         }
                     }
@@ -97,7 +97,7 @@ struct SubscriptionCardView: View {
                             .foregroundColor(.textSecondary)
                         
                         Text("Next: \(subscription.formattedNextBillingDate)")
-                            .font(.system(size: 11, weight: .regular, design: .default))
+                            .font(.system(size: 11, weight: .semibold, design: .rounded))
                             .foregroundColor(.textSecondary)
                             .lineLimit(1)
                             .minimumScaleFactor(0.6)
@@ -106,11 +106,11 @@ struct SubscriptionCardView: View {
                     HStack(spacing: 4) {
                         Image(systemName: "checkmark.seal.fill")
                             .font(.system(size: 10, weight: .bold))
-                            .foregroundColor(Color(hex: "#10B981"))
+                            .foregroundColor(.brandTertiary)
                         
                         Text("One-Time Purchase")
-                            .font(.system(size: 11, weight: .bold, design: .default))
-                            .foregroundColor(Color(hex: "#10B981"))
+                            .font(.system(size: 11, weight: .bold, design: .rounded))
+                            .foregroundColor(.brandTertiary)
                     }
                 }
             }
@@ -126,17 +126,17 @@ struct SubscriptionCardView: View {
             ZStack {
                 Color.cardBackground
                 LinearGradient(
-                    colors: [cardColor.opacity(0.08), cardColor.opacity(0.02)],
+                    colors: [cardColor.opacity(0.12), cardColor.opacity(0.03)],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )
             }
         )
-        .cornerRadius(16)
-        .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 3)
+        .cornerRadius(18)
+        .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 3)
         .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(cardColor.opacity(0.18), lineWidth: 1)
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .stroke(cardColor.opacity(0.22), lineWidth: 1)
         )
     }
     
