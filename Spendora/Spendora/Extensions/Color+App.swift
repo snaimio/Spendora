@@ -23,6 +23,7 @@ extension Color {
     static let brandLight = Color(hex: "#F8F9FE")        // Light Lavender
     static let brandCard = Color(hex: "#FFFFFF")         // Pure White Cards
     static let brandPurple = Color(hex: "#6C5CE7")       // Purple Accent
+    static let brandRose = Color(hex: "#FF6B6B")         // Rose Coral Accent
     
     // MARK: - Status Colors
     static let brandSuccess = Color(hex: "#00D4AA")      // Mint Green
