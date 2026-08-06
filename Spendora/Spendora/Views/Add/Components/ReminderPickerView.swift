@@ -44,7 +44,8 @@ struct ReminderPickerView: View {
     var body: some View {
         PremiumFormField(
             icon: "bell.circle.fill",
-            title: "Reminder Alert"
+            title: "Reminder Alert",
+            iconColor: .brandRose
         ) {
             Picker("Reminder Alert", selection: $reminderDaysBefore) {
                 ForEach(ReminderOption.allCases) { option in

@@ -4,32 +4,19 @@
 
 import SwiftUI
 
-
 // MARK: - HeroHeaderView
 
 /**
- `HeroHeaderView` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for heroheaderview handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `HeroHeaderView` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
+ `HeroHeaderView` renders the main dashboard executive summary hero card with vibrant gradients,
+ high-contrast typography, live currency formatting, budget progress bar, and glass stat pills.
  */
 struct HeroHeaderView: View {
 
     // MARK: - Properties
 
-    let totalMonthly: Double  // totalMonthly property
-    let totalYearly: Double  // totalYearly property
-    let count: Int  // count property
+    let totalMonthly: Double
+    let totalYearly: Double
+    let count: Int
     
     private var budget: Double {
         BudgetService.shared.monthlyBudget
@@ -47,160 +34,147 @@ struct HeroHeaderView: View {
         BudgetService.shared.budgetStatus(currentSpending: totalMonthly).color
     }
 
-
     // MARK: - Body
 
-    /// Main SwiftUI layout body property.
     var body: some View {
-        VStack(spacing: 14) {
-            // Top gradient line
-            Rectangle()
-                .fill(
-                    LinearGradient(
-                        colors: [.brandPrimary, .brandSecondary, Color.purple],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                )
-                .frame(height: 4)
-                .cornerRadius(2)
-                .padding(.horizontal, 16)
-            
-            // Brand Logo & Header
+        VStack(spacing: 16) {
+            // Header Top Bar with App Logo
             HStack {
                 HStack(spacing: 8) {
                     Image("AppLogo")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: 26, height: 26)
-                        .clipShape(RoundedRectangle(cornerRadius: 7, style: .continuous))
-                        .shadow(color: .brandPrimary.opacity(0.3), radius: 4, x: 0, y: 2)
+                        .frame(width: 28, height: 28)
+                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                        .shadow(color: Color(hex: "#6366F1").opacity(0.4), radius: 6, x: 0, y: 3)
                     
                     Text("SPENDORA")
-                        .font(.system(size: 13, weight: .black, design: .rounded))
-                        .tracking(2.0)
+                        .font(.system(size: 14, weight: .black, design: .rounded))
+                        .tracking(2.2)
                         .foregroundStyle(
                             LinearGradient(
-                                colors: [.brandPrimary, .brandSecondary],
+                                colors: [Color(hex: "#6366F1"), Color(hex: "#8B5CF6")],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
                         )
                 }
                 Spacer()
-            }
-            .padding(.horizontal, 16)
-            .padding(.top, 2)
-            
-            HStack(alignment: .top, spacing: 12) {
-                // Left: Monthly spend
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("THIS MONTH")
-                        .font(.system(.caption, design: .rounded))
-                        .fontWeight(.bold)
-                        .foregroundColor(.secondary)
-                        .tracking(1.5)
-                    
-                    Text(CurrencyManager.shared.format(totalMonthly))
-                        .font(.appHeroPrice(size: 34))
+                
+                // Active Subscriptions Count Pill
+                HStack(spacing: 4) {
+                    Circle()
+                        .fill(Color(hex: "#10B981"))
+                        .frame(width: 6, height: 6)
+                    Text("\(count) Active")
+                        .font(.system(size: 11, weight: .bold, design: .rounded))
                         .foregroundColor(.primary)
-                        .contentTransition(.numericText())
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.7)
-                    
-                    if count > 0 {
-                        Text("\(count) active \(count == 1 ? "subscription" : "subscriptions")")
-                            .font(.system(.caption, design: .rounded))
-                            .foregroundColor(.secondary)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.8)
-                    }
                 }
-                .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-                
-                Spacer(minLength: 8)
-                
-                // Right: Mini stats
-                VStack(alignment: .trailing, spacing: 6) {
-                    PremiumStatPill(
-                        icon: "calendar",
-                        label: "Yearly",
-                        value: CurrencyManager.shared.format(totalYearly)
-                    )
-                    
-                    PremiumStatPill(
-                        icon: "chart.line.uptrend.xyaxis",
-                        label: "Avg",
-                        value: CurrencyManager.shared.format(count > 0 ? totalMonthly / Double(count) : 0)
-                    )
-                }
-                .frame(minWidth: 0, maxWidth: .infinity, alignment: .trailing)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
+                .background(Color.cardBackground)
+                .cornerRadius(12)
+                .shadow(color: Color.black.opacity(0.04), radius: 4, x: 0, y: 2)
             }
             .padding(.horizontal, 16)
             
-            // Budget Progress Bar (If Budget Set)
-            if budget > 0 {
-                VStack(alignment: .leading, spacing: 6) {
-                    HStack {
-                        Text("Monthly Budget")
-                            .font(.caption)
-                            .fontWeight(.medium)
-                            .foregroundColor(.secondary)
-                        Spacer()
-                        Text("\(Int(budgetRatio * 100))% used")
-                            .font(.caption)
-                            .fontWeight(.bold)
-                            .foregroundColor(budgetStatusColor)
+            // Executive Hero Spending Card
+            VStack(alignment: .leading, spacing: 14) {
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("TOTAL MONTHLY RUN RATE")
+                            .font(.system(size: 11, weight: .extrabold, design: .rounded))
+                            .foregroundColor(.white.opacity(0.85))
+                            .tracking(1.2)
+                        
+                        Text(CurrencyManager.shared.format(totalMonthly))
+                            .font(.system(size: 36, weight: .black, design: .rounded))
+                            .foregroundColor(.white)
+                            .contentTransition(.numericText())
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
                     }
                     
-                    GeometryReader { geo in
-                        ZStack(alignment: .leading) {
-                            Capsule()
-                                .fill(Color.secondary.opacity(0.15))
-                                .frame(height: 8)
-                            
-                            Capsule()
-                                .fill(
-                                    LinearGradient(
-                                        colors: budgetRatio > 0.9 ? [.orange, .red] : [.brandPrimary, .brandSecondary],
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
-                                )
-                                .frame(width: geo.size.width * CGFloat(budgetRatio), height: 8)
-                                .animation(.spring(response: 0.5, dampingFraction: 0.7), value: budgetRatio)
+                    Spacer()
+                    
+                    // Glass Stat Pills (Yearly & Avg)
+                    VStack(alignment: .trailing, spacing: 6) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "calendar")
+                                .font(.system(size: 10, weight: .bold))
+                            Text("Yr: \(CurrencyManager.shared.format(totalYearly))")
+                                .font(.system(size: 11, weight: .bold, design: .rounded))
                         }
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(Color.white.opacity(0.18))
+                        .cornerRadius(10)
+                        
+                        HStack(spacing: 4) {
+                            Image(systemName: "chart.line.uptrend.xyaxis")
+                                .font(.system(size: 10, weight: .bold))
+                            Text("Avg: \(CurrencyManager.shared.format(count > 0 ? totalMonthly / Double(count) : 0))")
+                                .font(.system(size: 11, weight: .bold, design: .rounded))
+                        }
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(Color.white.opacity(0.18))
+                        .cornerRadius(10)
                     }
-                    .frame(height: 8)
-                    
-                    Text(budgetStatusText)
-                        .font(.caption2)
-                        .fontWeight(.semibold)
-                        .foregroundColor(budgetStatusColor)
                 }
-                .padding(.horizontal, 16)
-                .padding(.top, 4)
+                
+                // Budget Progress Bar
+                if budget > 0 {
+                    VStack(alignment: .leading, spacing: 6) {
+                        HStack {
+                            Text("Monthly Budget (\(CurrencyManager.shared.format(budget)))")
+                                .font(.system(size: 11, weight: .bold, design: .rounded))
+                                .foregroundColor(.white.opacity(0.9))
+                            Spacer()
+                            Text("\(Int(budgetRatio * 100))% used")
+                                .font(.system(size: 11, weight: .black, design: .rounded))
+                                .foregroundColor(budgetRatio > 0.9 ? Color(hex: "#FF4757") : Color(hex: "#2ED573"))
+                        }
+                        
+                        GeometryReader { geo in
+                            ZStack(alignment: .leading) {
+                                Capsule()
+                                    .fill(Color.white.opacity(0.2))
+                                    .frame(height: 8)
+                                
+                                Capsule()
+                                    .fill(
+                                        LinearGradient(
+                                            colors: budgetRatio > 0.9 ? [Color(hex: "#FFA502"), Color(hex: "#FF4757")] : [Color(hex: "#2ED573"), Color(hex: "#1E90FF")],
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
+                                    )
+                                    .frame(width: max(0, min(geo.size.width, geo.size.width * CGFloat(budgetRatio))), height: 8)
+                            }
+                        }
+                        .frame(height: 8)
+                    }
+                    .padding(.top, 4)
+                }
             }
-        }
-        .padding(.vertical, 16)
-        .background(.ultraThinMaterial)
-        .background(
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .fill(Color(.systemBackground).opacity(0.8))
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .stroke(
-                    LinearGradient(
-                        colors: [.white.opacity(0.3), .clear],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ),
-                    lineWidth: 1.5
+            .padding(20)
+            .background(
+                LinearGradient(
+                    colors: [Color(hex: "#6366F1"), Color(hex: "#8B5CF6"), Color(hex: "#4F46E5")],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
                 )
-        )
-        .cornerRadius(24)
-        .shadow(color: Color.black.opacity(0.08), radius: 15, x: 0, y: 5)
-        .padding(.horizontal, 4)
+            )
+            .cornerRadius(24)
+            .shadow(color: Color(hex: "#6366F1").opacity(0.35), radius: 16, x: 0, y: 8)
+            .overlay(
+                RoundedRectangle(cornerRadius: 24, style: .continuous)
+                    .stroke(Color.white.opacity(0.2), lineWidth: 1)
+            )
+            .padding(.horizontal, 16)
+        }
     }
 }

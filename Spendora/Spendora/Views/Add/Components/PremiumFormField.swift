@@ -4,54 +4,52 @@
 
 import SwiftUI
 
-
 // MARK: - PremiumFormField
 
 /**
- `PremiumFormField` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for premiumformfield handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `PremiumFormField` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
+ `PremiumFormField` renders form field sections with vibrant icon containers, smooth glass background cards, and crisp rounded corners.
  */
 struct PremiumFormField<Content: View>: View {
 
     // MARK: - Properties
 
-    let icon: String  // icon property
-    let title: String  // title property
-    let content: Content  // content property
+    let icon: String
+    let title: String
+    let iconColor: Color
+    let content: Content
     
-    init(icon: String, title: String, @ViewBuilder content: () -> Content) {
+    init(
+        icon: String,
+        title: String,
+        iconColor: Color = .brandPrimary,
+        @ViewBuilder content: () -> Content
+    ) {
         self.icon = icon
         self.title = title
+        self.iconColor = iconColor
         self.content = content()
     }
-    
 
     // MARK: - Body
 
-    /// Main SwiftUI layout body property.
     var body: some View {
         HStack(spacing: 14) {
-            Image(systemName: icon)
-                .font(.title3)
-                .foregroundColor(.brandPrimary)
-                .frame(width: 28)
+            ZStack {
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(iconColor.opacity(0.14))
+                    .frame(width: 36, height: 36)
+                
+                Image(systemName: icon)
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundColor(iconColor)
+            }
             
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 3) {
                 Text(title)
-                    .font(.system(.caption, design: .rounded))
+                    .font(.system(size: 11, weight: .semibold, design: .rounded))
                     .foregroundColor(.secondary)
+                    .textCase(.uppercase)
+                    .tracking(0.5)
                 
                 content
                     .font(.system(.body, design: .rounded))
@@ -61,8 +59,12 @@ struct PremiumFormField<Content: View>: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
-        .background(Color(.systemBackground))
-        .cornerRadius(16)
-        .shadow(color: Color.black.opacity(0.03), radius: 8, x: 0, y: 2)
+        .background(Color.cardBackground)
+        .cornerRadius(18)
+        .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 3)
+        .overlay(
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .stroke(Color.secondary.opacity(0.08), lineWidth: 1)
+        )
     }
 }

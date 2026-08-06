@@ -36,7 +36,8 @@ struct CategoryPickerView: View {
     var body: some View {
         PremiumFormField(
             icon: "folder.fill",
-            title: "Category"
+            title: "Category",
+            iconColor: .brandRose
         ) {
             Picker("", selection: $selectedCategory) {
                 ForEach(SubscriptionCategory.allCases, id: \.rawValue) { category in

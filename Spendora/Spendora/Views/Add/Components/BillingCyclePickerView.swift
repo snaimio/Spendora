@@ -28,7 +28,8 @@ struct BillingCyclePickerView: View {
     var body: some View {
         PremiumFormField(
             icon: "repeat.circle.fill",
-            title: "Billing Cycle"
+            title: "Billing Cycle",
+            iconColor: .brandPrimary
         ) {
             Picker("", selection: Binding(
                 get: { selectedCycle },

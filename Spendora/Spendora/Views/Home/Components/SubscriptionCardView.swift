@@ -39,110 +39,105 @@ struct SubscriptionCardView: View {
 
     /// Main SwiftUI layout body property.
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 14) {
             ZStack {
-                Circle()
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
                     .fill(
                         LinearGradient(
-                            colors: [cardColor, cardColor.opacity(0.7)],
+                            colors: [cardColor, cardColor.opacity(0.75)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
                     )
-                    .frame(width: 40, height: 40)
-                    .shadow(color: cardColor.opacity(0.3), radius: 4, x: 0, y: 2)
+                    .frame(width: 44, height: 44)
+                    .shadow(color: cardColor.opacity(0.35), radius: 6, x: 0, y: 3)
                 
                 Image(systemName: cardIcon)
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(.system(size: 17, weight: .bold))
                     .foregroundColor(.white)
             }
-            .frame(width: 40)
+            .frame(width: 44)
             
-            VStack(alignment: .leading, spacing: 3) {
+            VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 6) {
                     Text(subscription.displayName)
-                        .font(.system(size: 14, weight: .semibold, design: .rounded))
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
                         .foregroundColor(.textPrimary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                     
                     if subscription.isUpcoming {
-                        Text("Soon")
-                            .font(.system(size: 7, weight: .bold, design: .rounded))
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(Color(hex: "#38BDF8").opacity(0.18))
+                        Text("Due Soon")
+                            .font(.system(size: 8, weight: .extrabold, design: .rounded))
+                            .padding(.horizontal, 7)
+                            .padding(.vertical, 3)
+                            .background(Color(hex: "#0EA5E9").opacity(0.18))
                             .foregroundColor(Color(hex: "#0EA5E9"))
-                            .cornerRadius(6)
+                            .cornerRadius(8)
                     }
                     
                     if subscription.isTrial && !subscription.trialConvertedToPaid {
                         Text("Trial")
-                            .font(.system(size: 7, weight: .bold, design: .rounded))
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(Color(hex: "#FF6B6B").opacity(0.15))
-                            .foregroundColor(Color(hex: "#FF6B6B"))
-                            .cornerRadius(6)
+                            .font(.system(size: 8, weight: .extrabold, design: .rounded))
+                            .padding(.horizontal, 7)
+                            .padding(.vertical, 3)
+                            .background(Color(hex: "#F59E0B").opacity(0.18))
+                            .foregroundColor(Color(hex: "#F59E0B"))
+                            .cornerRadius(8)
                     }
                 }
                 
                 HStack(spacing: 4) {
                     Text(CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost))
-                        .font(.system(size: 13, weight: .bold, design: .rounded))
+                        .font(.system(size: 14, weight: .heavy, design: .rounded))
                         .foregroundColor(.brandPrimary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                     
                     if subscription.isOneTime {
-                        Text("• One-Time")
-                            .font(.system(size: 10, weight: .semibold, design: .rounded))
-                            .foregroundColor(.brandSecondary)
+                        Text("• Lifetime")
+                            .font(.system(size: 10, weight: .bold, design: .rounded))
+                            .foregroundColor(.brandPurple)
                     } else {
                         Text("/month")
-                            .font(.system(size: 10, weight: .regular, design: .rounded))
+                            .font(.system(size: 10, weight: .medium, design: .rounded))
                             .foregroundColor(.textSecondary)
                         
                         if subscription.isYearly {
                             Text("• Yearly")
-                                .font(.system(size: 9, weight: .regular, design: .rounded))
+                                .font(.system(size: 9, weight: .medium, design: .rounded))
                                 .foregroundColor(.textSecondary)
                         }
                     }
                 }
                 
                 if !subscription.isOneTime {
-                    HStack(spacing: 3) {
+                    HStack(spacing: 4) {
                         Image(systemName: "calendar")
-                            .font(.system(size: 7))
+                            .font(.system(size: 8, weight: .semibold))
                             .foregroundColor(.textSecondary)
                         
                         Text("Next: \(subscription.formattedNextBillingDate)")
-                            .font(.system(size: 9, weight: .regular, design: .rounded))
+                            .font(.system(size: 10, weight: .medium, design: .rounded))
                             .foregroundColor(.textSecondary)
                             .lineLimit(1)
                             .minimumScaleFactor(0.6)
                     }
                 } else {
-                    HStack(spacing: 3) {
+                    HStack(spacing: 4) {
                         Image(systemName: "checkmark.seal.fill")
-                            .font(.system(size: 8))
+                            .font(.system(size: 9, weight: .bold))
                             .foregroundColor(.brandTertiary)
                         
-                        Text("Lifetime Purchase")
-                            .font(.system(size: 9, weight: .semibold, design: .rounded))
-                            .foregroundColor(.textSecondary)
+                        Text("One-Time Purchase")
+                            .font(.system(size: 10, weight: .bold, design: .rounded))
+                            .foregroundColor(.brandTertiary)
                     }
                 }
             }
             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
             
-            Spacer(minLength: 4)
-            
             Image(systemName: "chevron.right")
-                .font(.caption)
-                .foregroundColor(.textSecondary.opacity(0.3))
-        }
         .padding(12)
         .background(
             RoundedRectangle(cornerRadius: 14)

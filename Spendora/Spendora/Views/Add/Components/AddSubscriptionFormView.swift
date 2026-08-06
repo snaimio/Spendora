@@ -46,7 +46,8 @@ struct AddSubscriptionFormView: View {
         VStack(spacing: 16) {
             PremiumFormField(
                 icon: "sparkles",
-                title: "Service Name"
+                title: "Service Name",
+                iconColor: .brandPurple
             ) {
                 TextField("e.g. Netflix, Spotify, GitHub", text: $name)
                     .textInputAutocapitalization(.words)
@@ -66,7 +67,8 @@ struct AddSubscriptionFormView: View {
             
             PremiumFormField(
                 icon: "link.circle.fill",
-                title: "Manage & Cancel Link"
+                title: "Manage & Cancel Link",
+                iconColor: .brandAccent
             ) {
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
@@ -116,7 +118,8 @@ struct AddSubscriptionFormView: View {
             
             PremiumFormField(
                 icon: "creditcard.circle.fill",
-                title: "Payment Method"
+                title: "Payment Method",
+                iconColor: .brandAmber
             ) {
                 Picker("Payment Method", selection: $selectedPaymentMethod) {
                     ForEach(PaymentMethod.allCases) { method in
@@ -131,7 +134,8 @@ struct AddSubscriptionFormView: View {
             if !isOneTime {
                 PremiumFormField(
                     icon: "calendar.circle.fill",
-                    title: "Next Billing"
+                    title: "Next Billing",
+                    iconColor: .brandTertiary
                 ) {
                     DatePicker(
                         "",
