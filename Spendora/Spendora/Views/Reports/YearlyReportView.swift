@@ -404,7 +404,7 @@ struct ReportAreaTrendChart: View {
                     x: .value("Month", item.month),
                     y: .value("Amount", item.amount)
                 )
-                .foregroundStyle(.brandTertiary)
+                .foregroundStyle(Color.brandTertiary)
                 .lineStyle(StrokeStyle(lineWidth: 3))
             }
             .frame(height: 180)
