@@ -75,6 +75,8 @@ struct AddSubscriptionFormView: View {
                             .textInputAutocapitalization(.never)
                             .autocorrectionDisabled()
                             .font(.system(.subheadline, design: .rounded))
+                            .foregroundColor(.primary)
+                            .tint(.brandPrimary)
                             .onChange(of: linkURL) { _, newValue in
                                 if !newValue.isEmpty {
                                     isUserEditedLink = true
@@ -97,10 +99,10 @@ struct AddSubscriptionFormView: View {
                         HStack(spacing: 3) {
                             Image(systemName: "sparkles")
                                 .font(.system(size: 9))
-                                .foregroundColor(.brandPrimary)
+                                .foregroundColor(.secondary)
                             Text("Auto-generated website portal link")
                                 .font(.system(size: 10, weight: .medium, design: .rounded))
-                                .foregroundColor(.brandPrimary)
+                                .foregroundColor(.secondary)
                         }
                     } else {
                         Text("Auto-generates official portal link when typing service name")
