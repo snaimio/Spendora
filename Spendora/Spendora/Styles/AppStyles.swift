@@ -8,38 +8,32 @@ import SwiftUI
 
 /**
  `AppStyles` provides a unified, enterprise-grade design system token architecture for Spendora.
- Inspired by Apple's HIG and premier financial applications (Copilot, Monzo, Robinhood).
+ Features SF Pro Display/Text typographic hierarchy, glassmorphism tokens, and micro-shadow systems.
  */
 struct AppStyles {
 
-    // MARK: - Typography System (SF Pro Rounded & Text)
+    // MARK: - Typography Hierarchy
     struct Typography {
-        /// Hero Price Display (36pt, Black, Rounded)
-        static let heroPrice = Font.system(size: 36, weight: .black, design: .rounded)
+        /// Hero Price Display (38pt, Black, Display)
+        static let heroPrice = Font.system(size: 38, weight: .black, design: .default)
         
-        /// Large Title (34pt, Bold, Rounded)
-        static let largeTitle = Font.system(size: 34, weight: .bold, design: .rounded)
+        /// Large Title: SF Pro Display Bold, 34pt
+        static let largeTitle = Font.system(size: 34, weight: .bold, design: .default)
         
-        /// Screen Title 1 (28pt, Bold, Rounded)
-        static let title1 = Font.system(size: 28, weight: .bold, design: .rounded)
+        /// Title: SF Pro Display Semibold, 28pt
+        static let title = Font.system(size: 28, weight: .semibold, design: .default)
         
-        /// Group Header Title 2 (22pt, SemiBold, Rounded)
-        static let title2 = Font.system(size: 22, weight: .semibold, design: .rounded)
+        /// Headline: SF Pro Display Semibold, 20pt
+        static let headline = Font.system(size: 20, weight: .semibold, design: .default)
         
-        /// Item Headline (18pt, SemiBold, Rounded)
-        static let headline = Font.system(size: 18, weight: .semibold, design: .rounded)
+        /// Body: SF Pro Text Regular, 16pt
+        static let body = Font.system(size: 16, weight: .regular, design: .default)
         
-        /// Form Label Subheadline (15pt, SemiBold, Rounded)
-        static let subheadline = Font.system(size: 15, weight: .semibold, design: .rounded)
+        /// Caption: SF Pro Text Regular, 13pt
+        static let caption = Font.system(size: 13, weight: .regular, design: .default)
         
-        /// Standard Body Text (16pt, Regular, Rounded)
-        static let body = Font.system(size: 16, weight: .regular, design: .rounded)
-        
-        /// Caption Description (13pt, Medium, Rounded)
-        static let caption = Font.system(size: 13, weight: .medium, design: .rounded)
-        
-        /// Status Badge Pill (11pt, Heavy, Rounded)
-        static let badge = Font.system(size: 11, weight: .heavy, design: .rounded)
+        /// Footnote: SF Pro Text Regular, 11pt
+        static let footnote = Font.system(size: 11, weight: .regular, design: .default)
     }
 
     // MARK: - Spacing System
@@ -60,7 +54,7 @@ struct AppStyles {
         static let xxLarge: CGFloat = 48
     }
 
-    // MARK: - Corner Radius Tokens
+    // MARK: - Corner Radius Tokens (12-16px Card Standard)
     struct Radius {
         /// 6pt badge pill radius
         static let small: CGFloat = 6
@@ -68,12 +62,10 @@ struct AppStyles {
         static let icon: CGFloat = 10
         /// 14pt button radius
         static let button: CGFloat = 14
-        /// 18pt form field radius
-        static let field: CGFloat = 18
-        /// 20pt card radius
-        static let card: CGFloat = 20
-        /// 24pt hero banner radius
-        static let hero: CGFloat = 24
+        /// 16pt card standard radius
+        static let card: CGFloat = 16
+        /// 20pt hero banner radius
+        static let hero: CGFloat = 20
     }
 
     // MARK: - Shadow Elevation System
@@ -83,6 +75,6 @@ struct AppStyles {
         /// Medium glass shadow
         static let medium = Color.black.opacity(0.08)
         /// Strong hero glow shadow
-        static let heroGlow = Color(hex: "#6366F1").opacity(0.35)
+        static let heroGlow = Color(hex: "#2563EB").opacity(0.35)
     }
 }

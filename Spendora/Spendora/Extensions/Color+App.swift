@@ -7,59 +7,47 @@ import SwiftUI
 // MARK: - Color Extension
 
 /**
- Extension on `Color` providing Apple's recognized HIG system color palette and Apple Wallet/Health design system.
- Fits both Crisp Light Mode and OLED Midnight Dark Mode.
+ Extension on `Color` providing Spendora's Clean Modern Fintech Design System.
+ Features Deep Navy (#0F172A), Royal Blue (#2563EB), Mint Green (#10B981), and Coral Rose (#F43F5E).
  */
 extension Color {
     
-    // MARK: - Apple Recognized HIG System Colors
-    static let brandPrimary = Color(hex: "#007AFF")      // Apple System Blue
-    static let brandSecondary = Color(hex: "#5856D6")    // Apple System Indigo
-    static let brandTertiary = Color(hex: "#34C759")     // Apple System Green
-    static let brandAccent = Color(hex: "#5AC8FA")       // Apple System Light Blue
-    static let brandRose = Color(hex: "#FF2D55")         // Apple System Pink/Red
-    static let brandAmber = Color(hex: "#FF9500")        // Apple System Orange
-    static let brandPurple = Color(hex: "#AF52DE")       // Apple System Purple
+    // MARK: - Clean Modern Fintech Brand Palette
+    static let brandPrimary = Color(hex: "#0F172A")      // Deep Navy
+    static let brandSecondary = Color(hex: "#2563EB")    // Royal Blue
+    static let brandTertiary = Color(hex: "#10B981")     // Mint Green
+    static let brandAccent = Color(hex: "#38BDF8")       // Electric Sky Blue
+    static let brandRose = Color(hex: "#F43F5E")         // Coral Rose
+    static let brandAmber = Color(hex: "#F59E0B")        // Amber Gold
+    static let brandPurple = Color(hex: "#7C3AED")       // Deep Purple
     
-    // MARK: - Apple Signature Gradients (Wallet, Fitness, Music)
+    // MARK: - Fintech Gradient Meshes
     static let gradientHero = LinearGradient(
-        colors: [Color(hex: "#007AFF"), Color(hex: "#5856D6")],
+        colors: [Color(hex: "#0F172A"), Color(hex: "#1E293B"), Color(hex: "#2563EB")],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
     
-    static let gradientPurple = LinearGradient(
-        colors: [Color(hex: "#5856D6"), Color(hex: "#AF52DE")],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-    
-    static let gradientSunset = LinearGradient(
-        colors: [Color(hex: "#FF2D55"), Color(hex: "#FF9500")],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-    
-    static let gradientOcean = LinearGradient(
-        colors: [Color(hex: "#007AFF"), Color(hex: "#34C759")],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-    
-    static let gradientSunrise = LinearGradient(
-        colors: [Color(hex: "#FF9500"), Color(hex: "#FF2D55")],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-    
-    static let gradientLavender = LinearGradient(
-        colors: [Color(hex: "#AF52DE"), Color(hex: "#FF2D55")],
+    static let gradientRoyal = LinearGradient(
+        colors: [Color(hex: "#2563EB"), Color(hex: "#38BDF8")],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
     
     static let gradientMint = LinearGradient(
-        colors: [Color(hex: "#34C759"), Color(hex: "#5AC8FA")],
+        colors: [Color(hex: "#10B981"), Color(hex: "#059669")],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
+    
+    static let gradientCoral = LinearGradient(
+        colors: [Color(hex: "#F43F5E"), Color(hex: "#FB923C")],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
+    
+    static let gradientPurple = LinearGradient(
+        colors: [Color(hex: "#7C3AED"), Color(hex: "#C084FC")],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
@@ -70,48 +58,48 @@ extension Color {
         endPoint: .bottomTrailing
     )
 
-    // MARK: - Apple Native UI Adaptive Surfaces
+    // MARK: - Adaptive Surfaces (Pure White/Slate Mist & OLED Dark Navy)
     static let appBackground = Color(UIColor { traitCollection in
         traitCollection.userInterfaceStyle == .dark
-            ? UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)        // Pure Apple OLED Black
-            : UIColor(red: 0.95, green: 0.95, blue: 0.97, alpha: 1.0)     // Apple Grouped Secondary System Background (#F2F2F7)
+            ? UIColor(red: 0.05, green: 0.07, blue: 0.09, alpha: 1.0)     // Dark Charcoal Navy (#0D1117)
+            : UIColor(red: 0.97, green: 0.98, blue: 0.99, alpha: 1.0)     // Light Slate White (#F8FAFC)
     })
     
     static let cardBackground = Color(UIColor { traitCollection in
         traitCollection.userInterfaceStyle == .dark
-            ? UIColor(red: 0.11, green: 0.11, blue: 0.12, alpha: 1.0)     // Apple Secondary System Fill (#1C1C1E)
+            ? UIColor(red: 0.1, green: 0.12, blue: 0.16, alpha: 1.0)      // Slate Glass Card (#1A202C)
             : UIColor.white
     })
     
     static let textPrimary = Color(UIColor { traitCollection in
         traitCollection.userInterfaceStyle == .dark
             ? UIColor.white
-            : UIColor(red: 0.1, green: 0.1, blue: 0.12, alpha: 1.0)
+            : UIColor(red: 0.12, green: 0.16, blue: 0.23, alpha: 1.0)     // Dark Slate (#1E293B)
     })
     
     static let textSecondary = Color(UIColor { traitCollection in
         traitCollection.userInterfaceStyle == .dark
-            ? UIColor(red: 0.55, green: 0.55, blue: 0.57, alpha: 1.0)     // Apple System Secondary Label
-            : UIColor(red: 0.44, green: 0.44, blue: 0.46, alpha: 1.0)
+            ? UIColor(red: 0.58, green: 0.64, blue: 0.72, alpha: 1.0)     // Slate Gray (#94A3B8)
+            : UIColor(red: 0.39, green: 0.45, blue: 0.55, alpha: 1.0)     // Dark Slate Secondary (#64748B)
     })
     
     static let textTertiary = Color(UIColor { traitCollection in
         traitCollection.userInterfaceStyle == .dark
-            ? UIColor(red: 0.38, green: 0.38, blue: 0.40, alpha: 1.0)
-            : UIColor(red: 0.68, green: 0.68, blue: 0.70, alpha: 1.0)
+            ? UIColor(red: 0.38, green: 0.44, blue: 0.52, alpha: 1.0)
+            : UIColor(red: 0.58, green: 0.64, blue: 0.72, alpha: 1.0)
     })
     
-    // MARK: - Apple Category Colors
-    static let categoryEntertainment = Color(hex: "#FF2D55")   // Apple Pink/Red
-    static let categoryProductivity = Color(hex: "#007AFF")    // Apple Blue
-    static let categoryHealth = Color(hex: "#34C759")          // Apple Green
-    static let categoryShopping = Color(hex: "#FF9500")        // Apple Orange
-    static let categoryFood = Color(hex: "#FF3B30")            // Apple Red
-    static let categoryEducation = Color(hex: "#5856D6")       // Apple Indigo
-    static let categoryAiTools = Color(hex: "#AF52DE")         // Apple Purple
-    static let categoryUtilities = Color(hex: "#5AC8FA")       // Apple Teal/Light Blue
-    static let categoryGaming = Color(hex: "#30B0C7")          // Apple Cyan
-    static let categoryOther = Color(hex: "#8E8E93")           // Apple Gray
+    // MARK: - Category Colors
+    static let categoryEntertainment = Color(hex: "#F43F5E")   // Coral Rose
+    static let categoryProductivity = Color(hex: "#2563EB")    // Royal Blue
+    static let categoryHealth = Color(hex: "#10B981")          // Mint Green
+    static let categoryShopping = Color(hex: "#F59E0B")        // Amber Gold
+    static let categoryFood = Color(hex: "#EF4444")            // Red
+    static let categoryEducation = Color(hex: "#7C3AED")       // Deep Purple
+    static let categoryAiTools = Color(hex: "#0EA5E9")         // Sky Blue
+    static let categoryUtilities = Color(hex: "#64748B")       // Slate Gray
+    static let categoryGaming = Color(hex: "#8B5CF6")          // Violet
+    static let categoryOther = Color(hex: "#475569")           // Dark Slate
     
     // MARK: - Hex Initializer
     init(hex: String) {
