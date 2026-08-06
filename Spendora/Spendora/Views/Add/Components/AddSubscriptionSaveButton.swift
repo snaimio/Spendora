@@ -54,13 +54,13 @@ struct AddSubscriptionSaveButton: View {
             .padding(.vertical, 16)
             .background(
                 LinearGradient(
-                    colors: isValid ? [Color(hex: "#6366F1"), Color(hex: "#8B5CF6")] : [.gray.opacity(0.4), .gray.opacity(0.3)],
+                    colors: isValid ? [Color(hex: "#007AFF"), Color(hex: "#5856D6")] : [.gray.opacity(0.4), .gray.opacity(0.3)],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )
             )
             .cornerRadius(18)
-            .shadow(color: isValid ? Color(hex: "#6366F1").opacity(0.35) : .clear, radius: 14, x: 0, y: 6)
+            .shadow(color: isValid ? Color(hex: "#007AFF").opacity(0.35) : .clear, radius: 14, x: 0, y: 6)
         }
         .disabled(!isValid || isSaving)
         .padding(.horizontal, 16)

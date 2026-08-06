@@ -7,42 +7,42 @@ import SwiftUI
 // MARK: - UniqueSubscriptionThemeHelper
 
 /**
- `UniqueSubscriptionThemeHelper` ensures every single individual subscription card has a 100% unique, distinct color and icon representation based on its unique instance ID.
+ `UniqueSubscriptionThemeHelper` ensures every single individual subscription card has a 100% unique, distinct color and icon representation based on Apple's recognized HIG system color spectrum.
  */
 struct UniqueSubscriptionThemeHelper {
 
-    // MARK: - 30 Distinct Ultra-Vibrant Spectrum Palette
+    // MARK: - Apple 30-Color HIG System Palette
     static let vibrantPalette: [Color] = [
-        Color(hex: "#6366F1"), // 1. Electric Indigo
-        Color(hex: "#F43F5E"), // 2. Coral Rose
-        Color(hex: "#10B981"), // 3. Emerald Mint
-        Color(hex: "#F59E0B"), // 4. Golden Amber
-        Color(hex: "#8B5CF6"), // 5. Electric Violet
-        Color(hex: "#0EA5E9"), // 6. Sky Blue
-        Color(hex: "#EC4899"), // 7. Hot Pink
-        Color(hex: "#14B8A6"), // 8. Bright Teal
-        Color(hex: "#A855F7"), // 9. Neon Purple
-        Color(hex: "#F97316"), // 10. Sunset Orange
-        Color(hex: "#06B6D4"), // 11. Cyan Blue
-        Color(hex: "#84CC16"), // 12. Lime Green
-        Color(hex: "#EF4444"), // 13. Crimson Red
-        Color(hex: "#3B82F6"), // 14. Royal Blue
-        Color(hex: "#D946EF"), // 15. Electric Magenta
-        Color(hex: "#7C3AED"), // 16. Vibrant Grape
-        Color(hex: "#00B4D8"), // 17. Tropical Turquoise
-        Color(hex: "#EAB308"), // 18. Sun Yellow
-        Color(hex: "#1D4ED8"), // 19. Deep Sapphire
-        Color(hex: "#E11D48"), // 20. Bright Cherry
-        Color(hex: "#059669"), // 21. Jade Green
-        Color(hex: "#C084FC"), // 22. Bright Orchid
-        Color(hex: "#D97706"), // 23. Deep Amber
-        Color(hex: "#06D6A0"), // 24. Aqua Green
-        Color(hex: "#FF6B6B"), // 25. Warm Coral
-        Color(hex: "#00F5D4"), // 26. Electric Cyan
-        Color(hex: "#7B2CBF"), // 27. Royal Purple
-        Color(hex: "#FF5400"), // 28. Fire Orange
-        Color(hex: "#3A86EF"), // 29. Deep Navy
-        Color(hex: "#9D0208")  // 30. Berry Red
+        Color(hex: "#007AFF"), // 1. Apple System Blue
+        Color(hex: "#5856D6"), // 2. Apple System Indigo
+        Color(hex: "#AF52DE"), // 3. Apple System Purple
+        Color(hex: "#FF2D55"), // 4. Apple System Pink
+        Color(hex: "#FF3B30"), // 5. Apple System Red
+        Color(hex: "#FF9500"), // 6. Apple System Orange
+        Color(hex: "#34C759"), // 7. Apple System Green
+        Color(hex: "#00C7BE"), // 8. Apple System Teal
+        Color(hex: "#30B0C7"), // 9. Apple System Cyan
+        Color(hex: "#5AC8FA"), // 10. Apple System Light Blue
+        Color(hex: "#64D2FF"), // 11. Apple System Sky
+        Color(hex: "#D152B8"), // 12. Apple System Magenta
+        Color(hex: "#30D158"), // 13. Apple Mint Green
+        Color(hex: "#FF453A"), // 14. Apple Coral Red
+        Color(hex: "#FF9F0A"), // 15. Apple Warm Gold
+        Color(hex: "#BF5AF2"), // 16. Apple Bright Purple
+        Color(hex: "#5E5CE6"), // 17. Apple Deep Indigo
+        Color(hex: "#32ADE6"), // 18. Apple Ocean Blue
+        Color(hex: "#FF375F"), // 19. Apple Hot Rose
+        Color(hex: "#30C759"), // 20. Apple Emerald
+        Color(hex: "#F2A900"), // 21. Apple Amber
+        Color(hex: "#9B51E0"), // 22. Apple Vivid Violet
+        Color(hex: "#177E46"), // 23. Apple Forest Green
+        Color(hex: "#0077B6"), // 24. Apple Royal Blue
+        Color(hex: "#E54747"), // 25. Apple Crimson
+        Color(hex: "#7D52DE"), // 26. Apple Dark Violet
+        Color(hex: "#00A896"), // 27. Apple Dark Teal
+        Color(hex: "#E63946"), // 28. Apple Deep Red
+        Color(hex: "#2A9D8F"), // 29. Apple Sea Green
+        Color(hex: "#8E8E93")  // 30. Apple System Gray
     ]
 
     // MARK: - Distinct SF Symbol Icons
@@ -53,7 +53,7 @@ struct UniqueSubscriptionThemeHelper {
     ]
 
     // MARK: - Color Resolver
-    /// Guarantees a unique color for each individual subscription instance.
+    /// Guarantees a unique Apple HIG system color for each individual subscription instance.
     static func resolveColor(for subscription: Subscription) -> Color {
         // 1. Explicit user custom color if set and customized
         if let hex = subscription.colorHex, !hex.isEmpty, hex != "#6C63FF" {
