@@ -27,78 +27,120 @@ struct SubscriptionRow: View {
 
     var body: some View {
         HStack(spacing: 12) {
+            // Category Color Strip (Left Accent Edge)
+            RoundedRectangle(cornerRadius: 3, style: .continuous)
+                .fill(rowColor)
+                .frame(width: 4, height: 48)
+            
+            // Icon Badge Container
             ZStack {
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(rowColor.opacity(0.14))
-                    .frame(width: 40, height: 40)
+                    .fill(
+                        LinearGradient(
+                            colors: [rowColor, rowColor.opacity(0.8)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 44, height: 44)
+                    .shadow(color: rowColor.opacity(0.35), radius: 6, x: 0, y: 3)
                 
                 Image(systemName: rowIcon)
-                    .font(.system(size: 16, weight: .bold))
-                    .foregroundColor(rowColor)
+                    .font(.system(size: 17, weight: .bold))
+                    .foregroundColor(.white)
             }
+            .frame(width: 44)
             
-            VStack(alignment: .leading, spacing: 3) {
-                Text(subscription.displayName)
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
-                    .foregroundColor(.textPrimary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
+            // Middle Details: Name, Category, Date
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(spacing: 6) {
+                    Text(subscription.displayName)
+                        .font(AppStyles.Typography.body)
+                        .fontWeight(.bold)
+                        .foregroundColor(.textPrimary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                    
+                    CountdownChip(daysRemaining: subscription.daysUntilBilling)
+                }
                 
                 HStack(spacing: 4) {
-                    Text(subscription.effectiveCategory)
-                        .font(.system(size: 11, weight: .semibold, design: .rounded))
-                        .foregroundColor(.textSecondary)
+                    Text(CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost))
+                        .font(AppStyles.Typography.subheadline)
+                        .fontWeight(.bold)
+                        .foregroundColor(.textPrimary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
                     
                     if subscription.isOneTime {
-                        Text("•")
-                            .foregroundColor(.textSecondary)
-                        Text("Lifetime")
-                            .font(.system(size: 11, weight: .bold, design: .rounded))
+                        Text("• Lifetime")
+                            .font(AppStyles.Typography.footnote)
+                            .fontWeight(.bold)
                             .foregroundColor(.brandPurple)
-                    } else if subscription.isYearly {
-                        Text("•")
+                    } else {
+                        Text("/month")
+                            .font(AppStyles.Typography.footnote)
                             .foregroundColor(.textSecondary)
-                        Text("Yearly")
-                            .font(.system(size: 11, weight: .medium, design: .rounded))
-                            .foregroundColor(.textSecondary)
+                        
+                        if subscription.isYearly {
+                            Text("• Yearly")
+                                .font(AppStyles.Typography.footnote)
+                                .foregroundColor(.textSecondary)
+                        }
                     }
-                    
-                    if subscription.isTrial && !subscription.trialConvertedToPaid {
-                        Text("•")
+                }
+                
+                if !subscription.isOneTime {
+                    HStack(spacing: 4) {
+                        Image(systemName: "calendar")
+                            .font(.system(size: 9, weight: .semibold))
                             .foregroundColor(.textSecondary)
-                        Text("Trial")
-                            .font(.system(size: 11, weight: .bold, design: .rounded))
-                            .foregroundColor(.brandAmber)
+                        
+                        Text("Next: \(subscription.formattedNextBillingDate)")
+                            .font(AppStyles.Typography.footnote)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.textSecondary)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.6)
+                    }
+                } else {
+                    HStack(spacing: 4) {
+                        Image(systemName: "checkmark.seal.fill")
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundColor(.brandTertiary)
+                        
+                        Text("One-Time Purchase")
+                            .font(AppStyles.Typography.footnote)
+                            .fontWeight(.bold)
+                            .foregroundColor(.brandTertiary)
                     }
                 }
             }
             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
             
-            VStack(alignment: .trailing, spacing: 2) {
-                Text(CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost))
-                    .font(.system(size: 15, weight: .heavy, design: .rounded).monospacedDigit())
-                    .foregroundColor(.brandPrimary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
-                
-                Text(subscription.isOneTime ? "one-time" : "/month")
-                    .font(.system(size: 10, weight: .medium, design: .rounded))
-                    .foregroundColor(.textSecondary)
-            }
-            .frame(minWidth: 70, alignment: .trailing)
-            
+            // Clickable Chevron Indicator
             Image(systemName: "chevron.right")
-                .font(.system(size: 11, weight: .semibold))
-                .foregroundColor(.textTertiary)
+                .font(.system(size: 13, weight: .bold))
+                .foregroundColor(.textSecondary)
+                .padding(.trailing, 4)
         }
-        .padding(.vertical, 10)
         .padding(.horizontal, 14)
-        .background(Color.cardBackground)
+        .padding(.vertical, 14)
+        .background(
+            ZStack {
+                Color.cardBackground
+                LinearGradient(
+                    colors: [rowColor.opacity(0.12), rowColor.opacity(0.03)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            }
+        )
         .cornerRadius(16)
-        .shadow(color: Color.black.opacity(0.03), radius: 6, x: 0, y: 2)
+        .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 3)
         .overlay(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(Color.secondary.opacity(0.08), lineWidth: 1)
+                .stroke(rowColor.opacity(0.22), lineWidth: 1)
         )
     }
 }

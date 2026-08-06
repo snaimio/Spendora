@@ -44,13 +44,19 @@ extension Subscription {
         return max(score, 0)
     }
 
-    /// Calculates exact number of calendar days remaining until the next billing charge date
-    var daysUntilBilling: Int {  // daysUntilBilling property
-        Calendar.current.dateComponents(
-            [.day],
-            from: Calendar.current.startOfDay(for: Date()),
-            to: Calendar.current.startOfDay(for: nextBillingDate)
-        ).day ?? 0
+    /// Calculates exact number of calendar days remaining until the next billing charge date (clamped within 0..365 days)
+    var daysUntilBilling: Int {
+        if isOneTime { return 0 }
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let billingDay = calendar.startOfDay(for: nextBillingDate)
+        
+        let days = calendar.dateComponents([.day], from: today, to: billingDay).day ?? 0
+        if days < 0 { return 0 }
+        if days > 365 {
+            return isYearly ? (days % 365) : (days % 30)
+        }
+        return days
     }
 
     /// Returns true if next billing date falls within the upcoming 7 days

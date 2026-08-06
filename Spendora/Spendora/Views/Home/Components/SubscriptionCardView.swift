@@ -60,7 +60,7 @@ struct SubscriptionCardView: View {
                     Text(CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost))
                         .font(AppStyles.Typography.subheadline)
                         .fontWeight(.bold)
-                        .foregroundColor(.brandPrimary)
+                        .foregroundColor(.textPrimary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                     

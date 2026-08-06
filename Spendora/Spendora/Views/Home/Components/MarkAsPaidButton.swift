@@ -8,51 +8,76 @@ import UIKit
 // MARK: - MarkAsPaidButton
 
 /**
- `MarkAsPaidButton` provides Subby's signature 1-tap "Mark as Paid" feature:
- - Advances the subscription's next billing date by 1 month (or 1 year if yearly)
+ `MarkAsPaidButton` provides a practical billing payment recorder:
+ - Displays "Paid for [Month/Year]" (e.g., "Paid for August" or "Paid for 2026") upon recording a payment
+ - Advances the next billing date to the upcoming cycle
  - Plays tactile haptic feedback
- - Shows visual checkmark confirmation animation
  */
 struct MarkAsPaidButton: View {
     @Bindable var subscription: Subscription
-    @State private var isPaidConfirmed = false
+    @State private var isPaidForCurrentCycle = false
+    @State private var paidCycleText = ""
     
+    private var currentCycleLabel: String {
+        let formatter = DateFormatter()
+        if subscription.isYearly {
+            formatter.dateFormat = "yyyy"
+        } else {
+            formatter.dateFormat = "MMMM"
+        }
+        return formatter.string(from: Date())
+    }
+
     var body: some View {
         Button {
-            markAsPaid()
+            recordPayment()
         } label: {
-            HStack(spacing: 4) {
-                Image(systemName: isPaidConfirmed ? "checkmark.circle.fill" : "creditcard.circle")
+            HStack(spacing: 6) {
+                Image(systemName: isPaidForCurrentCycle ? "checkmark.seal.fill" : "creditcard.circle.fill")
                     .font(.system(size: 13, weight: .bold))
                 
-                Text(isPaidConfirmed ? "Paid!" : "Mark Paid")
-                    .font(.system(size: 11, weight: .bold, design: .rounded))
+                Text(isPaidForCurrentCycle ? "Paid for \(paidCycleText)" : "Mark Paid for \(currentCycleLabel)")
+                    .font(.system(size: 12, weight: .bold, design: .rounded))
+                    .lineLimit(1)
             }
-            .foregroundColor(isPaidConfirmed ? .white : Color(hex: "#00D4AA"))
-            .padding(.horizontal, 10)
-            .padding(.vertical, 6)
+            .foregroundColor(isPaidForCurrentCycle ? .white : .brandPrimary)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
             .background(
-                isPaidConfirmed
-                    ? Color(hex: "#00D4AA")
-                    : Color(hex: "#00D4AA").opacity(0.14)
+                isPaidForCurrentCycle
+                    ? Color.brandTertiary
+                    : Color.brandPrimary.opacity(0.12)
             )
             .cornerRadius(12)
-            .scaleEffect(isPaidConfirmed ? 1.05 : 1.0)
-            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isPaidConfirmed)
         }
         .buttonStyle(.plain)
+        .onAppear {
+            checkIfAlreadyPaid()
+        }
     }
     
-    private func markAsPaid() {
-        // Haptic feedback
+    private func checkIfAlreadyPaid() {
+        // If next billing date is in the future beyond current month/year, mark as paid for current cycle
+        let calendar = Calendar.current
+        let today = Date()
+        if subscription.nextBillingDate > today && !calendar.isDate(subscription.nextBillingDate, equalTo: today, toGranularity: subscription.isYearly ? .year : .month) {
+            isPaidForCurrentCycle = true
+            paidCycleText = currentCycleLabel
+        }
+    }
+
+    private func recordPayment() {
         let generator = UIImpactFeedbackGenerator(style: .medium)
         generator.impactOccurred()
         
+        let cycleLabel = currentCycleLabel
+        paidCycleText = cycleLabel
+        
         withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-            isPaidConfirmed = true
+            isPaidForCurrentCycle = true
         }
         
-        // Advance billing date
+        // Advance billing date to next cycle
         let calendar = Calendar.current
         if subscription.isYearly {
             if let nextDate = calendar.date(byAdding: .year, value: 1, to: subscription.nextBillingDate) {
@@ -61,13 +86,6 @@ struct MarkAsPaidButton: View {
         } else {
             if let nextDate = calendar.date(byAdding: .month, value: 1, to: subscription.nextBillingDate) {
                 subscription.nextBillingDate = nextDate
-            }
-        }
-        
-        // Reset confirmation visual after delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.8) {
-            withAnimation {
-                isPaidConfirmed = false
             }
         }
     }
