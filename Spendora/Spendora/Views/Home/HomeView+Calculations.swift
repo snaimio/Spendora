@@ -58,6 +58,15 @@ extension HomeView {
         activeSubscriptions.count
     }
     
+    var activeRecurringCount: Int {
+        activeSubscriptions.filter { !$0.isOneTime }.count
+    }
+    
+    var averageMonthlyCost: Double {
+        let count = activeRecurringCount
+        return count > 0 ? totalMonthly / Double(count) : 0
+    }
+    
     var nextSubscription: Subscription? {
         subscriptions
             .filter { !$0.isCancelled && !$0.isOverdue }

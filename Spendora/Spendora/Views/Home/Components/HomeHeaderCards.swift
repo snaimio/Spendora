@@ -22,6 +22,10 @@ struct HeroCardView: View {
     let subscriptionCount: Int
     var nextSubscription: Subscription? = nil
 
+    private var averageMonthlyCost: Double {
+        subscriptionCount > 0 ? totalMonthly / Double(subscriptionCount) : 0
+    }
+
     // MARK: - Body
 
     var body: some View {
@@ -31,7 +35,8 @@ struct HeroCardView: View {
                 totalMonthly: totalMonthly,
                 totalYearly: totalYearly,
                 count: count,
-                subscriptionCount: subscriptionCount
+                subscriptionCount: subscriptionCount,
+                averageMonthlyCost: averageMonthlyCost
             )
             
             // CARD 2: Next Charge Spotlight Card
@@ -49,6 +54,7 @@ struct ThisMonthCardView: View {
     let totalYearly: Double
     let count: Int
     let subscriptionCount: Int
+    let averageMonthlyCost: Double
     @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
@@ -121,7 +127,7 @@ struct ThisMonthCardView: View {
                     MetricSubCard(
                         icon: "chart.line.uptrend.xyaxis",
                         title: "Monthly Avg",
-                        value: CurrencyManager.shared.format(subscriptionCount > 0 ? totalMonthly / Double(subscriptionCount) : 0),
+                        value: CurrencyManager.shared.format(averageMonthlyCost),
                         color: Color(hex: "#8B5CF6")
                     )
                 }
