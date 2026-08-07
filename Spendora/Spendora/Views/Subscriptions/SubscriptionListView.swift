@@ -130,7 +130,7 @@ struct SubscriptionListView: View {
                     }
                 }
             }
-            .navigationTitle("Portfolio")
+            .navigationTitle("Subscriptions")
             .navigationBarTitleDisplayMode(.large)
             .sheet(item: $selectedSubscription) { subscription in
                 SubscriptionDetailView(subscription: subscription)
