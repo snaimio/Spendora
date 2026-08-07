@@ -8,11 +8,11 @@ import SwiftUI
 // MARK: - OnboardingPageView
 
 /**
- `OnboardingPageView` renders an individual onboarding slide card with:
+ `OnboardingPageView` renders an individual onboarding slide card featuring:
  - 100x100pt circular vector badge icon container
- - Apple HIG typography (26pt Title, 15pt Subheadline, 14pt Feature Highlights)
- - Adaptive card container (`Color.cardBackground`) with 100% contrast in both Light & Dark modes
- - No squeezed or truncated text across any iPhone screen size
+ - 26pt Bold Headline Title
+ - DEDICATED DESCRIPTION CARD BOX with rounded borders and 100% WCAG contrast padding
+ - Standalone Feature Bullet Points card box at bottom
  */
 struct OnboardingPageView: View {
 
@@ -24,14 +24,14 @@ struct OnboardingPageView: View {
     // MARK: - Body
 
     var body: some View {
-        VStack(spacing: 24) {
+        VStack(spacing: 20) {
             // Hero Icon Badge Container
             ZStack {
                 if let imageName = page.customImageName {
                     Image(imageName)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
-                        .frame(width: 100, height: 100)
+                        .frame(width: 96, height: 96)
                         .clipShape(Circle())
                         .shadow(color: page.color.opacity(0.4), radius: 12, x: 0, y: 6)
                         .scaleEffect(animate ? 1.0 : 0.85)
@@ -44,64 +44,91 @@ struct OnboardingPageView: View {
                                 endPoint: .bottomTrailing
                             )
                         )
-                        .frame(width: 100, height: 100)
+                        .frame(width: 96, height: 96)
                         .shadow(color: page.color.opacity(0.4), radius: 12, x: 0, y: 6)
                         .scaleEffect(animate ? 1.0 : 0.85)
                     
                     Image(systemName: page.icon)
-                        .font(.system(size: 42, weight: .bold))
+                        .font(.system(size: 40, weight: .bold))
                         .foregroundColor(.white)
                         .scaleEffect(animate ? 1.0 : 0.7)
                 }
             }
-            .padding(.top, 12)
+            .padding(.top, 8)
             
-            // Title & Description Stack
-            VStack(spacing: 10) {
-                Text(page.title)
-                    .font(AppStyles.Typography.title)
-                    .foregroundColor(.textPrimary)
-                    .multilineTextAlignment(.center)
-                    .lineLimit(2)
-                    .minimumScaleFactor(0.8)
-                
+            // Slide Title
+            Text(page.title)
+                .font(AppStyles.Typography.title)
+                .foregroundColor(.textPrimary)
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
+                .minimumScaleFactor(0.8)
+            
+            // DEDICATED SUBTITLE DESCRIPTION CARD BOX
+            VStack {
                 Text(page.description)
                     .font(AppStyles.Typography.subheadline)
-                    .foregroundColor(.textSecondary)
+                    .foregroundColor(.textPrimary)
                     .multilineTextAlignment(.center)
                     .lineLimit(4)
                     .minimumScaleFactor(0.85)
-                    .padding(.horizontal, 12)
+                    .lineSpacing(4)
             }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 16)
+            .frame(maxWidth: .infinity)
+            .background(
+                ZStack {
+                    Color.appBackground.opacity(0.6)
+                    LinearGradient(
+                        colors: [page.color.opacity(0.12), page.color.opacity(0.04)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                }
+            )
+            .cornerRadius(16)
+            .overlay(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke(page.color.opacity(0.3), lineWidth: 1)
+            )
+            .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 2)
             
-            // Feature Highlights Stack
+            // Feature Highlights Box
             VStack(alignment: .leading, spacing: 10) {
                 FeatureHighlight(icon: "checkmark.seal.fill", text: "100% On-Device - Zero bank credentials required")
                 FeatureHighlight(icon: "checkmark.seal.fill", text: "Free & Private - No hidden cloud tracking")
                 FeatureHighlight(icon: "checkmark.seal.fill", text: "Customizable billing alerts & analytics")
             }
-            .padding(.top, 4)
-            .padding(.horizontal, 16)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 14)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color.appBackground.opacity(0.3))
+            .cornerRadius(16)
+            .overlay(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke(Color.secondary.opacity(0.12), lineWidth: 1)
+            )
         }
         .padding(.horizontal, 20)
-        .padding(.vertical, 24)
+        .padding(.vertical, 20)
         .background(
             ZStack {
                 Color.cardBackground
                 LinearGradient(
-                    colors: [page.color.opacity(0.08), page.color.opacity(0.02)],
+                    colors: [page.color.opacity(0.06), page.color.opacity(0.02)],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )
             }
         )
-        .cornerRadius(22)
-        .shadow(color: Color.black.opacity(0.06), radius: 10, x: 0, y: 4)
+        .cornerRadius(24)
+        .shadow(color: Color.black.opacity(0.08), radius: 12, x: 0, y: 5)
         .overlay(
-            RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .stroke(page.color.opacity(0.2), lineWidth: 1)
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .stroke(page.color.opacity(0.25), lineWidth: 1.2)
         )
-        .padding(.horizontal, 20)
+        .padding(.horizontal, 18)
         .onAppear {
             animate = false
             withAnimation(.spring(response: 0.5, dampingFraction: 0.75)) {
