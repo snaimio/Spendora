@@ -1,74 +1,66 @@
 //
 //  CalendarDayView.swift
+//  Spendora
 //
 
-/**
- * Main/Core Functions & Purpose:
- * CalendarDayView component displaying date numbers, today indicator circle, and subscription billing dots on the calendar grid.
- */
-
 import SwiftUI
-
 
 // MARK: - CalendarDayView
 
 /**
- `CalendarDayView` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for calendardayview handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `CalendarDayView` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
+ `CalendarDayView` displays calendar day numbers with today indicator badge and billing dots.
  */
 struct CalendarDayView: View {
 
     // MARK: - Properties
 
-    let date: Date  // date property
-    let isToday: Bool  // isToday property
-    let isInMonth: Bool  // isInMonth property
-    let subscriptions: [Subscription]  // subscriptions property
-    
+    let date: Date
+    let isToday: Bool
+    let isInMonth: Bool
+    let subscriptions: [Subscription]
+    @Environment(\.colorScheme) private var colorScheme
 
     // MARK: - Body
 
-    /// Main SwiftUI layout body property.
     var body: some View {
-        VStack(spacing: 2) {
+        VStack(spacing: 4) {
             Text(Calendar.current.component(.day, from: date).formatted())
-                .font(.callout)
-                .fontWeight(isToday ? .bold : .regular)
-                .foregroundColor(isInMonth ? .primary : .secondary)
-                .frame(width: 36, height: 36)
+                .font(.system(size: 14, weight: isToday ? .bold : .medium, design: .rounded))
+                .foregroundColor(
+                    isToday
+                        ? (colorScheme == .dark ? Color(hex: "#0F0F1A") : .white)
+                        : (isInMonth ? .textPrimary : .textSecondary.opacity(0.35))
+                )
+                .frame(width: 34, height: 34)
                 .background(
                     Group {
                         if isToday {
                             Circle()
-                                .fill(Color.brandPrimary)
+                                .fill(
+                                    LinearGradient(
+                                        colors: [Color(hex: "#D4AF37"), Color(hex: "#F59E0B")],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
+                                .shadow(color: Color(hex: "#D4AF37").opacity(0.4), radius: 4, y: 2)
                         } else if !subscriptions.isEmpty {
                             Circle()
-                                .fill(Color.brandPrimary.opacity(0.15))
+                                .fill(Color(hex: "#D4AF37").opacity(0.16))
                         }
                     }
                 )
-                .foregroundColor(isToday ? .white : .primary)
             
             if !subscriptions.isEmpty {
-                HStack(spacing: 2) {
+                HStack(spacing: 3) {
                     ForEach(subscriptions.prefix(3), id: \.id) { sub in
                         Circle()
-                            .fill(Color(hex: sub.colorHex ?? "#6C63FF"))
-                            .frame(width: 4, height: 4)
+                            .fill(Color(hex: sub.colorHex ?? "#FF6B6B"))
+                            .frame(width: 5, height: 5)
                     }
                 }
+            } else {
+                Spacer().frame(height: 5)
             }
         }
     }

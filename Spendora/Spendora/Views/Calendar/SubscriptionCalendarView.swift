@@ -1,148 +1,168 @@
 //
 //  SubscriptionCalendarView.swift
+//  Spendora
 //
 
 import SwiftUI
 
-
 // MARK: - SubscriptionCalendarView
 
 /**
- `SubscriptionCalendarView` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for subscriptioncalendarview handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `SubscriptionCalendarView` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
+ `SubscriptionCalendarView` presents Spendora's interactive subscription billing calendar
+ wrapped inside adaptive 3D cards for seamless Light and Dark mode readability.
  */
 struct SubscriptionCalendarView: View {
 
     // MARK: - Properties
 
-    let subscriptions: [Subscription]  // subscriptions property
+    let subscriptions: [Subscription]
     @State private var selectedDate = Date()
     @State private var selectedSubscription: Subscription?
+    @Environment(\.colorScheme) private var colorScheme
     
     private let calendar = Calendar.current
     private let daysInWeek = 7
-    
 
     // MARK: - Body
 
-    /// Main SwiftUI layout body property.
     var body: some View {
         NavigationStack {
-            VStack {
-                // Month Navigation
-                HStack {
-                    Button {
-                        withAnimation {
-                            selectedDate = calendar.date(byAdding: .month, value: -1, to: selectedDate) ?? selectedDate
-                        }
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .foregroundColor(.brandPrimary)
-                    }
-                    
-                    Spacer()
-                    
-                    Text(selectedDate.formatted(.dateTime.month(.wide).year()))
-                        .font(.title2)
-                        .fontWeight(.bold)
-                    
-                    Spacer()
-                    
-                    Button {
-                        withAnimation {
-                            selectedDate = calendar.date(byAdding: .month, value: 1, to: selectedDate) ?? selectedDate
-                        }
-                    } label: {
-                        Image(systemName: "chevron.right")
-                            .foregroundColor(.brandPrimary)
-                    }
-                }
-                .padding(.horizontal)
-                .padding(.vertical, 8)
+            ZStack {
+                SpendoraBrandBackgroundView()
                 
-                // Day Headers
-                HStack {
-                    ForEach(calendar.weekdaySymbols, id: \.self) { day in
-                        Text(day.prefix(3))
-                            .font(.caption)
-                            .fontWeight(.medium)
-                            .foregroundColor(.secondary)
-                            .frame(maxWidth: .infinity)
-                    }
-                }
-                .padding(.horizontal)
-                
-                // Calendar Grid
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: daysInWeek), spacing: 8) {
-                    ForEach(daysInMonth(date: selectedDate), id: \.self) { date in
-                        CalendarDayView(
-                            date: date,
-                            isToday: calendar.isDateInToday(date),
-                            isInMonth: calendar.isDate(date, equalTo: selectedDate, toGranularity: .month),
-                            subscriptions: subscriptionsForDate(date)
-                        )
-                        .onTapGesture {
-                            if let sub = subscriptionsForDate(date).first {
-                                selectedSubscription = sub
-                            }
-                        }
-                    }
-                }
-                .padding(.horizontal)
-                
-                // Legend
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Billing Days")
-                        .font(.headline)
-                        .padding(.top, 8)
-                    
-                    if subscriptionsWithBillingDates.isEmpty {
-                        Text("No upcoming billing dates")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    } else {
-                        ForEach(subscriptionsWithBillingDates.prefix(5), id: \.id) { sub in
+                ScrollView {
+                    VStack(spacing: 20) {
+                        // CARD 1: Calendar Grid Container Card (Adaptive Light/Dark Theme)
+                        VStack(spacing: 16) {
+                            // Month Navigation Header
                             HStack {
-                                Circle()
-                                    .fill(Color(hex: sub.colorHex ?? "#6C63FF"))
-                                    .frame(width: 8, height: 8)
-                                
-                                Text(sub.displayName)
-                                    .font(.subheadline)
+                                Button {
+                                    withAnimation(.easeInOut(duration: 0.25)) {
+                                        selectedDate = calendar.date(byAdding: .month, value: -1, to: selectedDate) ?? selectedDate
+                                    }
+                                } label: {
+                                    Image(systemName: "chevron.left")
+                                        .font(.system(size: 16, weight: .bold))
+                                        .foregroundColor(Color(hex: "#D4AF37"))
+                                        .padding(8)
+                                        .background(Color(hex: "#D4AF37").opacity(0.12))
+                                        .clipShape(Circle())
+                                }
                                 
                                 Spacer()
                                 
-                                Text(sub.formattedNextBillingDate)
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
+                                Text(selectedDate.formatted(.dateTime.month(.wide).year()))
+                                    .font(.system(size: 20, weight: .bold, design: .rounded))
+                                    .foregroundColor(.textPrimary)
+                                
+                                Spacer()
+                                
+                                Button {
+                                    withAnimation(.easeInOut(duration: 0.25)) {
+                                        selectedDate = calendar.date(byAdding: .month, value: 1, to: selectedDate) ?? selectedDate
+                                    }
+                                } label: {
+                                    Image(systemName: "chevron.right")
+                                        .font(.system(size: 16, weight: .bold))
+                                        .foregroundColor(Color(hex: "#D4AF37"))
+                                        .padding(8)
+                                        .background(Color(hex: "#D4AF37").opacity(0.12))
+                                        .clipShape(Circle())
+                                }
+                            }
+                            .padding(.horizontal, 4)
+                            
+                            // Day Headers (Sun Mon Tue Wed Thu Fri Sat)
+                            HStack {
+                                ForEach(calendar.shortWeekdaySymbols, id: \.self) { day in
+                                    Text(day.uppercased())
+                                        .font(.system(size: 11, weight: .bold, design: .rounded))
+                                        .foregroundColor(.textSecondary)
+                                        .frame(maxWidth: .infinity)
+                                }
+                            }
+                            .padding(.vertical, 4)
+                            
+                            // Calendar Grid
+                            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: daysInWeek), spacing: 10) {
+                                ForEach(daysInMonth(date: selectedDate), id: \.self) { date in
+                                    CalendarDayView(
+                                        date: date,
+                                        isToday: calendar.isDateInToday(date),
+                                        isInMonth: calendar.isDate(date, equalTo: selectedDate, toGranularity: .month),
+                                        subscriptions: subscriptionsForDate(date)
+                                    )
+                                    .onTapGesture {
+                                        if let sub = subscriptionsForDate(date).first {
+                                            selectedSubscription = sub
+                                        }
+                                    }
+                                }
                             }
                         }
+                        .padding(18)
+                        .spendora3DCard(cornerRadius: 22)
                         
-                        if subscriptionsWithBillingDates.count > 5 {
-                            Text("+ \(subscriptionsWithBillingDates.count - 5) more")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                        // CARD 2: Upcoming Billing Schedule Card
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack(spacing: 6) {
+                                Image(systemName: "calendar.badge.clock")
+                                    .font(.system(size: 14, weight: .bold))
+                                    .foregroundColor(Color(hex: "#D4AF37"))
+                                
+                                Text("UPCOMING BILLING DAYS")
+                                    .font(.system(size: 12, weight: .bold, design: .rounded))
+                                    .foregroundColor(.textSecondary)
+                                    .tracking(1.2)
+                            }
+                            
+                            if subscriptionsWithBillingDates.isEmpty {
+                                HStack {
+                                    Spacer()
+                                    Text("No upcoming billing charges found.")
+                                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                                        .foregroundColor(.textSecondary)
+                                        .padding(.vertical, 14)
+                                    Spacer()
+                                }
+                            } else {
+                                VStack(spacing: 8) {
+                                    ForEach(subscriptionsWithBillingDates.prefix(5), id: \.id) { sub in
+                                        HStack(spacing: 12) {
+                                            Circle()
+                                                .fill(Color(hex: sub.colorHex ?? "#D4AF37"))
+                                                .frame(width: 10, height: 10)
+                                            
+                                            Text(sub.displayName)
+                                                .font(.system(size: 15, weight: .bold, design: .rounded))
+                                                .foregroundColor(.textPrimary)
+                                            
+                                            Spacer()
+                                            
+                                            Text(CurrencyManager.shared.format(sub.isOneTime ? sub.cost : sub.monthlyCost))
+                                                .font(.system(size: 15, weight: .bold, design: .rounded))
+                                                .foregroundColor(Color(hex: "#FF6B6B"))
+                                            
+                                            Text(sub.formattedNextBillingDate)
+                                                .font(.system(size: 12, weight: .semibold, design: .rounded))
+                                                .foregroundColor(.textSecondary)
+                                        }
+                                        .padding(12)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .fill(colorScheme == .dark ? Color.white.opacity(0.04) : Color.black.opacity(0.025))
+                                        )
+                                    }
+                                }
+                            }
                         }
+                        .padding(18)
+                        .spendora3DCard(cornerRadius: 22)
                     }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 16)
+                    .padding(.bottom, 36)
                 }
-                .padding()
-                .background(Color(.secondarySystemBackground))
-                .cornerRadius(16)
-                .padding(.horizontal)
-                
-                Spacer()
             }
             .navigationTitle("Calendar")
             .navigationBarTitleDisplayMode(.large)
@@ -154,36 +174,16 @@ struct SubscriptionCalendarView: View {
     
     private var subscriptionsWithBillingDates: [Subscription] {
         subscriptions
-            .filter { !$0.isOverdue }
+            .filter { !$0.isOverdue && !$0.isCancelled }
             .sorted { $0.nextBillingDate < $1.nextBillingDate }
     }
     
-
-    /**
-     Executes `subscriptionsForDate` for component logic.
-     
-     - Parameter date: Value passed to `subscriptionsForDate`.
-     
-     ## Behavior
-     1. Validates method arguments and current state.
-     2. Executes core computation or state mutation.
-     */
     private func subscriptionsForDate(_ date: Date) -> [Subscription] {
         subscriptions.filter {
-            calendar.isDate($0.nextBillingDate, inSameDayAs: date)
+            !$0.isCancelled && calendar.isDate($0.nextBillingDate, inSameDayAs: date)
         }
     }
     
-
-    /**
-     Executes `daysInMonth` for component logic.
-     
-     - Parameter date: Value passed to `daysInMonth`.
-     
-     ## Behavior
-     1. Validates method arguments and current state.
-     2. Executes core computation or state mutation.
-     */
     private func daysInMonth(date: Date) -> [Date] {
         guard let monthInterval = calendar.dateInterval(of: .month, for: date) else { return [] }
         guard let monthFirstWeek = calendar.dateInterval(of: .weekOfMonth, for: monthInterval.start) else { return [] }
@@ -191,7 +191,7 @@ struct SubscriptionCalendarView: View {
         let startDate = monthFirstWeek.start
         let endDate = calendar.date(byAdding: .day, value: 41, to: startDate) ?? Date()
         
-        var dates: [Date] = []  // dates property
+        var dates: [Date] = []
         var currentDate = startDate
         
         while currentDate < endDate {
@@ -201,12 +201,4 @@ struct SubscriptionCalendarView: View {
         
         return dates
     }
-}
-
-
-// MARK: - Preview
-
-/// Xcode Canvas Preview Provider.
-#Preview {
-    SubscriptionCalendarView(subscriptions: [])
 }
