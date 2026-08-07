@@ -9,70 +9,89 @@ import UIKit
 // MARK: - MarkAsPaidButton
 
 /**
- `MarkAsPaidButton` provides a clean, editable bill payment recorder:
- - Displays single clean SF Symbol icon (no double checkmarks!)
+ `MarkAsPaidButton` provides a clean, zero-warning bill payment recorder:
+ - Uses SwiftUI Menu for options when paid (Zero UIKit AutoLayout warnings!)
  - Action State: "Log Payment ($24.99)"
- - Paid State: "Paid ($24.99)"
- - Tapping while paid presents an Edit / Undo Action Sheet to revert or modify the payment log
+ - Paid State: "Paid ($24.99)" (with Menu dropdown for Undo / Re-log)
+ - Plays tactile haptic feedback
  */
 struct MarkAsPaidButton: View {
     @Bindable var subscription: Subscription
     @State private var isPaymentLogged = false
-    @State private var showingEditMenu = false
     
     private var formattedCost: String {
         CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost)
     }
 
     var body: some View {
-        Button {
+        Group {
             if isPaymentLogged {
-                showingEditMenu = true
+                Menu {
+                    Button(role: .destructive) {
+                        undoPayment()
+                    } label: {
+                        Label("Undo Payment (Revert Date)", systemImage: "arrow.uturn.backward.circle")
+                    }
+                    
+                    Button {
+                        recordPayment()
+                    } label: {
+                        Label("Log Next Cycle (\(formattedCost))", systemImage: "plus.circle")
+                    }
+                } label: {
+                    HStack(spacing: 5) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.system(size: 13, weight: .bold))
+                        
+                        Text("Paid (\(formattedCost))")
+                            .font(.system(size: 13, weight: .bold, design: .rounded))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
+                        
+                        Image(systemName: "chevron.down")
+                            .font(.system(size: 10, weight: .bold))
+                    }
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 8)
+                    .background(
+                        LinearGradient(
+                            colors: [Color(hex: "#D4AF37"), Color(hex: "#B8860B")],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .cornerRadius(12)
+                    .shadow(color: Color(hex: "#D4AF37").opacity(0.3), radius: 4, x: 0, y: 2)
+                }
             } else {
-                recordPayment()
-            }
-        } label: {
-            HStack(spacing: 6) {
-                Image(systemName: isPaymentLogged ? "checkmark.circle.fill" : "creditcard.fill")
-                    .font(.system(size: 13, weight: .bold))
-                
-                Text(isPaymentLogged ? "Paid (\(formattedCost))" : "Log Payment (\(formattedCost))")
-                    .font(.system(size: 13, weight: .bold, design: .rounded))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
-            }
-            .foregroundColor(isPaymentLogged ? .white : Color(hex: "#0F0F1A"))
-            .padding(.horizontal, 14)
-            .padding(.vertical, 8)
-            .background(
-                isPaymentLogged
-                    ? LinearGradient(
-                        colors: [Color(hex: "#D4AF37"), Color(hex: "#B8860B")],
-                        startPoint: .leading,
-                        endPoint: .trailing
+                Button {
+                    recordPayment()
+                } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: "creditcard.fill")
+                            .font(.system(size: 13, weight: .bold))
+                        
+                        Text("Log Payment (\(formattedCost))")
+                            .font(.system(size: 13, weight: .bold, design: .rounded))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
+                    }
+                    .foregroundColor(Color(hex: "#0F0F1A"))
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 8)
+                    .background(
+                        LinearGradient(
+                            colors: [Color(hex: "#FFD93D"), Color(hex: "#F59E0B")],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
                     )
-                    : LinearGradient(
-                        colors: [Color(hex: "#FFD93D"), Color(hex: "#F59E0B")],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-            )
-            .cornerRadius(12)
-            .shadow(color: Color(hex: "#F59E0B").opacity(0.3), radius: 4, x: 0, y: 2)
-        }
-        .buttonStyle(.plain)
-        .confirmationDialog("Payment Logged for \(subscription.displayName)", isPresented: $showingEditMenu, titleVisibility: .visible) {
-            Button("Undo Payment (Revert Billing Date)") {
-                undoPayment()
+                    .cornerRadius(12)
+                    .shadow(color: Color(hex: "#F59E0B").opacity(0.3), radius: 4, x: 0, y: 2)
+                }
+                .buttonStyle(.plain)
             }
-            
-            Button("Log Next Cycle Payment (\(formattedCost))") {
-                recordPayment()
-            }
-            
-            Button("Cancel", role: .cancel) { }
-        } message: {
-            Text("Next billing date is currently \(subscription.formattedNextBillingDate). You can undo this payment or record the next cycle.")
         }
         .onAppear {
             checkIfAlreadyPaid()
