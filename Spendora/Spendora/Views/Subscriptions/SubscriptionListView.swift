@@ -1,28 +1,18 @@
 //
 //  SubscriptionListView.swift
+//  Spendora
 //
 
 import SwiftUI
 import SwiftData
 
-
 // MARK: - SubscriptionListView
 
 /**
- `SubscriptionListView` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for subscriptionlistview handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `SubscriptionListView` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
+ `SubscriptionListView` presents the complete subscription portfolio with Apple HIG Segmented Controls:
+ - Segmented Filter (Active | Cancelled | All)
+ - Search & Multi-criteria Sort Chips (Alphabetical, Cost, Renewal Date, Category)
+ - Direct Swipe-to-Edit & Swipe-to-Delete actions
  */
 struct SubscriptionListView: View {
 
@@ -33,8 +23,9 @@ struct SubscriptionListView: View {
     @State private var searchText = ""
     @State private var selectedSubscription: Subscription?
     @State private var sortOption: SortOption = .alphabetical
+    @State private var statusFilter: SubscriptionStatusFilter = .active
     
-    var filteredSubscriptions: [Subscription] {  // filteredSubscriptions property
+    var filteredSubscriptions: [Subscription] {
         let sorted = sortSubscriptions(subscriptions)
         if searchText.isEmpty { return sorted }
         return sorted.filter {
@@ -42,15 +33,29 @@ struct SubscriptionListView: View {
             $0.effectiveCategory.localizedCaseInsensitiveContains(searchText)
         }
     }
-    
-    var totalMonthly: Double {  // totalMonthly property
-        filteredSubscriptions.reduce(0) { $0 + $1.monthlyCost }
+
+    var activeSubscriptions: [Subscription] {
+        filteredSubscriptions.filter { !$0.isCancelled }
+    }
+
+    var cancelledSubscriptions: [Subscription] {
+        filteredSubscriptions.filter { $0.isCancelled }
     }
     
+    var displayedSubscriptions: [Subscription] {
+        switch statusFilter {
+        case .active: return activeSubscriptions
+        case .cancelled: return cancelledSubscriptions
+        case .all: return filteredSubscriptions
+        }
+    }
+    
+    var totalMonthly: Double {
+        activeSubscriptions.reduce(0) { $0 + $1.monthlyCost }
+    }
 
     // MARK: - Body
 
-    /// Main SwiftUI layout body property.
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -58,98 +63,61 @@ struct SubscriptionListView: View {
                     .padding(.horizontal, 12)
                     .padding(.vertical, 8)
                 
+                // Segmented Status Filter
+                Picker("Filter", selection: $statusFilter) {
+                    Text("Active (\(activeSubscriptions.count))").tag(SubscriptionStatusFilter.active)
+                    Text("Cancelled (\(cancelledSubscriptions.count))").tag(SubscriptionStatusFilter.cancelled)
+                    Text("All (\(filteredSubscriptions.count))").tag(SubscriptionStatusFilter.all)
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal, 12)
+                .padding(.bottom, 6)
+                
                 HStack {
-                    Text("\(filteredSubscriptions.count) subscriptions")
+                    Text("\(displayedSubscriptions.count) subscriptions")
                         .font(.system(.caption, design: .rounded))
                         .foregroundColor(.textSecondary)
                     
                     Spacer()
                     
-                    Text("Total: \(CurrencyManager.shared.format(totalMonthly))/mo")
+                    Text("Monthly Run-Rate: \(CurrencyManager.shared.format(totalMonthly))")
                         .font(.system(.caption, design: .rounded))
                         .fontWeight(.semibold)
                         .foregroundColor(.brandPrimary)
                 }
                 .padding(.horizontal)
-                .padding(.vertical, 8)
+                .padding(.vertical, 6)
                 
                 SortChipsView(sortOption: $sortOption)
                     .padding(.horizontal)
-                    .padding(.vertical, 8)
+                    .padding(.vertical, 6)
                 
-                if filteredSubscriptions.isEmpty {
+                if displayedSubscriptions.isEmpty {
                     EmptyStateView()
                         .padding(.top, 40)
                 } else {
                     List {
-                        let active = filteredSubscriptions.filter { !$0.isCancelled }
-                        let cancelled = filteredSubscriptions.filter { $0.isCancelled }
-                        
-                        if !active.isEmpty {
-                            Section("Active Subscriptions (\(active.count))") {
-                                ForEach(active) { subscription in
-                                    SubscriptionRow(subscription: subscription)
-                                        .listRowInsets(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
-                                        .listRowBackground(Color.clear)
-                                        .contentShape(Rectangle())
-                                        .onTapGesture {
-                                            selectedSubscription = subscription
-                                        }
-                                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                            Button(role: .destructive) {
-                                                deleteSubscription(subscription)
-                                            } label: {
-                                                Label("Delete", systemImage: "trash")
-                                            }
-                                        }
-                                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                                            Button {
-                                                selectedSubscription = subscription
-                                            } label: {
-                                                Label("Edit", systemImage: "pencil")
-                                            }
-                                            .tint(.blue)
-                                        }
+                        if statusFilter == .all {
+                            if !activeSubscriptions.isEmpty {
+                                Section("Active Subscriptions (\(activeSubscriptions.count))") {
+                                    ForEach(activeSubscriptions) { subscription in
+                                        subscriptionListRow(for: subscription)
+                                    }
                                 }
                             }
-                        }
-                        
-                        if !cancelled.isEmpty {
-                            Section {
-                                ForEach(cancelled) { subscription in
-                                    SubscriptionRow(subscription: subscription)
-                                        .opacity(0.75)
-                                        .listRowInsets(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
-                                        .listRowBackground(Color.clear)
-                                        .contentShape(Rectangle())
-                                        .onTapGesture {
-                                            selectedSubscription = subscription
-                                        }
-                                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                            Button(role: .destructive) {
-                                                deleteSubscription(subscription)
-                                            } label: {
-                                                Label("Delete", systemImage: "trash")
-                                            }
-                                        }
-                                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                                            Button {
-                                                selectedSubscription = subscription
-                                            } label: {
-                                                Label("Edit", systemImage: "pencil")
-                                            }
-                                            .tint(.blue)
-                                        }
+                            
+                            if !cancelledSubscriptions.isEmpty {
+                                Section("Cancelled & Paused (\(cancelledSubscriptions.count))") {
+                                    ForEach(cancelledSubscriptions) { subscription in
+                                        subscriptionListRow(for: subscription)
+                                            .opacity(0.75)
+                                    }
                                 }
-                            } header: {
-                                HStack(spacing: 6) {
-                                    Image(systemName: "xmark.circle.fill")
-                                        .foregroundColor(Color(hex: "#F97316"))
-                                    Text("CANCELLED & PAUSED MEMBERSHIPS (\(cancelled.count))")
-                                        .font(.system(size: 11, weight: .bold, design: .rounded))
-                                        .foregroundColor(.textSecondary)
-                                        .tracking(1.2)
-                                }
+                            }
+                        } else {
+                            ForEach(displayedSubscriptions) { subscription in
+                                subscriptionListRow(for: subscription)
+                                    .opacity(subscription.isCancelled ? 0.75 : 1.0)
                             }
                         }
                     }
@@ -157,7 +125,7 @@ struct SubscriptionListView: View {
                     .scrollContentBackground(.hidden)
                 }
             }
-            .navigationTitle("All Subscriptions")
+            .navigationTitle("Portfolio")
             .navigationBarTitleDisplayMode(.large)
             .sheet(item: $selectedSubscription) { subscription in
                 SubscriptionDetailView(subscription: subscription)
@@ -165,16 +133,32 @@ struct SubscriptionListView: View {
         }
     }
     
+    @ViewBuilder
+    private func subscriptionListRow(for subscription: Subscription) -> some View {
+        SubscriptionRow(subscription: subscription)
+            .listRowInsets(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
+            .listRowBackground(Color.clear)
+            .contentShape(Rectangle())
+            .onTapGesture {
+                selectedSubscription = subscription
+            }
+            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                Button(role: .destructive) {
+                    deleteSubscription(subscription)
+                } label: {
+                    Label("Delete", systemImage: "trash")
+                }
+            }
+            .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                Button {
+                    selectedSubscription = subscription
+                } label: {
+                    Label("Edit", systemImage: "pencil")
+                }
+                .tint(.blue)
+            }
+    }
 
-    /**
-     Executes `sortSubscriptions` for component logic.
-     
-     - Parameter subs: Value passed to `sortSubscriptions`.
-     
-     ## Behavior
-     1. Validates method arguments and current state.
-     2. Executes core computation or state mutation.
-     */
     private func sortSubscriptions(_ subs: [Subscription]) -> [Subscription] {
         switch sortOption {
         case .alphabetical:
@@ -191,17 +175,7 @@ struct SubscriptionListView: View {
             return subs.sorted { $0.createdAt > $1.createdAt }
         }
     }
-    
 
-    /**
-     Executes `deleteSubscription` for component logic.
-     
-     - Parameter subscription: Value passed to `deleteSubscription`.
-     
-     ## Behavior
-     1. Validates method arguments and current state.
-     2. Executes core computation or state mutation.
-     */
     private func deleteSubscription(_ subscription: Subscription) {
         NotificationService.shared.cancel(for: subscription)
         modelContext.delete(subscription)

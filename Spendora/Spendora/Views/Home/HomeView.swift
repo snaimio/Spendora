@@ -1,37 +1,29 @@
 //
 //  HomeView.swift
+//  Spendora
 //
-
-/**
- * Main/Core Functions & Purpose:
- * HomeView main dashboard view of the Spendora app.
- * Displays overall monthly/yearly spend totals, upcoming charge cards, search & sort controls,
- * subscription cards list, quick actions toolbar menu (Yearly Report, Challenges, Savings Score, AI Insights),
- * and user profile avatar header.
- */
 
 import SwiftUI
 import SwiftData
 import WidgetKit
 
+// MARK: - SubscriptionStatusFilter Enum
+
+enum SubscriptionStatusFilter: String, CaseIterable, Identifiable {
+    case active = "Active"
+    case cancelled = "Cancelled"
+    case all = "All"
+    
+    var id: String { rawValue }
+}
 
 // MARK: - HomeView
 
 /**
- `HomeView` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for homeview handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `HomeView` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
+ `HomeView` main executive dashboard adhering to Apple HIG Fintech Industry Standards:
+ - Segmented Status Control (Active | Cancelled | All)
+ - Machined Steel Spending Gauge Meter & Executive Totals
+ - Clean Subscriptions Cards List with high-contrast distinct typography
  */
 struct HomeView: View {
 
@@ -46,6 +38,7 @@ struct HomeView: View {
     @State var searchText = ""
     @State var refreshID = 0
     @State var sortOption: SortOption = .alphabetical
+    @State var statusFilter: SubscriptionStatusFilter = .active
     @State var animateHeader = false
     
     @ObservedObject var profileManager = UserProfileManager.shared
@@ -63,7 +56,6 @@ struct HomeView: View {
 
     // MARK: - Body
 
-    /// Main SwiftUI layout body property.
     var body: some View {
         NavigationStack {
             ZStack {
@@ -72,7 +64,7 @@ struct HomeView: View {
                 
                 ScrollView {
                     VStack(spacing: 20) {
-                        // Single Integrated Hero Summary Card (Monthly Spend, Stats & Next Charge)
+                        // Single Integrated Hero Summary Card (Monthly Spend, Gauge & Next Charge)
                         HeroCardView(
                             totalMonthly: totalMonthly,
                             totalYearly: totalYearly,
@@ -84,82 +76,31 @@ struct HomeView: View {
                         .offset(y: animateHeader ? 0 : 12)
                         
                         if !subscriptions.isEmpty {
-                            // Search Bar & Sort Chips
+                            // Search Bar, Sort Chips & Status Segmented Filter
                             VStack(spacing: 12) {
                                 SearchBarView(searchText: $searchText)
+                                
+                                HStack {
+                                    // Industry Standard Segmented Status Filter (Active | Cancelled | All)
+                                    Picker("Filter", selection: $statusFilter) {
+                                        Text("Active (\(activeSubscriptions.count))").tag(SubscriptionStatusFilter.active)
+                                        Text("Cancelled (\(cancelledSubscriptions.count))").tag(SubscriptionStatusFilter.cancelled)
+                                        Text("All (\(filteredSubscriptions.count))").tag(SubscriptionStatusFilter.all)
+                                    }
+                                    .pickerStyle(.segmented)
+                                }
+                                
                                 SortChipsView(sortOption: $sortOption)
                             }
                             
-                            // Active Subscriptions Section
-                            if !activeSubscriptions.isEmpty {
-                                HStack {
-                                    Text("Active Subscriptions")
-                                        .font(.system(.headline, design: .rounded))
-                                        .foregroundColor(.textPrimary)
-                                    Spacer()
-                                    Text("\(activeSubscriptions.count) Active")
-                                        .font(.system(.caption, design: .rounded))
-                                        .fontWeight(.medium)
-                                        .foregroundColor(.textSecondary)
-                                }
-                                .padding(.horizontal, 4)
-                                .padding(.top, 4)
-                                
-                                VStack(spacing: 12) {
-                                    ForEach(activeSubscriptions) { subscription in
-                                        SubscriptionCardView(subscription: subscription)
-                                            .onTapGesture {
-                                                generator.impactOccurred()
-                                                selectedSubscription = subscription
-                                            }
-                                    }
-                                }
-                            }
-                            
-                            // Cancelled & Paused Distinct Section Container
-                            if !cancelledSubscriptions.isEmpty {
-                                VStack(alignment: .leading, spacing: 12) {
-                                    HStack(spacing: 6) {
-                                        Image(systemName: "xmark.circle.fill")
-                                            .font(.system(size: 14, weight: .bold))
-                                            .foregroundColor(Color(hex: "#F97316"))
-                                        
-                                        Text("CANCELLED & PAUSED MEMBERSHIPS")
-                                            .font(.system(size: 11, weight: .bold, design: .rounded))
-                                            .foregroundColor(.textSecondary)
-                                            .tracking(1.2)
-                                        
-                                        Spacer()
-                                        
-                                        Text("\(cancelledSubscriptions.count) Inactive")
-                                            .font(.system(size: 11, weight: .bold, design: .rounded))
-                                            .foregroundColor(Color(hex: "#F97316"))
-                                            .padding(.horizontal, 8)
-                                            .padding(.vertical, 3)
-                                            .background(Color(hex: "#F97316").opacity(0.14))
-                                            .cornerRadius(8)
-                                    }
-                                    .padding(.horizontal, 4)
-                                    
-                                    VStack(spacing: 10) {
-                                        ForEach(cancelledSubscriptions) { subscription in
-                                            SubscriptionCardView(subscription: subscription)
-                                                .opacity(0.75)
-                                                .onTapGesture {
-                                                    generator.impactOccurred()
-                                                    selectedSubscription = subscription
-                                                }
-                                        }
-                                    }
-                                }
-                                .padding(14)
-                                .background(Color.secondary.opacity(0.06))
-                                .cornerRadius(20)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                                        .stroke(Color(hex: "#F97316").opacity(0.25), lineWidth: 1)
-                                )
-                                .padding(.top, 8)
+                            // DISPLAY CONTENT BASED ON STATUS FILTER
+                            switch statusFilter {
+                            case .active:
+                                activeSubscriptionsSection
+                            case .cancelled:
+                                cancelledSubscriptionsSection
+                            case .all:
+                                allSubscriptionsSection
                             }
                         } else {
                             EmptyStateView()
@@ -272,6 +213,120 @@ struct HomeView: View {
             .background(homeSheetModifiers)
             .onChange(of: subscriptions.count) { _, _ in
                 updateWidgetData()
+            }
+        }
+    }
+    
+    // MARK: - Active Subscriptions Section
+    private var activeSubscriptionsSection: some View {
+        VStack(spacing: 12) {
+            HStack {
+                Text("Active Subscriptions")
+                    .font(.system(.headline, design: .rounded))
+                    .foregroundColor(.textPrimary)
+                Spacer()
+                Text("\(activeSubscriptions.count) Active")
+                    .font(.system(.caption, design: .rounded))
+                    .fontWeight(.medium)
+                    .foregroundColor(.textSecondary)
+            }
+            .padding(.horizontal, 4)
+            
+            if activeSubscriptions.isEmpty {
+                Text("No active subscriptions found.")
+                    .font(.system(.subheadline, design: .rounded))
+                    .foregroundColor(.textSecondary)
+                    .padding(.vertical, 20)
+            } else {
+                ForEach(activeSubscriptions) { subscription in
+                    SubscriptionCardView(subscription: subscription)
+                        .onTapGesture {
+                            generator.impactOccurred()
+                            selectedSubscription = subscription
+                        }
+                }
+            }
+        }
+    }
+    
+    // MARK: - Cancelled Subscriptions Section
+    private var cancelledSubscriptionsSection: some View {
+        VStack(spacing: 12) {
+            HStack {
+                Text("Cancelled & Paused")
+                    .font(.system(.headline, design: .rounded))
+                    .foregroundColor(.textPrimary)
+                Spacer()
+                Text("\(cancelledSubscriptions.count) Inactive")
+                    .font(.system(.caption, design: .rounded))
+                    .fontWeight(.medium)
+                    .foregroundColor(.textSecondary)
+            }
+            .padding(.horizontal, 4)
+            
+            if cancelledSubscriptions.isEmpty {
+                Text("No cancelled subscriptions found.")
+                    .font(.system(.subheadline, design: .rounded))
+                    .foregroundColor(.textSecondary)
+                    .padding(.vertical, 20)
+            } else {
+                ForEach(cancelledSubscriptions) { subscription in
+                    SubscriptionCardView(subscription: subscription)
+                        .opacity(0.75)
+                        .onTapGesture {
+                            generator.impactOccurred()
+                            selectedSubscription = subscription
+                        }
+                }
+            }
+        }
+    }
+    
+    // MARK: - All Subscriptions Section (Apple HIG Grouped Headers)
+    private var allSubscriptionsSection: some View {
+        VStack(spacing: 16) {
+            if !activeSubscriptions.isEmpty {
+                VStack(spacing: 10) {
+                    HStack {
+                        Text("ACTIVE")
+                            .font(.system(size: 12, weight: .bold, design: .rounded))
+                            .foregroundColor(.brandPrimary)
+                            .tracking(1.2)
+                        Spacer()
+                    }
+                    .padding(.horizontal, 4)
+                    
+                    ForEach(activeSubscriptions) { subscription in
+                        SubscriptionCardView(subscription: subscription)
+                            .onTapGesture {
+                                generator.impactOccurred()
+                                selectedSubscription = subscription
+                            }
+                    }
+                }
+            }
+            
+            if !cancelledSubscriptions.isEmpty {
+                VStack(spacing: 10) {
+                    HStack {
+                        Text("PAUSED & CANCELLED")
+                            .font(.system(size: 12, weight: .bold, design: .rounded))
+                            .foregroundColor(.textSecondary)
+                            .tracking(1.2)
+                        Spacer()
+                    }
+                    .padding(.horizontal, 4)
+                    .padding(.top, 8)
+                    
+                    ForEach(cancelledSubscriptions) { subscription in
+                        SubscriptionCardView(subscription: subscription)
+                            .opacity(0.75)
+                            .onTapGesture {
+                                generator.impactOccurred()
+                                selectedSubscription = subscription
+                            }
+                    }
+                }
             }
         }
     }
