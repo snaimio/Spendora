@@ -53,25 +53,25 @@ struct SubscriptionCardView: View {
             
             // Card Content Stack
             VStack(alignment: .leading, spacing: 4) {
-                // ROW 1: SUBSCRIPTION NAME (Distinct 19pt Bold Rounded Font, .textPrimary Color)
+                // ROW 1: SUBSCRIPTION NAME (Apple HIG 17pt Bold Rounded Font, .textPrimary Color)
                 HStack(alignment: .center) {
                     Text(subscription.displayName)
-                        .font(.system(size: 19, weight: .bold, design: .rounded))
+                        .font(.system(size: 17, weight: .bold, design: .rounded))
                         .foregroundColor(.textPrimary)
                         .lineLimit(1)
-                        .minimumScaleFactor(0.7)
+                        .minimumScaleFactor(0.75)
                     
                     Spacer()
                     
                     Image(systemName: "chevron.right")
-                        .font(.system(size: 13, weight: .bold))
+                        .font(.system(size: 12, weight: .bold))
                         .foregroundColor(.textSecondary)
                 }
                 
-                // ROW 2: PRICE & BILLING CYCLE (Price: Distinct 16pt Heavy Black Coral Font!)
+                // ROW 2: PRICE & BILLING CYCLE (Price: Apple HIG 17pt Bold Coral Font)
                 HStack(spacing: 4) {
                     Text(CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost))
-                        .font(.system(size: 16, weight: .black, design: .rounded))
+                        .font(.system(size: 17, weight: .bold, design: .rounded))
                         .foregroundColor(Color(hex: "#FF6B6B"))
                     
                     if subscription.isOneTime {

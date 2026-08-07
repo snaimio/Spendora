@@ -187,7 +187,7 @@ struct NextChargeSpotlightCardView: View {
                 HStack(alignment: .center, spacing: 16) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(subscription.displayName)
-                            .font(.system(size: 24, weight: .bold, design: .rounded))
+                            .font(.system(size: 20, weight: .bold, design: .rounded))
                             .foregroundColor(.textPrimary)
                             .lineLimit(1)
                             .minimumScaleFactor(0.7)
@@ -211,7 +211,7 @@ struct NextChargeSpotlightCardView: View {
                     // Cost Figure (Single Locked Line on Right Side!)
                     VStack(alignment: .trailing, spacing: 2) {
                         Text(CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost))
-                            .font(.system(size: 24, weight: .black, design: .rounded))
+                            .font(.system(size: 22, weight: .bold, design: .rounded))
                             .foregroundColor(Color(hex: "#F59E0B"))
                             .lineLimit(1)
                             .minimumScaleFactor(0.7)
