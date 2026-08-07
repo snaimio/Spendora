@@ -10,7 +10,7 @@ import SwiftUI
 /**
  `HeroCardView` presents two distinct, standalone cards for executive clarity:
  1. `ThisMonthCardView`: Displays overall monthly spend, active count, yearly commitment & monthly average.
- 2. `NextChargeSpotlightCardView`: Dedicated luxury card highlighting upcoming charge details with zero text truncation.
+ 2. `NextChargeSpotlightCardView`: Displays upcoming charge details in 1 single clean row with identical card styling as `ThisMonthCardView`.
  */
 struct HeroCardView: View {
 
@@ -34,7 +34,7 @@ struct HeroCardView: View {
                 subscriptionCount: subscriptionCount
             )
             
-            // CARD 2: Standalone Next Charge Spotlight Card (Adaptive Light/Dark Mode Palette!)
+            // CARD 2: Next Charge Spotlight Card (Same Color, Same Size, Single Line Content!)
             if let next = nextSubscription {
                 NextChargeSpotlightCardView(subscription: next)
             }
@@ -149,120 +149,92 @@ struct ThisMonthCardView: View {
     }
 }
 
-// MARK: - Card 2: Next Charge Spotlight Card View (Adaptive Light & Dark Palette!)
+// MARK: - Card 2: Next Charge Spotlight Card View (Same Color & Size as This Month Card!)
 
 struct NextChargeSpotlightCardView: View {
     let subscription: Subscription
     @Environment(\.colorScheme) private var colorScheme
 
-    private var dateTextColor: Color {
-        colorScheme == .dark ? Color(hex: "#D4AF37") : Color(hex: "#B45309")
-    }
-
-    private var headerIconColor: Color {
-        colorScheme == .dark ? Color(hex: "#F59E0B") : Color(hex: "#C2410C")
-    }
-
     var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            // Header Row: Icon, Title & Status Badge
-            HStack(alignment: .center) {
-                HStack(spacing: 6) {
-                    Image(systemName: "bell.badge.fill")
-                        .font(.system(size: 14, weight: .bold))
-                        .foregroundColor(headerIconColor)
-                    
-                    Text("NEXT CHARGE SPOTLIGHT")
-                        .font(.system(size: 11, weight: .bold, design: .rounded))
-                        .foregroundColor(dateTextColor)
-                        .tracking(1.2)
-                }
-                
-                Spacer()
-                
-                CountdownChip(daysRemaining: subscription.daysUntilBilling, isCancelled: subscription.isCancelled)
-            }
-            
-            Divider()
-                .background(dateTextColor.opacity(0.25))
-            
-            // Subscription Name (Prominent 22pt Bold Text)
-            Text(subscription.displayName)
-                .font(.system(size: 22, weight: .bold, design: .rounded))
-                .foregroundColor(.textPrimary)
-                .lineLimit(1)
-                .minimumScaleFactor(0.8)
-            
-            // Cost & Cycle Row (Vibrant Coral 20pt Heavy Black Font)
-            HStack(spacing: 6) {
-                Text(CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost))
-                    .font(.system(size: 20, weight: .black, design: .rounded))
-                    .foregroundColor(Color(hex: "#FF6B6B"))
-                
-                if subscription.isOneTime {
-                    Text("• Lifetime")
-                        .font(.system(size: 14, weight: .bold, design: .rounded))
-                        .foregroundColor(dateTextColor)
-                } else {
-                    Text("/month")
-                        .font(.system(size: 14, weight: .bold, design: .rounded))
-                        .foregroundColor(.textSecondary)
-                    
-                    if subscription.isYearly {
-                        Text("• Yearly Plan")
-                            .font(.system(size: 14, weight: .bold, design: .rounded))
-                            .foregroundColor(dateTextColor)
+        VStack(spacing: 0) {
+            // Top Accent Brand Gradient Bar (Matching This Month Card!)
+            Rectangle()
+                .fill(
+                    LinearGradient(
+                        colors: [Color(hex: "#FF6B6B"), Color(hex: "#F59E0B"), Color(hex: "#D4AF37")],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .frame(height: 5)
+
+            VStack(alignment: .leading, spacing: 14) {
+                // Header Row
+                HStack {
+                    HStack(spacing: 6) {
+                        Image(systemName: "bell.badge.fill")
+                            .font(.system(size: 13, weight: .bold))
+                            .foregroundColor(Color(hex: "#F59E0B"))
+                        
+                        Text("NEXT CHARGE SPOTLIGHT")
+                            .font(.system(size: 12, weight: .bold, design: .rounded))
+                            .foregroundColor(.textSecondary)
+                            .tracking(1.5)
                     }
+                    
+                    Spacer()
+                    
+                    CountdownChip(daysRemaining: subscription.daysUntilBilling, isCancelled: subscription.isCancelled)
+                }
+
+                // Single Main Content Row (1 Single Locked Row - Name & Renewal Date on Left, Price on Right!)
+                HStack(alignment: .center, spacing: 16) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(subscription.displayName)
+                            .font(.system(size: 24, weight: .bold, design: .rounded))
+                            .foregroundColor(.textPrimary)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
+                        
+                        HStack(spacing: 4) {
+                            Image(systemName: "calendar")
+                                .font(.system(size: 11, weight: .medium))
+                                .foregroundColor(.textSecondary)
+                            
+                            Text("Renewal: \(subscription.formattedNextBillingDate)")
+                                .font(.system(size: 13, weight: .semibold, design: .rounded))
+                                .foregroundColor(.textSecondary)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.8)
+                        }
+                    }
+                    .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                    
+                    Spacer(minLength: 8)
+                    
+                    // Cost Figure (Single Locked Line on Right Side!)
+                    VStack(alignment: .trailing, spacing: 2) {
+                        Text(CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost))
+                            .font(.system(size: 24, weight: .black, design: .rounded))
+                            .foregroundColor(Color(hex: "#FF6B6B"))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
+                        
+                        Text(subscription.isOneTime ? "Lifetime" : (subscription.isYearly ? "/yr" : "/mo"))
+                            .font(.system(size: 12, weight: .semibold, design: .rounded))
+                            .foregroundColor(.textSecondary)
+                    }
+                    .fixedSize(horizontal: true, vertical: false)
                 }
             }
-            .lineLimit(1)
-            .fixedSize(horizontal: true, vertical: false)
-            
-            // Renewal Date Row (16pt Bold Signature Gold - 1 Single Locked Line!)
-            HStack(spacing: 6) {
-                Image(systemName: "calendar")
-                    .font(.system(size: 14, weight: .bold))
-                    .foregroundColor(dateTextColor)
-                
-                Text("Renewal Date: \(subscription.formattedNextBillingDate)")
-                    .font(.system(size: 16, weight: .bold, design: .rounded))
-                    .foregroundColor(dateTextColor)
-            }
-            .lineLimit(1)
-            .fixedSize(horizontal: true, vertical: false)
+            .padding(18)
         }
-        .padding(18)
-        .background(
-            colorScheme == .dark
-                ? LinearGradient(
-                    colors: [Color(hex: "#1E293B"), Color(hex: "#0F0F1A")],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-                : LinearGradient(
-                    colors: [Color.white, Color(hex: "#FAFAFA")],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-        )
+        .background(Color.cardBackground)
         .cornerRadius(22)
-        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.05), radius: 12, x: 0, y: 4)
+        .shadow(color: Color.black.opacity(0.06), radius: 12, x: 0, y: 4)
         .overlay(
             RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .stroke(
-                    colorScheme == .dark
-                        ? LinearGradient(
-                            colors: [Color(hex: "#D4AF37").opacity(0.6), Color(hex: "#D4AF37").opacity(0.15)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                        : LinearGradient(
-                            colors: [Color(hex: "#F59E0B").opacity(0.4), Color(hex: "#F59E0B").opacity(0.15)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                    lineWidth: 1.5
-                )
+                .stroke(Color.secondary.opacity(0.12), lineWidth: 1)
         )
     }
 }
