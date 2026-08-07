@@ -9,8 +9,8 @@ import SwiftUI
 
 /**
  `HeroCardView` presents two distinct, standalone cards for executive clarity:
- 1. `ThisMonthCardView`: Displays overall monthly spend, active count, yearly commitment & monthly average.
- 2. `NextChargeSpotlightCardView`: Displays upcoming charge details in 1 single clean row with identical card styling as `ThisMonthCardView`.
+ 1. `ThisMonthCardView`: Displays overall monthly spend with Emerald Green signature styling.
+ 2. `NextChargeSpotlightCardView`: Displays upcoming charge spotlight with Sunset Coral & Gold signature styling.
  */
 struct HeroCardView: View {
 
@@ -26,7 +26,7 @@ struct HeroCardView: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            // CARD 1: Executive Monthly Spend Card
+            // CARD 1: Executive Monthly Spend Card (Emerald Theme)
             ThisMonthCardView(
                 totalMonthly: totalMonthly,
                 totalYearly: totalYearly,
@@ -34,7 +34,7 @@ struct HeroCardView: View {
                 subscriptionCount: subscriptionCount
             )
             
-            // CARD 2: Next Charge Spotlight Card (Same Color, Same Size, Single Line Content!)
+            // CARD 2: Next Charge Spotlight Card (Sunset Coral & Gold Theme)
             if let next = nextSubscription {
                 NextChargeSpotlightCardView(subscription: next)
             }
@@ -42,7 +42,7 @@ struct HeroCardView: View {
     }
 }
 
-// MARK: - Card 1: This Month Card View
+// MARK: - Card 1: This Month Card View (Royal Emerald Theme)
 
 struct ThisMonthCardView: View {
     let totalMonthly: Double
@@ -53,11 +53,11 @@ struct ThisMonthCardView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // Top Accent Brand Gradient Bar
+            // Top Accent Emerald Gradient Bar
             Rectangle()
                 .fill(
                     LinearGradient(
-                        colors: [Color(hex: "#FF6B6B"), Color(hex: "#F59E0B"), Color(hex: "#D4AF37")],
+                        colors: [Color(hex: "#10B981"), Color(hex: "#059669"), Color(hex: "#F59E0B")],
                         startPoint: .leading,
                         endPoint: .trailing
                     )
@@ -70,7 +70,7 @@ struct ThisMonthCardView: View {
                     HStack(spacing: 6) {
                         Image(systemName: "calendar")
                             .font(.system(size: 13, weight: .bold))
-                            .foregroundColor(colorScheme == .dark ? Color(hex: "#D4AF37") : Color(hex: "#C2410C"))
+                            .foregroundColor(Color(hex: "#10B981"))
                         Text("THIS MONTH")
                             .font(.system(size: 12, weight: .bold, design: .rounded))
                             .foregroundColor(.textSecondary)
@@ -82,18 +82,14 @@ struct ThisMonthCardView: View {
                     HStack(spacing: 4) {
                         Image(systemName: "checkmark.seal.fill")
                             .font(.system(size: 12))
-                            .foregroundColor(colorScheme == .dark ? Color(hex: "#D4AF37") : Color(hex: "#B45309"))
+                            .foregroundColor(colorScheme == .dark ? Color(hex: "#10B981") : Color(hex: "#047857"))
                         Text("Active Budget")
                             .font(.system(size: 11, weight: .bold, design: .rounded))
-                            .foregroundColor(colorScheme == .dark ? Color(hex: "#D4AF37") : Color(hex: "#B45309"))
+                            .foregroundColor(colorScheme == .dark ? Color(hex: "#10B981") : Color(hex: "#047857"))
                     }
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
-                    .background(
-                        colorScheme == .dark
-                            ? Color(hex: "#D4AF37").opacity(0.16)
-                            : Color(hex: "#FEF3C7")
-                    )
+                    .background(Color(hex: "#10B981").opacity(0.14))
                     .cornerRadius(10)
                 }
 
@@ -144,12 +140,12 @@ struct ThisMonthCardView: View {
         .shadow(color: Color.black.opacity(0.06), radius: 12, x: 0, y: 4)
         .overlay(
             RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .stroke(Color.secondary.opacity(0.12), lineWidth: 1)
+                .stroke(Color(hex: "#10B981").opacity(0.25), lineWidth: 1.2)
         )
     }
 }
 
-// MARK: - Card 2: Next Charge Spotlight Card View (Same Color & Size as This Month Card!)
+// MARK: - Card 2: Next Charge Spotlight Card View (Sunset Coral & Gold Theme)
 
 struct NextChargeSpotlightCardView: View {
     let subscription: Subscription
@@ -157,7 +153,7 @@ struct NextChargeSpotlightCardView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // Top Accent Brand Gradient Bar (Matching This Month Card!)
+            // Top Accent Sunset Coral & Gold Bar
             Rectangle()
                 .fill(
                     LinearGradient(
@@ -234,7 +230,7 @@ struct NextChargeSpotlightCardView: View {
         .shadow(color: Color.black.opacity(0.06), radius: 12, x: 0, y: 4)
         .overlay(
             RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .stroke(Color.secondary.opacity(0.12), lineWidth: 1)
+                .stroke(Color(hex: "#F59E0B").opacity(0.35), lineWidth: 1.2)
         )
     }
 }

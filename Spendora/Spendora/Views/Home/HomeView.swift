@@ -231,10 +231,10 @@ struct HomeView: View {
                 Spacer()
                 Text("\(activeSubscriptions.count) Active")
                     .font(.system(size: 11, weight: .bold, design: .rounded))
-                    .foregroundColor(Color(hex: "#10B981"))
+                    .foregroundColor(Color(hex: "#047857"))
                     .padding(.horizontal, 8)
                     .padding(.vertical, 3)
-                    .background(Color(hex: "#10B981").opacity(0.14))
+                    .background(Color(hex: "#10B981").opacity(0.16))
                     .cornerRadius(8)
             }
             .padding(.horizontal, 4)
