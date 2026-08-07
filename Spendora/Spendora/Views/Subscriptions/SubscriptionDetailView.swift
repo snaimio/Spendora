@@ -118,15 +118,37 @@ struct SubscriptionDetailView: View {
             .navigationTitle(isEditing ? "Edit Service" : "Service Details")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    if isEditing {
+                if isEditing {
+                    ToolbarItem(placement: .cancellationAction) {
                         Button("Cancel") {
                             isEditing = false
                             resetValues()
                         }
                         .font(.system(.body, design: .rounded))
+                        .foregroundColor(.brandSecondary)
+                    }
+                    
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Save") {
+                            saveChanges()
+                        }
+                        .font(.system(.body, design: .rounded))
+                        .fontWeight(.bold)
                         .foregroundColor(.brandPrimary)
-                    } else {
+                        .disabled(!isValid || isSaving)
+                    }
+                } else {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Done") {
+                            generator.impactOccurred()
+                            dismiss()
+                        }
+                        .font(.system(.body, design: .rounded))
+                        .fontWeight(.semibold)
+                        .foregroundColor(.brandPrimary)
+                    }
+                    
+                    ToolbarItem(placement: .primaryAction) {
                         Button("Edit") {
                             isEditing = true
                         }
@@ -134,16 +156,6 @@ struct SubscriptionDetailView: View {
                         .fontWeight(.semibold)
                         .foregroundColor(.brandPrimary)
                     }
-                }
-                
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Done") {
-                        generator.impactOccurred()
-                        dismiss()
-                    }
-                    .font(.system(.body, design: .rounded))
-                    .fontWeight(.semibold)
-                    .foregroundColor(.brandPrimary)
                 }
             }
             .alert("Remove from App", isPresented: $showingDeleteAlert) {
