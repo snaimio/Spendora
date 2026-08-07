@@ -68,11 +68,11 @@ struct SubscriptionCardView: View {
                         .foregroundColor(.textSecondary)
                 }
                 
-                // ROW 2: PRICE & BILLING CYCLE (Price: Distinct 16pt Heavy Black Gold Font!)
+                // ROW 2: PRICE & BILLING CYCLE (Price: Distinct 16pt Heavy Black Coral Font!)
                 HStack(spacing: 4) {
                     Text(CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost))
                         .font(.system(size: 16, weight: .black, design: .rounded))
-                        .foregroundColor(Color(hex: "#D4AF37"))
+                        .foregroundColor(Color(hex: "#FF6B6B"))
                     
                     if subscription.isOneTime {
                         Text("• Lifetime")
