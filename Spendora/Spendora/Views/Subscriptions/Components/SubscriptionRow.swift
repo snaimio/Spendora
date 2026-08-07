@@ -8,15 +8,11 @@ import SwiftUI
 // MARK: - SubscriptionRow
 
 /**
- `SubscriptionRow` renders a subscription card matching `SubscriptionCardView`'s adaptive aesthetic:
- - Pure White card background in Light Mode / Machined Slate in Dark Mode (`Color.cardBackground`)
- - High-contrast text legibility in both modes (`.textPrimary` and `.textSecondary`)
- - Polished Brass Circular Icon Container with logo emblem (#D4AF37)
- - Gold Outline Accent Stroke (#D4AF37)
- - 1. Subscription Name: Headline (17pt Bold) - LARGEST, PROMINENT & FULL WIDTH
- - 2. Cost & Cycle: Subheadline (15pt Regular)
- - 3. Next Billing Date: Caption (13pt Regular)
- - 4. Status Badge ("Due in X days" / "Paid • Xd left"): Caption2 (12pt Semibold) - ALWAYS ON A NEW ROW!
+ `SubscriptionRow` renders a subscription card matching `SubscriptionCardView`'s distinct typography hierarchy:
+ - 1. SUBSCRIPTION NAME TITLE: Distinct 19pt Bold Rounded Font (.textPrimary High Contrast)
+ - 2. PRICE ($XX.XX): Distinct 16pt Heavy Black Font in Signature Gold/Brass (#D4AF37)
+ - 3. CYCLE & DATES: Muted 13pt Regular Font (.textSecondary)
+ - 4. STATUS BADGE ("Due in X days" / "Paid • Xd left"): Standalone NEW ROW!
  */
 struct SubscriptionRow: View {
 
@@ -57,10 +53,10 @@ struct SubscriptionRow: View {
             
             // Card Content Stack
             VStack(alignment: .leading, spacing: 4) {
-                // ROW 1: SUBSCRIPTION NAME (Headline 17pt Bold - LARGEST TEXT)
+                // ROW 1: SUBSCRIPTION NAME (Distinct 19pt Bold Rounded Font, .textPrimary Color)
                 HStack(alignment: .center) {
                     Text(subscription.displayName)
-                        .font(AppStyles.Typography.headline)
+                        .font(.system(size: 19, weight: .bold, design: .rounded))
                         .foregroundColor(.textPrimary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
@@ -72,32 +68,30 @@ struct SubscriptionRow: View {
                         .foregroundColor(.textSecondary)
                 }
                 
-                // ROW 2: COST & BILLING CYCLE (Subheadline 15pt Regular)
+                // ROW 2: PRICE & BILLING CYCLE (Price: Distinct 16pt Heavy Black Gold Font!)
                 HStack(spacing: 4) {
                     Text(CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost))
-                        .font(AppStyles.Typography.subheadline)
-                        .fontWeight(.bold)
-                        .foregroundColor(.textPrimary)
+                        .font(.system(size: 16, weight: .black, design: .rounded))
+                        .foregroundColor(Color(hex: "#D4AF37"))
                     
                     if subscription.isOneTime {
                         Text("• Lifetime")
-                            .font(AppStyles.Typography.subheadline)
-                            .fontWeight(.bold)
+                            .font(.system(size: 13, weight: .semibold, design: .rounded))
                             .foregroundColor(Color(hex: "#D4AF37"))
                     } else {
                         Text("/month")
-                            .font(AppStyles.Typography.subheadline)
+                            .font(.system(size: 13, weight: .medium, design: .rounded))
                             .foregroundColor(.textSecondary)
                         
                         if subscription.isYearly {
                             Text("• Yearly")
-                                .font(AppStyles.Typography.subheadline)
+                                .font(.system(size: 13, weight: .medium, design: .rounded))
                                 .foregroundColor(.textSecondary)
                         }
                     }
                 }
                 
-                // ROW 3: NEXT BILLING DATE (Caption 13pt Regular)
+                // ROW 3: NEXT BILLING DATE (Muted 13pt Regular Font)
                 if !subscription.isOneTime {
                     HStack(spacing: 4) {
                         Image(systemName: "calendar")
@@ -105,7 +99,7 @@ struct SubscriptionRow: View {
                             .foregroundColor(.textSecondary)
                         
                         Text("Renewal: \(subscription.formattedNextBillingDate)")
-                            .font(AppStyles.Typography.caption)
+                            .font(.system(size: 13, weight: .regular, design: .rounded))
                             .foregroundColor(.textSecondary)
                     }
                 } else {
@@ -115,8 +109,7 @@ struct SubscriptionRow: View {
                             .foregroundColor(Color(hex: "#D4AF37"))
                         
                         Text("One-Time Purchase")
-                            .font(AppStyles.Typography.caption)
-                            .fontWeight(.bold)
+                            .font(.system(size: 13, weight: .bold, design: .rounded))
                             .foregroundColor(Color(hex: "#D4AF37"))
                     }
                 }
