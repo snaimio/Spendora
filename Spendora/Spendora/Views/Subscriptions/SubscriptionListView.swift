@@ -13,6 +13,7 @@ import SwiftData
  - Segmented Filter (Active | Cancelled | All)
  - Search & Multi-criteria Sort Chips (Alphabetical, Cost, Renewal Date, Category)
  - Direct Swipe-to-Edit & Swipe-to-Delete actions
+ - Spendora Ambient Brand Gradient Background Overlay
  */
 struct SubscriptionListView: View {
 
@@ -62,70 +63,71 @@ struct SubscriptionListView: View {
                 SpendoraBrandBackgroundView()
                 
                 VStack(spacing: 0) {
-                SearchBarView(searchText: $searchText)
+                    SearchBarView(searchText: $searchText)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
+                    
+                    // Segmented Status Filter
+                    Picker("Filter", selection: $statusFilter) {
+                        Text("Active (\(activeSubscriptions.count))").tag(SubscriptionStatusFilter.active)
+                        Text("Cancelled (\(cancelledSubscriptions.count))").tag(SubscriptionStatusFilter.cancelled)
+                        Text("All (\(filteredSubscriptions.count))").tag(SubscriptionStatusFilter.all)
+                    }
+                    .pickerStyle(.segmented)
                     .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                
-                // Segmented Status Filter
-                Picker("Filter", selection: $statusFilter) {
-                    Text("Active (\(activeSubscriptions.count))").tag(SubscriptionStatusFilter.active)
-                    Text("Cancelled (\(cancelledSubscriptions.count))").tag(SubscriptionStatusFilter.cancelled)
-                    Text("All (\(filteredSubscriptions.count))").tag(SubscriptionStatusFilter.all)
-                }
-                .pickerStyle(.segmented)
-                .padding(.horizontal, 12)
-                .padding(.bottom, 6)
-                
-                HStack {
-                    Text("\(displayedSubscriptions.count) subscriptions")
-                        .font(.system(.caption, design: .rounded))
-                        .foregroundColor(.textSecondary)
+                    .padding(.bottom, 6)
                     
-                    Spacer()
-                    
-                    Text("Monthly Run-Rate: \(CurrencyManager.shared.format(totalMonthly))")
-                        .font(.system(.caption, design: .rounded))
-                        .fontWeight(.semibold)
-                        .foregroundColor(.brandPrimary)
-                }
-                .padding(.horizontal)
-                .padding(.vertical, 6)
-                
-                SortChipsView(sortOption: $sortOption)
+                    HStack {
+                        Text("\(displayedSubscriptions.count) subscriptions")
+                            .font(.system(.caption, design: .rounded))
+                            .foregroundColor(.textSecondary)
+                        
+                        Spacer()
+                        
+                        Text("Monthly Run-Rate: \(CurrencyManager.shared.format(totalMonthly))")
+                            .font(.system(.caption, design: .rounded))
+                            .fontWeight(.semibold)
+                            .foregroundColor(.brandPrimary)
+                    }
                     .padding(.horizontal)
                     .padding(.vertical, 6)
-                
-                if displayedSubscriptions.isEmpty {
-                    EmptyStateView()
-                        .padding(.top, 40)
-                } else {
-                    List {
-                        if statusFilter == .all {
-                            if !activeSubscriptions.isEmpty {
-                                Section("Active Subscriptions (\(activeSubscriptions.count))") {
-                                    ForEach(activeSubscriptions) { subscription in
-                                        subscriptionListRow(for: subscription)
+                    
+                    SortChipsView(sortOption: $sortOption)
+                        .padding(.horizontal)
+                        .padding(.vertical, 6)
+                    
+                    if displayedSubscriptions.isEmpty {
+                        EmptyStateView()
+                            .padding(.top, 40)
+                    } else {
+                        List {
+                            if statusFilter == .all {
+                                if !activeSubscriptions.isEmpty {
+                                    Section("Active Subscriptions (\(activeSubscriptions.count))") {
+                                        ForEach(activeSubscriptions) { subscription in
+                                            subscriptionListRow(for: subscription)
+                                        }
                                     }
                                 }
-                            }
-                            
-                            if !cancelledSubscriptions.isEmpty {
-                                Section("Cancelled & Paused (\(cancelledSubscriptions.count))") {
-                                    ForEach(cancelledSubscriptions) { subscription in
-                                        subscriptionListRow(for: subscription)
-                                            .opacity(0.75)
+                                
+                                if !cancelledSubscriptions.isEmpty {
+                                    Section("Cancelled & Paused (\(cancelledSubscriptions.count))") {
+                                        ForEach(cancelledSubscriptions) { subscription in
+                                            subscriptionListRow(for: subscription)
+                                                .opacity(0.75)
+                                        }
                                     }
                                 }
-                            }
-                        } else {
-                            ForEach(displayedSubscriptions) { subscription in
-                                subscriptionListRow(for: subscription)
-                                    .opacity(subscription.isCancelled ? 0.75 : 1.0)
+                            } else {
+                                ForEach(displayedSubscriptions) { subscription in
+                                    subscriptionListRow(for: subscription)
+                                        .opacity(subscription.isCancelled ? 0.75 : 1.0)
+                                }
                             }
                         }
+                        .listStyle(.insetGrouped)
+                        .scrollContentBackground(.hidden)
                     }
-                    .listStyle(.insetGrouped)
-                    .scrollContentBackground(.hidden)
                 }
             }
             .navigationTitle("Portfolio")
