@@ -82,34 +82,69 @@ struct SubscriptionListView: View {
                         .padding(.top, 40)
                 } else {
                     List {
-                        ForEach(filteredSubscriptions) { subscription in
-                            SubscriptionRow(subscription: subscription)
-                                .listRowInsets(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
-                                .listRowBackground(Color.clear)
-                                // ✅ Make the whole row tappable
-                                .contentShape(Rectangle())
-                                .onTapGesture {
-                                    selectedSubscription = subscription
+                        let active = filteredSubscriptions.filter { !$0.isCancelled }
+                        let cancelled = filteredSubscriptions.filter { $0.isCancelled }
+                        
+                        if !active.isEmpty {
+                            Section("Active Subscriptions (\(active.count))") {
+                                ForEach(active) { subscription in
+                                    SubscriptionRow(subscription: subscription)
+                                        .listRowInsets(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
+                                        .listRowBackground(Color.clear)
+                                        .contentShape(Rectangle())
+                                        .onTapGesture {
+                                            selectedSubscription = subscription
+                                        }
+                                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                            Button(role: .destructive) {
+                                                deleteSubscription(subscription)
+                                            } label: {
+                                                Label("Delete", systemImage: "trash")
+                                            }
+                                        }
+                                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                                            Button {
+                                                selectedSubscription = subscription
+                                            } label: {
+                                                Label("Edit", systemImage: "pencil")
+                                            }
+                                            .tint(.blue)
+                                        }
                                 }
-                                // ✅ Swipe actions
-                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                    Button(role: .destructive) {
-                                        deleteSubscription(subscription)
-                                    } label: {
-                                        Label("Delete", systemImage: "trash")
-                                    }
+                            }
+                        }
+                        
+                        if !cancelled.isEmpty {
+                            Section("Cancelled & Paused (\(cancelled.count))") {
+                                ForEach(cancelled) { subscription in
+                                    SubscriptionRow(subscription: subscription)
+                                        .opacity(0.8)
+                                        .listRowInsets(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
+                                        .listRowBackground(Color.clear)
+                                        .contentShape(Rectangle())
+                                        .onTapGesture {
+                                            selectedSubscription = subscription
+                                        }
+                                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                            Button(role: .destructive) {
+                                                deleteSubscription(subscription)
+                                            } label: {
+                                                Label("Delete", systemImage: "trash")
+                                            }
+                                        }
+                                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                                            Button {
+                                                selectedSubscription = subscription
+                                            } label: {
+                                                Label("Edit", systemImage: "pencil")
+                                            }
+                                            .tint(.blue)
+                                        }
                                 }
-                                .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                                    Button {
-                                        selectedSubscription = subscription
-                                    } label: {
-                                        Label("Edit", systemImage: "pencil")
-                                    }
-                                    .tint(.blue)
-                                }
+                            }
                         }
                     }
-                    .listStyle(.plain)
+                    .listStyle(.insetGrouped)
                     .scrollContentBackground(.hidden)
                 }
             }

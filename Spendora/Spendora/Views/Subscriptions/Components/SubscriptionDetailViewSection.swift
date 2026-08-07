@@ -113,7 +113,26 @@ struct SubscriptionDetailViewSection: View {
                     }
                 }
                 
-                if !subscription.isCancelled {
+                if subscription.isCancelled {
+                    Button {
+                        subscription.isCancelled = false
+                        subscription.cancellationDate = nil
+                        subscription.cancellationReason = nil
+                        let generator = UIImpactFeedbackGenerator(style: .medium)
+                        generator.impactOccurred()
+                    } label: {
+                        HStack {
+                            Image(systemName: "arrow.triangle.2.circlepath.circle.fill")
+                                .font(.system(size: 18, weight: .bold))
+                                .foregroundColor(.brandPrimary)
+                            Text("Reactivate Subscription")
+                                .font(.system(.body, design: .rounded))
+                                .fontWeight(.bold)
+                                .foregroundColor(.brandPrimary)
+                            Spacer()
+                        }
+                    }
+                } else {
                     Button {
                         showingCancelSheet = true
                     } label: {
@@ -132,7 +151,7 @@ struct SubscriptionDetailViewSection: View {
             } header: {
                 Text("Manage Service")
             } footer: {
-                Text("Tap 'Cancel on Provider Website' to cancel your subscription with the provider. Use 'Mark as Cancelled' to track it in your app.")
+                Text(subscription.isCancelled ? "Tap 'Reactivate Subscription' to restore this membership back to active status." : "Tap 'Cancel on Provider Website' to cancel your subscription with the provider. Use 'Mark as Cancelled' to track it in your app.")
             }
         }
     }

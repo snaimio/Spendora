@@ -10,20 +10,24 @@ import SwiftUI
 /**
  `CountdownChip` renders an adaptive status badge on its own dedicated row below card details:
  - High-contrast text colors in both Light & Dark modes to eliminate eye strain
+ - Cancelled: Neutral Slate / Muted Orange (#94A3B8 Light / #F97316 Dark)
  - Overdue / Due Today: Crimson Red (#DC2626 Light / #FF6B6B Dark)
  - Due in 1-7 Days: Deep Warm Amber (#C2410C Light / #F59E0B Dark)
  - Paid / Safe (> 7 Days): Rich Gold/Brass (#9A3412 Light / #D4AF37 Dark)
  */
 struct CountdownChip: View {
     let daysRemaining: Int
+    var isCancelled: Bool = false
     @Environment(\.colorScheme) private var colorScheme
     
     private var isSafePaid: Bool {
-        daysRemaining > 7
+        daysRemaining > 7 && !isCancelled
     }
     
     private var badgeTextColor: Color {
-        if daysRemaining <= 0 {
+        if isCancelled {
+            return colorScheme == .dark ? Color(hex: "#F97316") : Color(hex: "#C2410C")
+        } else if daysRemaining <= 0 {
             // Overdue / Due Today Red
             return colorScheme == .dark ? Color(hex: "#FF6B6B") : Color(hex: "#DC2626")
         } else if daysRemaining <= 7 {
@@ -36,7 +40,9 @@ struct CountdownChip: View {
     }
     
     private var badgeBgColor: Color {
-        if daysRemaining <= 0 {
+        if isCancelled {
+            return colorScheme == .dark ? Color(hex: "#F97316").opacity(0.18) : Color(hex: "#FFEDD5")
+        } else if daysRemaining <= 0 {
             return colorScheme == .dark ? Color(hex: "#FF6B6B").opacity(0.22) : Color(hex: "#FEE2E2")
         } else if daysRemaining <= 7 {
             return colorScheme == .dark ? Color(hex: "#F59E0B").opacity(0.22) : Color(hex: "#FFEDD5")
@@ -46,7 +52,9 @@ struct CountdownChip: View {
     }
 
     private var badgeBorderColor: Color {
-        if daysRemaining <= 0 {
+        if isCancelled {
+            return colorScheme == .dark ? Color(hex: "#F97316").opacity(0.35) : Color(hex: "#FDBA74")
+        } else if daysRemaining <= 0 {
             return colorScheme == .dark ? Color(hex: "#FF6B6B").opacity(0.4) : Color(hex: "#FCA5A5")
         } else if daysRemaining <= 7 {
             return colorScheme == .dark ? Color(hex: "#F59E0B").opacity(0.4) : Color(hex: "#FDBA74")
@@ -56,7 +64,9 @@ struct CountdownChip: View {
     }
     
     private var badgeText: String {
-        if daysRemaining < 0 {
+        if isCancelled {
+            return "Cancelled • Inactive"
+        } else if daysRemaining < 0 {
             return "Overdue (\(abs(daysRemaining))d)"
         } else if daysRemaining == 0 {
             return "Due Today"
@@ -71,7 +81,7 @@ struct CountdownChip: View {
     
     var body: some View {
         HStack(spacing: 5) {
-            Image(systemName: isSafePaid ? "checkmark.circle.fill" : "clock.fill")
+            Image(systemName: isCancelled ? "xmark.circle.fill" : (isSafePaid ? "checkmark.circle.fill" : "clock.fill"))
                 .font(.system(size: 10, weight: .bold))
                 .foregroundColor(badgeTextColor)
             

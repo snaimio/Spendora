@@ -90,28 +90,56 @@ struct HomeView: View {
                                 SortChipsView(sortOption: $sortOption)
                             }
                             
-                            // Subscriptions List Header
-                            HStack {
-                                Text("Subscriptions")
-                                    .font(.system(.headline, design: .rounded))
-                                    .foregroundColor(.textPrimary)
-                                Spacer()
-                                Text("\(filteredSubscriptions.count) Active")
-                                    .font(.system(.caption, design: .rounded))
-                                    .fontWeight(.medium)
-                                    .foregroundColor(.textSecondary)
+                            // Active Subscriptions Section
+                            if !activeSubscriptions.isEmpty {
+                                HStack {
+                                    Text("Active Subscriptions")
+                                        .font(.system(.headline, design: .rounded))
+                                        .foregroundColor(.textPrimary)
+                                    Spacer()
+                                    Text("\(activeSubscriptions.count) Active")
+                                        .font(.system(.caption, design: .rounded))
+                                        .fontWeight(.medium)
+                                        .foregroundColor(.textSecondary)
+                                }
+                                .padding(.horizontal, 4)
+                                .padding(.top, 4)
+                                
+                                VStack(spacing: 12) {
+                                    ForEach(activeSubscriptions) { subscription in
+                                        SubscriptionCardView(subscription: subscription)
+                                            .onTapGesture {
+                                                generator.impactOccurred()
+                                                selectedSubscription = subscription
+                                            }
+                                    }
+                                }
                             }
-                            .padding(.horizontal, 4)
-                            .padding(.top, 4)
                             
-                            // Subscriptions Cards List
-                            VStack(spacing: 12) {
-                                ForEach(filteredSubscriptions) { subscription in
-                                    SubscriptionCardView(subscription: subscription)
-                                        .onTapGesture {
-                                            generator.impactOccurred()
-                                            selectedSubscription = subscription
-                                        }
+                            // Cancelled & Paused Section
+                            if !cancelledSubscriptions.isEmpty {
+                                HStack {
+                                    Text("Cancelled & Paused")
+                                        .font(.system(.headline, design: .rounded))
+                                        .foregroundColor(.textPrimary)
+                                    Spacer()
+                                    Text("\(cancelledSubscriptions.count) Inactive")
+                                        .font(.system(.caption, design: .rounded))
+                                        .fontWeight(.medium)
+                                        .foregroundColor(.textSecondary)
+                                }
+                                .padding(.horizontal, 4)
+                                .padding(.top, 12)
+                                
+                                VStack(spacing: 12) {
+                                    ForEach(cancelledSubscriptions) { subscription in
+                                        SubscriptionCardView(subscription: subscription)
+                                            .opacity(0.8)
+                                            .onTapGesture {
+                                                generator.impactOccurred()
+                                                selectedSubscription = subscription
+                                            }
+                                    }
                                 }
                             }
                         } else {

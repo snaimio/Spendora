@@ -114,8 +114,8 @@ struct SubscriptionCardView: View {
                     }
                 }
                 
-                // ROW 4: STATUS BADGE ("Due in X Days" / "Paid • Xd left") - ALWAYS ON ITS OWN NEW ROW!
-                CountdownChip(daysRemaining: subscription.daysUntilBilling)
+                // ROW 4: STATUS BADGE ("Due in X Days" / "Paid • Xd left" / "Cancelled") - ALWAYS ON ITS OWN NEW ROW!
+                CountdownChip(daysRemaining: subscription.daysUntilBilling, isCancelled: subscription.isCancelled)
                     .padding(.top, 2)
             }
             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)

@@ -1,24 +1,19 @@
 //
 //  HomeView+Calculations.swift
+//  Spendora
 //
 
-/**
- * Main/Core Functions & Purpose:
- * Extension for HomeView containing search filtering, sorting logic, monthly/yearly spend aggregations,
- * and upcoming billing subscription lookups.
- */
-
 import SwiftUI
-
 
 // MARK: - HomeView Extension
 
 /**
- Extension on `HomeView` providing utility methods and helpers.
+ Extension on `HomeView` providing search filtering, sorting logic, active vs cancelled subscription separation,
+ monthly/yearly spend aggregations, and upcoming billing lookups.
  */
 extension HomeView {
     
-    var sortedSubscriptions: [Subscription] {  // sortedSubscriptions property
+    var sortedSubscriptions: [Subscription] {
         switch sortOption {
         case .alphabetical:
             return subscriptions.sorted { $0.displayName < $1.displayName }
@@ -35,7 +30,7 @@ extension HomeView {
         }
     }
     
-    var filteredSubscriptions: [Subscription] {  // filteredSubscriptions property
+    var filteredSubscriptions: [Subscription] {
         if searchText.isEmpty { return sortedSubscriptions }
         return sortedSubscriptions.filter {
             $0.displayName.localizedCaseInsensitiveContains(searchText) ||
@@ -43,21 +38,29 @@ extension HomeView {
         }
     }
     
-    var totalMonthly: Double {  // totalMonthly property
-        filteredSubscriptions.reduce(0) { $0 + $1.monthlyCost }
+    var activeSubscriptions: [Subscription] {
+        filteredSubscriptions.filter { !$0.isCancelled }
     }
     
-    var totalYearly: Double {  // totalYearly property
-        filteredSubscriptions.reduce(0) { $0 + $1.yearlyCost }
+    var cancelledSubscriptions: [Subscription] {
+        filteredSubscriptions.filter { $0.isCancelled }
     }
     
-    var subscriptionCount: Int {  // subscriptionCount property
-        filteredSubscriptions.count
+    var totalMonthly: Double {
+        activeSubscriptions.reduce(0) { $0 + $1.monthlyCost }
     }
     
-    var nextSubscription: Subscription? {  // nextSubscription property
+    var totalYearly: Double {
+        activeSubscriptions.reduce(0) { $0 + $1.yearlyCost }
+    }
+    
+    var subscriptionCount: Int {
+        activeSubscriptions.count
+    }
+    
+    var nextSubscription: Subscription? {
         subscriptions
-            .filter { !$0.isOverdue }
+            .filter { !$0.isCancelled && !$0.isOverdue }
             .sorted { $0.nextBillingDate < $1.nextBillingDate }
             .first
     }
