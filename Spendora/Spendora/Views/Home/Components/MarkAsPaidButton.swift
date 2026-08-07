@@ -9,15 +9,16 @@ import UIKit
 // MARK: - MarkAsPaidButton
 
 /**
- `MarkAsPaidButton` provides a practical, clear bill payment recorder:
- - Displays exact dollar cost action: "Log Payment ($24.99)" or "Log Payment ($19.99/mo)"
- - Displays confirmation state: "✓ Payment Logged ($24.99) • Next: Sep 25, 2027"
- - Advances the next billing date to the upcoming cycle
- - Plays tactile haptic feedback
+ `MarkAsPaidButton` provides a clean, editable bill payment recorder:
+ - Displays single clean SF Symbol icon (no double checkmarks!)
+ - Action State: "Log Payment ($24.99)"
+ - Paid State: "Paid ($24.99)"
+ - Tapping while paid presents an Edit / Undo Action Sheet to revert or modify the payment log
  */
 struct MarkAsPaidButton: View {
     @Bindable var subscription: Subscription
     @State private var isPaymentLogged = false
+    @State private var showingEditMenu = false
     
     private var formattedCost: String {
         CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost)
@@ -25,13 +26,17 @@ struct MarkAsPaidButton: View {
 
     var body: some View {
         Button {
-            recordPayment()
+            if isPaymentLogged {
+                showingEditMenu = true
+            } else {
+                recordPayment()
+            }
         } label: {
             HStack(spacing: 6) {
                 Image(systemName: isPaymentLogged ? "checkmark.circle.fill" : "creditcard.fill")
                     .font(.system(size: 13, weight: .bold))
                 
-                Text(isPaymentLogged ? "✓ Paid (\(formattedCost))" : "Log Payment (\(formattedCost))")
+                Text(isPaymentLogged ? "Paid (\(formattedCost))" : "Log Payment (\(formattedCost))")
                     .font(.system(size: 13, weight: .bold, design: .rounded))
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
@@ -56,6 +61,19 @@ struct MarkAsPaidButton: View {
             .shadow(color: Color(hex: "#F59E0B").opacity(0.3), radius: 4, x: 0, y: 2)
         }
         .buttonStyle(.plain)
+        .confirmationDialog("Payment Logged for \(subscription.displayName)", isPresented: $showingEditMenu, titleVisibility: .visible) {
+            Button("Undo Payment (Revert Billing Date)") {
+                undoPayment()
+            }
+            
+            Button("Log Next Cycle Payment (\(formattedCost))") {
+                recordPayment()
+            }
+            
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("Next billing date is currently \(subscription.formattedNextBillingDate). You can undo this payment or record the next cycle.")
+        }
         .onAppear {
             checkIfAlreadyPaid()
         }
@@ -87,6 +105,27 @@ struct MarkAsPaidButton: View {
             if let nextDate = calendar.date(byAdding: .month, value: 1, to: subscription.nextBillingDate) {
                 subscription.nextBillingDate = nextDate
             }
+        }
+    }
+    
+    private func undoPayment() {
+        let generator = UIImpactFeedbackGenerator(style: .medium)
+        generator.impactOccurred()
+        
+        // Revert billing date back by 1 cycle
+        let calendar = Calendar.current
+        if subscription.isYearly {
+            if let prevDate = calendar.date(byAdding: .year, value: -1, to: subscription.nextBillingDate) {
+                subscription.nextBillingDate = prevDate
+            }
+        } else {
+            if let prevDate = calendar.date(byAdding: .month, value: -1, to: subscription.nextBillingDate) {
+                subscription.nextBillingDate = prevDate
+            }
+        }
+        
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) {
+            isPaymentLogged = false
         }
     }
 }
