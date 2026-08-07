@@ -97,8 +97,8 @@ struct ThisMonthCardView: View {
                 HStack(alignment: .bottom, spacing: 16) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(CurrencyManager.shared.format(totalMonthly))
-                            .font(.system(size: 38, weight: .bold, design: .rounded))
-                            .foregroundColor(.textPrimary)
+                            .font(.system(size: 38, weight: .black, design: .rounded))
+                            .foregroundColor(Color(hex: "#10B981"))
                             .contentTransition(.numericText())
                             .lineLimit(1)
                             .minimumScaleFactor(0.6)
@@ -253,8 +253,8 @@ struct HeroPill: View {
                 .foregroundColor(.textSecondary)
             Text(value)
                 .font(.system(.caption, design: .rounded))
-                .fontWeight(.semibold)
-                .foregroundColor(.textPrimary)
+                .fontWeight(.bold)
+                .foregroundColor(color)
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
         }
