@@ -97,7 +97,7 @@ struct ThisMonthCardView: View {
                 HStack(alignment: .bottom, spacing: 16) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(CurrencyManager.shared.format(totalMonthly))
-                            .font(.system(size: 38, weight: .black, design: .rounded))
+                            .font(.system(size: 28, weight: .bold, design: .rounded))
                             .foregroundColor(Color(hex: "#10B981"))
                             .contentTransition(.numericText())
                             .lineLimit(1)
@@ -184,13 +184,13 @@ struct NextChargeSpotlightCardView: View {
                 }
 
                 // Single Main Content Row (1 Single Locked Row - Name & Renewal Date on Left, Price on Right!)
-                HStack(alignment: .center, spacing: 16) {
+                HStack(alignment: .bottom, spacing: 16) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(subscription.displayName)
-                            .font(.system(size: 20, weight: .bold, design: .rounded))
+                            .font(.system(size: 28, weight: .bold, design: .rounded))
                             .foregroundColor(.textPrimary)
                             .lineLimit(1)
-                            .minimumScaleFactor(0.7)
+                            .minimumScaleFactor(0.6)
                         
                         HStack(spacing: 4) {
                             Image(systemName: "calendar")
@@ -209,18 +209,19 @@ struct NextChargeSpotlightCardView: View {
                     Spacer(minLength: 8)
                     
                     // Cost Figure (Single Locked Line on Right Side!)
-                    VStack(alignment: .trailing, spacing: 2) {
+                    VStack(alignment: .trailing, spacing: 4) {
                         Text(CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost))
-                            .font(.system(size: 22, weight: .bold, design: .rounded))
+                            .font(.system(size: 28, weight: .bold, design: .rounded))
                             .foregroundColor(Color(hex: "#F59E0B"))
                             .lineLimit(1)
-                            .minimumScaleFactor(0.7)
+                            .minimumScaleFactor(0.6)
                         
-                        Text(subscription.isOneTime ? "Lifetime" : (subscription.isYearly ? "/yr" : "/mo"))
-                            .font(.system(size: 12, weight: .semibold, design: .rounded))
+                        Text(subscription.isOneTime ? "Lifetime" : (subscription.isYearly ? "Yearly Plan" : "/month"))
+                            .font(.system(size: 13, weight: .semibold, design: .rounded))
                             .foregroundColor(.textSecondary)
+                            .lineLimit(1)
                     }
-                    .fixedSize(horizontal: true, vertical: false)
+                    .frame(minWidth: 0, maxWidth: .infinity, alignment: .trailing)
                 }
             }
             .padding(18)
