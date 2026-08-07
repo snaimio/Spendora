@@ -8,11 +8,14 @@ import SwiftUI
 // MARK: - SubscriptionRow
 
 /**
- `SubscriptionRow` renders a subscription card matching `SubscriptionCardView`'s exact hierarchy:
- 1. Subscription Name: Headline (17pt Bold) - LARGEST, PROMINENT & FULL WIDTH
- 2. Cost & Cycle: Subheadline (15pt Regular)
- 3. Next Billing Date: Caption (13pt Regular)
- 4. Status Badge ("Due in X days" / "Paid • Xd left"): Caption2 (12pt Semibold) - ALWAYS ON A NEW ROW!
+ `SubscriptionRow` renders a subscription card matching `SubscriptionCardView`'s exact brushed gunmetal aesthetic:
+ - Machined Gunmetal Gradient Surface (#2B2D32 → #1A1B1E)
+ - Polished Brass Circular Icon Container with logo emblem
+ - Gold Outline Accent Stroke (#D4AF37)
+ - 1. Subscription Name: Headline (17pt Bold) - LARGEST, PROMINENT & FULL WIDTH
+ - 2. Cost & Cycle: Subheadline (15pt Regular)
+ - 3. Next Billing Date: Caption (13pt Regular)
+ - 4. Status Badge ("Due in X days" / "Paid • Xd left"): Caption2 (12pt Semibold) - ALWAYS ON A NEW ROW!
  */
 struct SubscriptionRow: View {
 
@@ -32,29 +35,24 @@ struct SubscriptionRow: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 14) {
-            // Category Color Strip (Left Accent Edge)
-            RoundedRectangle(cornerRadius: 3, style: .continuous)
-                .fill(rowColor)
-                .frame(width: 4, height: 68)
-            
-            // Icon Badge Container (48x48pt)
+            // Gold Circular Emblem Badge Container (46x46pt)
             ZStack {
-                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                Circle()
                     .fill(
                         LinearGradient(
-                            colors: [rowColor, rowColor.opacity(0.8)],
+                            colors: [Color(hex: "#D4AF37"), Color(hex: "#B8860B")],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
                     )
-                    .frame(width: 48, height: 48)
-                    .shadow(color: rowColor.opacity(0.35), radius: 6, x: 0, y: 3)
+                    .frame(width: 46, height: 46)
+                    .shadow(color: Color(hex: "#D4AF37").opacity(0.35), radius: 6, x: 0, y: 3)
                 
                 Image(systemName: rowIcon)
                     .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(.white)
+                    .foregroundColor(Color(hex: "#0F0F1A"))
             }
-            .frame(width: 48)
+            .frame(width: 46)
             
             // Card Content Stack
             VStack(alignment: .leading, spacing: 4) {
@@ -62,7 +60,7 @@ struct SubscriptionRow: View {
                 HStack(alignment: .center) {
                     Text(subscription.displayName)
                         .font(AppStyles.Typography.headline)
-                        .foregroundColor(.textPrimary)
+                        .foregroundColor(.white)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                     
@@ -70,7 +68,7 @@ struct SubscriptionRow: View {
                     
                     Image(systemName: "chevron.right")
                         .font(.system(size: 13, weight: .bold))
-                        .foregroundColor(.textSecondary)
+                        .foregroundColor(Color(hex: "#94A3B8"))
                 }
                 
                 // ROW 2: COST & BILLING CYCLE (Subheadline 15pt Regular)
@@ -78,21 +76,21 @@ struct SubscriptionRow: View {
                     Text(CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost))
                         .font(AppStyles.Typography.subheadline)
                         .fontWeight(.bold)
-                        .foregroundColor(.textPrimary)
+                        .foregroundColor(.white)
                     
                     if subscription.isOneTime {
                         Text("• Lifetime")
                             .font(AppStyles.Typography.subheadline)
-                            .foregroundColor(.brandPurple)
+                            .foregroundColor(Color(hex: "#D4AF37"))
                     } else {
                         Text("/month")
                             .font(AppStyles.Typography.subheadline)
-                            .foregroundColor(.textSecondary)
+                            .foregroundColor(Color(hex: "#CBD5E1"))
                         
                         if subscription.isYearly {
                             Text("• Yearly")
                                 .font(AppStyles.Typography.subheadline)
-                                .foregroundColor(.textSecondary)
+                                .foregroundColor(Color(hex: "#CBD5E1"))
                         }
                     }
                 }
@@ -102,22 +100,22 @@ struct SubscriptionRow: View {
                     HStack(spacing: 4) {
                         Image(systemName: "calendar")
                             .font(.system(size: 11, weight: .medium))
-                            .foregroundColor(.textSecondary)
+                            .foregroundColor(Color(hex: "#94A3B8"))
                         
-                        Text("Next: \(subscription.formattedNextBillingDate)")
+                        Text("Renewal: \(subscription.formattedNextBillingDate)")
                             .font(AppStyles.Typography.caption)
-                            .foregroundColor(.textSecondary)
+                            .foregroundColor(Color(hex: "#CBD5E1"))
                     }
                 } else {
                     HStack(spacing: 4) {
                         Image(systemName: "checkmark.seal.fill")
                             .font(.system(size: 11, weight: .bold))
-                            .foregroundColor(.brandSuccess)
+                            .foregroundColor(Color(hex: "#D4AF37"))
                         
                         Text("One-Time Purchase")
                             .font(AppStyles.Typography.caption)
                             .fontWeight(.bold)
-                            .foregroundColor(.brandSuccess)
+                            .foregroundColor(Color(hex: "#D4AF37"))
                     }
                 }
                 
@@ -131,19 +129,26 @@ struct SubscriptionRow: View {
         .padding(.vertical, 14)
         .background(
             ZStack {
-                Color.cardBackground
+                // Machined Gunmetal Surface
                 LinearGradient(
-                    colors: [rowColor.opacity(0.1), rowColor.opacity(0.02)],
+                    colors: [Color(hex: "#2B2D32"), Color(hex: "#1A1B1E")],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )
             }
         )
         .cornerRadius(18)
-        .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 3)
+        .shadow(color: Color.black.opacity(0.4), radius: 10, x: 0, y: 4)
         .overlay(
             RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .stroke(rowColor.opacity(0.18), lineWidth: 1)
+                .stroke(
+                    LinearGradient(
+                        colors: [Color(hex: "#D4AF37").opacity(0.4), Color(hex: "#D4AF37").opacity(0.1)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 1.2
+                )
         )
     }
 }

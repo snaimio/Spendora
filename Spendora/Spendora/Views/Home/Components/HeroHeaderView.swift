@@ -19,11 +19,11 @@ enum BillingPeriodFilter: String, CaseIterable, Identifiable {
 
 /**
  `HeroHeaderView` renders the main executive dashboard hero card featuring:
- - Signature Bold Teal Gradient (#00D4AA → #00B4D8 → #6C5CE7)
- - 38pt Black Hero Price Counter
+ - Machined Gunmetal Steel Housing with 4 Corner Brass Rivets
+ - Analog Radial Spending Gauge Meter with Polished Brass Needle
+ - 38pt Hero Price Display
  - Period Selector Dropdown (Monthly ⌄, Yearly ⌄)
- - Budget Progress Bar
- - Next Charge Card with proper multi-line layout rules (Name prominent 20pt Bold, due days on NEW ROW!)
+ - Next Charge spotlight card with proper multi-line layout rules (Name prominent 20pt Bold, due days on NEW ROW!)
  */
 struct HeroHeaderView: View {
 
@@ -64,8 +64,8 @@ struct HeroHeaderView: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            // Executive Hero Banner Card
-            VStack(alignment: .leading, spacing: 18) {
+            // Machined Gunmetal Hero Card Container
+            VStack(alignment: .leading, spacing: 16) {
                 // Header Row: Period Menu & Active Count
                 HStack {
                     HStack(spacing: 6) {
@@ -76,7 +76,7 @@ struct HeroHeaderView: View {
                             .fontWeight(.bold)
                             .tracking(1.5)
                     }
-                    .foregroundColor(.white.opacity(0.85))
+                    .foregroundColor(Color(hex: "#CBD5E1"))
                     
                     Spacer()
                     
@@ -94,12 +94,93 @@ struct HeroHeaderView: View {
                             Image(systemName: "chevron.down")
                                 .font(.system(size: 10, weight: .bold))
                         }
-                        .foregroundColor(.white)
+                        .foregroundColor(Color(hex: "#D4AF37"))
                         .padding(.horizontal, 10)
                         .padding(.vertical, 5)
-                        .background(Color.white.opacity(0.2))
+                        .background(Color(hex: "#D4AF37").opacity(0.16))
                         .cornerRadius(12)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color(hex: "#D4AF37").opacity(0.4), lineWidth: 1)
+                        )
                     }
+                }
+                
+                // ANALOG SPENDING GAUGE METER (Physical Luxury Machined Dial)
+                VStack(spacing: 8) {
+                    ZStack {
+                        // Gauge Arc Track
+                        Circle()
+                            .trim(from: 0.15, to: 0.85)
+                            .stroke(
+                                LinearGradient(
+                                    colors: [Color(hex: "#334155"), Color(hex: "#1E293B")],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                ),
+                                style: StrokeStyle(lineWidth: 12, lineCap: .round)
+                            )
+                            .rotationEffect(.degrees(90))
+                            .frame(width: 140, height: 140)
+                        
+                        // Active Gauge Progress Arc
+                        Circle()
+                            .trim(from: 0.15, to: 0.15 + max(0, min(0.7, 0.7 * budgetRatio)))
+                            .stroke(
+                                LinearGradient(
+                                    colors: [Color(hex: "#D4AF37"), Color(hex: "#F59E0B")],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                ),
+                                style: StrokeStyle(lineWidth: 12, lineCap: .round)
+                            )
+                            .rotationEffect(.degrees(90))
+                            .frame(width: 140, height: 140)
+                            .shadow(color: Color(hex: "#D4AF37").opacity(0.4), radius: 6, x: 0, y: 0)
+                        
+                        // Analog Gauge Needle
+                        Rectangle()
+                            .fill(
+                                LinearGradient(
+                                    colors: [Color(hex: "#F59E0B"), Color(hex: "#D4AF37")],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
+                            .frame(width: 4, height: 50)
+                            .offset(y: -25)
+                            .rotationEffect(.degrees(-126 + (252 * max(0, min(1.0, budgetRatio)))))
+                            .shadow(color: Color.black.opacity(0.5), radius: 3, x: 1, y: 2)
+                        
+                        // Center Brass Screw Cap
+                        Circle()
+                            .fill(
+                                LinearGradient(
+                                    colors: [Color(hex: "#F59E0B"), Color(hex: "#D4AF37")],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                            .frame(width: 16, height: 16)
+                            .shadow(color: Color.black.opacity(0.4), radius: 3, x: 0, y: 2)
+                    }
+                    .frame(height: 110)
+                    
+                    HStack {
+                        Text("0%")
+                            .font(.system(size: 10, weight: .bold, design: .rounded))
+                            .foregroundColor(Color(hex: "#94A3B8"))
+                        Spacer()
+                        Text("SPENDING GAUGE (\(Int(budgetRatio * 100))%)")
+                            .font(.system(size: 11, weight: .bold, design: .rounded))
+                            .foregroundColor(Color(hex: "#D4AF37"))
+                            .tracking(1.2)
+                        Spacer()
+                        Text("100%")
+                            .font(.system(size: 10, weight: .bold, design: .rounded))
+                            .foregroundColor(Color(hex: "#94A3B8"))
+                    }
+                    .padding(.horizontal, 28)
                 }
                 
                 // Hero Price & Subscription Count
@@ -114,7 +195,7 @@ struct HeroHeaderView: View {
                         
                         Text("\(subscriptionCount) \(subscriptionCount == 1 ? "active subscription" : "active subscriptions")")
                             .font(AppStyles.Typography.caption)
-                            .foregroundColor(.white.opacity(0.85))
+                            .foregroundColor(Color(hex: "#CBD5E1"))
                     }
                     
                     Spacer()
@@ -126,70 +207,34 @@ struct HeroHeaderView: View {
                             Text("Avg: \(CurrencyManager.shared.format(subscriptionCount > 0 ? totalMonthly / Double(subscriptionCount) : 0))")
                                 .font(AppStyles.Typography.caption2)
                         }
-                        .foregroundColor(.white.opacity(0.9))
+                        .foregroundColor(Color(hex: "#D4AF37"))
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
-                        .background(Color.white.opacity(0.18))
+                        .background(Color(hex: "#D4AF37").opacity(0.14))
                         .cornerRadius(8)
                         
                         Text("Yearly: \(CurrencyManager.shared.format(totalYearly))")
                             .font(AppStyles.Typography.caption2)
-                            .foregroundColor(.white.opacity(0.85))
+                            .foregroundColor(Color(hex: "#CBD5E1"))
                             .lineLimit(1)
                     }
-                }
-                
-                // Budget Progress Bar
-                if budget > 0 {
-                    VStack(alignment: .leading, spacing: 6) {
-                        HStack {
-                            Text("Monthly Budget (\(CurrencyManager.shared.format(budget)))")
-                                .font(AppStyles.Typography.footnote)
-                                .fontWeight(.bold)
-                                .foregroundColor(.white.opacity(0.9))
-                            Spacer()
-                            Text("\(Int(budgetRatio * 100))% used")
-                                .font(AppStyles.Typography.caption2)
-                                .foregroundColor(budgetRatio > 0.9 ? Color(hex: "#FF6B6B") : Color(hex: "#FFD93D"))
-                        }
-                        
-                        GeometryReader { geo in
-                            ZStack(alignment: .leading) {
-                                Capsule()
-                                    .fill(Color.white.opacity(0.22))
-                                    .frame(height: 8)
-                                
-                                Capsule()
-                                    .fill(
-                                        LinearGradient(
-                                            colors: budgetRatio > 0.9 ? [Color(hex: "#FFD93D"), Color(hex: "#FF6B6B")] : [Color(hex: "#00D4AA"), Color(hex: "#FFD93D")],
-                                            startPoint: .leading,
-                                            endPoint: .trailing
-                                        )
-                                    )
-                                    .frame(width: max(0, min(geo.size.width, geo.size.width * CGFloat(budgetRatio))), height: 8)
-                            }
-                        }
-                        .frame(height: 8)
-                    }
-                    .padding(.top, 2)
                 }
                 
                 // Next Charge Section Card (Proper Multi-Line Layout Structure)
                 if let next = nextSubscription {
                     Divider()
-                        .background(Color.white.opacity(0.25))
+                        .background(Color(hex: "#D4AF37").opacity(0.25))
                     
                     VStack(alignment: .leading, spacing: 4) {
                         // ROW 1: Header Label (Caption 12pt Semibold)
                         HStack(spacing: 5) {
                             Image(systemName: "bell.fill")
                                 .font(.system(size: 11, weight: .bold))
-                                .foregroundColor(Color(hex: "#FFD93D"))
+                                .foregroundColor(Color(hex: "#F59E0B"))
                             
                             Text("NEXT CHARGE")
                                 .font(AppStyles.Typography.caption2)
-                                .foregroundColor(.white.opacity(0.85))
+                                .foregroundColor(Color(hex: "#CBD5E1"))
                                 .tracking(1.2)
                         }
                         
@@ -202,7 +247,7 @@ struct HeroHeaderView: View {
                         // ROW 3: Cost & Billing Date (Body 16pt Regular)
                         Text("\(CurrencyManager.shared.format(next.isOneTime ? next.cost : next.monthlyCost)) • \(next.formattedNextBillingDate)")
                             .font(AppStyles.Typography.body)
-                            .foregroundColor(.white.opacity(0.9))
+                            .foregroundColor(Color(hex: "#CBD5E1"))
                         
                         // ROW 4: Status Badge ("Due in X days") - NEW ROW!
                         CountdownChip(daysRemaining: next.daysUntilBilling)
@@ -211,12 +256,44 @@ struct HeroHeaderView: View {
                 }
             }
             .padding(20)
-            .background(Color.gradientHero)
+            .background(
+                ZStack {
+                    // Brushed Gunmetal Base
+                    LinearGradient(
+                        colors: [Color(hex: "#2B2D32"), Color(hex: "#1A1B1E")],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                    
+                    // 4 Corner Brass Rivet Accents
+                    VStack {
+                        HStack {
+                            Circle().fill(Color(hex: "#D4AF37")).frame(width: 6, height: 6)
+                            Spacer()
+                            Circle().fill(Color(hex: "#D4AF37")).frame(width: 6, height: 6)
+                        }
+                        Spacer()
+                        HStack {
+                            Circle().fill(Color(hex: "#D4AF37")).frame(width: 6, height: 6)
+                            Spacer()
+                            Circle().fill(Color(hex: "#D4AF37")).frame(width: 6, height: 6)
+                        }
+                    }
+                    .padding(10)
+                }
+            )
             .cornerRadius(22)
-            .shadow(color: Color(hex: "#00D4AA").opacity(0.35), radius: 18, x: 0, y: 8)
+            .shadow(color: Color.black.opacity(0.4), radius: 14, x: 0, y: 6)
             .overlay(
                 RoundedRectangle(cornerRadius: 22, style: .continuous)
-                    .stroke(Color.white.opacity(0.25), lineWidth: 1)
+                    .stroke(
+                        LinearGradient(
+                            colors: [Color(hex: "#D4AF37").opacity(0.5), Color(hex: "#D4AF37").opacity(0.1)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        lineWidth: 1.5
+                    )
             )
             .padding(.horizontal, 16)
         }
