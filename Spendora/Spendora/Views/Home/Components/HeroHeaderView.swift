@@ -19,11 +19,16 @@ enum BillingPeriodFilter: String, CaseIterable, Identifiable {
 
 /**
  `HeroHeaderView` renders the main executive dashboard hero card featuring:
- - Machined Gunmetal Steel Housing with 4 Corner Brass Rivets
+ - Machined Steel Housing with 4 Corner Brass Rivets
  - Analog Radial Spending Gauge Meter with Polished Brass Needle
  - 38pt Hero Price Display
  - Period Selector Dropdown (Monthly ⌄, Yearly ⌄)
- - Next Charge spotlight card with proper multi-line layout rules (Name prominent 20pt Bold, due days on NEW ROW!)
+ - Next Charge spotlight card with EVERY DETAIL ON ITS OWN DEDICATED ROW:
+   1. Header: NEXT CHARGE
+   2. Name: Service Name (20pt Bold Prominent)
+   3. Cost: C$XX.XX /month (16pt Heavy Black Vibrant Coral #FF6B6B)
+   4. Date: Renewal Date (14pt Regular on dedicated row - NO TEXT BREAKING!)
+   5. Badge: Standalone Status Badge Row
  */
 struct HeroHeaderView: View {
 
@@ -64,7 +69,7 @@ struct HeroHeaderView: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            // Machined Gunmetal Hero Card Container
+            // Machined Steel Hero Card Container
             VStack(alignment: .leading, spacing: 16) {
                 // Header Row: Period Menu & Active Count
                 HStack {
@@ -220,19 +225,19 @@ struct HeroHeaderView: View {
                     }
                 }
                 
-                // Next Charge Section Card (Proper Multi-Line Layout Structure)
+                // Next Charge Spotlight Section Card (EVERY DETAIL ON ITS OWN DEDICATED ROW)
                 if let next = nextSubscription {
                     Divider()
                         .background(Color(hex: "#D4AF37").opacity(0.25))
                     
-                    VStack(alignment: .leading, spacing: 4) {
-                        // ROW 1: Header Label (Caption 12pt Semibold)
+                    VStack(alignment: .leading, spacing: 6) {
+                        // ROW 1: Header Label
                         HStack(spacing: 5) {
                             Image(systemName: "bell.fill")
                                 .font(.system(size: 11, weight: .bold))
                                 .foregroundColor(Color(hex: "#F59E0B"))
                             
-                            Text("NEXT CHARGE")
+                            Text("NEXT CHARGE SPOTLIGHT")
                                 .font(AppStyles.Typography.caption2)
                                 .foregroundColor(Color(hex: "#CBD5E1"))
                                 .tracking(1.2)
@@ -243,16 +248,55 @@ struct HeroHeaderView: View {
                             .font(AppStyles.Typography.title3)
                             .foregroundColor(.white)
                             .lineLimit(1)
+                            .minimumScaleFactor(0.8)
                         
-                        // ROW 3: Cost & Billing Date (Body 16pt Regular)
-                        Text("\(CurrencyManager.shared.format(next.isOneTime ? next.cost : next.monthlyCost)) • \(next.formattedNextBillingDate)")
-                            .font(AppStyles.Typography.body)
-                            .foregroundColor(Color(hex: "#CBD5E1"))
+                        // ROW 3: Cost Amount (Vibrant Coral #FF6B6B Heavy Black Font - Consistent Price Color!)
+                        HStack(spacing: 4) {
+                            Text(CurrencyManager.shared.format(next.isOneTime ? next.cost : next.monthlyCost))
+                                .font(.system(size: 17, weight: .black, design: .rounded))
+                                .foregroundColor(Color(hex: "#FF6B6B"))
+                            
+                            if next.isOneTime {
+                                Text("• Lifetime")
+                                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                                    .foregroundColor(Color(hex: "#D4AF37"))
+                            } else {
+                                Text("/month")
+                                    .font(.system(size: 13, weight: .medium, design: .rounded))
+                                    .foregroundColor(Color(hex: "#CBD5E1"))
+                                
+                                if next.isYearly {
+                                    Text("• Yearly")
+                                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                                        .foregroundColor(Color(hex: "#CBD5E1"))
+                                }
+                            }
+                        }
                         
-                        // ROW 4: Status Badge ("Due in X days") - NEW ROW!
-                        CountdownChip(daysRemaining: next.daysUntilBilling)
+                        // ROW 4: Next Billing Date (DEDICATED ROW - NO TEXT BREAKING!)
+                        HStack(spacing: 5) {
+                            Image(systemName: "calendar")
+                                .font(.system(size: 12, weight: .medium))
+                                .foregroundColor(Color(hex: "#D4AF37"))
+                            
+                            Text("Renewal Date: \(next.formattedNextBillingDate)")
+                                .font(.system(size: 14, weight: .medium, design: .rounded))
+                                .foregroundColor(Color(hex: "#CBD5E1"))
+                                .lineLimit(1)
+                        }
+                        
+                        // ROW 5: Status Badge ("Due in X days" / "Paid • Xd left") - STANDALONE ROW!
+                        CountdownChip(daysRemaining: next.daysUntilBilling, isCancelled: next.isCancelled)
                             .padding(.top, 2)
                     }
+                    .padding(14)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color.black.opacity(0.25))
+                    .cornerRadius(16)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(Color(hex: "#D4AF37").opacity(0.3), lineWidth: 1)
+                    )
                 }
             }
             .padding(20)
