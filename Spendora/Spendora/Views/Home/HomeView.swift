@@ -220,14 +220,22 @@ struct HomeView: View {
     private var activeSubscriptionsSection: some View {
         VStack(spacing: 12) {
             HStack {
-                Text("Active Subscriptions")
-                    .font(.system(.headline, design: .rounded))
-                    .foregroundColor(.textPrimary)
+                HStack(spacing: 6) {
+                    Image(systemName: "checkmark.shield.fill")
+                        .foregroundColor(Color(hex: "#10B981"))
+                        .font(.headline)
+                    Text("Active Subscriptions")
+                        .font(.system(.headline, design: .rounded))
+                        .foregroundColor(.textPrimary)
+                }
                 Spacer()
                 Text("\(activeSubscriptions.count) Active")
-                    .font(.system(.caption, design: .rounded))
-                    .fontWeight(.medium)
-                    .foregroundColor(.textSecondary)
+                    .font(.system(size: 11, weight: .bold, design: .rounded))
+                    .foregroundColor(Color(hex: "#10B981"))
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(Color(hex: "#10B981").opacity(0.14))
+                    .cornerRadius(8)
             }
             .padding(.horizontal, 4)
             
@@ -252,14 +260,22 @@ struct HomeView: View {
     private var cancelledSubscriptionsSection: some View {
         VStack(spacing: 12) {
             HStack {
-                Text("Cancelled & Paused")
-                    .font(.system(.headline, design: .rounded))
-                    .foregroundColor(.textPrimary)
+                HStack(spacing: 6) {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundColor(Color(hex: "#F97316"))
+                        .font(.headline)
+                    Text("Cancelled & Paused")
+                        .font(.system(.headline, design: .rounded))
+                        .foregroundColor(.textPrimary)
+                }
                 Spacer()
                 Text("\(cancelledSubscriptions.count) Inactive")
-                    .font(.system(.caption, design: .rounded))
-                    .fontWeight(.medium)
-                    .foregroundColor(.textSecondary)
+                    .font(.system(size: 11, weight: .bold, design: .rounded))
+                    .foregroundColor(Color(hex: "#F97316"))
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(Color(hex: "#F97316").opacity(0.14))
+                    .cornerRadius(8)
             }
             .padding(.horizontal, 4)
             
@@ -287,14 +303,22 @@ struct HomeView: View {
             if !activeSubscriptions.isEmpty {
                 VStack(spacing: 10) {
                     HStack {
-                        Text("Active Subscriptions")
-                            .font(.system(.headline, design: .rounded))
-                            .foregroundColor(.textPrimary)
+                        HStack(spacing: 6) {
+                            Image(systemName: "checkmark.shield.fill")
+                                .foregroundColor(Color(hex: "#10B981"))
+                                .font(.headline)
+                            Text("Active Subscriptions")
+                                .font(.system(.headline, design: .rounded))
+                                .foregroundColor(.textPrimary)
+                        }
                         Spacer()
                         Text("\(activeSubscriptions.count) Active")
-                            .font(.system(.caption, design: .rounded))
-                            .fontWeight(.medium)
-                            .foregroundColor(.textSecondary)
+                            .font(.system(size: 11, weight: .bold, design: .rounded))
+                            .foregroundColor(Color(hex: "#10B981"))
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 3)
+                            .background(Color(hex: "#10B981").opacity(0.14))
+                            .cornerRadius(8)
                     }
                     .padding(.horizontal, 4)
                     
@@ -311,14 +335,22 @@ struct HomeView: View {
             if !cancelledSubscriptions.isEmpty {
                 VStack(spacing: 10) {
                     HStack {
-                        Text("Cancelled & Paused")
-                            .font(.system(.headline, design: .rounded))
-                            .foregroundColor(.textPrimary)
+                        HStack(spacing: 6) {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundColor(Color(hex: "#F97316"))
+                                .font(.headline)
+                            Text("Cancelled & Paused")
+                                .font(.system(.headline, design: .rounded))
+                                .foregroundColor(.textPrimary)
+                        }
                         Spacer()
                         Text("\(cancelledSubscriptions.count) Inactive")
-                            .font(.system(.caption, design: .rounded))
-                            .fontWeight(.medium)
-                            .foregroundColor(.textSecondary)
+                            .font(.system(size: 11, weight: .bold, design: .rounded))
+                            .foregroundColor(Color(hex: "#F97316"))
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 3)
+                            .background(Color(hex: "#F97316").opacity(0.14))
+                            .cornerRadius(8)
                     }
                     .padding(.horizontal, 4)
                     .padding(.top, 8)
