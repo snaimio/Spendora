@@ -212,7 +212,7 @@ struct NextChargeSpotlightCardView: View {
                     VStack(alignment: .trailing, spacing: 2) {
                         Text(CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost))
                             .font(.system(size: 24, weight: .black, design: .rounded))
-                            .foregroundColor(Color(hex: "#FF6B6B"))
+                            .foregroundColor(Color(hex: "#F59E0B"))
                             .lineLimit(1)
                             .minimumScaleFactor(0.7)
                         
