@@ -46,23 +46,23 @@ struct PremiumAppInfoRow: View {
                     .frame(width: 66, height: 66)
                     .blur(radius: 4)
 
-                Image("AppLogo")
+                Image("SpendoraLogo")
                     .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 60, height: 60)
-                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 52, height: 52)
+                    .clipShape(Circle())
                     .overlay(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        Circle()
                             .stroke(
                                 LinearGradient(
-                                    colors: [.brandPrimary, .brandSecondary.opacity(0.8)],
+                                    colors: [Color(hex: "#FFD93D"), Color(hex: "#00D4AA")],
                                     startPoint: .topLeading,
                                     endPoint: .bottomTrailing
                                 ),
-                                lineWidth: 2.0
+                                lineWidth: 2
                             )
                     )
-                    .shadow(color: Color.brandPrimary.opacity(0.35), radius: 8, x: 0, y: 4)
+                    .shadow(color: Color(hex: "#FFD93D").opacity(0.4), radius: 8, x: 0, y: 4)
             }
 
             VStack(alignment: .leading, spacing: 3) {

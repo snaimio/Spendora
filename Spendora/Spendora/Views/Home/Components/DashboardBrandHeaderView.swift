@@ -55,23 +55,23 @@ struct DashboardBrandHeaderView: View {
                     .frame(width: 46, height: 46)
                     .blur(radius: 3)
                 
-                Image("AppLogo")
+                Image("SpendoraLogo")
                     .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 42, height: 42)
-                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 44, height: 44)
+                    .clipShape(Circle())
                     .overlay(
-                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        Circle()
                             .stroke(
                                 LinearGradient(
-                                    colors: [.brandPrimary, .brandSecondary],
+                                    colors: [Color(hex: "#FFD93D"), Color(hex: "#00D4AA")],
                                     startPoint: .topLeading,
                                     endPoint: .bottomTrailing
                                 ),
-                                lineWidth: 1.5
+                                lineWidth: 2
                             )
                     )
-                    .shadow(color: Color.brandPrimary.opacity(0.3), radius: 6, x: 0, y: 3)
+                    .shadow(color: Color(hex: "#FFD93D").opacity(0.4), radius: 6, x: 0, y: 3)
             }
             
             VStack(alignment: .leading, spacing: 2) {

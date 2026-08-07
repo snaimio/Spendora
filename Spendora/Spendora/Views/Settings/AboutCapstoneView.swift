@@ -45,23 +45,23 @@ struct AboutCapstoneView: View {
             VStack(spacing: 24) {
                 // Header Banner
                 VStack(spacing: 14) {
-                    Image("AppLogo")
+                    Image("SpendoraLogo")
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 90, height: 90)
-                        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 84, height: 84)
+                        .clipShape(Circle())
                         .overlay(
-                            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                            Circle()
                                 .stroke(
                                     LinearGradient(
-                                        colors: [.brandPrimary.opacity(0.6), .brandSecondary.opacity(0.3)],
+                                        colors: [Color(hex: "#FFD93D"), Color(hex: "#00D4AA")],
                                         startPoint: .topLeading,
                                         endPoint: .bottomTrailing
                                     ),
-                                    lineWidth: 2
+                                    lineWidth: 2.5
                                 )
                         )
-                        .shadow(color: Color.brandPrimary.opacity(0.3), radius: 15, x: 0, y: 8)
+                        .shadow(color: Color(hex: "#FFD93D").opacity(0.4), radius: 12, x: 0, y: 6)
                     
                     VStack(spacing: 4) {
                         Text("Spendora")
