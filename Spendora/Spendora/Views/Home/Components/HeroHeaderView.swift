@@ -26,8 +26,8 @@ enum BillingPeriodFilter: String, CaseIterable, Identifiable {
  - Next Charge spotlight card with EVERY DETAIL ON ITS OWN DEDICATED ROW:
    1. Header: NEXT CHARGE
    2. Name: Service Name (20pt Bold Prominent)
-   3. Cost: C$XX.XX /month (16pt Heavy Black Vibrant Coral #FF6B6B)
-   4. Date: Renewal Date (14pt Regular on dedicated row - NO TEXT BREAKING!)
+   3. Cost: C$XX.XX /month (18pt Heavy Black Vibrant Coral #FF6B6B)
+   4. Date: Renewal Date (16pt Bold Gold on dedicated row - LOCKED ON 1 SINGLE LINE!)
    5. Badge: Standalone Status Badge Row
  */
 struct HeroHeaderView: View {
@@ -230,72 +230,75 @@ struct HeroHeaderView: View {
                     Divider()
                         .background(Color(hex: "#D4AF37").opacity(0.25))
                     
-                    VStack(alignment: .leading, spacing: 6) {
+                    VStack(alignment: .leading, spacing: 8) {
                         // ROW 1: Header Label
                         HStack(spacing: 5) {
                             Image(systemName: "bell.fill")
-                                .font(.system(size: 11, weight: .bold))
+                                .font(.system(size: 12, weight: .bold))
                                 .foregroundColor(Color(hex: "#F59E0B"))
                             
                             Text("NEXT CHARGE SPOTLIGHT")
-                                .font(AppStyles.Typography.caption2)
+                                .font(.system(size: 11, weight: .bold, design: .rounded))
                                 .foregroundColor(Color(hex: "#CBD5E1"))
                                 .tracking(1.2)
                         }
                         
                         // ROW 2: Subscription Name (Title 3 20pt Bold - PROMINENT)
                         Text(next.displayName)
-                            .font(AppStyles.Typography.title3)
+                            .font(.system(size: 20, weight: .bold, design: .rounded))
                             .foregroundColor(.white)
                             .lineLimit(1)
                             .minimumScaleFactor(0.8)
                         
-                        // ROW 3: Cost Amount (Vibrant Coral #FF6B6B Heavy Black Font - Consistent Price Color!)
-                        HStack(spacing: 4) {
+                        // ROW 3: Cost Amount (Bigger 18pt Heavy Black Vibrant Coral #FF6B6B Font)
+                        HStack(spacing: 6) {
                             Text(CurrencyManager.shared.format(next.isOneTime ? next.cost : next.monthlyCost))
-                                .font(.system(size: 17, weight: .black, design: .rounded))
+                                .font(.system(size: 18, weight: .black, design: .rounded))
                                 .foregroundColor(Color(hex: "#FF6B6B"))
                             
                             if next.isOneTime {
                                 Text("• Lifetime")
-                                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                                    .font(.system(size: 14, weight: .bold, design: .rounded))
                                     .foregroundColor(Color(hex: "#D4AF37"))
                             } else {
                                 Text("/month")
-                                    .font(.system(size: 13, weight: .medium, design: .rounded))
+                                    .font(.system(size: 14, weight: .bold, design: .rounded))
                                     .foregroundColor(Color(hex: "#CBD5E1"))
                                 
                                 if next.isYearly {
                                     Text("• Yearly")
-                                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                                        .font(.system(size: 14, weight: .bold, design: .rounded))
                                         .foregroundColor(Color(hex: "#CBD5E1"))
                                 }
                             }
                         }
+                        .lineLimit(1)
+                        .fixedSize(horizontal: true, vertical: false)
                         
-                        // ROW 4: Next Billing Date (DEDICATED ROW - NO TEXT BREAKING!)
-                        HStack(spacing: 5) {
+                        // ROW 4: Next Billing Date (LOCKED ON 1 SINGLE ROW - BIGGER 16pt BOLD GOLD!)
+                        HStack(spacing: 6) {
                             Image(systemName: "calendar")
-                                .font(.system(size: 12, weight: .medium))
+                                .font(.system(size: 14, weight: .bold))
                                 .foregroundColor(Color(hex: "#D4AF37"))
                             
                             Text("Renewal Date: \(next.formattedNextBillingDate)")
-                                .font(.system(size: 14, weight: .medium, design: .rounded))
-                                .foregroundColor(Color(hex: "#CBD5E1"))
-                                .lineLimit(1)
+                                .font(.system(size: 16, weight: .bold, design: .rounded))
+                                .foregroundColor(Color(hex: "#D4AF37"))
                         }
+                        .lineLimit(1)
+                        .fixedSize(horizontal: true, vertical: false)
                         
                         // ROW 5: Status Badge ("Due in X days" / "Paid • Xd left") - STANDALONE ROW!
                         CountdownChip(daysRemaining: next.daysUntilBilling, isCancelled: next.isCancelled)
-                            .padding(.top, 2)
+                            .padding(.top, 4)
                     }
-                    .padding(14)
+                    .padding(16)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color.black.opacity(0.25))
-                    .cornerRadius(16)
+                    .background(Color.black.opacity(0.3))
+                    .cornerRadius(18)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(Color(hex: "#D4AF37").opacity(0.3), lineWidth: 1)
+                        RoundedRectangle(cornerRadius: 18)
+                            .stroke(Color(hex: "#D4AF37").opacity(0.35), lineWidth: 1)
                     )
                 }
             }

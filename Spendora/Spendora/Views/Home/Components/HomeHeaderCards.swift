@@ -1,48 +1,29 @@
 //
 //  HomeHeaderCards.swift
+//  Spendora
 //
 
-/**
- * Main/Core Functions & Purpose:
- * HomeHeaderCards component file containing HeroCardView, HeroPill, and NextChargeCardView.
- */
-
 import SwiftUI
-
-// MARK: - Hero Card View
 
 // MARK: - HeroCardView
 
 /**
- `HeroCardView` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for herocardview handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `HeroCardView` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
+ `HeroCardView` renders the dashboard top spending card & Next Charge spotlight row:
+ - Single line Next Charge Spotlight with 15pt bold text
+ - Currency and renewal date locked on 1 single row (no multi-line breaking!)
  */
 struct HeroCardView: View {
 
     // MARK: - Properties
 
-    let totalMonthly: Double  // totalMonthly property
-    let totalYearly: Double  // totalYearly property
-    let count: Int  // count property
-    let subscriptionCount: Int  // subscriptionCount property
+    let totalMonthly: Double
+    let totalYearly: Double
+    let count: Int
+    let subscriptionCount: Int
     var nextSubscription: Subscription? = nil
-    
 
     // MARK: - Body
 
-    /// Main SwiftUI layout body property.
     var body: some View {
         VStack(spacing: 0) {
             Rectangle()
@@ -103,33 +84,56 @@ struct HeroCardView: View {
                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .trailing)
             }
             .padding(.horizontal, 20)
-            .padding(.bottom, nextSubscription != nil ? 4 : 12)
+            .padding(.bottom, nextSubscription != nil ? 6 : 12)
             
+            // Next Charge Spotlight Row (Single Line, Bigger Font, Zero Line Breaking!)
             if let next = nextSubscription {
                 Divider()
                     .padding(.horizontal, 20)
                     .padding(.vertical, 8)
                 
-                HStack(spacing: 6) {
-                    Image(systemName: "bell.badge.fill")
-                        .font(.caption2)
-                        .foregroundColor(.brandPrimary)
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack {
+                        HStack(spacing: 5) {
+                            Image(systemName: "bell.badge.fill")
+                                .font(.system(size: 13, weight: .bold))
+                                .foregroundColor(Color(hex: "#F59E0B"))
+                            
+                            Text("NEXT CHARGE")
+                                .font(.system(size: 11, weight: .bold, design: .rounded))
+                                .foregroundColor(.textSecondary)
+                                .tracking(1.2)
+                        }
+                        
+                        Spacer()
+                        
+                        CountdownChip(daysRemaining: next.daysUntilBilling, isCancelled: next.isCancelled)
+                    }
                     
-                    Text("Next Charge:")
-                        .font(.system(.caption2, design: .rounded))
-                        .foregroundColor(.textSecondary)
-                    
-                    Text(next.displayName)
-                        .font(.system(.caption, design: .rounded))
-                        .fontWeight(.semibold)
-                        .foregroundColor(.textPrimary)
-                    
-                    Spacer()
-                    
-                    Text("\(next.formattedCost) • \(next.formattedNextBillingDate)")
-                        .font(.system(.caption2, design: .rounded))
-                        .fontWeight(.medium)
-                        .foregroundColor(.brandPrimary)
+                    // Single Line Prominent Price & Date Row (Bigger Font, Single Line Locked!)
+                    HStack(alignment: .firstTextBaseline) {
+                        Text(next.displayName)
+                            .font(.system(size: 17, weight: .bold, design: .rounded))
+                            .foregroundColor(.textPrimary)
+                            .lineLimit(1)
+                        
+                        Spacer()
+                        
+                        HStack(spacing: 6) {
+                            Text(CurrencyManager.shared.format(next.isOneTime ? next.cost : next.monthlyCost))
+                                .font(.system(size: 16, weight: .black, design: .rounded))
+                                .foregroundColor(Color(hex: "#FF6B6B"))
+                            
+                            Text("•")
+                                .foregroundColor(Color(hex: "#D4AF37"))
+                            
+                            Text(next.formattedNextBillingDate)
+                                .font(.system(size: 15, weight: .bold, design: .rounded))
+                                .foregroundColor(Color(hex: "#D4AF37"))
+                        }
+                        .lineLimit(1)
+                        .fixedSize(horizontal: true, vertical: false)
+                    }
                 }
                 .padding(.horizontal, 20)
                 .padding(.bottom, 12)
@@ -144,35 +148,12 @@ struct HeroCardView: View {
 
 // MARK: - HeroPill
 
-/**
- `HeroPill` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for heropill handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `HeroPill` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
- */
 struct HeroPill: View {
+    let icon: String
+    let label: String
+    let value: String
+    let color: Color
 
-    // MARK: - Properties
-
-    let icon: String  // icon property
-    let label: String  // label property
-    let value: String  // value property
-    let color: Color  // color property
-    
-
-    // MARK: - Body
-
-    /// Main SwiftUI layout body property.
     var body: some View {
         HStack(spacing: 4) {
             Image(systemName: icon)
