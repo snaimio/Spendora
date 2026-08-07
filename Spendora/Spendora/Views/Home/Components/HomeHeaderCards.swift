@@ -34,7 +34,7 @@ struct HeroCardView: View {
                 subscriptionCount: subscriptionCount
             )
             
-            // CARD 2: Standalone Next Charge Spotlight Card (Different Color & Bigger Layout!)
+            // CARD 2: Standalone Next Charge Spotlight Card (Adaptive Light/Dark Mode Palette!)
             if let next = nextSubscription {
                 NextChargeSpotlightCardView(subscription: next)
             }
@@ -49,6 +49,7 @@ struct ThisMonthCardView: View {
     let totalYearly: Double
     let count: Int
     let subscriptionCount: Int
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         VStack(spacing: 0) {
@@ -69,7 +70,7 @@ struct ThisMonthCardView: View {
                     HStack(spacing: 6) {
                         Image(systemName: "calendar")
                             .font(.system(size: 13, weight: .bold))
-                            .foregroundColor(.brandPrimary)
+                            .foregroundColor(colorScheme == .dark ? Color(hex: "#D4AF37") : Color(hex: "#C2410C"))
                         Text("THIS MONTH")
                             .font(.system(size: 12, weight: .bold, design: .rounded))
                             .foregroundColor(.textSecondary)
@@ -81,14 +82,18 @@ struct ThisMonthCardView: View {
                     HStack(spacing: 4) {
                         Image(systemName: "checkmark.seal.fill")
                             .font(.system(size: 12))
-                            .foregroundColor(.brandPrimary)
+                            .foregroundColor(colorScheme == .dark ? Color(hex: "#D4AF37") : Color(hex: "#B45309"))
                         Text("Active Budget")
                             .font(.system(size: 11, weight: .bold, design: .rounded))
-                            .foregroundColor(.brandPrimary)
+                            .foregroundColor(colorScheme == .dark ? Color(hex: "#D4AF37") : Color(hex: "#B45309"))
                     }
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
-                    .background(Color.brandPrimary.opacity(0.12))
+                    .background(
+                        colorScheme == .dark
+                            ? Color(hex: "#D4AF37").opacity(0.16)
+                            : Color(hex: "#FEF3C7")
+                    )
                     .cornerRadius(10)
                 }
 
@@ -144,10 +149,19 @@ struct ThisMonthCardView: View {
     }
 }
 
-// MARK: - Card 2: Next Charge Spotlight Card View (Distinct Color & Bigger)
+// MARK: - Card 2: Next Charge Spotlight Card View (Adaptive Light & Dark Palette!)
 
 struct NextChargeSpotlightCardView: View {
     let subscription: Subscription
+    @Environment(\.colorScheme) private var colorScheme
+
+    private var dateTextColor: Color {
+        colorScheme == .dark ? Color(hex: "#D4AF37") : Color(hex: "#B45309")
+    }
+
+    private var headerIconColor: Color {
+        colorScheme == .dark ? Color(hex: "#F59E0B") : Color(hex: "#C2410C")
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -156,11 +170,11 @@ struct NextChargeSpotlightCardView: View {
                 HStack(spacing: 6) {
                     Image(systemName: "bell.badge.fill")
                         .font(.system(size: 14, weight: .bold))
-                        .foregroundColor(Color(hex: "#F59E0B"))
+                        .foregroundColor(headerIconColor)
                     
                     Text("NEXT CHARGE SPOTLIGHT")
                         .font(.system(size: 11, weight: .bold, design: .rounded))
-                        .foregroundColor(Color(hex: "#D4AF37"))
+                        .foregroundColor(dateTextColor)
                         .tracking(1.2)
                 }
                 
@@ -170,12 +184,12 @@ struct NextChargeSpotlightCardView: View {
             }
             
             Divider()
-                .background(Color(hex: "#D4AF37").opacity(0.25))
+                .background(dateTextColor.opacity(0.25))
             
             // Subscription Name (Prominent 22pt Bold Text)
             Text(subscription.displayName)
                 .font(.system(size: 22, weight: .bold, design: .rounded))
-                .foregroundColor(.white)
+                .foregroundColor(.textPrimary)
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
             
@@ -188,16 +202,16 @@ struct NextChargeSpotlightCardView: View {
                 if subscription.isOneTime {
                     Text("• Lifetime")
                         .font(.system(size: 14, weight: .bold, design: .rounded))
-                        .foregroundColor(Color(hex: "#D4AF37"))
+                        .foregroundColor(dateTextColor)
                 } else {
                     Text("/month")
                         .font(.system(size: 14, weight: .bold, design: .rounded))
-                        .foregroundColor(Color(hex: "#CBD5E1"))
+                        .foregroundColor(.textSecondary)
                     
                     if subscription.isYearly {
                         Text("• Yearly Plan")
                             .font(.system(size: 14, weight: .bold, design: .rounded))
-                            .foregroundColor(Color(hex: "#D4AF37"))
+                            .foregroundColor(dateTextColor)
                     }
                 }
             }
@@ -208,52 +222,45 @@ struct NextChargeSpotlightCardView: View {
             HStack(spacing: 6) {
                 Image(systemName: "calendar")
                     .font(.system(size: 14, weight: .bold))
-                    .foregroundColor(Color(hex: "#D4AF37"))
+                    .foregroundColor(dateTextColor)
                 
                 Text("Renewal Date: \(subscription.formattedNextBillingDate)")
                     .font(.system(size: 16, weight: .bold, design: .rounded))
-                    .foregroundColor(Color(hex: "#D4AF37"))
+                    .foregroundColor(dateTextColor)
             }
             .lineLimit(1)
             .fixedSize(horizontal: true, vertical: false)
         }
         .padding(18)
         .background(
-            ZStack {
-                // Machined Gunmetal / Amber Glow Gradient
-                LinearGradient(
+            colorScheme == .dark
+                ? LinearGradient(
                     colors: [Color(hex: "#1E293B"), Color(hex: "#0F0F1A")],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )
-                
-                // Gold Corner Rivets
-                VStack {
-                    HStack {
-                        Circle().fill(Color(hex: "#D4AF37")).frame(width: 5, height: 5)
-                        Spacer()
-                        Circle().fill(Color(hex: "#D4AF37")).frame(width: 5, height: 5)
-                    }
-                    Spacer()
-                    HStack {
-                        Circle().fill(Color(hex: "#D4AF37")).frame(width: 5, height: 5)
-                        Spacer()
-                        Circle().fill(Color(hex: "#D4AF37")).frame(width: 5, height: 5)
-                    }
-                }
-                .padding(8)
-            }
+                : LinearGradient(
+                    colors: [Color.white, Color(hex: "#FAFAFA")],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
         )
         .cornerRadius(22)
-        .shadow(color: Color.black.opacity(0.15), radius: 14, x: 0, y: 5)
+        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.05), radius: 12, x: 0, y: 4)
         .overlay(
             RoundedRectangle(cornerRadius: 22, style: .continuous)
                 .stroke(
-                    LinearGradient(
-                        colors: [Color(hex: "#D4AF37").opacity(0.6), Color(hex: "#D4AF37").opacity(0.15)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ),
+                    colorScheme == .dark
+                        ? LinearGradient(
+                            colors: [Color(hex: "#D4AF37").opacity(0.6), Color(hex: "#D4AF37").opacity(0.15)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                        : LinearGradient(
+                            colors: [Color(hex: "#F59E0B").opacity(0.4), Color(hex: "#F59E0B").opacity(0.15)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
                     lineWidth: 1.5
                 )
         )
