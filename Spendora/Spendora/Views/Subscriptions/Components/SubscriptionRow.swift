@@ -8,9 +8,10 @@ import SwiftUI
 // MARK: - SubscriptionRow
 
 /**
- `SubscriptionRow` renders a subscription card matching `SubscriptionCardView`'s exact brushed gunmetal aesthetic:
- - Machined Gunmetal Gradient Surface (#2B2D32 → #1A1B1E)
- - Polished Brass Circular Icon Container with logo emblem
+ `SubscriptionRow` renders a subscription card matching `SubscriptionCardView`'s adaptive aesthetic:
+ - Pure White card background in Light Mode / Machined Slate in Dark Mode (`Color.cardBackground`)
+ - High-contrast text legibility in both modes (`.textPrimary` and `.textSecondary`)
+ - Polished Brass Circular Icon Container with logo emblem (#D4AF37)
  - Gold Outline Accent Stroke (#D4AF37)
  - 1. Subscription Name: Headline (17pt Bold) - LARGEST, PROMINENT & FULL WIDTH
  - 2. Cost & Cycle: Subheadline (15pt Regular)
@@ -46,7 +47,7 @@ struct SubscriptionRow: View {
                         )
                     )
                     .frame(width: 46, height: 46)
-                    .shadow(color: Color(hex: "#D4AF37").opacity(0.35), radius: 6, x: 0, y: 3)
+                    .shadow(color: Color(hex: "#D4AF37").opacity(0.3), radius: 5, x: 0, y: 2)
                 
                 Image(systemName: rowIcon)
                     .font(.system(size: 20, weight: .bold))
@@ -60,7 +61,7 @@ struct SubscriptionRow: View {
                 HStack(alignment: .center) {
                     Text(subscription.displayName)
                         .font(AppStyles.Typography.headline)
-                        .foregroundColor(.white)
+                        .foregroundColor(.textPrimary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                     
@@ -68,7 +69,7 @@ struct SubscriptionRow: View {
                     
                     Image(systemName: "chevron.right")
                         .font(.system(size: 13, weight: .bold))
-                        .foregroundColor(Color(hex: "#94A3B8"))
+                        .foregroundColor(.textSecondary)
                 }
                 
                 // ROW 2: COST & BILLING CYCLE (Subheadline 15pt Regular)
@@ -76,21 +77,22 @@ struct SubscriptionRow: View {
                     Text(CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost))
                         .font(AppStyles.Typography.subheadline)
                         .fontWeight(.bold)
-                        .foregroundColor(.white)
+                        .foregroundColor(.textPrimary)
                     
                     if subscription.isOneTime {
                         Text("• Lifetime")
                             .font(AppStyles.Typography.subheadline)
+                            .fontWeight(.bold)
                             .foregroundColor(Color(hex: "#D4AF37"))
                     } else {
                         Text("/month")
                             .font(AppStyles.Typography.subheadline)
-                            .foregroundColor(Color(hex: "#CBD5E1"))
+                            .foregroundColor(.textSecondary)
                         
                         if subscription.isYearly {
                             Text("• Yearly")
                                 .font(AppStyles.Typography.subheadline)
-                                .foregroundColor(Color(hex: "#CBD5E1"))
+                                .foregroundColor(.textSecondary)
                         }
                     }
                 }
@@ -100,11 +102,11 @@ struct SubscriptionRow: View {
                     HStack(spacing: 4) {
                         Image(systemName: "calendar")
                             .font(.system(size: 11, weight: .medium))
-                            .foregroundColor(Color(hex: "#94A3B8"))
+                            .foregroundColor(.textSecondary)
                         
                         Text("Renewal: \(subscription.formattedNextBillingDate)")
                             .font(AppStyles.Typography.caption)
-                            .foregroundColor(Color(hex: "#CBD5E1"))
+                            .foregroundColor(.textSecondary)
                     }
                 } else {
                     HStack(spacing: 4) {
@@ -127,28 +129,12 @@ struct SubscriptionRow: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 14)
-        .background(
-            ZStack {
-                // Machined Gunmetal Surface
-                LinearGradient(
-                    colors: [Color(hex: "#2B2D32"), Color(hex: "#1A1B1E")],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-            }
-        )
+        .background(Color.cardBackground)
         .cornerRadius(18)
-        .shadow(color: Color.black.opacity(0.4), radius: 10, x: 0, y: 4)
+        .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 3)
         .overlay(
             RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .stroke(
-                    LinearGradient(
-                        colors: [Color(hex: "#D4AF37").opacity(0.4), Color(hex: "#D4AF37").opacity(0.1)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ),
-                    lineWidth: 1.2
-                )
+                .stroke(Color(hex: "#D4AF37").opacity(0.3), lineWidth: 1.2)
         )
     }
 }
