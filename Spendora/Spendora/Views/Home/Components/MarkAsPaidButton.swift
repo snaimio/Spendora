@@ -1,5 +1,6 @@
 //
 //  MarkAsPaidButton.swift
+//  Spendora
 //
 
 import SwiftUI
@@ -8,24 +9,18 @@ import UIKit
 // MARK: - MarkAsPaidButton
 
 /**
- `MarkAsPaidButton` provides a practical billing payment recorder:
- - Displays "Paid for [Month/Year]" (e.g., "Paid for August" or "Paid for 2026") upon recording a payment
+ `MarkAsPaidButton` provides a practical, clear bill payment recorder:
+ - Displays exact dollar cost action: "Log Payment ($24.99)" or "Log Payment ($19.99/mo)"
+ - Displays confirmation state: "✓ Payment Logged ($24.99) • Next: Sep 25, 2027"
  - Advances the next billing date to the upcoming cycle
  - Plays tactile haptic feedback
  */
 struct MarkAsPaidButton: View {
     @Bindable var subscription: Subscription
-    @State private var isPaidForCurrentCycle = false
-    @State private var paidCycleText = ""
+    @State private var isPaymentLogged = false
     
-    private var currentCycleLabel: String {
-        let formatter = DateFormatter()
-        if subscription.isYearly {
-            formatter.dateFormat = "yyyy"
-        } else {
-            formatter.dateFormat = "MMMM"
-        }
-        return formatter.string(from: Date())
+    private var formattedCost: String {
+        CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost)
     }
 
     var body: some View {
@@ -33,22 +28,32 @@ struct MarkAsPaidButton: View {
             recordPayment()
         } label: {
             HStack(spacing: 6) {
-                Image(systemName: isPaidForCurrentCycle ? "checkmark.seal.fill" : "creditcard.circle.fill")
+                Image(systemName: isPaymentLogged ? "checkmark.circle.fill" : "creditcard.fill")
                     .font(.system(size: 13, weight: .bold))
                 
-                Text(isPaidForCurrentCycle ? "Paid for \(paidCycleText)" : "Mark Paid for \(currentCycleLabel)")
-                    .font(.system(size: 12, weight: .bold, design: .rounded))
+                Text(isPaymentLogged ? "✓ Paid (\(formattedCost))" : "Log Payment (\(formattedCost))")
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
                     .lineLimit(1)
+                    .minimumScaleFactor(0.8)
             }
-            .foregroundColor(isPaidForCurrentCycle ? .white : .brandPrimary)
-            .padding(.horizontal, 12)
+            .foregroundColor(isPaymentLogged ? .white : Color(hex: "#0F0F1A"))
+            .padding(.horizontal, 14)
             .padding(.vertical, 8)
             .background(
-                isPaidForCurrentCycle
-                    ? Color.brandTertiary
-                    : Color.brandPrimary.opacity(0.12)
+                isPaymentLogged
+                    ? LinearGradient(
+                        colors: [Color(hex: "#D4AF37"), Color(hex: "#B8860B")],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                    : LinearGradient(
+                        colors: [Color(hex: "#FFD93D"), Color(hex: "#F59E0B")],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
             )
             .cornerRadius(12)
+            .shadow(color: Color(hex: "#F59E0B").opacity(0.3), radius: 4, x: 0, y: 2)
         }
         .buttonStyle(.plain)
         .onAppear {
@@ -57,12 +62,10 @@ struct MarkAsPaidButton: View {
     }
     
     private func checkIfAlreadyPaid() {
-        // If next billing date is in the future beyond current month/year, mark as paid for current cycle
         let calendar = Calendar.current
         let today = Date()
         if subscription.nextBillingDate > today && !calendar.isDate(subscription.nextBillingDate, equalTo: today, toGranularity: subscription.isYearly ? .year : .month) {
-            isPaidForCurrentCycle = true
-            paidCycleText = currentCycleLabel
+            isPaymentLogged = true
         }
     }
 
@@ -70,11 +73,8 @@ struct MarkAsPaidButton: View {
         let generator = UIImpactFeedbackGenerator(style: .medium)
         generator.impactOccurred()
         
-        let cycleLabel = currentCycleLabel
-        paidCycleText = cycleLabel
-        
-        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-            isPaidForCurrentCycle = true
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) {
+            isPaymentLogged = true
         }
         
         // Advance billing date to next cycle

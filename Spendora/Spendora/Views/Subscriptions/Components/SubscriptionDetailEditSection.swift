@@ -1,40 +1,22 @@
 //
 //  SubscriptionDetailEditSection.swift
+//  Spendora
 //
-
-/**
- * Main/Core Functions & Purpose:
- * SubscriptionDetailEditSection component containing input form fields (Name, Cost, Category, Payment Method, Billing Cycle, Trial End Date, Notes) when editing a subscription.
- */
 
 import SwiftUI
 import SwiftData
 
-
 // MARK: - SubscriptionDetailEditSection
 
 /**
- `SubscriptionDetailEditSection` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for subscriptiondetaileditsection handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `SubscriptionDetailEditSection` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
+ `SubscriptionDetailEditSection` component containing input form fields (Name, Cost, Category, Payment Method, Billing Cycle, Record Payment, Trial End Date, Notes) when editing a subscription.
  */
 struct SubscriptionDetailEditSection: View {
 
     // MARK: - Properties
 
     @Environment(\.modelContext) private var modelContext
-    let subscription: Subscription  // subscription property
+    let subscription: Subscription
     
     @Binding var name: String
     @Binding var cost: String
@@ -48,14 +30,12 @@ struct SubscriptionDetailEditSection: View {
     @Binding var usageRating: Int
     @Binding var isSaving: Bool
     
-    let isValid: Bool  // isValid property
-    let saveChangesAction: () -> Void  // saveChangesAction property
-    let ratingDescription: String  // ratingDescription property
-    
+    let isValid: Bool
+    let saveChangesAction: () -> Void
+    let ratingDescription: String
 
     // MARK: - Body
 
-    /// Main SwiftUI layout body property.
     var body: some View {
         Group {
             Section("Service Info") {
@@ -105,6 +85,32 @@ struct SubscriptionDetailEditSection: View {
                 }
             }
             
+            // MARK: - Dedicated Record Payment Action Section
+            if !subscription.isOneTime {
+                Section("Record Payment") {
+                    HStack {
+                        Image(systemName: "creditcard.circle.fill")
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundColor(.brandPrimary)
+                        
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Record Bill Payment")
+                                .font(.system(.body, design: .rounded))
+                                .fontWeight(.medium)
+                                .foregroundColor(.textPrimary)
+                            Text("Logs payment and advances billing date")
+                                .font(.system(.caption, design: .rounded))
+                                .foregroundColor(.textSecondary)
+                        }
+                        
+                        Spacer()
+                        
+                        MarkAsPaidButton(subscription: subscription)
+                    }
+                    .padding(.vertical, 4)
+                }
+            }
+            
             Section("Notes") {
                 TextField("Add notes...", text: $notes, axis: .vertical)
                     .lineLimit(3...6)
@@ -149,7 +155,7 @@ struct SubscriptionDetailEditSection: View {
                 .disabled(!isValid || isSaving)
                 .listRowBackground(
                     LinearGradient(
-                        colors: [Color(hex: "#FF6B6B"), Color(hex: "#FFE66D")],
+                        colors: [Color(hex: "#D4AF37"), Color(hex: "#F59E0B")],
                         startPoint: .leading,
                         endPoint: .trailing
                     )
