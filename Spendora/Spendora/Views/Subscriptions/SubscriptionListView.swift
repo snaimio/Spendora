@@ -58,7 +58,10 @@ struct SubscriptionListView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
+            ZStack {
+                SpendoraBrandBackgroundView()
+                
+                VStack(spacing: 0) {
                 SearchBarView(searchText: $searchText)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 8)

@@ -8,7 +8,7 @@ import SwiftUI
 // MARK: - Color Extension
 
 /**
- Extension on `Color` providing Spendora's Luxury Gunmetal Leather & Polished Rose-Gold / Brass Theme.
+ Extension on `Color` providing Spendora's Luxury Gunmetal Leather & Polished Rose-Gold / Amber Theme.
  Extracted directly from the master logo asset and visual mockup specifications.
  */
 extension Color {
@@ -30,7 +30,7 @@ extension Color {
     static let brandWarning = Color(hex: "#F59E0B")      // Amber Gold
     static let brandDanger = Color(hex: "#FF6B6B")       // Rose Red
     
-    // MARK: - Gradients
+    // MARK: - Vibrant Brand Gradients
     static let gradientPrimary = LinearGradient(
         colors: [Color(hex: "#D4AF37"), Color(hex: "#F59E0B")],
         startPoint: .topLeading,
@@ -38,13 +38,19 @@ extension Color {
     )
     
     static let gradientSunset = LinearGradient(
-        colors: [Color(hex: "#FF6B6B"), Color(hex: "#D4AF37")],
+        colors: [Color(hex: "#FF6B6B"), Color(hex: "#F59E0B")],
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    
+    static let gradientVibrantGold = LinearGradient(
+        colors: [Color(hex: "#F59E0B"), Color(hex: "#D4AF37"), Color(hex: "#FF8A5C")],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
     
     static let gradientHero = LinearGradient(
-        colors: [Color(hex: "#1E293B"), Color(hex: "#0F0F1A"), Color(hex: "#D4AF37").opacity(0.3)],
+        colors: [Color(hex: "#2B2D32"), Color(hex: "#1A1B1E")],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
@@ -112,6 +118,53 @@ extension Color {
         }
         
         self.init(.sRGB, red: Double(r) / 255, green: Double(g) / 255, blue: Double(b) / 255, opacity: Double(a) / 255)
+    }
+}
+
+// MARK: - Ambient Brand Background Overlay
+
+struct SpendoraBrandBackgroundView: View {
+    @Environment(\.colorScheme) private var colorScheme
+    
+    var body: some View {
+        ZStack {
+            Color.appBackground
+                .ignoresSafeArea()
+            
+            // Ambient Glowing Gold Orb (Top-Right)
+            Circle()
+                .fill(
+                    RadialGradient(
+                        colors: [Color(hex: "#D4AF37").opacity(colorScheme == .dark ? 0.15 : 0.08), Color.clear],
+                        center: .center,
+                        startRadius: 10,
+                        endRadius: 240
+                    )
+                )
+                .frame(width: 320, height: 320)
+                .offset(x: 120, y: -180)
+                .blur(radius: 20)
+            
+            // Ambient Glowing Coral Orb (Bottom-Left)
+            Circle()
+                .fill(
+                    RadialGradient(
+                        colors: [Color(hex: "#FF6B6B").opacity(colorScheme == .dark ? 0.12 : 0.06), Color.clear],
+                        center: .center,
+                        startRadius: 10,
+                        endRadius: 260
+                    )
+                )
+                .frame(width: 340, height: 340)
+                .offset(x: -140, y: 220)
+                .blur(radius: 25)
+        }
+    }
+}
+
+extension View {
+    func spendoraBrandBackground() -> some View {
+        self.background(SpendoraBrandBackgroundView())
     }
 }
 

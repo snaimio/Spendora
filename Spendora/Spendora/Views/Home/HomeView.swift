@@ -59,8 +59,7 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.appBackground
-                    .ignoresSafeArea()
+                SpendoraBrandBackgroundView()
                 
                 ScrollView {
                     VStack(spacing: 20) {
