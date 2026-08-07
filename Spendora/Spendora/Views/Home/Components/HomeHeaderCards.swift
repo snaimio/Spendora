@@ -29,7 +29,7 @@ struct HeroCardView: View {
     // MARK: - Body
 
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 20) {
             // CARD 1: Executive Monthly Spend Card (with Embedded Mini Cards)
             ThisMonthCardView(
                 totalMonthly: totalMonthly,
