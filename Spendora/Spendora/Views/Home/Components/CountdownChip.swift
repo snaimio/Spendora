@@ -28,7 +28,7 @@ struct CountdownChip: View {
         } else if daysRemaining <= 7 {
             return Color.brandWarning      // Soon Gold (#FFD93D)
         } else {
-            return Color.brandSuccess      // Safe Teal (#00D4AA)
+            return Color(hex: "#D4AF37")     // Safe Paid Signature Gold/Brass (#D4AF37)
         }
     }
     
