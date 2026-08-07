@@ -1,5 +1,6 @@
 //
 //  PremiumOnboardingView.swift
+//  Spendora
 //
 
 import SwiftUI
@@ -7,8 +8,9 @@ import SwiftUI
 // MARK: - PremiumOnboardingView
 
 /**
- `PremiumOnboardingView` presents Spendora's initial 4-screen introduction flow,
- featuring Apple HIG compliant typography, vector hero icon badges, animated capsule page indicators, and 100% WCAG contrast text.
+ `PremiumOnboardingView` presents Spendora's 4-screen introduction flow,
+ featuring Apple HIG card containers, vector hero icon badges, animated capsule page indicators,
+ and 100% WCAG contrast colors that look stunning in both Light and Dark modes.
  */
 struct PremiumOnboardingView: View {
 
@@ -24,26 +26,26 @@ struct PremiumOnboardingView: View {
         OnboardingPage(
             icon: "sparkles.rectangle.stack.fill",
             title: "Track All Subscriptions",
-            description: "Keep Netflix, Spotify, Apple One, and all your recurring payments organized in one central place.",
-            color: Color(hex: "#007AFF")
+            description: "Keep Netflix, Spotify, Apple One, and all your recurring payments organized in one central executive dashboard.",
+            color: Color(hex: "#D4AF37")
         ),
         OnboardingPage(
             icon: "bell.badge.fill",
             title: "Smart Billing Alerts",
-            description: "Receive timely advance notifications before every charge date. Never get surprised by auto-renewals.",
-            color: Color(hex: "#5856D6")
+            description: "Receive advance push notifications before every renewal date. Never get caught off guard by auto-renewals again.",
+            color: Color(hex: "#F59E0B")
         ),
         OnboardingPage(
             icon: "chart.line.uptrend.xyaxis.circle.fill",
             title: "AI-Powered Analytics",
-            description: "Understand your financial run-rate with intelligent spending breakdowns and savings opportunities.",
-            color: Color(hex: "#AF52DE")
+            description: "Gain full visibility into your annual spending run-rate with intelligent financial breakdowns and savings score insights.",
+            color: Color(hex: "#8B5CF6")
         ),
         OnboardingPage(
             icon: "lock.shield.fill",
             title: "100% On-Device & Private",
-            description: "Your financial data stays strictly on your device. Zero external cloud requirements or data tracking.",
-            color: Color(hex: "#34C759")
+            description: "Your financial data stays strictly encrypted on your local device. Zero external cloud tracking or bank credentials required.",
+            color: Color(hex: "#38BDF8")
         )
     ]
 
@@ -55,7 +57,7 @@ struct PremiumOnboardingView: View {
             Color.appBackground
                 .ignoresSafeArea()
             
-            VStack {
+            VStack(spacing: 0) {
                 // Top Header: Skip Button
                 HStack {
                     Spacer()
@@ -63,18 +65,19 @@ struct PremiumOnboardingView: View {
                         completeOnboarding()
                     } label: {
                         Text("Skip")
-                            .font(.system(size: 14, weight: .semibold, design: .rounded))
+                            .font(AppStyles.Typography.subheadline)
+                            .fontWeight(.bold)
                             .foregroundColor(.textSecondary)
                             .padding(.horizontal, 16)
                             .padding(.vertical, 8)
                             .background(
                                 Capsule()
                                     .fill(Color.cardBackground)
-                                    .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 2)
+                                    .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 2)
                             )
                     }
                     .padding(.top, 16)
-                    .padding(.trailing, 24)
+                    .padding(.trailing, 20)
                     .opacity(showButtons ? 1 : 0)
                 }
                 
@@ -93,7 +96,7 @@ struct PremiumOnboardingView: View {
                 Spacer()
                 
                 // Bottom Control Section
-                VStack(spacing: 24) {
+                VStack(spacing: 20) {
                     // Animated Capsule Page Indicators
                     HStack(spacing: 8) {
                         ForEach(pages.indices, id: \.self) { index in
@@ -116,32 +119,32 @@ struct PremiumOnboardingView: View {
                     } label: {
                         HStack(spacing: 8) {
                             Text(currentPage == pages.count - 1 ? "Get Started" : "Continue")
-                                .font(.system(size: 17, weight: .bold, design: .rounded))
+                                .font(AppStyles.Typography.headline)
                             
                             Image(systemName: currentPage == pages.count - 1 ? "sparkles" : "arrow.right")
                                 .font(.system(size: 16, weight: .bold))
                         }
-                        .foregroundColor(.white)
+                        .foregroundColor(Color(hex: "#0F0F1A"))
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
                         .background(
                             LinearGradient(
-                                colors: [Color(hex: "#007AFF"), Color(hex: "#5856D6")],
+                                colors: [Color(hex: "#D4AF37"), Color(hex: "#F59E0B")],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
                         )
                         .cornerRadius(18)
-                        .shadow(color: Color(hex: "#007AFF").opacity(0.35), radius: 12, x: 0, y: 6)
+                        .shadow(color: Color(hex: "#D4AF37").opacity(0.4), radius: 10, x: 0, y: 5)
                         .opacity(showButtons ? 1 : 0)
                     }
-                    .padding(.horizontal, 24)
+                    .padding(.horizontal, 20)
                 }
-                .padding(.bottom, 40)
+                .padding(.bottom, 36)
             }
         }
         .onAppear {
-            withAnimation(.easeOut(duration: 0.5)) {
+            withAnimation(.easeOut(duration: 0.4)) {
                 showButtons = true
             }
         }
