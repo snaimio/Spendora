@@ -154,25 +154,33 @@ struct HomeView: View {
                         
                         Menu {
                             Button {
-                                showingYearlyReport = true
+                                DispatchQueue.main.async {
+                                    showingYearlyReport = true
+                                }
                             } label: {
                                 Label("Yearly Report", systemImage: "calendar")
                             }
                             
                             Button {
-                                showingChallenges = true
+                                DispatchQueue.main.async {
+                                    showingChallenges = true
+                                }
                             } label: {
                                 Label("Challenges", systemImage: "trophy")
                             }
                             
                             Button {
-                                showingSavingsScore = true
+                                DispatchQueue.main.async {
+                                    showingSavingsScore = true
+                                }
                             } label: {
                                 Label("Savings Score", systemImage: "star.circle.fill")
                             }
                             
                             Button {
-                                showingAIInsights = true
+                                DispatchQueue.main.async {
+                                    showingAIInsights = true
+                                }
                             } label: {
                                 Label("AI Insights", systemImage: "brain.head.profile")
                             }
