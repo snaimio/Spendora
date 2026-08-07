@@ -282,17 +282,20 @@ struct HomeView: View {
         }
     }
     
-    // MARK: - All Subscriptions Section (Apple HIG Grouped Headers)
+    // MARK: - All Subscriptions Section
     private var allSubscriptionsSection: some View {
         VStack(spacing: 16) {
             if !activeSubscriptions.isEmpty {
                 VStack(spacing: 10) {
                     HStack {
-                        Text("ACTIVE")
-                            .font(.system(size: 12, weight: .bold, design: .rounded))
-                            .foregroundColor(.brandPrimary)
-                            .tracking(1.2)
+                        Text("Active Subscriptions")
+                            .font(.system(.headline, design: .rounded))
+                            .foregroundColor(.textPrimary)
                         Spacer()
+                        Text("\(activeSubscriptions.count) Active")
+                            .font(.system(.caption, design: .rounded))
+                            .fontWeight(.medium)
+                            .foregroundColor(.textSecondary)
                     }
                     .padding(.horizontal, 4)
                     
@@ -309,11 +312,14 @@ struct HomeView: View {
             if !cancelledSubscriptions.isEmpty {
                 VStack(spacing: 10) {
                     HStack {
-                        Text("PAUSED & CANCELLED")
-                            .font(.system(size: 12, weight: .bold, design: .rounded))
-                            .foregroundColor(.textSecondary)
-                            .tracking(1.2)
+                        Text("Cancelled & Paused")
+                            .font(.system(.headline, design: .rounded))
+                            .foregroundColor(.textPrimary)
                         Spacer()
+                        Text("\(cancelledSubscriptions.count) Inactive")
+                            .font(.system(.caption, design: .rounded))
+                            .fontWeight(.medium)
+                            .foregroundColor(.textSecondary)
                     }
                     .padding(.horizontal, 4)
                     .padding(.top, 8)
