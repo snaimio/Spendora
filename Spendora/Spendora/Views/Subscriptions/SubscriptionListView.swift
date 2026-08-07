@@ -84,7 +84,7 @@ struct SubscriptionListView: View {
                         
                         Spacer()
                         
-                        Text("Monthly Run-Rate: \(CurrencyManager.shared.format(totalMonthly))")
+                        Text("Monthly Total: \(CurrencyManager.shared.format(totalMonthly))")
                             .font(.system(.caption, design: .rounded))
                             .fontWeight(.semibold)
                             .foregroundColor(.brandPrimary)

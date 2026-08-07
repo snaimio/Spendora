@@ -251,7 +251,7 @@ struct AIHealthBannerView: View {
             
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Monthly Run-Rate")
+                    Text("Monthly Total")
                         .font(.system(.caption2, design: .rounded))
                         .foregroundColor(.textSecondary)
                     Text(CurrencyManager.shared.format(totalMonthly))

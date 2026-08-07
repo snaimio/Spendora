@@ -119,7 +119,7 @@ struct ThisMonthCardView: View {
                 HStack(spacing: 12) {
                     MetricSubCard(
                         icon: "calendar.badge.clock",
-                        title: "Yearly Run-Rate",
+                        title: "Yearly Total",
                         value: CurrencyManager.shared.format(totalYearly),
                         color: Color(hex: "#0EA5E9")
                     )
