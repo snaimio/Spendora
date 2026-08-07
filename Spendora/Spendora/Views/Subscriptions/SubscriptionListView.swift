@@ -115,10 +115,10 @@ struct SubscriptionListView: View {
                         }
                         
                         if !cancelled.isEmpty {
-                            Section("Cancelled & Paused (\(cancelled.count))") {
+                            Section {
                                 ForEach(cancelled) { subscription in
                                     SubscriptionRow(subscription: subscription)
-                                        .opacity(0.8)
+                                        .opacity(0.75)
                                         .listRowInsets(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
                                         .listRowBackground(Color.clear)
                                         .contentShape(Rectangle())
@@ -140,6 +140,15 @@ struct SubscriptionListView: View {
                                             }
                                             .tint(.blue)
                                         }
+                                }
+                            } header: {
+                                HStack(spacing: 6) {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .foregroundColor(Color(hex: "#F97316"))
+                                    Text("CANCELLED & PAUSED MEMBERSHIPS (\(cancelled.count))")
+                                        .font(.system(size: 11, weight: .bold, design: .rounded))
+                                        .foregroundColor(.textSecondary)
+                                        .tracking(1.2)
                                 }
                             }
                         }

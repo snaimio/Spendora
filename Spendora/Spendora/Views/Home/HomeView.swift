@@ -116,31 +116,50 @@ struct HomeView: View {
                                 }
                             }
                             
-                            // Cancelled & Paused Section
+                            // Cancelled & Paused Distinct Section Container
                             if !cancelledSubscriptions.isEmpty {
-                                HStack {
-                                    Text("Cancelled & Paused")
-                                        .font(.system(.headline, design: .rounded))
-                                        .foregroundColor(.textPrimary)
-                                    Spacer()
-                                    Text("\(cancelledSubscriptions.count) Inactive")
-                                        .font(.system(.caption, design: .rounded))
-                                        .fontWeight(.medium)
-                                        .foregroundColor(.textSecondary)
-                                }
-                                .padding(.horizontal, 4)
-                                .padding(.top, 12)
-                                
-                                VStack(spacing: 12) {
-                                    ForEach(cancelledSubscriptions) { subscription in
-                                        SubscriptionCardView(subscription: subscription)
-                                            .opacity(0.8)
-                                            .onTapGesture {
-                                                generator.impactOccurred()
-                                                selectedSubscription = subscription
-                                            }
+                                VStack(alignment: .leading, spacing: 12) {
+                                    HStack(spacing: 6) {
+                                        Image(systemName: "xmark.circle.fill")
+                                            .font(.system(size: 14, weight: .bold))
+                                            .foregroundColor(Color(hex: "#F97316"))
+                                        
+                                        Text("CANCELLED & PAUSED MEMBERSHIPS")
+                                            .font(.system(size: 11, weight: .bold, design: .rounded))
+                                            .foregroundColor(.textSecondary)
+                                            .tracking(1.2)
+                                        
+                                        Spacer()
+                                        
+                                        Text("\(cancelledSubscriptions.count) Inactive")
+                                            .font(.system(size: 11, weight: .bold, design: .rounded))
+                                            .foregroundColor(Color(hex: "#F97316"))
+                                            .padding(.horizontal, 8)
+                                            .padding(.vertical, 3)
+                                            .background(Color(hex: "#F97316").opacity(0.14))
+                                            .cornerRadius(8)
+                                    }
+                                    .padding(.horizontal, 4)
+                                    
+                                    VStack(spacing: 10) {
+                                        ForEach(cancelledSubscriptions) { subscription in
+                                            SubscriptionCardView(subscription: subscription)
+                                                .opacity(0.75)
+                                                .onTapGesture {
+                                                    generator.impactOccurred()
+                                                    selectedSubscription = subscription
+                                                }
+                                        }
                                     }
                                 }
+                                .padding(14)
+                                .background(Color.secondary.opacity(0.06))
+                                .cornerRadius(20)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                        .stroke(Color(hex: "#F97316").opacity(0.25), lineWidth: 1)
+                                )
+                                .padding(.top, 8)
                             }
                         } else {
                             EmptyStateView()
