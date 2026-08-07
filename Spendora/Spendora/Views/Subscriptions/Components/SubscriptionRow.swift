@@ -122,12 +122,6 @@ struct SubscriptionRow: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 14)
-        .background(Color.cardBackground)
-        .cornerRadius(18)
-        .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 3)
-        .overlay(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .stroke(Color(hex: "#D4AF37").opacity(0.3), lineWidth: 1.2)
-        )
+        .spendora3DCard(cornerRadius: 18)
     }
 }

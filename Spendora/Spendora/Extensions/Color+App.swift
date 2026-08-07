@@ -121,7 +121,7 @@ extension Color {
     }
 }
 
-// MARK: - Ambient Brand Background Overlay
+// MARK: - Ambient Brand Background & 3D Specular Modifiers
 
 struct SpendoraBrandBackgroundView: View {
     @Environment(\.colorScheme) private var colorScheme
@@ -131,40 +131,73 @@ struct SpendoraBrandBackgroundView: View {
             Color.appBackground
                 .ignoresSafeArea()
             
-            // Ambient Glowing Gold Orb (Top-Right)
+            // 3D Ambient Glowing Gold Orb (Top-Right)
             Circle()
                 .fill(
                     RadialGradient(
-                        colors: [Color(hex: "#D4AF37").opacity(colorScheme == .dark ? 0.15 : 0.08), Color.clear],
-                        center: .center,
-                        startRadius: 10,
-                        endRadius: 240
-                    )
-                )
-                .frame(width: 320, height: 320)
-                .offset(x: 120, y: -180)
-                .blur(radius: 20)
-            
-            // Ambient Glowing Coral Orb (Bottom-Left)
-            Circle()
-                .fill(
-                    RadialGradient(
-                        colors: [Color(hex: "#FF6B6B").opacity(colorScheme == .dark ? 0.12 : 0.06), Color.clear],
+                        colors: [Color(hex: "#D4AF37").opacity(colorScheme == .dark ? 0.18 : 0.10), Color.clear],
                         center: .center,
                         startRadius: 10,
                         endRadius: 260
                     )
                 )
                 .frame(width: 340, height: 340)
-                .offset(x: -140, y: 220)
+                .offset(x: 130, y: -190)
+                .blur(radius: 20)
+            
+            // 3D Ambient Glowing Coral Orb (Bottom-Left)
+            Circle()
+                .fill(
+                    RadialGradient(
+                        colors: [Color(hex: "#FF6B6B").opacity(colorScheme == .dark ? 0.14 : 0.08), Color.clear],
+                        center: .center,
+                        startRadius: 10,
+                        endRadius: 280
+                    )
+                )
+                .frame(width: 360, height: 360)
+                .offset(x: -150, y: 240)
                 .blur(radius: 25)
         }
+    }
+}
+
+struct Spendora3DCardModifier: ViewModifier {
+    let cornerRadius: CGFloat
+    @Environment(\.colorScheme) private var colorScheme
+
+    func body(content: Content) -> some View {
+        content
+            .background(Color.cardBackground)
+            .cornerRadius(cornerRadius)
+            // 3D Multi-Layered Dual Drop Shadow
+            .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.25 : 0.08), radius: 12, x: 0, y: 6)
+            .shadow(color: Color(hex: "#D4AF37").opacity(colorScheme == .dark ? 0.15 : 0.05), radius: 4, x: 0, y: 2)
+            // Specular Highlight Bevel Stroke
+            .overlay(
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .stroke(
+                        LinearGradient(
+                            colors: [
+                                Color(hex: "#D4AF37").opacity(colorScheme == .dark ? 0.5 : 0.3),
+                                Color.white.opacity(colorScheme == .dark ? 0.1 : 0.3)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        lineWidth: 1.2
+                    )
+            )
     }
 }
 
 extension View {
     func spendoraBrandBackground() -> some View {
         self.background(SpendoraBrandBackgroundView())
+    }
+    
+    func spendora3DCard(cornerRadius: CGFloat = 20) -> some View {
+        self.modifier(Spendora3DCardModifier(cornerRadius: cornerRadius))
     }
 }
 
