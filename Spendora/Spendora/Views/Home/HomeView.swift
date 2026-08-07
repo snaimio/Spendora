@@ -67,8 +67,8 @@ struct HomeView: View {
                         HeroCardView(
                             totalMonthly: totalMonthly,
                             totalYearly: totalYearly,
-                            count: filteredSubscriptions.count,
-                            subscriptionCount: subscriptionCount,
+                            count: activeSubscriptions.count,
+                            subscriptionCount: activeSubscriptions.count,
                             nextSubscription: nextSubscription
                         )
                         .opacity(animateHeader ? 1 : 0)
