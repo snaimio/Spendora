@@ -126,7 +126,7 @@ struct ThisMonthCardView: View {
                     
                     MetricSubCard(
                         icon: "chart.line.uptrend.xyaxis",
-                        title: "Monthly Avg",
+                        title: "Avg Per Sub",
                         value: CurrencyManager.shared.format(averageMonthlyCost),
                         color: Color(hex: "#8B5CF6")
                     )
