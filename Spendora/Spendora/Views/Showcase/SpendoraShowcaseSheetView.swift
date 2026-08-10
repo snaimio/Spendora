@@ -3,7 +3,7 @@
 //  Spendora
 //
 //  Production-ready, clean, modern SwiftUI UI/UX component sheet & 4-panel screen layout
-//  strictly adhering to Spendora's 60-30-10 Warm Cream & Coral Fire Design System.
+//  strictly adhering to Spendora's Golden UX (20pt Card Radius, Coral Fire #FF6B6B Accent).
 //
 
 import SwiftUI
@@ -81,63 +81,47 @@ struct ShowcaseDashboardScreen: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: SpendoraTheme.Spacing.md) {
-                    // Top Navigation Bar
+                    // Navigation Bar (Left bell, center title, right +/menu/avatar)
                     HStack(alignment: .center) {
-                        // User Avatar (Warm Coral) & Greeting
-                        HStack(spacing: 12) {
-                            ZStack {
-                                Circle()
-                                    .fill(SpendoraTheme.Colors.coralGradient)
-                                    .frame(width: 40, height: 40)
-                                
-                                Text("GU")
-                                    .font(.system(size: 14, weight: .bold))
-                                    .foregroundColor(.white)
-                            }
-
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text("Good evening,")
-                                    .font(SpendoraTheme.Typography.caption)
-                                    .foregroundColor(SpendoraTheme.Colors.textSecondary)
-                                
-                                Text("Gabriel Utterson")
-                                    .font(SpendoraTheme.Typography.body)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(SpendoraTheme.Colors.textPrimary)
-                            }
-                        }
+                        Image(systemName: "bell.fill")
+                            .font(.system(size: 22))
+                            .foregroundColor(SpendoraTheme.Colors.coral)
 
                         Spacer()
 
-                        // Bell Icon in Coral
-                        Image(systemName: "bell.fill")
+                        Text("Dashboard")
                             .font(.system(size: 17, weight: .semibold))
-                            .foregroundColor(SpendoraTheme.Colors.coral)
-                            .padding(.trailing, 6)
+                            .foregroundColor(SpendoraTheme.Colors.textPrimary)
 
-                        // + Button Coral Gradient Pill
-                        Button {
-                            let generator = UIImpactFeedbackGenerator(style: .medium)
-                            generator.impactOccurred()
-                        } label: {
-                            HStack(spacing: 4) {
+                        Spacer()
+
+                        HStack(spacing: 8) {
+                            // Coral gradient + button 36x36pt circle
+                            Button { } label: {
                                 Image(systemName: "plus")
-                                    .font(.system(size: 13, weight: .bold))
-                                Text("Add")
-                                    .font(.system(size: 13, weight: .semibold))
+                                    .font(.system(size: 14, weight: .bold))
+                                    .foregroundColor(.white)
+                                    .frame(width: 36, height: 36)
+                                    .background(SpendoraTheme.Colors.coralGradient)
+                                    .clipShape(Circle())
+                                    .shadow(color: SpendoraTheme.Colors.coral.opacity(0.35), radius: 6, y: 2)
                             }
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 7)
-                            .background(SpendoraTheme.Colors.coralGradient)
-                            .clipShape(Capsule())
-                            .shadow(color: SpendoraTheme.Colors.coral.opacity(0.35), radius: 6, x: 0, y: 2)
+
+                            // Avatar GU circle coral
+                            ZStack {
+                                Circle()
+                                    .fill(SpendoraTheme.Colors.coralGradient)
+                                    .frame(width: 34, height: 34)
+                                Text("GU")
+                                    .font(.system(size: 12, weight: .bold))
+                                    .foregroundColor(.white)
+                            }
                         }
                     }
                     .padding(.horizontal, SpendoraTheme.Spacing.lg)
                     .padding(.top, 8)
 
-                    // Hero Header Card (20pt radius, coral shadow)
+                    // Hero Spend Card (20pt radius, white, coral shadow)
                     VStack(alignment: .leading, spacing: 14) {
                         HStack {
                             Text("THIS MONTH")
@@ -162,18 +146,19 @@ struct ShowcaseDashboardScreen: View {
                                 .foregroundColor(SpendoraTheme.Colors.textSecondary)
                         }
 
-                        // Next charge section inside hero card below 0.5pt divider
+                        // Divider 0.5pt full width
                         Divider()
                             .background(SpendoraTheme.Colors.border)
 
+                        // Next charge row: service icon 44x44, name 17pt, date 13pt, cost 17pt coral
                         HStack(alignment: .center, spacing: 12) {
                             ZStack {
-                                Circle()
+                                RoundedRectangle(cornerRadius: 12, style: .continuous)
                                     .fill(SpendoraTheme.Colors.coral.opacity(0.15))
-                                    .frame(width: 40, height: 40)
+                                    .frame(width: 44, height: 44)
                                 Image(systemName: "cpu.fill")
                                     .foregroundColor(SpendoraTheme.Colors.coral)
-                                    .font(.system(size: 17, weight: .semibold))
+                                    .font(.system(size: 18, weight: .semibold))
                             }
 
                             VStack(alignment: .leading, spacing: 2) {
@@ -188,16 +173,18 @@ struct ShowcaseDashboardScreen: View {
                             Spacer()
 
                             Text("C$20.00")
-                                .font(Font.system(size: 16, weight: .semibold).monospacedDigit())
+                                .font(Font.system(size: 17, weight: .semibold).monospacedDigit())
                                 .foregroundColor(SpendoraTheme.Colors.coral)
                         }
-                        .padding(.top, 4)
+                        .padding(.top, 2)
+
+                        CountdownChip(daysRemaining: 6)
                     }
                     .padding(SpendoraTheme.Spacing.lg)
                     .spendoraCard(cornerRadius: SpendoraTheme.Radius.hero)
                     .padding(.horizontal, SpendoraTheme.Spacing.lg)
 
-                    // Quick Stats Row: 3-Column Equal Mini-Cards
+                    // Stat Row: 3 equal cards with 10pt spacing (12pt radius, 12pt padding)
                     HStack(spacing: 10) {
                         MetricSubCard(title: "YEARLY", value: "C$915.12")
                         MetricSubCard(title: "AVERAGE", value: "C$19.07")
@@ -205,7 +192,7 @@ struct ShowcaseDashboardScreen: View {
                     }
                     .padding(.horizontal, SpendoraTheme.Spacing.lg)
 
-                    // Sort Filter Pills
+                    // Sort Pills (Horizontal scroll, active coral gradient)
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 8) {
                             ForEach(sortOptions.indices, id: \.self) { idx in
@@ -240,24 +227,24 @@ struct ShowcaseDashboardScreen: View {
                     }
                     .padding(.vertical, 2)
 
-                    // Subscription Cards Stack (16pt radius, coral shadow)
-                    VStack(spacing: SpendoraTheme.Spacing.md) {
+                    // Subscription Cards Stack (20pt radius, 16pt padding, 10pt spacing)
+                    VStack(spacing: 10) {
                         ForEach(upcomingRenewals) { item in
                             HStack(alignment: .top, spacing: SpendoraTheme.Spacing.md) {
                                 ZStack {
-                                    Circle()
-                                        .fill(item.iconColor.opacity(0.15))
-                                        .frame(width: 42, height: 42)
+                                    RoundedRectangle(cornerRadius: SpendoraTheme.Radius.iconBox, style: .continuous)
+                                        .fill(item.iconColor.opacity(0.20))
+                                        .frame(width: 46, height: 46)
 
                                     Image(systemName: item.icon)
-                                        .font(.system(size: 18, weight: .semibold))
+                                        .font(.system(size: 20, weight: .semibold))
                                         .foregroundColor(item.iconColor)
                                 }
 
                                 VStack(alignment: .leading, spacing: SpendoraTheme.Spacing.xs) {
                                     HStack {
                                         Text(item.name)
-                                            .font(SpendoraTheme.Typography.headline)
+                                            .font(.system(size: 17, weight: .semibold))
                                             .foregroundColor(SpendoraTheme.Colors.textPrimary)
 
                                         Spacer()
@@ -269,15 +256,15 @@ struct ShowcaseDashboardScreen: View {
 
                                     HStack(spacing: 4) {
                                         Text(item.category)
-                                            .font(SpendoraTheme.Typography.subheadline)
-                                            .foregroundColor(SpendoraTheme.Colors.textSecondary)
+                                            .font(.system(size: 14, weight: .medium))
+                                            .foregroundColor(item.iconColor)
 
-                                        Text("•")
-                                            .font(SpendoraTheme.Typography.caption)
+                                        Text("·")
+                                            .font(.system(size: 14, weight: .bold))
                                             .foregroundColor(SpendoraTheme.Colors.textTertiary)
 
                                         Text("Monthly")
-                                            .font(SpendoraTheme.Typography.subheadline)
+                                            .font(.system(size: 14, weight: .regular))
                                             .foregroundColor(SpendoraTheme.Colors.textSecondary)
                                     }
 
@@ -285,10 +272,16 @@ struct ShowcaseDashboardScreen: View {
                                         Text(String(format: "C$%.2f/month", item.cost))
                                             .font(Font.system(size: 15, weight: .semibold).monospacedDigit())
                                             .foregroundColor(SpendoraTheme.Colors.textPrimary)
+
+                                        Spacer()
+
+                                        Text("Next: Oct \(item.daysRemaining)")
+                                            .font(.system(size: 13))
+                                            .foregroundColor(SpendoraTheme.Colors.textSecondary)
                                     }
 
                                     CountdownChip(daysRemaining: item.daysRemaining)
-                                        .padding(.top, 2)
+                                        .padding(.top, 8)
                                 }
                             }
                             .padding(SpendoraTheme.Spacing.lg)
@@ -337,31 +330,14 @@ struct ShowcaseSubscriptionsListScreen: View {
                     .padding(.horizontal, SpendoraTheme.Spacing.lg)
                     .padding(.top, 8)
 
-                    // Search Bar (#FFF0EE Background)
-                    HStack(spacing: 10) {
-                        Image(systemName: "magnifyingglass")
-                            .foregroundColor(SpendoraTheme.Colors.coral)
-                            .font(.system(size: 15, weight: .semibold))
+                    // Search Bar
+                    SearchBarView(searchText: $searchText)
+                        .padding(.horizontal, SpendoraTheme.Spacing.lg)
 
-                        TextField("Search all subscriptions...", text: $searchText)
-                            .font(SpendoraTheme.Typography.body)
-                            .foregroundColor(SpendoraTheme.Colors.textPrimary)
-                            .autocorrectionDisabled()
-                    }
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 11)
-                    .background(SpendoraTheme.Colors.coralTint)
-                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 14, style: .continuous)
-                            .stroke(SpendoraTheme.Colors.border, lineWidth: 0.5)
-                    )
-                    .padding(.horizontal, SpendoraTheme.Spacing.lg)
-
-                    // Monthly Total Row (Bold Coral #FF6B6B)
+                    // Summary Row
                     HStack {
                         Text("\(activeList.count) subscriptions")
-                            .font(.system(.caption, design: .rounded))
+                            .font(.system(size: 13))
                             .foregroundColor(SpendoraTheme.Colors.textSecondary)
 
                         Spacer()
@@ -372,8 +348,8 @@ struct ShowcaseSubscriptionsListScreen: View {
                     }
                     .padding(.horizontal, SpendoraTheme.Spacing.lg)
 
-                    // Active Section
-                    VStack(spacing: SpendoraTheme.Spacing.md) {
+                    // Cards
+                    VStack(spacing: 10) {
                         ForEach(activeList) { item in
                             ShowcaseRowView(item: item)
                         }
@@ -393,19 +369,19 @@ struct ShowcaseRowView: View {
     var body: some View {
         HStack(alignment: .top, spacing: SpendoraTheme.Spacing.md) {
             ZStack {
-                Circle()
-                    .fill(item.iconColor.opacity(0.15))
-                    .frame(width: 42, height: 42)
+                RoundedRectangle(cornerRadius: SpendoraTheme.Radius.iconBox, style: .continuous)
+                    .fill(item.iconColor.opacity(0.20))
+                    .frame(width: 46, height: 46)
 
                 Image(systemName: item.icon)
-                    .font(.system(size: 18, weight: .semibold))
+                    .font(.system(size: 20, weight: .semibold))
                     .foregroundColor(item.iconColor)
             }
 
             VStack(alignment: .leading, spacing: SpendoraTheme.Spacing.xs) {
                 HStack {
                     Text(item.name)
-                        .font(SpendoraTheme.Typography.headline)
+                        .font(.system(size: 17, weight: .semibold))
                         .foregroundColor(SpendoraTheme.Colors.textPrimary)
 
                     Spacer()
@@ -417,11 +393,11 @@ struct ShowcaseRowView: View {
 
                 HStack(spacing: 4) {
                     Text(item.category)
-                        .font(SpendoraTheme.Typography.subheadline)
-                        .foregroundColor(SpendoraTheme.Colors.textSecondary)
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundColor(item.iconColor)
 
-                    Text("•")
-                        .font(SpendoraTheme.Typography.caption)
+                    Text("·")
+                        .font(.system(size: 14, weight: .bold))
                         .foregroundColor(SpendoraTheme.Colors.textTertiary)
 
                     Text(String(format: "C$%.2f/mo", item.cost))
@@ -430,7 +406,7 @@ struct ShowcaseRowView: View {
                 }
 
                 CountdownChip(daysRemaining: item.daysRemaining, isCancelled: item.isCancelled)
-                    .padding(.top, 2)
+                    .padding(.top, 8)
             }
         }
         .padding(SpendoraTheme.Spacing.lg)
@@ -453,7 +429,7 @@ struct ShowcaseCalendarScreen: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: SpendoraTheme.Spacing.xl) {
+                VStack(spacing: SpendoraTheme.Spacing.xxl) {
                     // Header
                     HStack {
                         VStack(alignment: .leading, spacing: 2) {
@@ -471,28 +447,28 @@ struct ShowcaseCalendarScreen: View {
                     .padding(.horizontal, SpendoraTheme.Spacing.lg)
                     .padding(.top, 8)
 
-                    // Calendar Grid Card (20pt radius, coral shadow)
+                    // Calendar Card (20pt radius)
                     VStack(spacing: 16) {
                         HStack {
                             Image(systemName: "chevron.left")
-                                .font(.system(size: 14, weight: .semibold))
+                                .font(.system(size: 15, weight: .semibold))
                                 .foregroundColor(SpendoraTheme.Colors.coral)
-                                .padding(8)
+                                .frame(width: 36, height: 36)
                                 .background(SpendoraTheme.Colors.coralTint)
                                 .clipShape(Circle())
 
                             Spacer()
 
                             Text("October 2026")
-                                .font(SpendoraTheme.Typography.headline)
+                                .font(.system(size: 20, weight: .semibold))
                                 .foregroundColor(SpendoraTheme.Colors.textPrimary)
 
                             Spacer()
 
                             Image(systemName: "chevron.right")
-                                .font(.system(size: 14, weight: .semibold))
+                                .font(.system(size: 15, weight: .semibold))
                                 .foregroundColor(SpendoraTheme.Colors.coral)
-                                .padding(8)
+                                .frame(width: 36, height: 36)
                                 .background(SpendoraTheme.Colors.coralTint)
                                 .clipShape(Circle())
                         }
@@ -501,29 +477,27 @@ struct ShowcaseCalendarScreen: View {
                         HStack {
                             ForEach(["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"], id: \.self) { day in
                                 Text(day)
-                                    .font(SpendoraTheme.Typography.label)
+                                    .font(.system(size: 11, weight: .semibold))
                                     .foregroundColor(SpendoraTheme.Colors.textSecondary)
                                     .frame(maxWidth: .infinity)
                             }
                         }
 
-                        // Grid
-                        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), spacing: 10) {
+                        // 44x44pt Grid Cells
+                        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), spacing: 8) {
                             ForEach(calendarDays, id: \.self) { day in
-                                VStack(spacing: 3) {
+                                VStack(spacing: 2) {
                                     Text("\(day)")
                                         .font(Font.system(size: 13, weight: (day == 10 || billingDates.contains(day)) ? .bold : .regular).monospacedDigit())
                                         .foregroundColor(day == 10 ? .white : (billingDates.contains(day) ? SpendoraTheme.Colors.textPrimary : SpendoraTheme.Colors.textSecondary))
-                                        .frame(width: 32, height: 32)
+                                        .frame(width: 36, height: 36)
                                         .background(
                                             Group {
                                                 if day == 10 {
-                                                    // Today circle: coral gradient fill
                                                     Circle()
                                                         .fill(SpendoraTheme.Colors.coralGradient)
                                                         .shadow(color: SpendoraTheme.Colors.coral.opacity(0.35), radius: 6, x: 0, y: 2)
                                                 } else if billingDates.contains(day) {
-                                                    // Billing days: 2pt coral stroke ring
                                                     Circle()
                                                         .stroke(SpendoraTheme.Colors.coral, lineWidth: 2.0)
                                                         .background(Circle().fill(SpendoraTheme.Colors.coralTint))
@@ -539,6 +513,7 @@ struct ShowcaseCalendarScreen: View {
                                         Spacer().frame(height: 5)
                                     }
                                 }
+                                .frame(width: 44, height: 44)
                             }
                         }
                     }
@@ -546,7 +521,7 @@ struct ShowcaseCalendarScreen: View {
                     .spendoraCard(cornerRadius: SpendoraTheme.Radius.hero)
                     .padding(.horizontal, SpendoraTheme.Spacing.lg)
 
-                    // Upcoming Billing Days Feed (Left 3pt coral accent bar)
+                    // Upcoming Billing Feed (Left 3pt coral bar)
                     VStack(alignment: .leading, spacing: 12) {
                         HStack(spacing: 6) {
                             Image(systemName: "calendar.badge.clock")
@@ -562,16 +537,14 @@ struct ShowcaseCalendarScreen: View {
 
                         VStack(spacing: 10) {
                             ForEach(upcomingFeed) { item in
-                                HStack(spacing: 12) {
-                                    // Left 3pt coral accent bar
+                                HStack(spacing: 10) {
                                     RoundedRectangle(cornerRadius: 1.5)
                                         .fill(SpendoraTheme.Colors.coral)
-                                        .frame(width: 3, height: 28)
+                                        .frame(width: 3, height: 44)
 
                                     VStack(alignment: .leading, spacing: 2) {
                                         Text(item.name)
-                                            .font(SpendoraTheme.Typography.body)
-                                            .fontWeight(.bold)
+                                            .font(.system(size: 16, weight: .semibold))
                                             .foregroundColor(SpendoraTheme.Colors.textPrimary)
                                         Text("Due in \(item.daysRemaining) days")
                                             .font(SpendoraTheme.Typography.caption)
@@ -581,11 +554,11 @@ struct ShowcaseCalendarScreen: View {
                                     Spacer()
 
                                     Text(String(format: "C$%.2f", item.cost))
-                                        .font(Font.system(size: 15, weight: .bold).monospacedDigit())
+                                        .font(Font.system(size: 16, weight: .semibold).monospacedDigit())
                                         .foregroundColor(SpendoraTheme.Colors.coral)
                                 }
                                 .padding(14)
-                                .spendoraCard(cornerRadius: 14)
+                                .spendoraCard(cornerRadius: 16)
                             }
                         }
                         .padding(.horizontal, SpendoraTheme.Spacing.lg)
@@ -603,122 +576,55 @@ struct ShowcaseCalendarScreen: View {
 struct ShowcaseSettingsScreen: View {
     @State private var biometricAuthEnabled: Bool = true
     @State private var pushNotificationsEnabled: Bool = true
-    @State private var selectedCurrencyIndex: Int = 0
-    private let currencies = ["CAD ($)", "USD ($)", "EUR (€)", "GBP (£)"]
 
     var body: some View {
         NavigationStack {
-            Form {
-                // Branded Coral Gradient Header Card
-                Section {
+            ScrollView {
+                VStack(spacing: SpendoraTheme.Spacing.xl) {
+                    // Header Brand Card
                     PremiumAppInfoRow()
+                        .padding(.horizontal, SpendoraTheme.Spacing.lg)
+                        .padding(.top, 8)
+
+                    // Profile Row
+                    SettingsUserProfileRow(onTap: {})
+                        .padding(.horizontal, SpendoraTheme.Spacing.lg)
+                        .spendoraCard(cornerRadius: 16)
+                        .padding(.horizontal, SpendoraTheme.Spacing.lg)
+
+                    // Data Actions Card
+                    VStack(spacing: 0) {
+                        PremiumSettingsRow(
+                            icon: "square.and.arrow.up",
+                            title: "Export to CSV",
+                            subtitle: "Download spreadsheet records"
+                        )
+                        
+                        Divider().background(SpendoraTheme.Colors.border)
+
+                        PremiumSettingsRow(
+                            icon: "doc.richtext",
+                            title: "Export to PDF",
+                            subtitle: "Generate annual report document"
+                        )
+                        
+                        Divider().background(SpendoraTheme.Colors.border)
+
+                        PremiumSettingsRow(
+                            icon: "trash.fill",
+                            title: "Reset All Data",
+                            subtitle: "Permanently delete records",
+                            isDestructive: true
+                        )
+                    }
+                    .padding(.horizontal, SpendoraTheme.Spacing.lg)
+                    .spendoraCard(cornerRadius: 16)
+                    .padding(.horizontal, SpendoraTheme.Spacing.lg)
+                    .padding(.bottom, 90)
                 }
-                .listRowInsets(EdgeInsets())
-                .listRowBackground(Color.clear)
-
-                // Section: Security & Alerts
-                Section {
-                    Toggle(isOn: $biometricAuthEnabled) {
-                        HStack(spacing: 12) {
-                            Image(systemName: "faceid")
-                                .font(.system(size: 17))
-                                .foregroundColor(SpendoraTheme.Colors.coral)
-                                .frame(width: 24)
-
-                            Text("Face ID & Passcode")
-                                .foregroundColor(SpendoraTheme.Colors.textPrimary)
-                        }
-                    }
-                    .tint(SpendoraTheme.Colors.coral)
-
-                    Toggle(isOn: $pushNotificationsEnabled) {
-                        HStack(spacing: 12) {
-                            Image(systemName: "bell.badge.fill")
-                                .font(.system(size: 17))
-                                .foregroundColor(SpendoraTheme.Colors.coral)
-                                .frame(width: 24)
-
-                            Text("Billing Push Reminders")
-                                .foregroundColor(SpendoraTheme.Colors.textPrimary)
-                        }
-                    }
-                    .tint(SpendoraTheme.Colors.coral)
-                } header: {
-                    Text("SECURITY & ALERTS")
-                        .font(.system(size: 11, weight: .semibold))
-                        .foregroundColor(SpendoraTheme.Colors.coralWarm)
-                }
-                .listRowBackground(SpendoraTheme.Colors.card)
-
-                // Section: Preferences
-                Section {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Default Portfolio Currency")
-                            .font(SpendoraTheme.Typography.subheadline)
-                            .foregroundColor(SpendoraTheme.Colors.textSecondary)
-
-                        Picker("Currency", selection: $selectedCurrencyIndex) {
-                            ForEach(currencies.indices, id: \.self) { idx in
-                                Text(currencies[idx]).tag(idx)
-                            }
-                        }
-                        .pickerStyle(.segmented)
-                    }
-                    .padding(.vertical, 4)
-                } header: {
-                    Text("PREFERENCES")
-                        .font(.system(size: 11, weight: .semibold))
-                        .foregroundColor(SpendoraTheme.Colors.coralWarm)
-                }
-                .listRowBackground(SpendoraTheme.Colors.card)
-
-                // Section: Data & Backup
-                Section {
-                    HStack {
-                        Image(systemName: "tablecells.fill")
-                            .foregroundColor(SpendoraTheme.Colors.coral)
-                            .frame(width: 24)
-                        Text("Export to CSV (Spreadsheet)")
-                            .foregroundColor(SpendoraTheme.Colors.textPrimary)
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .font(.caption)
-                            .foregroundColor(SpendoraTheme.Colors.chevron)
-                    }
-
-                    HStack {
-                        Image(systemName: "doc.text.fill")
-                            .foregroundColor(SpendoraTheme.Colors.coral)
-                            .frame(width: 24)
-                        Text("Export Executive Annual PDF")
-                            .foregroundColor(SpendoraTheme.Colors.textPrimary)
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .font(.caption)
-                            .foregroundColor(SpendoraTheme.Colors.chevron)
-                    }
-
-                    Button(role: .destructive) { } label: {
-                        HStack {
-                            Image(systemName: "trash.fill")
-                                .foregroundColor(SpendoraTheme.Colors.danger)
-                                .frame(width: 24)
-                            Text("Reset All Data")
-                                .foregroundColor(SpendoraTheme.Colors.danger)
-                        }
-                    }
-                } header: {
-                    Text("DATA MANAGEMENT")
-                        .font(.system(size: 11, weight: .semibold))
-                        .foregroundColor(SpendoraTheme.Colors.coralWarm)
-                }
-                .listRowBackground(SpendoraTheme.Colors.card)
             }
-            .scrollContentBackground(.hidden)
-            .background(SpendoraTheme.Colors.canvas)
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
-            .padding(.bottom, 70)
         }
     }
 }
@@ -741,16 +647,16 @@ struct ShowcaseFloatingTabBar: View {
                 Button {
                     let generator = UIImpactFeedbackGenerator(style: .light)
                     generator.impactOccurred()
-                    withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                    withAnimation(.easeInOut(duration: 0.2)) {
                         selectedTab = idx
                     }
                 } label: {
-                    VStack(spacing: 3) {
+                    VStack(spacing: 2) {
                         ZStack {
                             if selectedTab == idx {
-                                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                RoundedRectangle(cornerRadius: 8, style: .continuous)
                                     .fill(SpendoraTheme.Colors.coralTint)
-                                    .frame(width: 44, height: 26)
+                                    .frame(width: 32, height: 28)
                             }
                             
                             Image(systemName: tabs[idx].icon)
@@ -763,7 +669,7 @@ struct ShowcaseFloatingTabBar: View {
                             .foregroundColor(selectedTab == idx ? SpendoraTheme.Colors.coral : SpendoraTheme.Colors.textTertiary)
                     }
                     .frame(maxWidth: .infinity)
-                    .frame(height: 52)
+                    .frame(height: 50)
                 }
             }
         }
@@ -774,6 +680,6 @@ struct ShowcaseFloatingTabBar: View {
             Capsule()
                 .stroke(SpendoraTheme.Colors.border, lineWidth: 0.5)
         )
-        .shadow(color: SpendoraTheme.Colors.coral.opacity(0.12), radius: 14, x: 0, y: 6)
+        .shadow(color: SpendoraTheme.Colors.coral.opacity(0.10), radius: 16, x: 0, y: 6)
     }
 }

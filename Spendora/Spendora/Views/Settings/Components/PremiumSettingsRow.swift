@@ -1,63 +1,55 @@
 //
 //  PremiumSettingsRow.swift
+//  Spendora
 //
 
 import SwiftUI
 
+// MARK: - PremiumSettingsRow (Golden UX 64pt Row Standard)
 
-// MARK: - PremiumSettingsRow
-
-/**
- `PremiumSettingsRow` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for premiumsettingsrow handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `PremiumSettingsRow` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
- */
 struct PremiumSettingsRow<Content: View>: View {
 
     // MARK: - Properties
 
-    let icon: String  // icon property
-    let title: String  // title property
-    let subtitle: String?  // subtitle property
-    let trailing: Content?  // trailing property
+    let icon: String
+    let title: String
+    let subtitle: String?
+    var isDestructive: Bool = false
+    let trailing: Content?
     
-    init(icon: String, title: String, subtitle: String? = nil, @ViewBuilder trailing: () -> Content? = { nil }) {
+    init(icon: String, title: String, subtitle: String? = nil, isDestructive: Bool = false, @ViewBuilder trailing: () -> Content? = { nil }) {
         self.icon = icon
         self.title = title
         self.subtitle = subtitle
+        self.isDestructive = isDestructive
         self.trailing = trailing()
     }
     
-
     // MARK: - Body
 
-    /// Main SwiftUI layout body property.
     var body: some View {
         HStack(spacing: 14) {
-            Image(systemName: icon)
-                .font(.title3)
-                .foregroundColor(.brandPrimary)
-                .frame(width: 28)
+            // Icon container: 32x32pt 8pt radius
+            ZStack {
+                RoundedRectangle(cornerRadius: SpendoraTheme.Radius.pill, style: .continuous)
+                    .fill(isDestructive ? SpendoraTheme.Colors.danger.opacity(0.15) : SpendoraTheme.Colors.coral.opacity(0.15))
+                    .frame(width: 32, height: 32)
+                
+                Image(systemName: icon)
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundColor(isDestructive ? SpendoraTheme.Colors.danger : SpendoraTheme.Colors.coral)
+            }
             
+            // Title 16pt medium charcoal & Subtitle 13pt secondary
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(.system(.body, design: .rounded))
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundColor(isDestructive ? SpendoraTheme.Colors.danger : SpendoraTheme.Colors.textPrimary)
                 
                 if let subtitle = subtitle {
                     Text(subtitle)
-                        .font(.system(.caption, design: .rounded))
-                        .foregroundColor(.secondary)
+                        .font(.system(size: 13, weight: .regular))
+                        .foregroundColor(SpendoraTheme.Colors.textSecondary)
                 }
             }
             
@@ -65,8 +57,13 @@ struct PremiumSettingsRow<Content: View>: View {
             
             if let trailing = trailing {
                 trailing
+            } else {
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundColor(SpendoraTheme.Colors.chevron)
             }
         }
-        .padding(.vertical, 4)
+        .frame(minHeight: 64)
+        .contentShape(Rectangle())
     }
 }

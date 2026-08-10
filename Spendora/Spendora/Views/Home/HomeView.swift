@@ -227,31 +227,26 @@ struct HomeView: View {
     
     // MARK: - Active Subscriptions Section
     private var activeSubscriptionsSection: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 10) {
             HStack {
-                HStack(spacing: 6) {
-                    Image(systemName: "checkmark.shield.fill")
-                        .foregroundColor(Color(hex: "#00D4AA"))
-                        .font(.headline)
-                    Text("Active Subscriptions")
-                        .font(.system(.headline, design: .rounded))
-                        .foregroundColor(.textPrimary)
-                }
+                Text("Active Subscriptions")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(SpendoraTheme.Colors.textPrimary)
                 Spacer()
-                Text("\(activeSubscriptions.count) Active")
-                    .font(.system(size: 11, weight: .bold, design: .rounded))
-                    .foregroundColor(Color(hex: "#00D4AA"))
+                Text("\(activeSubscriptions.count)")
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundColor(SpendoraTheme.Colors.coral)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 3)
-                    .background(Color(hex: "#00D4AA").opacity(0.16))
-                    .cornerRadius(8)
+                    .background(SpendoraTheme.Colors.coralTint)
+                    .clipShape(Capsule())
             }
             .padding(.horizontal, 4)
             
             if activeSubscriptions.isEmpty {
                 Text("No active subscriptions found.")
-                    .font(.system(.subheadline, design: .rounded))
-                    .foregroundColor(.textSecondary)
+                    .font(SpendoraTheme.Typography.subheadline)
+                    .foregroundColor(SpendoraTheme.Colors.textSecondary)
                     .padding(.vertical, 20)
             } else {
                 ForEach(activeSubscriptions) { subscription in
@@ -267,31 +262,26 @@ struct HomeView: View {
     
     // MARK: - Cancelled Subscriptions Section
     private var cancelledSubscriptionsSection: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 10) {
             HStack {
-                HStack(spacing: 6) {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundColor(Color(hex: "#F97316"))
-                        .font(.headline)
-                    Text("Cancelled & Paused")
-                        .font(.system(.headline, design: .rounded))
-                        .foregroundColor(.textPrimary)
-                }
+                Text("Cancelled & Paused")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(SpendoraTheme.Colors.textPrimary)
                 Spacer()
-                Text("\(cancelledSubscriptions.count) Inactive")
-                    .font(.system(size: 11, weight: .bold, design: .rounded))
-                    .foregroundColor(Color(hex: "#F97316"))
+                Text("\(cancelledSubscriptions.count)")
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundColor(SpendoraTheme.Colors.cancelled)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 3)
-                    .background(Color(hex: "#F97316").opacity(0.14))
-                    .cornerRadius(8)
+                    .background(SpendoraTheme.Colors.cancelled.opacity(0.14))
+                    .clipShape(Capsule())
             }
             .padding(.horizontal, 4)
             
             if cancelledSubscriptions.isEmpty {
                 Text("No cancelled subscriptions found.")
-                    .font(.system(.subheadline, design: .rounded))
-                    .foregroundColor(.textSecondary)
+                    .font(SpendoraTheme.Typography.subheadline)
+                    .foregroundColor(SpendoraTheme.Colors.textSecondary)
                     .padding(.vertical, 20)
             } else {
                 ForEach(cancelledSubscriptions) { subscription in
@@ -312,22 +302,17 @@ struct HomeView: View {
             if !activeSubscriptions.isEmpty {
                 VStack(spacing: 10) {
                     HStack {
-                        HStack(spacing: 6) {
-                            Image(systemName: "checkmark.shield.fill")
-                                .foregroundColor(.brandPrimary)
-                                .font(.headline)
-                            Text("Active Subscriptions")
-                                .font(.system(.headline, design: .rounded))
-                                .foregroundColor(.textPrimary)
-                        }
+                        Text("Active Subscriptions")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(SpendoraTheme.Colors.textPrimary)
                         Spacer()
-                        Text("\(activeSubscriptions.count) Active")
-                            .font(.system(size: 11, weight: .bold, design: .rounded))
-                            .foregroundColor(.brandPrimary)
+                        Text("\(activeSubscriptions.count)")
+                            .font(.system(size: 11, weight: .bold))
+                            .foregroundColor(SpendoraTheme.Colors.coral)
                             .padding(.horizontal, 8)
                             .padding(.vertical, 3)
-                            .background(Color.brandPrimary.opacity(0.14))
-                            .cornerRadius(8)
+                            .background(SpendoraTheme.Colors.coralTint)
+                            .clipShape(Capsule())
                     }
                     .padding(.horizontal, 4)
                     
@@ -344,25 +329,19 @@ struct HomeView: View {
             if !cancelledSubscriptions.isEmpty {
                 VStack(spacing: 10) {
                     HStack {
-                        HStack(spacing: 6) {
-                            Image(systemName: "xmark.circle.fill")
-                                .foregroundColor(.brandSecondary)
-                                .font(.headline)
-                            Text("Cancelled & Paused")
-                                .font(.system(.headline, design: .rounded))
-                                .foregroundColor(.textPrimary)
-                        }
+                        Text("Cancelled & Paused")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(SpendoraTheme.Colors.textPrimary)
                         Spacer()
-                        Text("\(cancelledSubscriptions.count) Inactive")
-                            .font(.system(size: 11, weight: .bold, design: .rounded))
-                            .foregroundColor(.brandSecondary)
+                        Text("\(cancelledSubscriptions.count)")
+                            .font(.system(size: 11, weight: .bold))
+                            .foregroundColor(SpendoraTheme.Colors.cancelled)
                             .padding(.horizontal, 8)
                             .padding(.vertical, 3)
-                            .background(Color.brandSecondary.opacity(0.14))
-                            .cornerRadius(8)
+                            .background(SpendoraTheme.Colors.cancelled.opacity(0.14))
+                            .clipShape(Capsule())
                     }
                     .padding(.horizontal, 4)
-                    .padding(.top, 8)
                     
                     ForEach(cancelledSubscriptions) { subscription in
                         SubscriptionCardView(subscription: subscription)

@@ -5,57 +5,37 @@
 
 import SwiftUI
 
-// MARK: - AppStyles (Fintech SF Pro Typography & 4pt Spacing System)
+// MARK: - AppStyles (Fintech Studio Standards)
 
-/**
- `AppStyles` provides Spendora's exact SF Pro typography scale, 4pt base grid spacing tokens,
- and standardized corner radii for top-tier fintech applications.
- */
 struct AppStyles {
     
-    // MARK: - Typography Scale (SF Pro Text & Display)
+    // MARK: - Typography
     struct Typography {
-        /// Hero Number: 40pt Bold Monospaced with tight tracking for dashboard figures
-        static let heroPrice = Font.system(size: 40, weight: .bold, design: .default).monospacedDigit()
-        
-        /// Large Title: 32pt Bold for top screen headers
-        static let largeTitle = Font.system(size: 32, weight: .bold, design: .default)
-        
-        /// Title: 22pt Semibold for major section and card headers
-        static let title = Font.system(size: 22, weight: .semibold, design: .default)
-        
-        /// Headline: 18pt Semibold for subscription service names (LARGEST text on card)
-        static let headline = Font.system(size: 18, weight: .semibold, design: .default)
-        
-        /// Body: 15pt Regular for standard descriptions and list text
-        static let body = Font.system(size: 15, weight: .regular, design: .default)
-        
-        /// Subheadline: 14pt Medium for category and billing frequencies
-        static let subheadline = Font.system(size: 14, weight: .medium, design: .default)
-        
-        /// Caption: 12pt Regular for timestamps and secondary dates
-        static let caption = Font.system(size: 12, weight: .regular, design: .default)
-        static let captionBold = Font.system(size: 12, weight: .semibold, design: .default)
-        
-        /// Label / Badge: 11pt Semibold with wide tracking for status pills and mini tags
-        static let label = Font.system(size: 11, weight: .semibold, design: .default)
-        static let micro = label
+        static let heroPrice = SpendoraTheme.Typography.heroAmount
+        static let largeTitle = SpendoraTheme.Typography.largeTitle
+        static let title = SpendoraTheme.Typography.title
+        static let headline = SpendoraTheme.Typography.headline
+        static let body = SpendoraTheme.Typography.body
+        static let subheadline = SpendoraTheme.Typography.subheadline
+        static let caption = SpendoraTheme.Typography.caption
+        static let captionBold = Font.system(size: 13, weight: .semibold, design: .default)
+        static let label = SpendoraTheme.Typography.label
+        static let micro = SpendoraTheme.Typography.micro
         static let caption2 = label
         static let footnote = caption
         static let badge = label
         static let title3 = title
     }
     
-    // MARK: - 4pt Base Grid Spacing Tokens
+    // MARK: - Spacing Grid
     struct Spacing {
-        static let xs: CGFloat = 4      // Element inner gap, chip icon spacing
-        static let sm: CGFloat = 8      // Nested row item padding, chip vertical
-        static let md: CGFloat = 12     // Gap between adjacent sub-cards / well padding
-        static let lg: CGFloat = 16     // Standard card inner padding & screen margins
-        static let xl: CGFloat = 20     // Gap between distinct cards within section
-        static let xxl: CGFloat = 28    // Vertical separation between major sections
+        static let xs: CGFloat = SpendoraTheme.Spacing.xs
+        static let sm: CGFloat = SpendoraTheme.Spacing.sm
+        static let md: CGFloat = SpendoraTheme.Spacing.md
+        static let lg: CGFloat = SpendoraTheme.Spacing.lg
+        static let xl: CGFloat = SpendoraTheme.Spacing.xl
+        static let xxl: CGFloat = SpendoraTheme.Spacing.xxl
         
-        // Aliases
         static let element: CGFloat = xs
         static let small: CGFloat = sm
         static let medium: CGFloat = md
@@ -65,15 +45,16 @@ struct AppStyles {
         static let xLarge: CGFloat = xxl
     }
     
-    // MARK: - Corner Radius Tokens (Exact Fintech Standard)
+    // MARK: - Corner Radius
     struct Radius {
-        static let small: CGFloat = 6   // Status pills, mini tags
-        static let chip: CGFloat = 8    // Filter pills, interactive chips
-        static let button: CGFloat = 12 // Primary CTA action buttons
-        static let medium: CGFloat = 12 // Sub-card containers, icon boxes
-        static let card: CGFloat = 16   // Standard subscription cards & metric tiles
-        static let hero: CGFloat = 16   // Hero dashboard summary container
-        static let large: CGFloat = 20  // Modals and large sheet presentation
+        static let small: CGFloat = SpendoraTheme.Radius.badge
+        static let chip: CGFloat = SpendoraTheme.Radius.pill
+        static let button: CGFloat = SpendoraTheme.Radius.button
+        static let medium: CGFloat = SpendoraTheme.Radius.subCard
+        static let iconBox: CGFloat = SpendoraTheme.Radius.iconBox
+        static let card: CGFloat = SpendoraTheme.Radius.card
+        static let hero: CGFloat = SpendoraTheme.Radius.hero
+        static let large: CGFloat = 24
     }
     
     // MARK: - Shadows
@@ -81,6 +62,6 @@ struct AppStyles {
         static let elevation1 = Color.black.opacity(0.04)
         static let elevation2 = Color.black.opacity(0.12)
         static let elevation3 = Color.black.opacity(0.35)
-        static let brandGlow = Color(hex: "#4F46E5").opacity(0.25)
+        static let brandGlow = SpendoraTheme.Colors.coral.opacity(0.15)
     }
 }

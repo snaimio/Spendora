@@ -6,15 +6,8 @@
 import SwiftUI
 import SwiftData
 
-// MARK: - SubscriptionListView
+// MARK: - SubscriptionListView (Golden UX Portfolio Screen)
 
-/**
- `SubscriptionListView` presents the complete subscription portfolio with Apple HIG Segmented Controls:
- - Segmented Filter (Active | Cancelled | All)
- - Search & Multi-criteria Sort Chips (Alphabetical, Cost, Renewal Date, Category)
- - Direct Swipe-to-Edit & Swipe-to-Delete actions
- - Spendora Ambient Brand Gradient Background Overlay
- */
 struct SubscriptionListView: View {
 
     // MARK: - Properties
@@ -25,6 +18,10 @@ struct SubscriptionListView: View {
     @State private var selectedSubscription: Subscription?
     @State private var sortOption: SortOption = .alphabetical
     @State private var statusFilter: SubscriptionStatusFilter = .active
+    @State private var showingAddSheet = false
+    
+    let generator = UIImpactFeedbackGenerator(style: .medium)
+    let notificationGenerator = UINotificationFeedbackGenerator()
     
     var filteredSubscriptions: [Subscription] {
         let sorted = sortSubscriptions(subscriptions)
@@ -63,23 +60,25 @@ struct SubscriptionListView: View {
                 SpendoraBrandBackgroundView()
                 
                 VStack(spacing: 0) {
+                    // Search Bar: #FFF0EE background, 14pt radius, 16pt padding horizontal
                     SearchBarView(searchText: $searchText)
-                        .padding(.horizontal, 12)
+                        .padding(.horizontal, 16)
                         .padding(.vertical, 8)
                     
-                    // Segmented Status Filter
+                    // Segmented Control: Active (4) | Cancelled (1) | All (5)
                     Picker("Filter", selection: $statusFilter) {
                         Text("Active (\(activeSubscriptions.count))").tag(SubscriptionStatusFilter.active)
                         Text("Cancelled (\(cancelledSubscriptions.count))").tag(SubscriptionStatusFilter.cancelled)
                         Text("All (\(filteredSubscriptions.count))").tag(SubscriptionStatusFilter.all)
                     }
                     .pickerStyle(.segmented)
-                    .padding(.horizontal, 12)
+                    .padding(.horizontal, 16)
                     .padding(.bottom, 6)
                     
+                    // Summary Row: "X subscriptions" left 13pt secondary, "Monthly Total: C$XX.XX" right 13pt bold coral
                     HStack {
-                        Text("\(displayedSubscriptions.count) subscriptions")
-                            .font(.system(.caption, design: .rounded))
+                        Text("\(displayedSubscriptions.count) \(displayedSubscriptions.count == 1 ? "subscription" : "subscriptions")")
+                            .font(.system(size: 13, weight: .regular))
                             .foregroundColor(SpendoraTheme.Colors.textSecondary)
                         
                         Spacer()
@@ -88,33 +87,45 @@ struct SubscriptionListView: View {
                             .font(.system(size: 13, weight: .bold))
                             .foregroundColor(SpendoraTheme.Colors.coral)
                     }
-                    .padding(.horizontal)
+                    .padding(.horizontal, 16)
                     .padding(.vertical, 6)
                     
+                    // Sort Pills (Horizontal scroll, no wrapping, active coral gradient)
                     SortChipsView(sortOption: $sortOption)
-                        .padding(.horizontal)
+                        .padding(.horizontal, 16)
                         .padding(.vertical, 6)
                     
+                    // Empty State or List
                     if displayedSubscriptions.isEmpty {
                         EmptyStateView()
-                            .padding(.top, 40)
+                            .padding(.top, 24)
                     } else {
                         List {
                             if statusFilter == .all {
                                 if !activeSubscriptions.isEmpty {
-                                    Section("Active Subscriptions (\(activeSubscriptions.count))") {
+                                    Section {
                                         ForEach(activeSubscriptions) { subscription in
                                             subscriptionListRow(for: subscription)
                                         }
+                                    } header: {
+                                        Text("Active Subscriptions (\(activeSubscriptions.count))")
+                                            .font(.system(size: 11, weight: .semibold))
+                                            .foregroundColor(SpendoraTheme.Colors.coralWarm)
+                                            .textCase(.uppercase)
                                     }
                                 }
                                 
                                 if !cancelledSubscriptions.isEmpty {
-                                    Section("Cancelled & Paused (\(cancelledSubscriptions.count))") {
+                                    Section {
                                         ForEach(cancelledSubscriptions) { subscription in
                                             subscriptionListRow(for: subscription)
                                                 .opacity(0.75)
                                         }
+                                    } header: {
+                                        Text("Cancelled & Paused (\(cancelledSubscriptions.count))")
+                                            .font(.system(size: 11, weight: .semibold))
+                                            .foregroundColor(SpendoraTheme.Colors.cancelled)
+                                            .textCase(.uppercase)
                                     }
                                 }
                             } else {
@@ -124,42 +135,68 @@ struct SubscriptionListView: View {
                                 }
                             }
                         }
-                        .listStyle(.insetGrouped)
+                        .listStyle(.plain)
                         .scrollContentBackground(.hidden)
                     }
                 }
             }
             .navigationTitle("Subscriptions")
             .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        generator.impactOccurred()
+                        showingAddSheet = true
+                    } label: {
+                        Image(systemName: "plus.circle.fill")
+                            .font(.system(size: 22, weight: .semibold))
+                            .foregroundColor(SpendoraTheme.Colors.coral)
+                    }
+                }
+            }
             .sheet(item: $selectedSubscription) { subscription in
                 SubscriptionDetailView(subscription: subscription)
+            }
+            .sheet(isPresented: $showingAddSheet) {
+                AddSubscriptionView()
             }
         }
     }
     
+    // MARK: - Row Builder with Swipe Actions & Haptics
+
     @ViewBuilder
     private func subscriptionListRow(for subscription: Subscription) -> some View {
         SubscriptionRow(subscription: subscription)
-            .listRowInsets(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
+            .listRowInsets(EdgeInsets(top: 5, leading: 16, bottom: 5, trailing: 16))
+            .listRowSeparator(.hidden)
             .listRowBackground(Color.clear)
             .contentShape(Rectangle())
             .onTapGesture {
-                selectedSubscription = subscription
+                generator.impactOccurred()
+                withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                    selectedSubscription = subscription
+                }
             }
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                // Swipe left: reveals coral delete background with trash.fill white 20pt
                 Button(role: .destructive) {
                     deleteSubscription(subscription)
                 } label: {
-                    Label("Delete", systemImage: "trash")
+                    Label("Delete", systemImage: "trash.fill")
                 }
+                .tint(SpendoraTheme.Colors.danger)
             }
             .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                // Swipe right: reveals mint mark-as-paid background
                 Button {
-                    selectedSubscription = subscription
+                    generator.impactOccurred()
+                    subscription.markAsPaid()
+                    try? modelContext.save()
                 } label: {
-                    Label("Edit", systemImage: "pencil")
+                    Label("Mark Paid", systemImage: "checkmark.circle.fill")
                 }
-                .tint(.blue)
+                .tint(SpendoraTheme.Colors.success)
             }
     }
 
@@ -181,6 +218,7 @@ struct SubscriptionListView: View {
     }
 
     private func deleteSubscription(_ subscription: Subscription) {
+        notificationGenerator.notificationOccurred(.warning)
         NotificationService.shared.cancel(for: subscription)
         modelContext.delete(subscription)
         try? modelContext.save()

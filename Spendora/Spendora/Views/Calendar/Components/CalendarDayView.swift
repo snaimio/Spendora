@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-// MARK: - CalendarDayView (Coral Fire Calendar Day Cell)
+// MARK: - CalendarDayView (Golden UX 44x44 Touch Target & 36x36 Indicator)
 
 struct CalendarDayView: View {
 
@@ -19,24 +19,22 @@ struct CalendarDayView: View {
     // MARK: - Body
 
     var body: some View {
-        VStack(spacing: 3) {
+        VStack(spacing: 2) {
             Text(Calendar.current.component(.day, from: date).formatted())
                 .font(Font.system(size: 13, weight: (isToday || !subscriptions.isEmpty) ? .bold : .regular, design: .default).monospacedDigit())
                 .foregroundColor(
                     isToday
                         ? .white
-                        : (isInMonth ? SpendoraTheme.Colors.textPrimary : SpendoraTheme.Colors.textTertiary.opacity(0.35))
+                        : (isInMonth ? SpendoraTheme.Colors.textPrimary : SpendoraTheme.Colors.textTertiary.opacity(0.25))
                 )
-                .frame(width: 32, height: 32)
+                .frame(width: 36, height: 36)
                 .background(
                     Group {
                         if isToday {
-                            // Today circle: coral gradient fill #FF6B6B→#FF8E53, white bold number
                             Circle()
                                 .fill(SpendoraTheme.Colors.coralGradient)
                                 .shadow(color: SpendoraTheme.Colors.coral.opacity(0.35), radius: 6, x: 0, y: 2)
                         } else if !subscriptions.isEmpty {
-                            // Billing days: 2pt coral stroke ring around number
                             Circle()
                                 .stroke(SpendoraTheme.Colors.coral, lineWidth: 2.0)
                                 .background(Circle().fill(SpendoraTheme.Colors.coralTint))
@@ -44,7 +42,6 @@ struct CalendarDayView: View {
                     }
                 )
             
-            // 5pt coral dot centered below
             if !subscriptions.isEmpty {
                 Circle()
                     .fill(SpendoraTheme.Colors.coral)
@@ -53,5 +50,6 @@ struct CalendarDayView: View {
                 Spacer().frame(height: 5)
             }
         }
+        .frame(width: 44, height: 44)
     }
 }

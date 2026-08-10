@@ -1,149 +1,80 @@
 //
 //  SettingsDataManagementSection.swift
+//  Spendora
 //
-
-/**
- * Main/Core Functions & Purpose:
- * SettingsDataManagementSection component containing CSV/PDF export, JSON backup, file import, and master data reset triggers.
- */
 
 import SwiftUI
 
+// MARK: - SettingsDataManagementSection (Golden UX Data Management Section)
 
-// MARK: - SettingsDataManagementSection
-
-/**
- `SettingsDataManagementSection` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for settingsdatamanagementsection handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `SettingsDataManagementSection` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
- */
 struct SettingsDataManagementSection: View {
 
     // MARK: - Properties
 
-    let exportCSV: () -> Void  // exportCSV property
-    let exportPDF: () -> Void  // exportPDF property
-    let exportBackup: () -> Void  // exportBackup property
-    let importBackup: () -> Void  // importBackup property
-    let resetData: () -> Void  // resetData property
-    
+    let exportCSV: () -> Void
+    let exportPDF: () -> Void
+    let exportBackup: () -> Void
+    let importBackup: () -> Void
+    let resetData: () -> Void
 
     // MARK: - Body
 
-    /// Main SwiftUI layout body property.
     var body: some View {
-        Section("Data & Privacy") {
+        Section {
             // Export CSV
             Button(action: exportCSV) {
-                HStack {
-                    Image(systemName: "square.and.arrow.up")
-                        .foregroundColor(.brandPrimary)
-                        .frame(width: 28)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Export to CSV")
-                            .font(.system(.body, design: .rounded))
-                        Text("Download subscription data as CSV")
-                            .font(.system(.caption, design: .rounded))
-                            .foregroundColor(.secondary)
-                    }
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
+                PremiumSettingsRow(
+                    icon: "square.and.arrow.up",
+                    title: "Export to CSV",
+                    subtitle: "Download subscription data as CSV spreadsheet"
+                )
             }
+            .buttonStyle(.plain)
             
             // Export PDF
             Button(action: exportPDF) {
-                HStack {
-                    Image(systemName: "doc.richtext")
-                        .foregroundColor(.brandPrimary)
-                        .frame(width: 28)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Export to PDF")
-                            .font(.system(.body, design: .rounded))
-                        Text("Generate report document")
-                            .font(.system(.caption, design: .rounded))
-                            .foregroundColor(.secondary)
-                    }
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
+                PremiumSettingsRow(
+                    icon: "doc.richtext",
+                    title: "Export to PDF",
+                    subtitle: "Generate executive annual report"
+                )
             }
+            .buttonStyle(.plain)
             
             // Backup JSON
             Button(action: exportBackup) {
-                HStack {
-                    Image(systemName: "arrow.up.doc")
-                        .foregroundColor(.brandPrimary)
-                        .frame(width: 28)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Create Backup")
-                            .font(.system(.body, design: .rounded))
-                        Text("Export full app data as JSON")
-                            .font(.system(.caption, design: .rounded))
-                            .foregroundColor(.secondary)
-                    }
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
+                PremiumSettingsRow(
+                    icon: "arrow.up.doc",
+                    title: "Create Backup",
+                    subtitle: "Export full app records as JSON"
+                )
             }
+            .buttonStyle(.plain)
             
             // Restore JSON
             Button(action: importBackup) {
-                HStack {
-                    Image(systemName: "arrow.down.doc")
-                        .foregroundColor(.brandPrimary)
-                        .frame(width: 28)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Restore Backup")
-                            .font(.system(.body, design: .rounded))
-                        Text("Import from JSON file")
-                            .font(.system(.caption, design: .rounded))
-                            .foregroundColor(.secondary)
-                    }
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
+                PremiumSettingsRow(
+                    icon: "arrow.down.doc",
+                    title: "Restore Backup",
+                    subtitle: "Import from encrypted JSON backup"
+                )
             }
+            .buttonStyle(.plain)
             
-            // Reset
+            // Danger Row: Reset All Data
             Button(role: .destructive, action: resetData) {
-                HStack {
-                    Image(systemName: "trash.fill")
-                        .foregroundColor(.red)
-                        .frame(width: 28)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Reset All Data")
-                            .font(.system(.body, design: .rounded))
-                            .foregroundColor(.red)
-                        Text("Delete all subscriptions")
-                            .font(.system(.caption, design: .rounded))
-                            .foregroundColor(.secondary)
-                    }
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
+                PremiumSettingsRow(
+                    icon: "trash.fill",
+                    title: "Reset All Data",
+                    subtitle: "Permanently erase all local subscription records",
+                    isDestructive: true
+                )
             }
+            .buttonStyle(.plain)
+        } header: {
+            Text("DATA & PRIVACY")
+                .font(.system(size: 11, weight: .semibold))
+                .foregroundColor(SpendoraTheme.Colors.coralWarm)
         }
     }
 }

@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-// MARK: - HeroCardView (60-30-10 Coral Fire & Warm Cream Architecture)
+// MARK: - HeroCardView (Golden UX 20pt Radius & 52pt Hero Architecture)
 
 struct HeroCardView: View {
 
@@ -25,7 +25,7 @@ struct HeroCardView: View {
 
     var body: some View {
         VStack(spacing: SpendoraTheme.Spacing.md) {
-            // CARD 1: Executive Monthly Spend Card (20pt radius)
+            // HERO SPEND CARD (20pt radius, white, coral shadow)
             ThisMonthCardView(
                 totalMonthly: totalMonthly,
                 totalYearly: totalYearly,
@@ -34,7 +34,7 @@ struct HeroCardView: View {
                 nextSubscription: nextSubscription
             )
             
-            // CARD 2: 3-Column Balanced Metric Cards (Yearly | Average | Total)
+            // STAT ROW (3 equal cards with 10pt spacing)
             ExecutiveMetricsRow(
                 totalYearly: totalYearly,
                 averageMonthly: averageMonthlyCost,
@@ -44,7 +44,7 @@ struct HeroCardView: View {
     }
 }
 
-// MARK: - Card 1: This Month Executive Card View
+// MARK: - ThisMonthCardView (Top Priority Hero Element)
 
 struct ThisMonthCardView: View {
     let totalMonthly: Double
@@ -65,8 +65,8 @@ struct ThisMonthCardView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             VStack(alignment: .leading, spacing: 14) {
-                // Section Header: THIS MONTH (11pt semibold uppercase #FF8E53)
-                HStack {
+                // Top row: "THIS MONTH" 11pt semibold uppercase #FF8E53 + right coral budget pill
+                HStack(alignment: .center) {
                     Text("THIS MONTH")
                         .font(.system(size: 11, weight: .semibold))
                         .foregroundColor(SpendoraTheme.Colors.coralWarm)
@@ -81,8 +81,8 @@ struct ThisMonthCardView: View {
                                 .frame(width: 6, height: 6)
                             
                             Text(String(format: "%.0f%% used", budgetProgress * 100))
-                                .font(SpendoraTheme.Typography.caption)
-                                .foregroundColor(SpendoraTheme.Colors.textSecondary)
+                                .font(.system(size: 11, weight: .semibold))
+                                .foregroundColor(SpendoraTheme.Colors.coral)
                         }
                         .padding(.horizontal, 8)
                         .padding(.vertical, 3)
@@ -91,21 +91,22 @@ struct ThisMonthCardView: View {
                     }
                 }
 
-                // Main Monthly Spend Hero Amount (52pt bold monospaced)
+                // Middle: monthly total 52pt bold monospaced — owns the screen
                 VStack(alignment: .leading, spacing: 4) {
                     Text(CurrencyManager.shared.format(totalMonthly))
                         .font(SpendoraTheme.Typography.heroAmount)
                         .foregroundColor(SpendoraTheme.Colors.textPrimary)
                         .contentTransition(.numericText())
                         .lineLimit(1)
-                        .minimumScaleFactor(0.55)
+                        .minimumScaleFactor(0.5)
                     
+                    // Below total: "X active subscriptions" 14pt secondary
                     Text("\(count) active \(count == 1 ? "subscription" : "subscriptions")")
                         .font(.system(size: 14, weight: .regular))
                         .foregroundColor(SpendoraTheme.Colors.textSecondary)
                 }
                 
-                // Capsule Budget Bar
+                // Capsule Budget Progress Bar
                 if monthlyBudget > 0 {
                     VStack(alignment: .leading, spacing: 6) {
                         GeometryReader { geo in
@@ -140,7 +141,7 @@ struct ThisMonthCardView: View {
             }
             .padding(SpendoraTheme.Spacing.lg)
             
-            // Next Charge Section inside hero card below 0.5pt divider
+            // Next charge section inside hero card below 0.5pt divider #F0EBE3
             if let next = nextSubscription {
                 Divider()
                     .background(SpendoraTheme.Colors.border)
@@ -156,17 +157,18 @@ struct ThisMonthCardView: View {
                     }
                     
                     HStack(alignment: .center, spacing: 12) {
+                        // Leading service icon 44x44 rounded
                         ZStack {
-                            Circle()
+                            RoundedRectangle(cornerRadius: 12, style: .continuous)
                                 .fill(next.categoryEnum.color.opacity(0.15))
-                                .frame(width: 40, height: 40)
+                                .frame(width: 44, height: 44)
                             
                             Image(systemName: UniqueSubscriptionThemeHelper.resolveIcon(for: next))
-                                .font(.system(size: 17, weight: .semibold))
+                                .font(.system(size: 18, weight: .semibold))
                                 .foregroundColor(next.categoryEnum.color)
                         }
                         
-                        // Service name 17pt semibold
+                        // Service name 17pt semibold, date 13pt secondary
                         VStack(alignment: .leading, spacing: 2) {
                             Text(next.displayName)
                                 .font(.system(size: 17, weight: .semibold))
@@ -180,24 +182,25 @@ struct ThisMonthCardView: View {
                         
                         Spacer()
                         
-                        // Cost coral colored #FF6B6B
+                        // Cost 17pt semibold coral monospaced
                         Text(CurrencyManager.shared.format(next.isOneTime ? next.cost : next.monthlyCost))
-                            .font(Font.system(size: 16, weight: .semibold, design: .default).monospacedDigit())
+                            .font(Font.system(size: 17, weight: .semibold, design: .default).monospacedDigit())
                             .foregroundColor(SpendoraTheme.Colors.coral)
                     }
                     
-                    // Status Badge Dedicated Row
+                    // Status badge on next charge row
                     CountdownChip(daysRemaining: next.daysUntilBilling, isCancelled: next.isCancelled)
+                        .padding(.top, 2)
                 }
                 .padding(SpendoraTheme.Spacing.lg)
-                .background(SpendoraTheme.Colors.coralTint.opacity(0.4))
+                .background(SpendoraTheme.Colors.coralTint.opacity(0.35))
             }
         }
         .spendoraCard(cornerRadius: SpendoraTheme.Radius.hero)
     }
 }
 
-// MARK: - 3-Column Balanced Metric Cards Row
+// MARK: - ExecutiveMetricsRow (Stat Row: 3 Equal Mini-Cards)
 
 struct ExecutiveMetricsRow: View {
     let totalYearly: Double
@@ -224,7 +227,7 @@ struct ExecutiveMetricsRow: View {
     }
 }
 
-// MARK: - MetricSubCard (3 Equal Mini-Cards)
+// MARK: - MetricSubCard (12pt Radius, 12pt Padding, 10pt Label #FF8E53, 18pt Bold Value)
 
 struct MetricSubCard: View {
     let title: String
@@ -232,22 +235,19 @@ struct MetricSubCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            // Label 10pt uppercase #FF8E53
             Text(title)
                 .font(.system(size: 10, weight: .semibold))
                 .foregroundColor(SpendoraTheme.Colors.coralWarm)
                 .tracking(0.8)
                 .lineLimit(1)
             
-            // Value 17pt semibold dark
             Text(value)
-                .font(Font.system(size: 17, weight: .semibold, design: .default).monospacedDigit())
+                .font(Font.system(size: 18, weight: .bold, design: .default).monospacedDigit())
                 .foregroundColor(SpendoraTheme.Colors.textPrimary)
                 .lineLimit(1)
-                .minimumScaleFactor(0.65)
+                .minimumScaleFactor(0.6)
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 10)
+        .padding(12)
         .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
         .spendoraCard(cornerRadius: SpendoraTheme.Radius.subCard)
     }
