@@ -214,44 +214,4 @@ struct SettingsView: View {
             }
         }
     }
-    
-    // MARK: - Actions
-
-    func exportCSV() {
-        if let url = ExportService.shared.exportToCSV(subscriptions: subscriptions) {
-            shareItems = [url]
-            showingShareSheet = true
-        }
-    }
-    
-    func exportPDF() {
-        let renderer = PDFReportRenderer(subscriptions: subscriptions)
-        if let url = renderer.generatePDF() {
-            shareItems = [url]
-            showingShareSheet = true
-        }
-    }
-    
-    func exportBackup() {
-        if let url = BackupService.shared.createBackup(subscriptions: subscriptions) {
-            shareItems = [url]
-            showingShareSheet = true
-        }
-    }
-    
-    func resetAllData() {
-        for sub in subscriptions {
-            NotificationService.shared.cancel(for: sub)
-            modelContext.delete(sub)
-        }
-        try? modelContext.save()
-        showingResetConfirmation = true
-    }
-    
-    func shareApp() {
-        if let url = URL(string: "https://apps.apple.com/app/spendora") {
-            shareItems = [url]
-            showingShareSheet = true
-        }
-    }
 }
