@@ -1,28 +1,15 @@
 //
 //  AddSubscriptionView.swift
+//  Spendora
 //
 
 import SwiftUI
 import SwiftData
 
-
 // MARK: - AddSubscriptionView
 
 /**
- `AddSubscriptionView` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for addsubscriptionview handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `AddSubscriptionView` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
+ `AddSubscriptionView` allows users to create new subscription records with Spendora Teal branding and presets.
  */
 struct AddSubscriptionView: View {
 
@@ -40,7 +27,7 @@ struct AddSubscriptionView: View {
     @State private var linkURL = ""
     @State private var isUserEditedLink = false
     @State private var nextBillingDate = Calendar.current.date(byAdding: .day, value: 30, to: Date()) ?? Date()
-    @State private var selectedColorHex = "#6C63FF"
+    @State private var selectedColorHex = "#00D4AA"
     @State private var notes = ""
     @State private var selectedPaymentMethod: PaymentMethod = .creditCard
     @State private var reminderDaysBefore = 3
@@ -66,104 +53,107 @@ struct AddSubscriptionView: View {
     // MARK: - Body
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: 20) {
-                    AddSubscriptionHeaderView()
-                    
-                    // Popular Providers Preset Selector
-                    VStack(alignment: .leading, spacing: 10) {
-                        HStack {
-                            Text("Popular Providers")
-                                .font(.system(.subheadline, design: .rounded))
-                                .fontWeight(.bold)
-                                .foregroundColor(.secondary)
-                            Spacer()
-                            Button {
-                                generator.impactOccurred()
-                                showingQuickAddSheet = true
-                            } label: {
-                                Text("See All")
+            ZStack {
+                SpendoraBrandBackgroundView()
+                
+                ScrollView {
+                    VStack(spacing: 20) {
+                        AddSubscriptionHeaderView()
+                        
+                        // Popular Providers Preset Selector
+                        VStack(alignment: .leading, spacing: 10) {
+                            HStack {
+                                Text("Popular Providers")
                                     .font(.system(.subheadline, design: .rounded))
                                     .fontWeight(.bold)
-                                    .foregroundColor(.brandPrimary)
-                            }
-                        }
-                        .padding(.horizontal, 20)
-                        
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 12) {
-                                ForEach(SubscriptionPreset.all.prefix(15)) { preset in
-                                    Button {
-                                        generator.impactOccurred()
-                                        applyPreset(preset)
-                                    } label: {
-                                        HStack(spacing: 8) {
-                                            ZStack {
-                                                Circle()
-                                                    .fill(preset.color.opacity(0.16))
-                                                    .frame(width: 28, height: 28)
-                                                
-                                                Image(systemName: preset.systemIcon)
-                                                    .foregroundColor(preset.color)
-                                                    .font(.system(size: 13, weight: .semibold))
-                                            }
-                                            
-                                            Text(preset.name)
-                                                .font(.system(.subheadline, design: .rounded))
-                                                .fontWeight(.semibold)
-                                                .foregroundColor(.primary)
-                                        }
-                                        .padding(.leading, 6)
-                                        .padding(.trailing, 14)
-                                        .padding(.vertical, 8)
-                                        .background(Color.cardBackground)
-                                        .cornerRadius(14)
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 14)
-                                                .stroke(name == preset.name ? preset.color : Color.secondary.opacity(0.12), lineWidth: name == preset.name ? 2 : 1)
-                                        )
-                                        .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 2)
-                                    }
-                                    .buttonStyle(.plain)
+                                    .foregroundColor(.textSecondary)
+                                Spacer()
+                                Button {
+                                    generator.impactOccurred()
+                                    showingQuickAddSheet = true
+                                } label: {
+                                    Text("See All")
+                                        .font(.system(.subheadline, design: .rounded))
+                                        .fontWeight(.bold)
+                                        .foregroundColor(Color(hex: "#00D4AA"))
                                 }
                             }
-                            .padding(.horizontal, 16)
+                            .padding(.horizontal, 20)
+                            
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 12) {
+                                    ForEach(SubscriptionPreset.all.prefix(15)) { preset in
+                                        Button {
+                                            generator.impactOccurred()
+                                            applyPreset(preset)
+                                        } label: {
+                                            HStack(spacing: 8) {
+                                                ZStack {
+                                                    Circle()
+                                                        .fill(preset.color.opacity(0.16))
+                                                        .frame(width: 28, height: 28)
+                                                    
+                                                    Image(systemName: preset.systemIcon)
+                                                        .foregroundColor(preset.color)
+                                                        .font(.system(size: 13, weight: .semibold))
+                                                }
+                                                
+                                                Text(preset.name)
+                                                    .font(.system(.subheadline, design: .rounded))
+                                                    .fontWeight(.semibold)
+                                                    .foregroundColor(.textPrimary)
+                                            }
+                                            .padding(.leading, 6)
+                                            .padding(.trailing, 14)
+                                            .padding(.vertical, 8)
+                                            .background(Color.cardBackground)
+                                            .cornerRadius(14)
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 14)
+                                                    .stroke(name == preset.name ? Color(hex: "#00D4AA") : Color.secondary.opacity(0.12), lineWidth: name == preset.name ? 2 : 1)
+                                            )
+                                            .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 2)
+                                        }
+                                        .buttonStyle(.plain)
+                                    }
+                                }
+                                .padding(.horizontal, 20)
+                            }
                         }
+                        
+                        AddSubscriptionFormView(
+                            name: $name,
+                            cost: $cost,
+                            selectedCategory: $selectedCategory,
+                            isYearly: $isYearly,
+                            isOneTime: $isOneTime,
+                            linkURL: $linkURL,
+                            isUserEditedLink: $isUserEditedLink,
+                            nextBillingDate: $nextBillingDate,
+                            selectedPaymentMethod: $selectedPaymentMethod,
+                            reminderDaysBefore: $reminderDaysBefore
+                        )
+                        .onChange(of: name) { _, newName in
+                            autoGenerateLinkIfNeeded(for: newName)
+                        }
+                        
+                        AddColorSelectionView(
+                            colorOptions: colorOptions,
+                            selectedColorHex: $selectedColorHex,
+                            generator: generator
+                        )
+                        
+                        AddNotesView(notes: $notes)
+                        
+                        AddSubscriptionSaveButton(
+                            isValid: isValid,
+                            isSaving: isSaving,
+                            action: saveSubscription
+                        )
                     }
-                    
-                    AddSubscriptionFormView(
-                        name: $name,
-                        cost: $cost,
-                        selectedCategory: $selectedCategory,
-                        isYearly: $isYearly,
-                        isOneTime: $isOneTime,
-                        linkURL: $linkURL,
-                        isUserEditedLink: $isUserEditedLink,
-                        nextBillingDate: $nextBillingDate,
-                        selectedPaymentMethod: $selectedPaymentMethod,
-                        reminderDaysBefore: $reminderDaysBefore
-                    )
-                    .onChange(of: name) { _, newName in
-                        autoGenerateLinkIfNeeded(for: newName)
-                    }
-                    
-                    AddColorSelectionView(
-                        colorOptions: colorOptions,
-                        selectedColorHex: $selectedColorHex,
-                        generator: generator
-                    )
-                    
-                    AddNotesView(notes: $notes)
-                    
-                    AddSubscriptionSaveButton(
-                        isValid: isValid,
-                        isSaving: isSaving,
-                        action: saveSubscription
-                    )
+                    .padding(.bottom, 36)
                 }
-                .padding(.bottom, 32)
             }
-            .background(Color.appBackground.ignoresSafeArea())
             .sheet(isPresented: $showingQuickAddSheet) {
                 QuickAddView { preset in
                     applyPreset(preset)
@@ -177,6 +167,7 @@ struct AddSubscriptionView: View {
                         dismiss()
                     }
                     .font(.system(.body, design: .rounded))
+                    .foregroundColor(Color(hex: "#FF6B6B"))
                 }
                 ToolbarItemGroup(placement: .keyboard) {
                     Spacer()
@@ -185,6 +176,7 @@ struct AddSubscriptionView: View {
                     }
                     .font(.system(.body, design: .rounded))
                     .fontWeight(.semibold)
+                    .foregroundColor(Color(hex: "#00D4AA"))
                 }
             }
             .alert("Error", isPresented: $showingError) {
@@ -253,7 +245,7 @@ struct AddSubscriptionView: View {
         let trimmedNotes = notes.trimmingCharacters(in: .whitespacesAndNewlines)
         var trimmedLink = linkURL.trimmingCharacters(in: .whitespacesAndNewlines)
         
-        // If user left link blank, auto-resolve direct management link for known services (e.g. GitHub, ChatGPT, Netflix)
+        // If user left link blank, auto-resolve direct management link for known services
         if trimmedLink.isEmpty, let resolvedURL = CancellationService.shared.getDirectCancellationURL(for: name.trimmingCharacters(in: .whitespacesAndNewlines))?.absoluteString {
             trimmedLink = resolvedURL
         }
@@ -290,40 +282,18 @@ struct AddSubscriptionView: View {
     }
 }
 
-// MARK: - Color Options
-
 // MARK: - AddSubscriptionColorOptions
 
-/**
- `AddSubscriptionColorOptions` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for addsubscriptioncoloroptions handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `AddSubscriptionColorOptions` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
- */
 struct AddSubscriptionColorOptions {
-
-    // MARK: - Properties
-
     static let all: [(name: String, hex: String)] = [
-        ("Purple", "#6C63FF"),
-        ("Blue", "#007AFF"),
-        ("Red", "#FF3B30"),
-        ("Orange", "#FF9500"),
-        ("Yellow", "#FFCC00"),
-        ("Green", "#34C759"),
-        ("Teal", "#5AC8FA"),
-        ("Pink", "#FF2D55"),
-        ("Gray", "#8E8E93")
+        ("Teal", "#00D4AA"),
+        ("Cyan", "#00B4D8"),
+        ("Coral", "#FF6B6B"),
+        ("Gold", "#FFD93D"),
+        ("Orange", "#FF8A5C"),
+        ("Purple", "#6C5CE7"),
+        ("Lavender", "#A29BFE"),
+        ("Gray", "#636E72")
     ]
 }
 

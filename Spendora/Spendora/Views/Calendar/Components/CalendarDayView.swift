@@ -8,7 +8,7 @@ import SwiftUI
 // MARK: - CalendarDayView
 
 /**
- `CalendarDayView` displays calendar day numbers with today indicator badge and billing dots.
+ `CalendarDayView` displays calendar day numbers with Spendora Teal today indicator badge and billing dots.
  */
 struct CalendarDayView: View {
 
@@ -38,15 +38,15 @@ struct CalendarDayView: View {
                             Circle()
                                 .fill(
                                     LinearGradient(
-                                        colors: [Color(hex: "#D4AF37"), Color(hex: "#F59E0B")],
+                                        colors: [Color(hex: "#00D4AA"), Color(hex: "#00B4D8")],
                                         startPoint: .topLeading,
                                         endPoint: .bottomTrailing
                                     )
                                 )
-                                .shadow(color: Color(hex: "#D4AF37").opacity(0.4), radius: 4, y: 2)
+                                .shadow(color: Color(hex: "#00D4AA").opacity(0.4), radius: 4, y: 2)
                         } else if !subscriptions.isEmpty {
                             Circle()
-                                .fill(Color(hex: "#D4AF37").opacity(0.16))
+                                .fill(Color(hex: "#00D4AA").opacity(0.16))
                         }
                     }
                 )
@@ -55,7 +55,7 @@ struct CalendarDayView: View {
                 HStack(spacing: 3) {
                     ForEach(subscriptions.prefix(3), id: \.id) { sub in
                         Circle()
-                            .fill(Color(hex: sub.colorHex ?? "#FF6B6B"))
+                            .fill(sub.categoryEnum.color)
                             .frame(width: 5, height: 5)
                     }
                 }

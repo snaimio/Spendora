@@ -9,7 +9,7 @@ import SwiftUI
 
 /**
  `HeroCardView` presents two distinct, standalone cards with embedded sub-card metrics for maximum visual clarity:
- 1. `ThisMonthCardView`: Executive monthly spend with embedded Yearly & Average sub-cards.
+ 1. `ThisMonthCardView`: Executive monthly spend with embedded Yearly & Average sub-cards in Spendora Teal (#00D4AA).
  2. `NextChargeSpotlightCardView`: Dedicated spotlight card for the imminent upcoming renewal.
  */
 struct HeroCardView: View {
@@ -30,7 +30,7 @@ struct HeroCardView: View {
 
     var body: some View {
         VStack(spacing: 20) {
-            // CARD 1: Executive Monthly Spend Card (with Embedded Mini Cards)
+            // CARD 1: Executive Monthly Spend Card (Spendora Teal Theme)
             ThisMonthCardView(
                 totalMonthly: totalMonthly,
                 totalYearly: totalYearly,
@@ -47,7 +47,7 @@ struct HeroCardView: View {
     }
 }
 
-// MARK: - Card 1: This Month Executive Spend Card View
+// MARK: - Card 1: This Month Executive Spend Card View (Spendora Teal Theme)
 
 struct ThisMonthCardView: View {
     let totalMonthly: Double
@@ -59,11 +59,11 @@ struct ThisMonthCardView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // Top Accent Emerald Gradient Bar
+            // Top Accent Spendora Teal Gradient Bar (#00D4AA → #00B4D8)
             Rectangle()
                 .fill(
                     LinearGradient(
-                        colors: [Color(hex: "#10B981"), Color(hex: "#059669"), Color(hex: "#F59E0B")],
+                        colors: [Color(hex: "#00D4AA"), Color(hex: "#00B4D8"), Color(hex: "#6C5CE7")],
                         startPoint: .leading,
                         endPoint: .trailing
                     )
@@ -76,7 +76,7 @@ struct ThisMonthCardView: View {
                     HStack(spacing: 6) {
                         Image(systemName: "calendar")
                             .font(.system(size: 13, weight: .bold))
-                            .foregroundColor(Color(hex: "#10B981"))
+                            .foregroundColor(Color(hex: "#00D4AA"))
                         Text("THIS MONTH")
                             .font(.system(size: 12, weight: .bold, design: .rounded))
                             .foregroundColor(.textSecondary)
@@ -88,22 +88,22 @@ struct ThisMonthCardView: View {
                     HStack(spacing: 4) {
                         Image(systemName: "checkmark.seal.fill")
                             .font(.system(size: 12))
-                            .foregroundColor(colorScheme == .dark ? Color(hex: "#10B981") : Color(hex: "#047857"))
+                            .foregroundColor(Color(hex: "#00D4AA"))
                         Text("Active Budget")
                             .font(.system(size: 11, weight: .bold, design: .rounded))
-                            .foregroundColor(colorScheme == .dark ? Color(hex: "#10B981") : Color(hex: "#047857"))
+                            .foregroundColor(Color(hex: "#00D4AA"))
                     }
                     .padding(.horizontal, 10)
                     .padding(.vertical, 4)
-                    .background(Color(hex: "#10B981").opacity(0.14))
+                    .background(Color(hex: "#00D4AA").opacity(0.14))
                     .cornerRadius(10)
                 }
 
-                // Main Monthly Spend Hero Amount
+                // Main Monthly Spend Hero Amount (Spendora Teal #00D4AA)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(CurrencyManager.shared.format(totalMonthly))
-                        .font(.system(size: 32, weight: .bold, design: .rounded))
-                        .foregroundColor(Color(hex: "#10B981"))
+                        .font(.system(size: 38, weight: .black, design: .rounded))
+                        .foregroundColor(Color(hex: "#00D4AA"))
                         .contentTransition(.numericText())
                         .lineLimit(1)
                         .minimumScaleFactor(0.6)
@@ -121,14 +121,14 @@ struct ThisMonthCardView: View {
                         icon: "calendar.badge.clock",
                         title: "Yearly Total",
                         value: CurrencyManager.shared.format(totalYearly),
-                        color: Color(hex: "#0EA5E9")
+                        color: Color(hex: "#00B4D8")
                     )
                     
                     MetricSubCard(
                         icon: "chart.line.uptrend.xyaxis",
                         title: "Avg Per Sub",
                         value: CurrencyManager.shared.format(averageMonthlyCost),
-                        color: Color(hex: "#8B5CF6")
+                        color: Color(hex: "#6C5CE7")
                     )
                 }
             }
@@ -139,12 +139,12 @@ struct ThisMonthCardView: View {
         .shadow(color: Color.black.opacity(0.06), radius: 12, x: 0, y: 4)
         .overlay(
             RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .stroke(Color(hex: "#10B981").opacity(0.25), lineWidth: 1.2)
+                .stroke(Color(hex: "#00D4AA").opacity(0.25), lineWidth: 1.2)
         )
     }
 }
 
-// MARK: - Card 2: Next Charge Spotlight Card View
+// MARK: - Card 2: Next Charge Spotlight Card View (Sunset Coral & Gold Theme)
 
 struct NextChargeSpotlightCardView: View {
     let subscription: Subscription
@@ -152,11 +152,11 @@ struct NextChargeSpotlightCardView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // Top Accent Sunset Coral & Gold Bar
+            // Top Accent Sunset Coral & Gold Bar (#FF6B6B → #FFD93D)
             Rectangle()
                 .fill(
                     LinearGradient(
-                        colors: [Color(hex: "#FF6B6B"), Color(hex: "#F59E0B"), Color(hex: "#D4AF37")],
+                        colors: [Color(hex: "#FF6B6B"), Color(hex: "#FFD93D")],
                         startPoint: .leading,
                         endPoint: .trailing
                     )
@@ -169,7 +169,7 @@ struct NextChargeSpotlightCardView: View {
                     HStack(spacing: 6) {
                         Image(systemName: "bell.badge.fill")
                             .font(.system(size: 13, weight: .bold))
-                            .foregroundColor(Color(hex: "#F59E0B"))
+                            .foregroundColor(Color(hex: "#FFD93D"))
                         
                         Text("NEXT CHARGE SPOTLIGHT")
                             .font(.system(size: 12, weight: .bold, design: .rounded))
@@ -189,13 +189,13 @@ struct NextChargeSpotlightCardView: View {
                         Circle()
                             .fill(
                                 LinearGradient(
-                                    colors: [Color(hex: "#F59E0B"), Color(hex: "#D4AF37")],
+                                    colors: [Color(hex: "#FFD93D"), Color(hex: "#FF8A5C")],
                                     startPoint: .topLeading,
                                     endPoint: .bottomTrailing
                                 )
                             )
                             .frame(width: 44, height: 44)
-                            .shadow(color: Color(hex: "#F59E0B").opacity(0.3), radius: 4, y: 2)
+                            .shadow(color: Color(hex: "#FFD93D").opacity(0.3), radius: 4, y: 2)
                         
                         Image(systemName: UniqueSubscriptionThemeHelper.resolveIcon(for: subscription))
                             .font(.system(size: 18, weight: .bold))
@@ -222,11 +222,11 @@ struct NextChargeSpotlightCardView: View {
                     }
                     .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                     
-                    // Cost Figure
+                    // Cost Figure (Coral Red #FF6B6B)
                     VStack(alignment: .trailing, spacing: 2) {
                         Text(CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost))
                             .font(.system(size: 20, weight: .bold, design: .rounded))
-                            .foregroundColor(Color(hex: "#F59E0B"))
+                            .foregroundColor(Color(hex: "#FF6B6B"))
                             .lineLimit(1)
                             .minimumScaleFactor(0.7)
                         
@@ -243,7 +243,7 @@ struct NextChargeSpotlightCardView: View {
                 )
                 .overlay(
                     RoundedRectangle(cornerRadius: 16)
-                        .stroke(Color(hex: "#F59E0B").opacity(0.2), lineWidth: 1)
+                        .stroke(Color(hex: "#FFD93D").opacity(0.3), lineWidth: 1)
                 )
             }
             .padding(18)
@@ -253,7 +253,7 @@ struct NextChargeSpotlightCardView: View {
         .shadow(color: Color.black.opacity(0.06), radius: 12, x: 0, y: 4)
         .overlay(
             RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .stroke(Color(hex: "#F59E0B").opacity(0.35), lineWidth: 1.2)
+                .stroke(Color(hex: "#FFD93D").opacity(0.35), lineWidth: 1.2)
         )
     }
 }

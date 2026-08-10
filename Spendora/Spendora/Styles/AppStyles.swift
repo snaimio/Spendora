@@ -9,22 +9,26 @@ import SwiftUI
 
 /**
  `AppStyles` provides Spendora's design system tokens, Apple HIG typography scale, spacing rules, and shadow specs.
+ Specified for Spendora Teal Brand Identity.
  */
 struct AppStyles {
     
-    // MARK: - Typography (Apple HIG Compliant)
+    // MARK: - Typography System
     struct Typography {
-        static let heroPrice = Font.system(size: 38, weight: .black, design: .rounded)
-        static let largeTitle = Font.system(size: 34, weight: .bold, design: .rounded)
+        static let heroPrice = Font.system(size: 42, weight: .black, design: .monospaced)
         static let title = Font.system(size: 28, weight: .bold, design: .rounded)
-        static let title3 = Font.system(size: 20, weight: .bold, design: .rounded)
-        static let headline = Font.system(size: 17, weight: .bold, design: .rounded)
+        static let headline = Font.system(size: 20, weight: .bold, design: .rounded)
         static let body = Font.system(size: 16, weight: .regular, design: .rounded)
-        static let subheadline = Font.system(size: 15, weight: .regular, design: .rounded)
         static let caption = Font.system(size: 13, weight: .regular, design: .rounded)
+        static let micro = Font.system(size: 11, weight: .bold, design: .rounded)
+        
+        // Legacy Aliases
+        static let largeTitle = title
+        static let title3 = headline
+        static let subheadline = Font.system(size: 15, weight: .regular, design: .rounded)
         static let caption2 = Font.system(size: 12, weight: .semibold, design: .rounded)
-        static let footnote = Font.system(size: 11, weight: .regular, design: .rounded)
-        static let badge = Font.system(size: 12, weight: .semibold, design: .rounded)
+        static let footnote = micro
+        static let badge = micro
     }
     
     // MARK: - Spacing

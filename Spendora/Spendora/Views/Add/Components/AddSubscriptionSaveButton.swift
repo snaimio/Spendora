@@ -1,40 +1,25 @@
 //
 //  AddSubscriptionSaveButton.swift
+//  Spendora
 //
 
 import SwiftUI
 
-
 // MARK: - AddSubscriptionSaveButton
 
 /**
- `AddSubscriptionSaveButton` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for addsubscriptionsavebutton handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `AddSubscriptionSaveButton` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
+ `AddSubscriptionSaveButton` renders the primary CTA save button styled with Spendora Teal gradient (#00D4AA → #00B4D8).
  */
 struct AddSubscriptionSaveButton: View {
 
     // MARK: - Properties
 
-    let isValid: Bool  // isValid property
-    let isSaving: Bool  // isSaving property
-    let action: () -> Void  // action property
-    
+    let isValid: Bool
+    let isSaving: Bool
+    let action: () -> Void
 
     // MARK: - Body
 
-    /// Main SwiftUI layout body property.
     var body: some View {
         Button {
             action()
@@ -45,25 +30,36 @@ struct AddSubscriptionSaveButton: View {
                         .tint(.white)
                 } else {
                     Text("Add Subscription")
-                        .font(.system(.headline, design: .rounded))
+                        .font(.system(size: 17, weight: .bold, design: .rounded))
                     Image(systemName: "arrow.right.circle.fill")
+                        .font(.system(size: 17, weight: .bold))
                 }
             }
             .foregroundColor(.white)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
             .background(
-                LinearGradient(
-                    colors: isValid ? [Color(hex: "#0F172A"), Color(hex: "#2563EB")] : [.gray.opacity(0.4), .gray.opacity(0.3)],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
+                Group {
+                    if isValid {
+                        LinearGradient(
+                            colors: [Color(hex: "#00D4AA"), Color(hex: "#00B4D8")],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    } else {
+                        LinearGradient(
+                            colors: [Color.gray.opacity(0.4), Color.gray.opacity(0.3)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    }
+                }
             )
             .cornerRadius(16)
-            .shadow(color: isValid ? Color(hex: "#2563EB").opacity(0.35) : .clear, radius: 14, x: 0, y: 6)
+            .shadow(color: isValid ? Color(hex: "#00D4AA").opacity(0.4) : .clear, radius: 14, x: 0, y: 6)
         }
         .disabled(!isValid || isSaving)
-        .padding(.horizontal, 16)
+        .padding(.horizontal, 20)
         .padding(.top, 8)
     }
 }

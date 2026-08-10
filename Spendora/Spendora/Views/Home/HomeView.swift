@@ -230,7 +230,7 @@ struct HomeView: View {
             HStack {
                 HStack(spacing: 6) {
                     Image(systemName: "checkmark.shield.fill")
-                        .foregroundColor(Color(hex: "#10B981"))
+                        .foregroundColor(Color(hex: "#00D4AA"))
                         .font(.headline)
                     Text("Active Subscriptions")
                         .font(.system(.headline, design: .rounded))
@@ -239,10 +239,10 @@ struct HomeView: View {
                 Spacer()
                 Text("\(activeSubscriptions.count) Active")
                     .font(.system(size: 11, weight: .bold, design: .rounded))
-                    .foregroundColor(Color(hex: "#047857"))
+                    .foregroundColor(Color(hex: "#00D4AA"))
                     .padding(.horizontal, 8)
                     .padding(.vertical, 3)
-                    .background(Color(hex: "#10B981").opacity(0.16))
+                    .background(Color(hex: "#00D4AA").opacity(0.16))
                     .cornerRadius(8)
             }
             .padding(.horizontal, 4)

@@ -8,49 +8,49 @@ import SwiftUI
 // MARK: - Color Extension
 
 /**
- Extension on `Color` providing Spendora's Luxury Gunmetal Leather & Polished Rose-Gold / Amber Theme.
- Extracted directly from the master logo asset and visual mockup specifications.
+ Extension on `Color` providing Spendora's Signature Teal Brand Palette.
+ Signature Color: Spendora Teal (#00D4AA)
  */
 extension Color {
     
-    // MARK: - Signature Luxury Palette (Master Logo Theme)
-    static let brandPrimary = Color(hex: "#D4AF37")      // Polished Brass / Gold Accent
-    static let brandSecondary = Color(hex: "#94A3B8")    // Brushed Gunmetal Grey
-    static let brandTertiary = Color(hex: "#D4AF37")     // Polished Brass Accent
-    static let brandAccent = Color(hex: "#F59E0B")       // Glowing Gold Highlight
-    static let brandAmber = Color(hex: "#F59E0B")        // Amber Gold
-    static let brandDark = Color(hex: "#0F0F1A")         // Deep Leather Black
-    static let brandLight = Color(hex: "#F8F9FE")        // Light Mode Surface
+    // MARK: - Signature Spendora Teal Palette
+    static let brandPrimary = Color(hex: "#00D4AA")      // Spendora Teal (SIGNATURE COLOR)
+    static let brandSecondary = Color(hex: "#FF6B6B")    // Coral (Actions / CTAs)
+    static let brandTertiary = Color(hex: "#00B4D8")     // Electric Cyan
+    static let brandAccent = Color(hex: "#FFD93D")       // Gold (Highlights / Badges)
+    static let brandAmber = Color(hex: "#FFD93D")        // Gold Accent
+    static let brandDark = Color(hex: "#0F0F1A")         // Deep Navy Background
+    static let brandLight = Color(hex: "#F8F9FE")        // Lavender White Surface
     static let brandCard = Color(hex: "#1E293B")         // Machined Dark Slate Cards
-    static let brandPurple = Color(hex: "#8B5CF6")       // Violet Metal Accent
-    static let brandRose = Color(hex: "#FF6B6B")         // Rose Coral Accent
+    static let brandPurple = Color(hex: "#6C5CE7")       // Royal Purple
+    static let brandRose = Color(hex: "#FF6B6B")         // Coral Red
     
     // MARK: - Status Colors
-    static let brandSuccess = Color(hex: "#D4AF37")      // Gold / Brass Confirmation
-    static let brandWarning = Color(hex: "#F59E0B")      // Amber Gold
-    static let brandDanger = Color(hex: "#FF6B6B")       // Rose Red
+    static let brandSuccess = Color(hex: "#00D4AA")      // Spendora Teal Confirmation
+    static let brandWarning = Color(hex: "#FFD93D")      // Gold Warning
+    static let brandDanger = Color(hex: "#FF6B6B")       // Coral Red Danger
     
-    // MARK: - Vibrant Brand Gradients
+    // MARK: - Signature Brand Gradients
     static let gradientPrimary = LinearGradient(
-        colors: [Color(hex: "#D4AF37"), Color(hex: "#F59E0B")],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-    
-    static let gradientSunset = LinearGradient(
-        colors: [Color(hex: "#FF6B6B"), Color(hex: "#F59E0B")],
-        startPoint: .leading,
-        endPoint: .trailing
-    )
-    
-    static let gradientVibrantGold = LinearGradient(
-        colors: [Color(hex: "#F59E0B"), Color(hex: "#D4AF37"), Color(hex: "#FF8A5C")],
+        colors: [Color(hex: "#00D4AA"), Color(hex: "#00B4D8")],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
     
     static let gradientHero = LinearGradient(
-        colors: [Color(hex: "#2B2D32"), Color(hex: "#1A1B1E")],
+        colors: [Color(hex: "#00D4AA"), Color(hex: "#00B4D8"), Color(hex: "#6C5CE7")],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
+
+    static let gradientSunset = LinearGradient(
+        colors: [Color(hex: "#FF6B6B"), Color(hex: "#FFD93D")],
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    
+    static let gradientVibrantGold = LinearGradient(
+        colors: [Color(hex: "#FFD93D"), Color(hex: "#FF8A5C")],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
@@ -88,16 +88,16 @@ extension Color {
 
     // MARK: - Category Colors
     static let categoryEntertainment = Color(hex: "#FF6B6B")
-    static let categoryProductivity = Color(hex: "#D4AF37")
-    static let categoryHealth = Color(hex: "#F59E0B")
+    static let categoryProductivity = Color(hex: "#00D4AA")
+    static let categoryHealth = Color(hex: "#FFD93D")
     static let categoryShopping = Color(hex: "#FF8A5C")
     static let categoryFood = Color(hex: "#FF6B6B")
-    static let categoryEducation = Color(hex: "#8B5CF6")
-    static let categoryAiTools = Color(hex: "#38BDF8")
+    static let categoryEducation = Color(hex: "#6C5CE7")
+    static let categoryAiTools = Color(hex: "#00B4D8")
     static let categoryMusic = Color(hex: "#FF6B6B")
-    static let categoryGaming = Color(hex: "#A78BFA")
-    static let categoryUtilities = Color(hex: "#94A3B8")
-    static let categoryOther = Color(hex: "#94A3B8")
+    static let categoryGaming = Color(hex: "#A29BFE")
+    static let categoryUtilities = Color(hex: "#636E72")
+    static let categoryOther = Color(hex: "#636E72")
     
     // MARK: - Helper
     init(hex: String) {
@@ -131,11 +131,11 @@ struct SpendoraBrandBackgroundView: View {
             Color.appBackground
                 .ignoresSafeArea()
             
-            // 3D Ambient Glowing Gold Orb (Top-Right)
+            // 3D Ambient Glowing Spendora Teal Orb (Top-Right)
             Circle()
                 .fill(
                     RadialGradient(
-                        colors: [Color(hex: "#D4AF37").opacity(colorScheme == .dark ? 0.18 : 0.10), Color.clear],
+                        colors: [Color(hex: "#00D4AA").opacity(colorScheme == .dark ? 0.20 : 0.12), Color.clear],
                         center: .center,
                         startRadius: 10,
                         endRadius: 260
@@ -172,14 +172,14 @@ struct Spendora3DCardModifier: ViewModifier {
             .cornerRadius(cornerRadius)
             // 3D Multi-Layered Dual Drop Shadow
             .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.25 : 0.08), radius: 12, x: 0, y: 6)
-            .shadow(color: Color(hex: "#D4AF37").opacity(colorScheme == .dark ? 0.15 : 0.05), radius: 4, x: 0, y: 2)
+            .shadow(color: Color(hex: "#00D4AA").opacity(colorScheme == .dark ? 0.15 : 0.05), radius: 4, x: 0, y: 2)
             // Specular Highlight Bevel Stroke
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
                     .stroke(
                         LinearGradient(
                             colors: [
-                                Color(hex: "#D4AF37").opacity(colorScheme == .dark ? 0.5 : 0.3),
+                                Color(hex: "#00D4AA").opacity(colorScheme == .dark ? 0.5 : 0.3),
                                 Color.white.opacity(colorScheme == .dark ? 0.1 : 0.3)
                             ],
                             startPoint: .topLeading,

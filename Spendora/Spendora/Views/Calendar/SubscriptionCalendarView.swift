@@ -9,7 +9,7 @@ import SwiftUI
 
 /**
  `SubscriptionCalendarView` presents Spendora's interactive subscription billing calendar
- wrapped inside adaptive 3D cards for seamless Light and Dark mode readability.
+ wrapped inside adaptive 3D cards with Spendora Teal brand identity.
  */
 struct SubscriptionCalendarView: View {
 
@@ -32,7 +32,7 @@ struct SubscriptionCalendarView: View {
                 
                 ScrollView {
                     VStack(spacing: 20) {
-                        // CARD 1: Calendar Grid Container Card (Adaptive Light/Dark Theme)
+                        // CARD 1: Calendar Grid Container Card (Spendora Teal Theme)
                         VStack(spacing: 16) {
                             // Month Navigation Header
                             HStack {
@@ -43,9 +43,9 @@ struct SubscriptionCalendarView: View {
                                 } label: {
                                     Image(systemName: "chevron.left")
                                         .font(.system(size: 16, weight: .bold))
-                                        .foregroundColor(Color(hex: "#D4AF37"))
+                                        .foregroundColor(Color(hex: "#00D4AA"))
                                         .padding(8)
-                                        .background(Color(hex: "#D4AF37").opacity(0.12))
+                                        .background(Color(hex: "#00D4AA").opacity(0.12))
                                         .clipShape(Circle())
                                 }
                                 
@@ -64,9 +64,9 @@ struct SubscriptionCalendarView: View {
                                 } label: {
                                     Image(systemName: "chevron.right")
                                         .font(.system(size: 16, weight: .bold))
-                                        .foregroundColor(Color(hex: "#D4AF37"))
+                                        .foregroundColor(Color(hex: "#00D4AA"))
                                         .padding(8)
-                                        .background(Color(hex: "#D4AF37").opacity(0.12))
+                                        .background(Color(hex: "#00D4AA").opacity(0.12))
                                         .clipShape(Circle())
                                 }
                             }
@@ -108,7 +108,7 @@ struct SubscriptionCalendarView: View {
                             HStack(spacing: 6) {
                                 Image(systemName: "calendar.badge.clock")
                                     .font(.system(size: 14, weight: .bold))
-                                    .foregroundColor(Color(hex: "#D4AF37"))
+                                    .foregroundColor(Color(hex: "#00D4AA"))
                                 
                                 Text("UPCOMING BILLING DAYS")
                                     .font(.system(size: 12, weight: .bold, design: .rounded))
@@ -130,7 +130,7 @@ struct SubscriptionCalendarView: View {
                                     ForEach(subscriptionsWithBillingDates.prefix(5), id: \.id) { sub in
                                         HStack(spacing: 12) {
                                             Circle()
-                                                .fill(Color(hex: sub.colorHex ?? "#D4AF37"))
+                                                .fill(sub.categoryEnum.color)
                                                 .frame(width: 10, height: 10)
                                             
                                             Text(sub.displayName)

@@ -8,12 +8,11 @@ import SwiftUI
 // MARK: - CountdownChip
 
 /**
- `CountdownChip` renders an adaptive status badge on its own dedicated row below card details:
- - High-contrast text colors in both Light & Dark modes to eliminate eye strain
- - Cancelled: Neutral Slate / Muted Orange (#94A3B8 Light / #F97316 Dark)
- - Overdue / Due Today: Crimson Red (#DC2626 Light / #FF6B6B Dark)
- - Due in 1-7 Days: Deep Warm Amber (#C2410C Light / #F59E0B Dark)
- - Paid / Safe (> 7 Days): Rich Gold/Brass (#9A3412 Light / #D4AF37 Dark)
+ `CountdownChip` renders an adaptive status badge with Spendora Teal brand system colors:
+ - Success / Safe (> 7 Days): Spendora Teal (#00D4AA)
+ - Warning / Due Soon (1-7 Days): Gold Warning (#FFD93D)
+ - Danger / Overdue / Due Today: Coral Red (#FF6B6B)
+ - Cancelled / Inactive: Coral Red (#FF6B6B)
  */
 struct CountdownChip: View {
     let daysRemaining: Int
@@ -26,40 +25,40 @@ struct CountdownChip: View {
     
     private var badgeTextColor: Color {
         if isCancelled {
-            return colorScheme == .dark ? Color(hex: "#F97316") : Color(hex: "#C2410C")
+            return colorScheme == .dark ? Color(hex: "#FF6B6B") : Color(hex: "#DC2626")
         } else if daysRemaining <= 0 {
             // Overdue / Due Today Red
             return colorScheme == .dark ? Color(hex: "#FF6B6B") : Color(hex: "#DC2626")
         } else if daysRemaining <= 7 {
-            // Due Soon Amber (High contrast dark amber in light mode)
-            return colorScheme == .dark ? Color(hex: "#F59E0B") : Color(hex: "#C2410C")
+            // Due Soon Gold
+            return colorScheme == .dark ? Color(hex: "#FFD93D") : Color(hex: "#B45309")
         } else {
-            // Safe Paid Signature Gold/Brass
-            return colorScheme == .dark ? Color(hex: "#D4AF37") : Color(hex: "#B45309")
+            // Safe Paid Spendora Teal
+            return colorScheme == .dark ? Color(hex: "#00D4AA") : Color(hex: "#059669")
         }
     }
     
     private var badgeBgColor: Color {
         if isCancelled {
-            return colorScheme == .dark ? Color(hex: "#F97316").opacity(0.18) : Color(hex: "#FFEDD5")
+            return colorScheme == .dark ? Color(hex: "#FF6B6B").opacity(0.18) : Color(hex: "#FEE2E2")
         } else if daysRemaining <= 0 {
             return colorScheme == .dark ? Color(hex: "#FF6B6B").opacity(0.22) : Color(hex: "#FEE2E2")
         } else if daysRemaining <= 7 {
-            return colorScheme == .dark ? Color(hex: "#F59E0B").opacity(0.22) : Color(hex: "#FFEDD5")
+            return colorScheme == .dark ? Color(hex: "#FFD93D").opacity(0.22) : Color(hex: "#FEF3C7")
         } else {
-            return colorScheme == .dark ? Color(hex: "#D4AF37").opacity(0.22) : Color(hex: "#FEF3C7")
+            return colorScheme == .dark ? Color(hex: "#00D4AA").opacity(0.18) : Color(hex: "#D1FAE5")
         }
     }
 
     private var badgeBorderColor: Color {
         if isCancelled {
-            return colorScheme == .dark ? Color(hex: "#F97316").opacity(0.35) : Color(hex: "#FDBA74")
+            return colorScheme == .dark ? Color(hex: "#FF6B6B").opacity(0.35) : Color(hex: "#FCA5A5")
         } else if daysRemaining <= 0 {
             return colorScheme == .dark ? Color(hex: "#FF6B6B").opacity(0.4) : Color(hex: "#FCA5A5")
         } else if daysRemaining <= 7 {
-            return colorScheme == .dark ? Color(hex: "#F59E0B").opacity(0.4) : Color(hex: "#FDBA74")
+            return colorScheme == .dark ? Color(hex: "#FFD93D").opacity(0.4) : Color(hex: "#FDE68A")
         } else {
-            return colorScheme == .dark ? Color(hex: "#D4AF37").opacity(0.4) : Color(hex: "#FDE68A")
+            return colorScheme == .dark ? Color(hex: "#00D4AA").opacity(0.35) : Color(hex: "#A7F3D0")
         }
     }
     

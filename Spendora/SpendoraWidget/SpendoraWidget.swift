@@ -1,5 +1,6 @@
 //
 //  SpendoraWidget.swift
+//  Spendora
 //
 
 import WidgetKit
@@ -7,39 +8,8 @@ import SwiftUI
 
 // MARK: - Timeline Provider
 
-// MARK: - Provider
-
-/**
- `Provider` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for provider handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `Provider` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
- */
 struct Provider: TimelineProvider {
 
-    // MARK: - Properties
-
-    
-
-    /**
-     Executes `placeholder` for component logic.
-     
-     - Parameter context: Value passed to `placeholder`.
-     
-     ## Behavior
-     1. Validates method arguments and current state.
-     2. Executes core computation or state mutation.
-     */
     func placeholder(in context: Context) -> SimpleEntry {
         SimpleEntry(
             date: Date(),
@@ -53,17 +23,6 @@ struct Provider: TimelineProvider {
         )
     }
     
-
-    /**
-     Executes `getSnapshot` for component logic.
-     
-     - Parameter context: Value passed to `getSnapshot`.
-     - Parameter completion: Value passed to `getSnapshot`.
-     
-     ## Behavior
-     1. Validates method arguments and current state.
-     2. Executes core computation or state mutation.
-     */
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> Void) {
         let entry = SimpleEntry(
             date: Date(),
@@ -78,17 +37,6 @@ struct Provider: TimelineProvider {
         completion(entry)
     }
     
-
-    /**
-     Executes `getTimeline` for component logic.
-     
-     - Parameter context: Value passed to `getTimeline`.
-     - Parameter completion: Value passed to `getTimeline`.
-     
-     ## Behavior
-     1. Validates method arguments and current state.
-     2. Executes core computation or state mutation.
-     */
     func getTimeline(in context: Context, completion: @escaping (Timeline<SimpleEntry>) -> Void) {
         let defaults = UserDefaults(suiteName: "group.com.trios2026sn.Spendora")
         
@@ -123,48 +71,27 @@ struct Provider: TimelineProvider {
 
 // MARK: - Entry Model
 
-// MARK: - SimpleEntry
-
-/**
- `SimpleEntry` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for simpleentry handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `SimpleEntry` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
- */
 struct SimpleEntry: TimelineEntry {
-
-    // MARK: - Properties
-
-    let date: Date  // date property
-    let totalSpending: Double  // totalSpending property
-    let totalYearly: Double  // totalYearly property
-    let activeCount: Int  // activeCount property
-    let upcomingSubscription: String  // upcomingSubscription property
-    let upcomingCost: Double  // upcomingCost property
-    let upcomingDate: Date?  // upcomingDate property
-    let currencySymbol: String  // currencySymbol property
+    let date: Date
+    let totalSpending: Double
+    let totalYearly: Double
+    let activeCount: Int
+    let upcomingSubscription: String
+    let upcomingCost: Double
+    let upcomingDate: Date?
+    let currencySymbol: String
     
-    var formattedMonthly: String {  // formattedMonthly property
+    var formattedMonthly: String {
         let amount = String(format: "%.2f", totalSpending)
         return "\(currencySymbol)\(amount)"
     }
     
-    var formattedUpcomingCost: String {  // formattedUpcomingCost property
+    var formattedUpcomingCost: String {
         let amount = String(format: "%.2f", upcomingCost)
         return "\(currencySymbol)\(amount)"
     }
     
-    var formattedUpcomingDate: String {  // formattedUpcomingDate property
+    var formattedUpcomingDate: String {
         guard let upcomingDate = upcomingDate else { return "No bills due" }
         if Calendar.current.isDateInToday(upcomingDate) {
             return "Due Today"
@@ -178,35 +105,10 @@ struct SimpleEntry: TimelineEntry {
 
 // MARK: - Entry View
 
-// MARK: - SpendoraWidgetEntryView
-
-/**
- `SpendoraWidgetEntryView` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for spendorawidgetentryview handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `SpendoraWidgetEntryView` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
- */
 struct SpendoraWidgetEntryView: View {
-
-    // MARK: - Properties
-
-    var entry: Provider.Entry  // entry property
+    var entry: Provider.Entry
     @Environment(\.widgetFamily) var family
 
-
-    // MARK: - Body
-
-    /// Main SwiftUI layout body property.
     var body: some View {
         switch family {
         case .systemMedium:
@@ -219,51 +121,26 @@ struct SpendoraWidgetEntryView: View {
 
 // MARK: - Small Widget View
 
-// MARK: - SmallWidgetView
-
-/**
- `SmallWidgetView` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for smallwidgetview handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `SmallWidgetView` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
- */
 struct SmallWidgetView: View {
+    let entry: SimpleEntry
 
-    // MARK: - Properties
-
-    let entry: SimpleEntry  // entry property
-    
-
-    // MARK: - Body
-
-    /// Main SwiftUI layout body property.
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            // Header Bar
+            // Header Bar (Spendora Teal Gradient)
             HStack(spacing: 6) {
                 Image("AppLogo")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 22, height: 22)
                     .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
-                    .shadow(color: Color(hex: "#FF6B6B").opacity(0.3), radius: 3, x: 0, y: 1.5)
+                    .shadow(color: Color(hex: "#00D4AA").opacity(0.3), radius: 3, x: 0, y: 1.5)
                 
                 Text("SPENDORA")
                     .font(.system(size: 10, weight: .black, design: .rounded))
                     .tracking(1.2)
                     .foregroundStyle(
                         LinearGradient(
-                            colors: [Color(hex: "#FF6B6B"), Color(hex: "#4ECDC4")],
+                            colors: [Color(hex: "#00D4AA"), Color(hex: "#00B4D8")],
                             startPoint: .leading,
                             endPoint: .trailing
                         )
@@ -273,7 +150,7 @@ struct SmallWidgetView: View {
             
             Spacer(minLength: 2)
             
-            // Spend Section
+            // Spend Section (Spendora Teal #00D4AA)
             VStack(alignment: .leading, spacing: 2) {
                 Text("THIS MONTH")
                     .font(.system(size: 9, weight: .bold, design: .rounded))
@@ -281,20 +158,19 @@ struct SmallWidgetView: View {
                     .tracking(1.0)
                 
                 Text(entry.formattedMonthly)
-                    .font(.system(size: 22, weight: .bold, design: .rounded))
-                    .fontDesign(.rounded)
-                    .monospacedDigit()
+                    .font(.system(size: 22, weight: .black, design: .rounded))
+                    .foregroundColor(Color(hex: "#00D4AA"))
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
             }
             
             Spacer(minLength: 2)
             
-            // Upcoming Pill
+            // Upcoming Pill (Coral Accent)
             HStack(spacing: 5) {
                 Image(systemName: "bell.fill")
                     .font(.system(size: 9))
-                    .foregroundColor(Color(hex: "#FF6B6B"))
+                    .foregroundColor(Color(hex: "#FFD93D"))
                 
                 VStack(alignment: .leading, spacing: 0) {
                     Text(entry.upcomingSubscription)
@@ -321,34 +197,9 @@ struct SmallWidgetView: View {
 
 // MARK: - Medium Widget View
 
-// MARK: - MediumWidgetView
-
-/**
- `MediumWidgetView` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for mediumwidgetview handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `MediumWidgetView` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
- */
 struct MediumWidgetView: View {
+    let entry: SimpleEntry
 
-    // MARK: - Properties
-
-    let entry: SimpleEntry  // entry property
-    
-
-    // MARK: - Body
-
-    /// Main SwiftUI layout body property.
     var body: some View {
         HStack(spacing: 16) {
             // Left Half: Spending Summary
@@ -359,14 +210,14 @@ struct MediumWidgetView: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 24, height: 24)
                         .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
-                        .shadow(color: Color(hex: "#FF6B6B").opacity(0.3), radius: 3, x: 0, y: 1.5)
+                        .shadow(color: Color(hex: "#00D4AA").opacity(0.3), radius: 3, x: 0, y: 1.5)
                     
                     Text("SPENDORA")
                         .font(.system(size: 11, weight: .black, design: .rounded))
                         .tracking(1.5)
                         .foregroundStyle(
                             LinearGradient(
-                                colors: [Color(hex: "#FF6B6B"), Color(hex: "#4ECDC4")],
+                                colors: [Color(hex: "#00D4AA"), Color(hex: "#00B4D8")],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
@@ -382,9 +233,8 @@ struct MediumWidgetView: View {
                         .tracking(1.0)
                     
                     Text(entry.formattedMonthly)
-                        .font(.system(size: 26, weight: .bold, design: .rounded))
-                        .fontDesign(.rounded)
-                        .monospacedDigit()
+                        .font(.system(size: 26, weight: .black, design: .rounded))
+                        .foregroundColor(Color(hex: "#00D4AA"))
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                 }
@@ -393,7 +243,7 @@ struct MediumWidgetView: View {
                     HStack(spacing: 4) {
                         Image(systemName: "checkmark.circle.fill")
                             .font(.system(size: 9))
-                            .foregroundColor(Color(hex: "#4ECDC4"))
+                            .foregroundColor(Color(hex: "#00D4AA"))
                         Text("\(entry.activeCount) active subscriptions")
                             .font(.system(size: 9, weight: .medium, design: .rounded))
                             .foregroundColor(.secondary)
@@ -415,7 +265,7 @@ struct MediumWidgetView: View {
                     Spacer()
                     Image(systemName: "calendar.badge.clock")
                         .font(.system(size: 11))
-                        .foregroundColor(Color(hex: "#FF6B6B"))
+                        .foregroundColor(Color(hex: "#FFD93D"))
                 }
                 
                 if entry.upcomingSubscription != "None" && entry.upcomingSubscription != "No subscriptions" {
@@ -441,7 +291,7 @@ struct MediumWidgetView: View {
                         .padding(.vertical, 4)
                         .background(
                             LinearGradient(
-                                colors: [Color(hex: "#FF6B6B"), Color(hex: "#FF9A9E")],
+                                colors: [Color(hex: "#FF6B6B"), Color(hex: "#FF8A5C")],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
@@ -469,32 +319,10 @@ struct MediumWidgetView: View {
 
 // MARK: - Widget Main Configuration
 @main
-
-// MARK: - SpendoraWidget
-
-/**
- `SpendoraWidget` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for spendorawidget handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `SpendoraWidget` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
- */
 struct SpendoraWidget: Widget {
-
-    // MARK: - Properties
-
-    let kind: String = "SpendoraWidget"  // kind property
+    let kind: String = "SpendoraWidget"
     
-    var body: some WidgetConfiguration {  // body property
+    var body: some WidgetConfiguration {
         StaticConfiguration(
             kind: kind,
             provider: Provider()
@@ -511,7 +339,7 @@ struct SpendoraWidget: Widget {
 extension Color {
     init(hex: String) {
         let hex = hex.trimmingCharacters(in: .alphanumerics.inverted)
-        var int: UInt64 = 0  // int property
+        var int: UInt64 = 0
         Scanner(string: hex).scanHexInt64(&int)
         let a, r, g, b: UInt64
         switch hex.count {
@@ -550,10 +378,6 @@ extension Color {
     )
 }
 
-
-// MARK: - Preview
-
-/// Xcode Canvas Preview Provider.
 #Preview(as: .systemMedium) {
     SpendoraWidget()
 } timeline: {

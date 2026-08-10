@@ -9,8 +9,7 @@ import SwiftUI
 
 /**
  `PremiumOnboardingView` presents Spendora's 4-screen introduction flow,
- featuring Apple HIG card containers, vector hero icon badges, animated capsule page indicators,
- and 100% WCAG contrast colors that look stunning in both Light and Dark modes.
+ styled with Spendora Teal brand identity, vector hero icon badges, and animated capsule page indicators.
  */
 struct PremiumOnboardingView: View {
 
@@ -27,25 +26,25 @@ struct PremiumOnboardingView: View {
             icon: "sparkles.rectangle.stack.fill",
             title: "Track All Subscriptions",
             description: "Keep Netflix, Spotify, Apple One, and all your recurring payments organized in one central executive dashboard.",
-            color: Color(hex: "#D4AF37")
+            color: Color(hex: "#00D4AA")
         ),
         OnboardingPage(
             icon: "bell.badge.fill",
             title: "Smart Billing Alerts",
             description: "Receive advance push notifications before every renewal date. Never get caught off guard by auto-renewals again.",
-            color: Color(hex: "#F59E0B")
+            color: Color(hex: "#FFD93D")
         ),
         OnboardingPage(
             icon: "chart.line.uptrend.xyaxis.circle.fill",
             title: "AI-Powered Analytics",
             description: "Gain full visibility into your annual spending run-rate with intelligent financial breakdowns and savings score insights.",
-            color: Color(hex: "#8B5CF6")
+            color: Color(hex: "#00B4D8")
         ),
         OnboardingPage(
             icon: "lock.shield.fill",
             title: "100% On-Device & Private",
             description: "Your financial data stays strictly encrypted on your local device. Zero external cloud tracking or bank credentials required.",
-            color: Color(hex: "#38BDF8")
+            color: Color(hex: "#6C5CE7")
         )
     ]
 
@@ -53,9 +52,7 @@ struct PremiumOnboardingView: View {
 
     var body: some View {
         ZStack {
-            // Adaptive Dark & Light Background Surface
-            Color.appBackground
-                .ignoresSafeArea()
+            SpendoraBrandBackgroundView()
             
             VStack(spacing: 0) {
                 // Top Header: Skip Button
@@ -101,13 +98,13 @@ struct PremiumOnboardingView: View {
                     HStack(spacing: 8) {
                         ForEach(pages.indices, id: \.self) { index in
                             Capsule()
-                                .fill(currentPage == index ? Color.brandPrimary : Color.textSecondary.opacity(0.3))
+                                .fill(currentPage == index ? Color(hex: "#00D4AA") : Color.textSecondary.opacity(0.3))
                                 .frame(width: currentPage == index ? 24 : 8, height: 8)
                                 .animation(.spring(response: 0.3, dampingFraction: 0.7), value: currentPage)
                         }
                     }
                     
-                    // Primary Action Button
+                    // Primary Action Button (Spendora Teal Gradient)
                     Button {
                         if currentPage == pages.count - 1 {
                             completeOnboarding()
@@ -124,18 +121,18 @@ struct PremiumOnboardingView: View {
                             Image(systemName: currentPage == pages.count - 1 ? "sparkles" : "arrow.right")
                                 .font(.system(size: 16, weight: .bold))
                         }
-                        .foregroundColor(Color(hex: "#0F0F1A"))
+                        .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
                         .background(
                             LinearGradient(
-                                colors: [Color(hex: "#D4AF37"), Color(hex: "#F59E0B")],
+                                colors: [Color(hex: "#00D4AA"), Color(hex: "#00B4D8")],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
                         )
                         .cornerRadius(18)
-                        .shadow(color: Color(hex: "#D4AF37").opacity(0.4), radius: 10, x: 0, y: 5)
+                        .shadow(color: Color(hex: "#00D4AA").opacity(0.4), radius: 10, x: 0, y: 5)
                         .opacity(showButtons ? 1 : 0)
                     }
                     .padding(.horizontal, 20)
@@ -154,6 +151,59 @@ struct PremiumOnboardingView: View {
         UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
         hasCompletedOnboarding = true
         dismiss()
+    }
+}
+
+// MARK: - OnboardingPage Model
+
+struct OnboardingPage: Identifiable {
+    let id = UUID()
+    let icon: String
+    let title: String
+    let description: String
+    let color: Color
+}
+
+// MARK: - OnboardingPageView
+
+struct OnboardingPageView: View {
+    let page: OnboardingPage
+
+    var body: some View {
+        VStack(spacing: 24) {
+            // Icon Emblem
+            ZStack {
+                Circle()
+                    .fill(
+                        LinearGradient(
+                            colors: [page.color.opacity(0.25), page.color.opacity(0.08)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 130, height: 130)
+                
+                Image(systemName: page.icon)
+                    .font(.system(size: 54, weight: .bold))
+                    .foregroundColor(page.color)
+            }
+            .shadow(color: page.color.opacity(0.3), radius: 12, y: 6)
+            
+            VStack(spacing: 12) {
+                Text(page.title)
+                    .font(.system(size: 26, weight: .bold, design: .rounded))
+                    .foregroundColor(.textPrimary)
+                    .multilineTextAlignment(.center)
+                
+                Text(page.description)
+                    .font(.system(size: 16, weight: .regular, design: .rounded))
+                    .foregroundColor(.textSecondary)
+                    .multilineTextAlignment(.center)
+                    .lineSpacing(4)
+                    .padding(.horizontal, 24)
+            }
+        }
+        .padding(.horizontal, 20)
     }
 }
 

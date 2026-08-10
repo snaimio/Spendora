@@ -9,11 +9,7 @@ import UIKit
 // MARK: - MarkAsPaidButton
 
 /**
- `MarkAsPaidButton` provides a clean, zero-warning bill payment recorder:
- - Uses SwiftUI Menu for options when paid (Zero UIKit AutoLayout warnings!)
- - Action State: "Log Payment ($24.99)"
- - Paid State: "Paid ($24.99)" (with Menu dropdown for Undo / Re-log)
- - Plays tactile haptic feedback
+ `MarkAsPaidButton` provides bill payment recording styled with Spendora Teal and Gold gradients.
  */
 struct MarkAsPaidButton: View {
     @Bindable var subscription: Subscription
@@ -56,13 +52,13 @@ struct MarkAsPaidButton: View {
                     .padding(.vertical, 8)
                     .background(
                         LinearGradient(
-                            colors: [Color(hex: "#D4AF37"), Color(hex: "#B8860B")],
+                            colors: [Color(hex: "#00D4AA"), Color(hex: "#00B4D8")],
                             startPoint: .leading,
                             endPoint: .trailing
                         )
                     )
                     .cornerRadius(12)
-                    .shadow(color: Color(hex: "#D4AF37").opacity(0.3), radius: 4, x: 0, y: 2)
+                    .shadow(color: Color(hex: "#00D4AA").opacity(0.3), radius: 4, x: 0, y: 2)
                 }
             } else {
                 Button {
@@ -82,13 +78,13 @@ struct MarkAsPaidButton: View {
                     .padding(.vertical, 8)
                     .background(
                         LinearGradient(
-                            colors: [Color(hex: "#FFD93D"), Color(hex: "#F59E0B")],
+                            colors: [Color(hex: "#FFD93D"), Color(hex: "#FF8A5C")],
                             startPoint: .leading,
                             endPoint: .trailing
                         )
                     )
                     .cornerRadius(12)
-                    .shadow(color: Color(hex: "#F59E0B").opacity(0.3), radius: 4, x: 0, y: 2)
+                    .shadow(color: Color(hex: "#FFD93D").opacity(0.3), radius: 4, x: 0, y: 2)
                 }
                 .buttonStyle(.plain)
             }

@@ -8,15 +8,13 @@ import SwiftUI
 // MARK: - AIInsightsView
 
 /**
- `AIInsightsView` presents Spendora's Executive AI Financial Intelligence engine:
- - Portfolio Health Index (0-100) with 5-Year Cost Projection & Inflation Analysis
- - Duplicate / Overlapping Service Detector (e.g., Multiple Streaming or AI services)
- - Low-Usage Value-For-Money (VFM) Audit with exact annual dollar leakage
- - Annual Billing Discount Arbitrage Calculator (~15-20% savings)
- - Free Trial Expiration & Auto-Renewal Radar
- - Category Allocation & Smart Financial Tips
+ `AIInsightsView` delivers executive AI financial intelligence, portfolio audits, duplicate detection,
+ and category spending analysis with Spendora Teal brand system.
  */
 struct AIInsightsView: View {
+
+    // MARK: - Properties
+
     let subscriptions: [Subscription]
     @Environment(\.dismiss) private var dismiss
 
@@ -33,20 +31,23 @@ struct AIInsightsView: View {
     }
 
     private var fiveYearProjection: Double {
-        totalYearly * 5
+        totalYearly * 5.0
     }
 
-    // AI Health Score calculation (0 - 100)
     private var healthScore: Int {
         guard !activeSubscriptions.isEmpty else { return 100 }
-        var score = 95
-        let underused = activeSubscriptions.filter { $0.usageRating <= 2 }.count
-        score -= (underused * 10)
-        let endingTrials = activeSubscriptions.filter { $0.isTrial && !$0.trialConvertedToPaid }.count
-        score -= (endingTrials * 6)
-        let monthlyOnly = activeSubscriptions.filter { !$0.isYearly && !$0.isOneTime }.count
-        score -= (monthlyOnly * 2)
-        if totalMonthly > 200 { score -= 5 }
+        var score = 100
+        
+        let lowUsage = activeSubscriptions.filter { $0.usageRating <= 2 }
+        score -= (lowUsage.count * 12)
+        
+        let categoryGrouped = Dictionary(grouping: activeSubscriptions) { $0.effectiveCategory }
+        let duplicateCategories = categoryGrouped.filter { $0.value.count > 1 }
+        score -= (duplicateCategories.count * 8)
+        
+        let activeTrials = activeSubscriptions.filter { $0.isTrial && !$0.trialConvertedToPaid }
+        score -= (activeTrials.count * 5)
+        
         return max(35, min(100, score))
     }
 
@@ -60,107 +61,110 @@ struct AIInsightsView: View {
 
     private var healthStatusColor: Color {
         switch healthScore {
-        case 85...100: return Color(hex: "#10B981")
-        case 70...84: return Color(hex: "#F59E0B")
+        case 85...100: return Color(hex: "#00D4AA")
+        case 70...84: return Color(hex: "#FFD93D")
         default: return Color(hex: "#FF6B6B")
         }
     }
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: 20) {
-                    // MARK: - Executive AI Health Banner
-                    AIHealthBannerView(
-                        healthScore: healthScore,
-                        statusText: healthStatusText,
-                        statusColor: healthStatusColor,
-                        subscriptionCount: activeSubscriptions.count,
-                        totalMonthly: totalMonthly,
-                        totalYearly: totalYearly,
-                        fiveYearProjection: fiveYearProjection
-                    )
-                    
-                    if activeSubscriptions.isEmpty {
-                        EmptyInsightsView()
-                    } else {
-                        // MARK: - Smart AI Audit Recommendations
-                        VStack(alignment: .leading, spacing: 14) {
-                            HStack(spacing: 6) {
-                                Image(systemName: "sparkles")
-                                    .font(.headline)
-                                    .foregroundColor(Color(hex: "#D4AF37"))
-                                Text("AI Financial Audits & Opportunities")
-                                    .font(.system(.headline, design: .rounded))
-                                    .foregroundColor(.textPrimary)
+            ZStack {
+                SpendoraBrandBackgroundView()
+                
+                ScrollView {
+                    VStack(spacing: 20) {
+                        // MARK: - Executive AI Health Banner
+                        AIHealthBannerView(
+                            healthScore: healthScore,
+                            statusText: healthStatusText,
+                            statusColor: healthStatusColor,
+                            subscriptionCount: activeSubscriptions.count,
+                            totalMonthly: totalMonthly,
+                            totalYearly: totalYearly,
+                            fiveYearProjection: fiveYearProjection
+                        )
+                        
+                        if activeSubscriptions.isEmpty {
+                            EmptyInsightsView()
+                        } else {
+                            // MARK: - Smart AI Audit Recommendations
+                            VStack(alignment: .leading, spacing: 14) {
+                                HStack(spacing: 6) {
+                                    Image(systemName: "sparkles")
+                                        .font(.headline)
+                                        .foregroundColor(Color(hex: "#00D4AA"))
+                                    Text("AI Financial Audits & Opportunities")
+                                        .font(.system(.headline, design: .rounded))
+                                        .foregroundColor(.textPrimary)
+                                }
+                                .padding(.horizontal, 4)
+                                
+                                // Audit 1: Duplicate / Overlapping Service Detector
+                                let categoryGrouped = Dictionary(grouping: activeSubscriptions) { $0.effectiveCategory }
+                                let overlappingCategories = categoryGrouped.filter { $0.value.count > 1 }
+                                
+                                if let topOverlap = overlappingCategories.max(by: { $0.value.count < $1.value.count }) {
+                                    let combinedCost = topOverlap.value.reduce(0) { $0 + $1.monthlyCost }
+                                    AIRecommendationCard(
+                                        icon: "rectangle.stack.fill",
+                                        iconColor: Color(hex: "#6C5CE7"),
+                                        title: "Overlapping \(topOverlap.key) Services (\(topOverlap.value.count))",
+                                        description: "You have \(topOverlap.value.count) active services in \(topOverlap.key) (\(topOverlap.value.map { $0.displayName }.joined(separator: ", "))). Combining or alternating these services could save you up to \(CurrencyManager.shared.format(combinedCost * 0.5))/month (\(CurrencyManager.shared.format(combinedCost * 6))/year).",
+                                        badgeText: "Overlap Detected"
+                                    )
+                                }
+                                
+                                // Audit 2: Underused Subscriptions (VFM Audit)
+                                let underused = activeSubscriptions.filter { $0.usageRating <= 2 }
+                                if !underused.isEmpty {
+                                    let totalWaste = underused.reduce(0) { $0 + $1.monthlyCost }
+                                    AIRecommendationCard(
+                                        icon: "exclamationmark.triangle.fill",
+                                        iconColor: Color(hex: "#FF6B6B"),
+                                        title: "Low Value-for-Money (\(underused.count) Services)",
+                                        description: "Services with low rating: \(underused.map { $0.displayName }.joined(separator: ", ")). Cancelling these unneeded memberships saves \(CurrencyManager.shared.format(totalWaste))/month (\(CurrencyManager.shared.format(totalWaste * 12))/yr).",
+                                        badgeText: "High Impact"
+                                    )
+                                }
+                                
+                                // Audit 3: Monthly to Yearly Conversion Arbitrage
+                                let monthlyOnly = activeSubscriptions.filter { !$0.isYearly && !$0.isOneTime }
+                                if !monthlyOnly.isEmpty {
+                                    let estimatedYearlySavings = monthlyOnly.reduce(0) { $0 + ($1.yearlyCost * 0.16) }
+                                    AIRecommendationCard(
+                                        icon: "arrow.triangle.2.circlepath.circle.fill",
+                                        iconColor: Color(hex: "#00D4AA"),
+                                        title: "Switch Monthly Plans to Annual Upfront",
+                                        description: "Converting \(monthlyOnly.count) monthly subscription(s) to annual billing unlocks an average 16% discount, saving ~\(CurrencyManager.shared.format(estimatedYearlySavings))/year.",
+                                        badgeText: "Save ~16%"
+                                    )
+                                }
+                                
+                                // Audit 4: Active Free Trial Radar
+                                let trials = activeSubscriptions.filter { $0.isTrial && !$0.trialConvertedToPaid }
+                                if !trials.isEmpty {
+                                    AIRecommendationCard(
+                                        icon: "clock.badge.exclamationmark.fill",
+                                        iconColor: Color(hex: "#FFD93D"),
+                                        title: "Free Trial Expiration Radar",
+                                        description: "You have \(trials.count) active trial(s) (\(trials.map { $0.displayName }.joined(separator: ", "))). Set advance reminders to prevent unexpected auto-charges.",
+                                        badgeText: "Action Needed"
+                                    )
+                                }
                             }
-                            .padding(.horizontal, 4)
                             
-                            // Audit 1: Duplicate / Overlapping Service Detector
-                            let categoryGrouped = Dictionary(grouping: activeSubscriptions) { $0.effectiveCategory }
-                            let overlappingCategories = categoryGrouped.filter { $0.value.count > 1 }
+                            // MARK: - Category Allocation & Spend Weight
+                            SpendingDistributionView(subscriptions: activeSubscriptions)
                             
-                            if let topOverlap = overlappingCategories.max(by: { $0.value.count < $1.value.count }) {
-                                let combinedCost = topOverlap.value.reduce(0) { $0 + $1.monthlyCost }
-                                AIRecommendationCard(
-                                    icon: "rectangle.stack.fill",
-                                    iconColor: Color(hex: "#8B5CF6"),
-                                    title: "Overlapping \(topOverlap.key) Services (\(topOverlap.value.count))",
-                                    description: "You have \(topOverlap.value.count) active services in \(topOverlap.key) (\(topOverlap.value.map { $0.displayName }.joined(separator: ", "))). Combining or alternating these services could save you up to \(CurrencyManager.shared.format(combinedCost * 0.5))/month (\(CurrencyManager.shared.format(combinedCost * 6))/year).",
-                                    badgeText: "Overlap Detected"
-                                )
-                            }
-                            
-                            // Audit 2: Underused Subscriptions (VFM Audit)
-                            let underused = activeSubscriptions.filter { $0.usageRating <= 2 }
-                            if !underused.isEmpty {
-                                let totalWaste = underused.reduce(0) { $0 + $1.monthlyCost }
-                                AIRecommendationCard(
-                                    icon: "exclamationmark.triangle.fill",
-                                    iconColor: Color(hex: "#FF6B6B"),
-                                    title: "Low Value-for-Money (\(underused.count) Services)",
-                                    description: "Services with low rating: \(underused.map { $0.displayName }.joined(separator: ", ")). Cancelling these unneeded memberships saves \(CurrencyManager.shared.format(totalWaste))/month (\(CurrencyManager.shared.format(totalWaste * 12))/yr).",
-                                    badgeText: "High Impact"
-                                )
-                            }
-                            
-                            // Audit 3: Monthly to Yearly Conversion Arbitrage
-                            let monthlyOnly = activeSubscriptions.filter { !$0.isYearly && !$0.isOneTime }
-                            if !monthlyOnly.isEmpty {
-                                let estimatedYearlySavings = monthlyOnly.reduce(0) { $0 + ($1.yearlyCost * 0.16) }
-                                AIRecommendationCard(
-                                    icon: "arrow.triangle.2.circlepath.circle.fill",
-                                    iconColor: Color(hex: "#D4AF37"),
-                                    title: "Switch Monthly Plans to Annual Upfront",
-                                    description: "Converting \(monthlyOnly.count) monthly subscription(s) to annual billing unlocks an average 16% discount, saving ~\(CurrencyManager.shared.format(estimatedYearlySavings))/year.",
-                                    badgeText: "Save ~16%"
-                                )
-                            }
-                            
-                            // Audit 4: Active Free Trial Radar
-                            let trials = activeSubscriptions.filter { $0.isTrial && !$0.trialConvertedToPaid }
-                            if !trials.isEmpty {
-                                AIRecommendationCard(
-                                    icon: "clock.badge.exclamationmark.fill",
-                                    iconColor: Color(hex: "#F59E0B"),
-                                    title: "Free Trial Expiration Radar",
-                                    description: "You have \(trials.count) active trial(s) (\(trials.map { $0.displayName }.joined(separator: ", "))). Set advance reminders to prevent unexpected auto-charges.",
-                                    badgeText: "Action Needed"
-                                )
-                            }
+                            // MARK: - Executive AI Financial Optimization Tips
+                            AIOptimizationTipsView()
                         }
-                        
-                        // MARK: - Category Allocation & Spend Weight
-                        SpendingDistributionView(subscriptions: activeSubscriptions)
-                        
-                        // MARK: - Executive AI Financial Optimization Tips
-                        AIOptimizationTipsView()
                     }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 16)
                 }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 16)
             }
-            .background(Color.appBackground.ignoresSafeArea())
             .navigationTitle("AI Financial Insights")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -170,7 +174,7 @@ struct AIInsightsView: View {
                     }
                     .font(.system(.body, design: .rounded))
                     .fontWeight(.bold)
-                    .foregroundColor(.brandPrimary)
+                    .foregroundColor(Color(hex: "#00D4AA"))
                 }
             }
         }
@@ -194,12 +198,12 @@ struct AIHealthBannerView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     HStack(spacing: 6) {
                         Image(systemName: "sparkles")
-                            .foregroundColor(Color(hex: "#D4AF37"))
+                            .foregroundColor(Color(hex: "#00D4AA"))
                             .font(.headline)
                         
                         Text("SPENDORA AI ADVISOR")
                             .font(.system(size: 11, weight: .bold, design: .rounded))
-                            .foregroundColor(Color(hex: "#D4AF37"))
+                            .foregroundColor(Color(hex: "#00D4AA"))
                             .tracking(1.2)
                     }
                     
@@ -257,7 +261,7 @@ struct AIHealthBannerView: View {
                     Text(CurrencyManager.shared.format(totalMonthly))
                         .font(.system(.subheadline, design: .rounded))
                         .fontWeight(.bold)
-                        .foregroundColor(.textPrimary)
+                        .foregroundColor(Color(hex: "#00D4AA"))
                 }
                 
                 Spacer()
@@ -269,7 +273,7 @@ struct AIHealthBannerView: View {
                     Text(CurrencyManager.shared.format(totalYearly))
                         .font(.system(.subheadline, design: .rounded))
                         .fontWeight(.bold)
-                        .foregroundColor(Color(hex: "#FF6B6B"))
+                        .foregroundColor(Color(hex: "#00B4D8"))
                 }
                 
                 Spacer()
@@ -281,18 +285,12 @@ struct AIHealthBannerView: View {
                     Text(CurrencyManager.shared.format(fiveYearProjection))
                         .font(.system(.subheadline, design: .rounded))
                         .fontWeight(.bold)
-                        .foregroundColor(Color(hex: "#D4AF37"))
+                        .foregroundColor(Color(hex: "#FFD93D"))
                 }
             }
         }
         .padding(18)
-        .background(Color.cardBackground)
-        .cornerRadius(20)
-        .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 4)
-        .overlay(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .stroke(Color(hex: "#D4AF37").opacity(0.25), lineWidth: 1)
-        )
+        .spendora3DCard(cornerRadius: 20)
     }
 }
 
@@ -342,13 +340,7 @@ struct AIRecommendationCard: View {
             }
         }
         .padding(16)
-        .background(Color.cardBackground)
-        .cornerRadius(18)
-        .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 3)
-        .overlay(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .stroke(iconColor.opacity(0.2), lineWidth: 1)
-        )
+        .spendora3DCard(cornerRadius: 18)
     }
 }
 
@@ -418,27 +410,22 @@ struct SpendingDistributionView: View {
             }
         }
         .padding(18)
-        .background(Color.cardBackground)
-        .cornerRadius(20)
-        .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 3)
-        .overlay(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .stroke(Color.secondary.opacity(0.12), lineWidth: 1)
-        )
+        .spendora3DCard(cornerRadius: 20)
     }
 
     private func categoryColor(for category: String) -> Color {
         switch category {
         case "Entertainment": return .categoryEntertainment
-        case "Music": return Color(hex: "#1DB954")
-        case "AI & Tools": return Color(hex: "#8B5CF6")
+        case "Music": return .categoryMusic
+        case "AI & Tools": return .categoryAiTools
         case "Productivity": return .categoryProductivity
         case "Health & Fitness": return .categoryHealth
         case "Shopping": return .categoryShopping
         case "Food & Dining": return .categoryFood
         case "Education": return .categoryEducation
-        case "Services": return Color(hex: "#0EA5E9")
-        default: return Color(hex: "#D4AF37")
+        case "Gaming": return .categoryGaming
+        case "Utilities": return .categoryUtilities
+        default: return .categoryOther
         }
     }
 }
@@ -450,7 +437,7 @@ struct AIOptimizationTipsView: View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(spacing: 6) {
                 Image(systemName: "lightbulb.fill")
-                    .foregroundColor(Color(hex: "#F59E0B"))
+                    .foregroundColor(Color(hex: "#FFD93D"))
                     .font(.headline)
                 Text("Executive Financial Tips")
                     .font(.system(.headline, design: .rounded))
@@ -478,13 +465,7 @@ struct AIOptimizationTipsView: View {
             }
         }
         .padding(18)
-        .background(Color.cardBackground)
-        .cornerRadius(20)
-        .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 3)
-        .overlay(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .stroke(Color.secondary.opacity(0.12), lineWidth: 1)
-        )
+        .spendora3DCard(cornerRadius: 20)
     }
 }
 
@@ -499,7 +480,7 @@ struct TipRow: View {
                 .font(.system(size: 13, weight: .bold, design: .rounded))
                 .foregroundColor(Color(hex: "#0F0F1A"))
                 .frame(width: 24, height: 24)
-                .background(Color(hex: "#D4AF37"))
+                .background(Color(hex: "#00D4AA"))
                 .clipShape(Circle())
             
             VStack(alignment: .leading, spacing: 3) {
@@ -524,11 +505,11 @@ struct EmptyInsightsView: View {
         VStack(spacing: 16) {
             ZStack {
                 Circle()
-                    .fill(Color(hex: "#D4AF37").opacity(0.15))
+                    .fill(Color(hex: "#00D4AA").opacity(0.15))
                     .frame(width: 80, height: 80)
                 Image(systemName: "sparkles")
                     .font(.system(size: 36))
-                    .foregroundColor(Color(hex: "#D4AF37"))
+                    .foregroundColor(Color(hex: "#00D4AA"))
             }
             
             Text("No Subscriptions Added")
@@ -544,7 +525,6 @@ struct EmptyInsightsView: View {
         }
         .padding(.vertical, 40)
         .frame(maxWidth: .infinity)
-        .background(Color.cardBackground)
-        .cornerRadius(20)
+        .spendora3DCard(cornerRadius: 20)
     }
 }
