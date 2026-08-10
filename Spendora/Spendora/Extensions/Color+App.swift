@@ -84,6 +84,18 @@ extension Color {
             ? UIColor(hex: "#F87171")
             : UIColor(hex: "#EF4444")
     })
+    
+    static let brandPurple = Color(hex: "#8B5CF6")
+    static let brandCyan = Color(hex: "#06B6D4")
+    static let brandGold = Color(hex: "#F59E0B")
+    static let brandAmber = Color(hex: "#F59E0B")
+    static let brandRose = Color(hex: "#EC4899")
+    static let brandSlate = Color(hex: "#64748B")
+    static let brandTertiary = Color(UIColor { trait in
+        trait.userInterfaceStyle == .dark
+            ? UIColor(hex: "#818CF8")
+            : UIColor(hex: "#6366F1")
+    })
 
     // MARK: - Adaptive Canvas & Surfaces
     static let appBackground = Color(UIColor { trait in
