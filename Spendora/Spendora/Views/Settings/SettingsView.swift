@@ -306,6 +306,24 @@ struct SettingsView: View {
             } message: {
                 Text("This will delete all your subscriptions. This action cannot be undone.")
             }
+            .alert("Data Reset", isPresented: $showingResetConfirmation) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("All subscriptions have been successfully reset.")
+            }
+            .fileImporter(
+                isPresented: $showingDocumentPicker,
+                allowedContentTypes: [.json]
+            ) { result in
+                switch result {
+                case .success(let url):
+                    guard url.startAccessingSecurityScopedResource() else { return }
+                    defer { url.stopAccessingSecurityScopedResource() }
+                    importBackup(from: url)
+                case .failure(let error):
+                    print("Error selecting backup file: \(error.localizedDescription)")
+                }
+            }
             .sheet(isPresented: $showingProfileSheet) {
                 ProfileView()
             }

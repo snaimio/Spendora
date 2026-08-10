@@ -83,12 +83,12 @@ class PDFExportService {
 
             let totalsY = 140
 
-            "Total Monthly: \(String(format: "$%.2f", totalMonthly))".draw(
+            "Total Monthly: \(CurrencyManager.shared.format(totalMonthly))".draw(
                 at: CGPoint(x: 50, y: totalsY),
                 withAttributes: [.font: headerFont]
             )
 
-            "Total Yearly: \(String(format: "$%.2f", totalYearly))".draw(
+            "Total Yearly: \(CurrencyManager.shared.format(totalYearly))".draw(
                 at: CGPoint(x: 50, y: totalsY + 25),
                 withAttributes: [.font: headerFont]
             )
@@ -117,7 +117,7 @@ class PDFExportService {
                 guard yPosition < pageHeightCGFloat - 60 else { break }
 
                 sub.displayName.draw(at: CGPoint(x: 50, y: yPosition), withAttributes: [.font: textFont])
-                String(format: "$%.2f", sub.cost).draw(at: CGPoint(x: 220, y: yPosition), withAttributes: [.font: textFont])
+                CurrencyManager.shared.format(sub.cost).draw(at: CGPoint(x: 220, y: yPosition), withAttributes: [.font: textFont])
                 (sub.isYearly ? "Yearly" : "Monthly").draw(at: CGPoint(x: 330, y: yPosition), withAttributes: [.font: textFont])
                 sub.formattedNextBillingDate.draw(at: CGPoint(x: 430, y: yPosition), withAttributes: [.font: textFont])
 
