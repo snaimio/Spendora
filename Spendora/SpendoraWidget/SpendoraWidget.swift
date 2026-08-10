@@ -318,7 +318,6 @@ struct MediumWidgetView: View {
 }
 
 // MARK: - Widget Main Configuration
-@main
 struct SpendoraWidget: Widget {
     let kind: String = "SpendoraWidget"
     

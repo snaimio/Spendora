@@ -154,59 +154,6 @@ struct PremiumOnboardingView: View {
     }
 }
 
-// MARK: - OnboardingPage Model
-
-struct OnboardingPage: Identifiable {
-    let id = UUID()
-    let icon: String
-    let title: String
-    let description: String
-    let color: Color
-}
-
-// MARK: - OnboardingPageView
-
-struct OnboardingPageView: View {
-    let page: OnboardingPage
-
-    var body: some View {
-        VStack(spacing: 24) {
-            // Icon Emblem
-            ZStack {
-                Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: [page.color.opacity(0.25), page.color.opacity(0.08)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(width: 130, height: 130)
-                
-                Image(systemName: page.icon)
-                    .font(.system(size: 54, weight: .bold))
-                    .foregroundColor(page.color)
-            }
-            .shadow(color: page.color.opacity(0.3), radius: 12, y: 6)
-            
-            VStack(spacing: 12) {
-                Text(page.title)
-                    .font(.system(size: 26, weight: .bold, design: .rounded))
-                    .foregroundColor(.textPrimary)
-                    .multilineTextAlignment(.center)
-                
-                Text(page.description)
-                    .font(.system(size: 16, weight: .regular, design: .rounded))
-                    .foregroundColor(.textSecondary)
-                    .multilineTextAlignment(.center)
-                    .lineSpacing(4)
-                    .padding(.horizontal, 24)
-            }
-        }
-        .padding(.horizontal, 20)
-    }
-}
-
 // MARK: - Preview
 #Preview {
     PremiumOnboardingView(hasCompletedOnboarding: .constant(false))
