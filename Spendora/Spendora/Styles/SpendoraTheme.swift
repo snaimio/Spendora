@@ -131,6 +131,8 @@ public struct SpendoraFintechCardModifier: ViewModifier {
     }
 }
 
+public typealias SpendoraCoralShadowModifier = SpendoraFintechCardModifier
+
 public struct PressEffectModifier: ViewModifier {
     @State private var isPressed = false
 

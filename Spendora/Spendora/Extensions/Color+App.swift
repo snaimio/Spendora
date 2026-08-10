@@ -109,7 +109,7 @@ struct SpendoraAppleCardModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .modifier(SpendoraCoralShadowModifier(cornerRadius: cornerRadius))
+            .modifier(SpendoraFintechCardModifier(cornerRadius: cornerRadius))
     }
 }
 
