@@ -4,12 +4,13 @@
 //
 
 import SwiftUI
+import SwiftData
 
-// MARK: - MarkAsPaidButton (Apple Style Action Pill)
+// MARK: - MarkAsPaidButton (Apple Native Action Pill)
 
 /**
  `MarkAsPaidButton` provides a one-tap subscription payment logger
- with Apple-level system feedback and clean styling.
+ that advances the billing date, saves to SwiftData, and reschedules alerts.
  */
 struct MarkAsPaidButton: View {
 
@@ -17,7 +18,7 @@ struct MarkAsPaidButton: View {
 
     let subscription: Subscription
     @State private var isPaidThisCycle: Bool = false
-    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.modelContext) private var modelContext
     private let generator = UIImpactFeedbackGenerator(style: .medium)
 
     // MARK: - Body
@@ -27,6 +28,8 @@ struct MarkAsPaidButton: View {
             generator.impactOccurred()
             withAnimation(.spring(response: 0.35, dampingFraction: 0.7)) {
                 subscription.markAsPaid()
+                try? modelContext.save()
+                NotificationService.shared.scheduleNotification(for: subscription)
                 isPaidThisCycle = true
             }
         } label: {
@@ -35,16 +38,17 @@ struct MarkAsPaidButton: View {
                     .font(.system(size: 11, weight: .semibold))
                 
                 Text(isPaidThisCycle ? "Paid" : "Log Payment")
-                    .font(AppStyles.Typography.micro)
+                    .font(.caption2.weight(.semibold))
             }
-            .foregroundColor(isPaidThisCycle ? .brandSuccess : .brandPrimary)
+            .foregroundColor(isPaidThisCycle ? Color(.systemGreen) : SpendoraTheme.accentText)
             .padding(.horizontal, 10)
             .padding(.vertical, 5)
             .background(
-                (isPaidThisCycle ? Color.brandSuccess : Color.brandPrimary)
-                    .opacity(colorScheme == .dark ? 0.16 : 0.10)
+                isPaidThisCycle
+                    ? Color(.systemGreen).opacity(0.12)
+                    : SpendoraTheme.accentTint
             )
-            .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+            .clipShape(Capsule())
         }
         .buttonStyle(.plain)
     }
