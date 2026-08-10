@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-// MARK: - SettingsUserProfileRow (Golden UX Profile Header)
+// MARK: - SettingsUserProfileRow (Apple Native Profile Row)
 
 struct SettingsUserProfileRow: View {
 
@@ -18,44 +18,41 @@ struct SettingsUserProfileRow: View {
 
     var body: some View {
         Button(action: onTap) {
-            HStack(spacing: 14) {
-                // Avatar circle 44x44pt coral gradient background white initials 17pt semibold
+            HStack(spacing: 12) {
+                // Avatar circle 40x40pt with emerald tint background & emerald text
                 ZStack {
                     Circle()
-                        .fill(SpendoraTheme.Colors.coralGradient)
-                        .frame(width: 44, height: 44)
-                        .shadow(color: SpendoraTheme.Colors.coral.opacity(0.25), radius: 6, y: 2)
+                        .fill(SpendoraTheme.accentTint)
+                        .frame(width: 40, height: 40)
                     
                     Text(profileManager.profile.initials)
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundColor(.white)
+                        .font(.headline.weight(.semibold))
+                        .foregroundColor(SpendoraTheme.accentText)
                 }
                 
-                // Name 16pt semibold charcoal & status 13pt secondary
+                // Name & Account Status
                 VStack(alignment: .leading, spacing: 2) {
                     Text(profileManager.profile.displayName)
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(SpendoraTheme.Colors.textPrimary)
+                        .font(.headline)
+                        .foregroundColor(Color(.label))
                     
                     HStack(spacing: 4) {
                         Image(systemName: profileManager.profile.isGuest ? "mappin.circle.fill" : profileManager.profile.provider.icon)
-                            .font(.system(size: 12))
-                            .foregroundColor(SpendoraTheme.Colors.coralWarm)
+                            .font(.system(size: 11))
+                            .foregroundColor(.secondary)
                         
                         Text(profileManager.profile.isGuest ? "Guest Mode (Local)" : profileManager.profile.email)
-                            .font(.system(size: 13, weight: .regular))
-                            .foregroundColor(SpendoraTheme.Colors.textSecondary)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                     }
                 }
                 
                 Spacer()
                 
-                // Chevron coral tint #FFB3A7
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundColor(SpendoraTheme.Colors.chevron)
+                    .font(.caption.weight(.semibold))
+                    .foregroundColor(Color(.tertiaryLabel))
             }
-            .frame(minHeight: 64)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
