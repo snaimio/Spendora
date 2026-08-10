@@ -1,5 +1,6 @@
 //
 //  YearlyReportView.swift
+//  Spendora
 //
 
 import SwiftUI
@@ -23,7 +24,7 @@ enum ReportChartVariation: String, CaseIterable, Identifiable {
     }
 }
 
-// MARK: - YearlyReportView
+// MARK: - YearlyReportView (Apple HIG Dynamic Annual Financial Report)
 
 struct YearlyReportView: View {
     let subscriptions: [Subscription]
@@ -33,59 +34,137 @@ struct YearlyReportView: View {
     @State private var showingShareSheet = false
     @State private var shareImage: UIImage?
 
-    var totalMonthly: Double {
-        subscriptions.reduce(0) { $0 + $1.monthlyCost }
+    private let monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+    // MARK: - Year-Aware Computations
+
+    /// Subscriptions that were active at any point during the selected year
+    private var activeSubscriptionsForYear: [Subscription] {
+        let calendar = Calendar.current
+        return subscriptions.filter { sub in
+            let createdYear = calendar.component(.year, from: sub.createdAt)
+            
+            // If subscription was created in a future year beyond selectedYear, exclude it
+            if createdYear > selectedYear {
+                return false
+            }
+            
+            // If subscription was cancelled before selectedYear started, exclude it
+            if sub.isCancelled, let cancelDate = sub.cancellationDate {
+                let cancelYear = calendar.component(.year, from: cancelDate)
+                if cancelYear < selectedYear {
+                    return false
+                }
+            }
+            
+            return true
+        }
     }
 
-    var totalYearly: Double {
-        subscriptions.reduce(0) { $0 + $1.yearlyCost }
+    /// Monthly cost breakdown for the 12 months of selectedYear
+    private var monthlyData: [(month: String, amount: Double)] {
+        let calendar = Calendar.current
+        let currentYear = calendar.component(.year, from: Date())
+        
+        return (1...12).map { monthIndex in
+            let monthName = monthNames[monthIndex - 1]
+            
+            let monthSpend = activeSubscriptionsForYear.reduce(0.0) { sum, sub in
+                let createdYear = calendar.component(.year, from: sub.createdAt)
+                let createdMonth = calendar.component(.month, from: sub.createdAt)
+                
+                // If created during selectedYear but after this month, don't charge (unless in future year projection)
+                if selectedYear == createdYear && monthIndex < createdMonth && selectedYear <= currentYear {
+                    return sum
+                }
+                
+                // If cancelled during selectedYear before this month, don't charge
+                if sub.isCancelled, let cancelDate = sub.cancellationDate {
+                    let cancelYear = calendar.component(.year, from: cancelDate)
+                    let cancelMonth = calendar.component(.month, from: cancelDate)
+                    if cancelYear == selectedYear && monthIndex > cancelMonth {
+                        return sum
+                    }
+                }
+                
+                if sub.isOneTime {
+                    return (createdYear == selectedYear && createdMonth == monthIndex) ? sum + sub.cost : sum
+                } else if sub.isYearly {
+                    let renewMonth = calendar.component(.month, from: sub.nextBillingDate)
+                    // Charges in the annual renewal month
+                    return (renewMonth == monthIndex) ? sum + sub.cost : sum
+                } else {
+                    // Regular monthly recurring subscription
+                    return sum + sub.monthlyCost
+                }
+            }
+            
+            return (month: monthName, amount: monthSpend)
+        }
     }
 
-    var averageMonthly: Double {
-        guard !subscriptions.isEmpty else { return 0 }
-        return totalYearly / 12.0
+    private var totalYearly: Double {
+        monthlyData.reduce(0.0) { $0 + $1.amount }
     }
 
-    var topCategory: String {
-        let grouped = Dictionary(grouping: subscriptions) { $0.effectiveCategory }
-        let totals = grouped.map { ($0.key, $0.value.reduce(0) { $0 + $1.monthlyCost }) }
-        return totals.max { $0.1 < $1.1 }?.0 ?? "None"
+    private var averageMonthly: Double {
+        totalYearly / 12.0
     }
 
-    var monthlyData: [(month: String, amount: Double)] {
-        let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-        return months.map { (month: $0, amount: totalMonthly) }
+    private var categoryData: [(category: String, amount: Double)] {
+        let calendar = Calendar.current
+        var categoryTotals: [String: Double] = [:]
+        
+        for sub in activeSubscriptionsForYear {
+            let cat = sub.effectiveCategory
+            let subAnnualSpend: Double
+            if sub.isOneTime {
+                let createdYear = calendar.component(.year, from: sub.createdAt)
+                subAnnualSpend = (createdYear == selectedYear) ? sub.cost : 0.0
+            } else if sub.isYearly {
+                subAnnualSpend = sub.cost
+            } else {
+                subAnnualSpend = sub.monthlyCost * 12.0
+            }
+            
+            if subAnnualSpend > 0 {
+                categoryTotals[cat, default: 0.0] += subAnnualSpend
+            }
+        }
+        
+        return categoryTotals.map { (category: $0.key, amount: $0.value) }
+            .sorted { $0.amount > $1.amount }
     }
 
-    var categoryData: [(category: String, amount: Double)] {
-        let grouped = Dictionary(grouping: subscriptions) { $0.effectiveCategory }
-        return grouped.map { (key: String, value: [Subscription]) in
-            (category: key, amount: value.reduce(0.0) { $0 + $1.monthlyCost })
-        }.sorted { $0.amount > $1.amount }
+    private var topCategory: String {
+        categoryData.first?.category ?? "None"
     }
+
+    // MARK: - Body
 
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 20) {
+                VStack(spacing: SpendoraTheme.sectionSpacing) {
                     // MARK: - Year Selector Header
                     YearSelectorBar(selectedYear: $selectedYear)
                     
                     // MARK: - Executive Financial Summary Card
                     ExecutiveYearlySummaryCard(
+                        year: selectedYear,
                         totalYearly: totalYearly,
                         averageMonthly: averageMonthly,
-                        subscriptionCount: subscriptions.count,
+                        subscriptionCount: activeSubscriptionsForYear.count,
                         topCategory: topCategory
                     )
                     
-                    if !subscriptions.isEmpty {
+                    if !activeSubscriptionsForYear.isEmpty && totalYearly > 0 {
                         // MARK: - Chart Variation Picker Segment
                         VStack(alignment: .leading, spacing: 12) {
                             HStack {
                                 Text("Financial Visualizations")
-                                    .font(.system(.headline, design: .rounded))
-                                    .foregroundColor(.textPrimary)
+                                    .font(.headline)
+                                    .foregroundColor(Color(.label))
                                 Spacer()
                             }
                             
@@ -100,41 +179,62 @@ struct YearlyReportView: View {
                             // Dynamic Chart Variation View
                             switch selectedVariation {
                             case .monthlyRunRate:
-                                ExecutiveMonthlyChart(monthlyData: monthlyData)
+                                ExecutiveMonthlyChart(monthlyData: monthlyData, year: selectedYear)
                             case .categoryDonut:
-                                ReportDonutChart(categoryData: categoryData, totalMonthly: totalMonthly)
+                                ReportDonutChart(categoryData: categoryData, totalYearly: totalYearly)
                             case .areaTrend:
-                                ReportAreaTrendChart(monthlyData: monthlyData)
+                                ReportAreaTrendChart(monthlyData: monthlyData, year: selectedYear)
                             }
                         }
                         
                         // MARK: - Category Breakdown Table
-                        ExecutiveCategoryTable(subscriptions: subscriptions)
+                        ExecutiveCategoryTable(categoryData: categoryData, totalYearly: totalYearly)
+                    } else {
+                        VStack(spacing: 12) {
+                            Image(systemName: "calendar.badge.exclamationmark")
+                                .font(.system(size: 40))
+                                .foregroundColor(Color(.secondaryLabel))
+                            Text("No Subscriptions in \(selectedYear)")
+                                .font(.headline)
+                                .foregroundColor(Color(.label))
+                            Text("There were no active subscriptions or renewal commitments recorded for this financial year.")
+                                .font(.subheadline)
+                                .foregroundColor(Color(.secondaryLabel))
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal, 24)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 40)
+                        .background(Color(.secondarySystemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous)
+                                .stroke(Color(.separator), lineWidth: 0.5)
+                        )
                     }
                     
                     // MARK: - Share & Export Report Button
                     Button {
                         generateShareImage()
                     } label: {
-                        HStack(spacing: 10) {
+                        HStack(spacing: 8) {
                             Image(systemName: "square.and.arrow.up.fill")
-                                .font(.headline)
-                            Text("Export Executive Annual Statement")
-                                .font(.system(.subheadline, design: .rounded))
-                                .fontWeight(.bold)
+                                .font(.system(size: 15, weight: .semibold))
+                            Text("Export \(selectedYear) Executive Statement")
+                                .font(.system(size: 15, weight: .semibold))
                         }
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 15)
-                        .background(Color.brandPrimary)
-                        .clipShape(RoundedRectangle(cornerRadius: AppStyles.Radius.card, style: .continuous))
+                        .padding(.vertical, 14)
+                        .background(SpendoraTheme.accent)
+                        .clipShape(RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous))
                     }
-                    .padding(.top, 8)
+                    .padding(.top, 4)
                 }
-                .padding(.horizontal, 16)
+                .padding(.horizontal, SpendoraTheme.cardPadding)
                 .padding(.vertical, 16)
             }
-            .background(Color.appBackground.ignoresSafeArea())
+            .background(Color(.systemBackground).ignoresSafeArea())
             .navigationTitle("Annual Financial Report")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -142,9 +242,8 @@ struct YearlyReportView: View {
                     Button("Done") {
                         dismiss()
                     }
-                    .font(.system(.body, design: .rounded))
-                    .fontWeight(.bold)
-                    .foregroundColor(.brandPrimary)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(SpendoraTheme.accent)
                 }
             }
             .sheet(isPresented: $showingShareSheet) {
@@ -181,45 +280,57 @@ struct YearSelectorBar: View {
     var body: some View {
         HStack {
             Button {
-                selectedYear -= 1
+                withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+                    selectedYear -= 1
+                }
             } label: {
-                Image(systemName: "chevron.left.circle.fill")
-                    .font(.title3)
-                    .foregroundColor(.brandPrimary)
+                Image(systemName: "chevron.left")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(SpendoraTheme.accent)
+                    .frame(width: 36, height: 36)
+                    .background(SpendoraTheme.accentTint)
+                    .clipShape(Circle())
             }
             
             Spacer()
             
-            HStack(spacing: 6) {
+            HStack(spacing: 8) {
                 Image(systemName: "calendar")
-                    .foregroundColor(.brandPrimary)
+                    .foregroundColor(SpendoraTheme.accent)
                 Text("\(selectedYear) Financial Year")
-                    .font(.system(.headline, design: .rounded))
-                    .fontWeight(.bold)
-                    .foregroundColor(.textPrimary)
+                    .font(.system(size: 17, weight: .bold, design: .rounded))
+                    .foregroundColor(Color(.label))
             }
             
             Spacer()
             
             Button {
-                selectedYear += 1
+                withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+                    selectedYear += 1
+                }
             } label: {
-                Image(systemName: "chevron.right.circle.fill")
-                    .font(.title3)
-                    .foregroundColor(.brandPrimary)
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(SpendoraTheme.accent)
+                    .frame(width: 36, height: 36)
+                    .background(SpendoraTheme.accentTint)
+                    .clipShape(Circle())
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
-        .background(Color.cardBackground)
-        .cornerRadius(16)
-        .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 2)
+        .padding(12)
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous)
+                .stroke(Color(.separator), lineWidth: 0.5)
+        )
     }
 }
 
 // MARK: - Executive Yearly Summary Card
 
 struct ExecutiveYearlySummaryCard: View {
+    let year: Int
     let totalYearly: Double
     let averageMonthly: Double
     let subscriptionCount: Int
@@ -227,15 +338,17 @@ struct ExecutiveYearlySummaryCard: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            VStack(spacing: 4) {
-                Text("ANNUAL SUBSCRIPTION COMMITMENT")
-                    .font(.system(size: 10, weight: .bold, design: .rounded))
-                    .foregroundColor(.textSecondary)
-                    .tracking(1.5)
+            VStack(spacing: 6) {
+                Text("\(year) ANNUAL SUBSCRIPTION COMMITMENT")
+                    .font(.system(size: 11, weight: .semibold, design: .rounded))
+                    .foregroundColor(Color(.secondaryLabel))
+                    .textCase(.uppercase)
+                    .tracking(1.0)
                 
                 Text(CurrencyManager.shared.format(totalYearly))
-                    .font(.system(size: 34, weight: .black, design: .rounded))
-                    .foregroundColor(.textPrimary)
+                    .font(.system(size: 38, weight: .semibold, design: .rounded))
+                    .monospacedDigit()
+                    .foregroundColor(Color(.label))
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
             }
@@ -243,50 +356,51 @@ struct ExecutiveYearlySummaryCard: View {
             Divider()
             
             HStack(spacing: 12) {
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: 3) {
                     Text("Average / Month")
-                        .font(.system(.caption2, design: .rounded))
-                        .foregroundColor(.textSecondary)
+                        .font(.caption)
+                        .foregroundColor(Color(.secondaryLabel))
                     Text(CurrencyManager.shared.format(averageMonthly))
-                        .font(.system(.headline, design: .rounded))
-                        .fontWeight(.bold)
-                        .foregroundColor(.brandPrimary)
+                        .font(.system(size: 16, weight: .semibold, design: .rounded))
+                        .monospacedDigit()
+                        .foregroundColor(SpendoraTheme.accentText)
                         .lineLimit(1)
-                        .minimumScaleFactor(0.5)
+                        .minimumScaleFactor(0.6)
                 }
                 
                 Spacer()
                 
-                VStack(alignment: .center, spacing: 4) {
+                VStack(alignment: .center, spacing: 3) {
                     Text("Active Services")
-                        .font(.system(.caption2, design: .rounded))
-                        .foregroundColor(.textSecondary)
+                        .font(.caption)
+                        .foregroundColor(Color(.secondaryLabel))
                     Text("\(subscriptionCount)")
-                        .font(.system(.headline, design: .rounded))
-                        .fontWeight(.bold)
-                        .foregroundColor(.textPrimary)
+                        .font(.system(size: 16, weight: .semibold, design: .rounded))
+                        .foregroundColor(Color(.label))
                         .lineLimit(1)
                 }
                 
                 Spacer()
                 
-                VStack(alignment: .trailing, spacing: 4) {
+                VStack(alignment: .trailing, spacing: 3) {
                     Text("Top Category")
-                        .font(.system(.caption2, design: .rounded))
-                        .foregroundColor(.textSecondary)
+                        .font(.caption)
+                        .foregroundColor(Color(.secondaryLabel))
                     Text(topCategory)
-                        .font(.system(.headline, design: .rounded))
-                        .fontWeight(.bold)
-                        .foregroundColor(.brandPurple)
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(Color(.label))
                         .lineLimit(1)
                         .minimumScaleFactor(0.6)
                 }
             }
         }
-        .padding(20)
-        .background(Color.cardBackground)
-        .cornerRadius(22)
-        .shadow(color: Color.black.opacity(0.05), radius: 12, x: 0, y: 4)
+        .padding(SpendoraTheme.cardPadding)
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous)
+                .stroke(Color(.separator), lineWidth: 0.5)
+        )
     }
 }
 
@@ -294,18 +408,18 @@ struct ExecutiveYearlySummaryCard: View {
 
 struct ExecutiveMonthlyChart: View {
     let monthlyData: [(month: String, amount: Double)]
+    let year: Int
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack {
-                Text("Monthly Run Rate Projection")
-                    .font(.system(.headline, design: .rounded))
-                    .foregroundColor(.textPrimary)
+                Text("\(year) Monthly Spending Distribution")
+                    .font(.headline)
+                    .foregroundColor(Color(.label))
                 Spacer()
-                Text("12-Month Bar")
-                    .font(.caption2)
-                    .fontWeight(.bold)
-                    .foregroundColor(.textSecondary)
+                Text("12-Month Run")
+                    .font(.caption.weight(.semibold))
+                    .foregroundColor(Color(.secondaryLabel))
             }
             
             Chart(monthlyData, id: \.month) { item in
@@ -313,24 +427,21 @@ struct ExecutiveMonthlyChart: View {
                     x: .value("Month", item.month),
                     y: .value("Amount", item.amount)
                 )
-                .foregroundStyle(
-                    LinearGradient(
-                        colors: [.brandPrimary, .brandSecondary],
-                        startPoint: .bottom,
-                        endPoint: .top
-                    )
-                )
-                .cornerRadius(6)
+                .foregroundStyle(SpendoraTheme.accent)
+                .cornerRadius(4)
             }
             .frame(height: 180)
             .chartYAxis {
                 AxisMarks(position: .leading)
             }
         }
-        .padding(18)
-        .background(Color.cardBackground)
-        .cornerRadius(20)
-        .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 3)
+        .padding(SpendoraTheme.cardPadding)
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous)
+                .stroke(Color(.separator), lineWidth: 0.5)
+        )
     }
 }
 
@@ -338,34 +449,44 @@ struct ExecutiveMonthlyChart: View {
 
 struct ReportDonutChart: View {
     let categoryData: [(category: String, amount: Double)]
-    let totalMonthly: Double
+    let totalYearly: Double
 
     var body: some View {
-        ZStack {
-            Chart(categoryData, id: \.category) { item in
-                SectorMark(
-                    angle: .value("Spending", item.amount),
-                    innerRadius: .ratio(0.65),
-                    angularInset: 1.5
-                )
-                .cornerRadius(5)
-                .foregroundStyle(by: .value("Category", item.category))
-            }
-            .frame(height: 220)
+        VStack(alignment: .leading, spacing: 14) {
+            Text("Category Spending Share")
+                .font(.headline)
+                .foregroundColor(Color(.label))
             
-            VStack(spacing: 2) {
-                Text("TOTAL RUN RATE")
-                    .font(.system(size: 9, weight: .bold, design: .rounded))
-                    .foregroundColor(.textSecondary)
-                Text(CurrencyManager.shared.format(totalMonthly))
-                    .font(.system(size: 20, weight: .bold, design: .rounded))
-                    .foregroundColor(.textPrimary)
+            ZStack {
+                Chart(categoryData, id: \.category) { item in
+                    SectorMark(
+                        angle: .value("Spending", item.amount),
+                        innerRadius: .ratio(0.65),
+                        angularInset: 1.5
+                    )
+                    .cornerRadius(4)
+                    .foregroundStyle(by: .value("Category", item.category))
+                }
+                .frame(height: 200)
+                
+                VStack(spacing: 2) {
+                    Text("ANNUAL SPEND")
+                        .font(.system(size: 9, weight: .bold, design: .rounded))
+                        .foregroundColor(Color(.secondaryLabel))
+                    Text(CurrencyManager.shared.format(totalYearly))
+                        .font(.system(size: 16, weight: .semibold, design: .rounded))
+                        .monospacedDigit()
+                        .foregroundColor(Color(.label))
+                }
             }
         }
-        .padding(18)
-        .background(Color.cardBackground)
-        .cornerRadius(20)
-        .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 3)
+        .padding(SpendoraTheme.cardPadding)
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous)
+                .stroke(Color(.separator), lineWidth: 0.5)
+        )
     }
 }
 
@@ -373,18 +494,18 @@ struct ReportDonutChart: View {
 
 struct ReportAreaTrendChart: View {
     let monthlyData: [(month: String, amount: Double)]
+    let year: Int
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack {
-                Text("Cumulative Spending Area Trend")
-                    .font(.system(.headline, design: .rounded))
-                    .foregroundColor(.textPrimary)
+                Text("\(year) Annual Trend Projection")
+                    .font(.headline)
+                    .foregroundColor(Color(.label))
                 Spacer()
                 Text("Area Trend")
-                    .font(.caption2)
-                    .fontWeight(.bold)
-                    .foregroundColor(.textSecondary)
+                    .font(.caption.weight(.semibold))
+                    .foregroundColor(Color(.secondaryLabel))
             }
             
             Chart(monthlyData, id: \.month) { item in
@@ -394,7 +515,7 @@ struct ReportAreaTrendChart: View {
                 )
                 .foregroundStyle(
                     LinearGradient(
-                        colors: [.brandTertiary.opacity(0.4), .brandTertiary.opacity(0.05)],
+                        colors: [SpendoraTheme.accent.opacity(0.4), SpendoraTheme.accent.opacity(0.05)],
                         startPoint: .top,
                         endPoint: .bottom
                     )
@@ -404,86 +525,130 @@ struct ReportAreaTrendChart: View {
                     x: .value("Month", item.month),
                     y: .value("Amount", item.amount)
                 )
-                .foregroundStyle(Color.brandTertiary)
-                .lineStyle(StrokeStyle(lineWidth: 3))
+                .foregroundStyle(SpendoraTheme.accent)
+                .lineStyle(StrokeStyle(lineWidth: 2.5))
             }
             .frame(height: 180)
             .chartYAxis {
                 AxisMarks(position: .leading)
             }
         }
-        .padding(18)
-        .background(Color.cardBackground)
-        .cornerRadius(20)
-        .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 3)
+        .padding(SpendoraTheme.cardPadding)
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous)
+                .stroke(Color(.separator), lineWidth: 0.5)
+        )
     }
 }
 
 // MARK: - Executive Category Table
 
 struct ExecutiveCategoryTable: View {
-    let subscriptions: [Subscription]
-
-    var totalSpend: Double {
-        subscriptions.reduce(0) { $0 + $1.monthlyCost }
-    }
+    let categoryData: [(category: String, amount: Double)]
+    let totalYearly: Double
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             Text("Category Financial Breakdown")
-                .font(.system(.headline, design: .rounded))
-                .foregroundColor(.textPrimary)
+                .font(.headline)
+                .foregroundColor(Color(.label))
             
-            let grouped = Dictionary(grouping: subscriptions) { $0.effectiveCategory }
-            let sortedCategories = grouped.sorted {
-                $0.value.reduce(0) { $0 + $1.monthlyCost } >
-                $1.value.reduce(0) { $0 + $1.monthlyCost }
-            }
-            
-            VStack(spacing: 10) {
-                ForEach(sortedCategories, id: \.key) { category, subs in
-                    let monthlyTotal = subs.reduce(0) { $0 + $1.monthlyCost }
-                    let yearlyTotal = subs.reduce(0) { $0 + $1.yearlyCost }
-                    let share = totalSpend > 0 ? (monthlyTotal / totalSpend) * 100 : 0
+            VStack(spacing: 8) {
+                ForEach(categoryData, id: \.category) { item in
+                    let share = totalYearly > 0 ? (item.amount / totalYearly) * 100 : 0
                     
                     HStack(alignment: .center) {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(category)
-                                .font(.system(.subheadline, design: .rounded))
-                                .fontWeight(.semibold)
-                                .foregroundColor(.textPrimary)
-                            
-                            Text("\(subs.count) \(subs.count == 1 ? "subscription" : "subscriptions")")
-                                .font(.caption2)
-                                .foregroundColor(.textSecondary)
-                        }
+                        Text(item.category)
+                            .font(.system(size: 15, weight: .medium))
+                            .foregroundColor(Color(.label))
                         
                         Spacer()
                         
                         VStack(alignment: .trailing, spacing: 2) {
-                            Text("\(CurrencyManager.shared.format(yearlyTotal))/yr")
-                                .font(.system(.subheadline, design: .rounded))
-                                .fontWeight(.bold)
-                                .foregroundColor(.textPrimary)
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.6)
+                            Text("\(CurrencyManager.shared.format(item.amount))/yr")
+                                .font(.system(size: 15, weight: .semibold, design: .rounded))
+                                .monospacedDigit()
+                                .foregroundColor(Color(.label))
                             
                             Text(String(format: "%.1f%% of total", share))
-                                .font(.caption2)
-                                .foregroundColor(.brandPrimary)
+                                .font(.caption2.weight(.medium))
+                                .foregroundColor(SpendoraTheme.accentText)
                         }
                     }
                     .padding(.vertical, 4)
                     
-                    if category != sortedCategories.last?.key {
+                    if item.category != categoryData.last?.category {
                         Divider()
                     }
                 }
             }
         }
-        .padding(18)
-        .background(Color.cardBackground)
-        .cornerRadius(20)
-        .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 3)
+        .padding(SpendoraTheme.cardPadding)
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous)
+                .stroke(Color(.separator), lineWidth: 0.5)
+        )
+    }
+}
+
+// MARK: - Shareable Yearly Report Canvas
+
+struct ShareableYearlyReport: View {
+    let year: Int
+    let totalYearly: Double
+    let averageMonthly: Double
+    let topCategory: String
+
+    var body: some View {
+        VStack(spacing: 20) {
+            HStack {
+                Image("SpendoraLogo")
+                    .resizable()
+                    .frame(width: 36, height: 36)
+                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                Text("Spendora Financial Statement")
+                    .font(.headline)
+                Spacer()
+                Text("\(year)")
+                    .font(.title2.weight(.bold))
+                    .foregroundColor(SpendoraTheme.accent)
+            }
+
+            Divider()
+
+            VStack(spacing: 6) {
+                Text("ANNUAL TOTAL EXPENDITURE")
+                    .font(.caption.weight(.semibold))
+                    .foregroundColor(.secondary)
+                Text(CurrencyManager.shared.format(totalYearly))
+                    .font(.system(size: 36, weight: .bold, design: .rounded))
+            }
+
+            HStack {
+                VStack {
+                    Text("Monthly Avg")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                    Text(CurrencyManager.shared.format(averageMonthly))
+                        .font(.headline)
+                }
+                Spacer()
+                VStack {
+                    Text("Top Category")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                    Text(topCategory)
+                        .font(.headline)
+                }
+            }
+        }
+        .padding(24)
+        .frame(width: 360)
+        .background(Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 }
