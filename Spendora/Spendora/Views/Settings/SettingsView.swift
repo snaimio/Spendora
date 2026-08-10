@@ -201,16 +201,16 @@ struct SettingsView: View {
                 PremiumOnboardingView(hasCompletedOnboarding: $showingOnboarding)
             }
             .sheet(isPresented: $showingYearlyReport) {
-                YearlyReportView()
+                YearlyReportView(subscriptions: subscriptions)
             }
             .sheet(isPresented: $showingChallenges) {
-                ChallengesView()
+                ChallengesView(subscriptions: subscriptions)
             }
             .sheet(isPresented: $showingSavingsScore) {
-                SavingsScoreView()
+                SavingsScoreView(subscriptions: subscriptions)
             }
             .sheet(isPresented: $showingAIInsights) {
-                AIInsightsView()
+                AIInsightsView(subscriptions: subscriptions)
             }
         }
     }

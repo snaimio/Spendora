@@ -37,6 +37,39 @@ struct HomeView: View {
     
     let generator = UIImpactFeedbackGenerator(style: .medium)
 
+    // MARK: - Computed Properties
+
+    var filteredSubscriptions: [Subscription] {
+        let sorted = sortSubscriptions(subscriptions)
+        if searchText.isEmpty { return sorted }
+        return sorted.filter {
+            $0.displayName.localizedCaseInsensitiveContains(searchText) ||
+            $0.effectiveCategory.localizedCaseInsensitiveContains(searchText)
+        }
+    }
+
+    var activeSubscriptions: [Subscription] {
+        filteredSubscriptions.filter { !$0.isCancelled }
+    }
+
+    var cancelledSubscriptions: [Subscription] {
+        filteredSubscriptions.filter { $0.isCancelled }
+    }
+    
+    var totalMonthly: Double {
+        activeSubscriptions.reduce(0) { $0 + $1.monthlyCost }
+    }
+
+    var totalYearly: Double {
+        activeSubscriptions.reduce(0) { $0 + $1.yearlyCost }
+    }
+
+    var nextSubscription: Subscription? {
+        activeSubscriptions
+            .filter { !$0.isOneTime }
+            .min { $0.nextBillingDate < $1.nextBillingDate }
+    }
+
     // MARK: - Body
 
     var body: some View {
@@ -175,16 +208,16 @@ struct HomeView: View {
                 ProfileView()
             }
             .sheet(isPresented: $showingYearlyReport) {
-                YearlyReportView()
+                YearlyReportView(subscriptions: subscriptions)
             }
             .sheet(isPresented: $showingChallenges) {
-                ChallengesView()
+                ChallengesView(subscriptions: subscriptions)
             }
             .sheet(isPresented: $showingSavingsScore) {
-                SavingsScoreView()
+                SavingsScoreView(subscriptions: subscriptions)
             }
             .sheet(isPresented: $showingAIInsights) {
-                AIInsightsView()
+                AIInsightsView(subscriptions: subscriptions)
             }
             .animation(.spring(response: 0.35, dampingFraction: 0.8), value: subscriptions.count)
         }
@@ -261,6 +294,23 @@ struct HomeView: View {
             if !cancelledSubscriptions.isEmpty {
                 cancelledSubscriptionsSection
             }
+        }
+    }
+
+    private func sortSubscriptions(_ subs: [Subscription]) -> [Subscription] {
+        switch sortOption {
+        case .alphabetical:
+            return subs.sorted { $0.displayName < $1.displayName }
+        case .cost:
+            return subs.sorted { $0.monthlyCost > $1.monthlyCost }
+        case .cheapest:
+            return subs.sorted { $0.monthlyCost < $1.monthlyCost }
+        case .renewalDate:
+            return subs.sorted { $0.nextBillingDate < $1.nextBillingDate }
+        case .category:
+            return subs.sorted { $0.effectiveCategory < $1.effectiveCategory }
+        case .recentlyAdded:
+            return subs.sorted { $0.createdAt > $1.createdAt }
         }
     }
 }
