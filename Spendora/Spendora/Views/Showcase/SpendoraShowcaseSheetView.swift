@@ -124,7 +124,7 @@ struct ShowcaseDashboardScreen: View {
                                 Text("Gabriel Utterson")
                                     .font(AppStyles.Typography.body)
                                     .fontWeight(.semibold)
-                                    .foregroundColor(.white)
+                                    .foregroundColor(.textPrimary)
                             }
                         }
 
@@ -165,7 +165,7 @@ struct ShowcaseDashboardScreen: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("C$76.26")
                                 .font(AppStyles.Typography.heroPrice)
-                                .foregroundColor(.white)
+                                .foregroundColor(.textPrimary)
 
                             Text("4 active subscriptions")
                                 .font(AppStyles.Typography.subheadline)
@@ -176,7 +176,7 @@ struct ShowcaseDashboardScreen: View {
                         GeometryReader { geo in
                             ZStack(alignment: .leading) {
                                 Capsule()
-                                    .fill(Color.white.opacity(0.08))
+                                    .fill(Color.secondary.opacity(0.15))
                                     .frame(height: 5)
 
                                 Capsule()
@@ -214,7 +214,7 @@ struct ShowcaseDashboardScreen: View {
                                         .padding(.vertical, 7)
                                         .background(
                                             Capsule()
-                                                .fill(selectedSortIndex == idx ? Color.brandPrimary : Color(hex: "#2C2C2E"))
+                                                .fill(selectedSortIndex == idx ? Color.brandPrimary : Color.cardBorder.opacity(0.6))
                                         )
                                         .foregroundColor(selectedSortIndex == idx ? Color(hex: "#0E0E10") : .textSecondary)
                                 }
@@ -242,7 +242,7 @@ struct ShowcaseDashboardScreen: View {
                                     HStack {
                                         Text(item.name)
                                             .font(AppStyles.Typography.headline)
-                                            .foregroundColor(.white)
+                                            .foregroundColor(.textPrimary)
 
                                         Spacer()
 
@@ -268,7 +268,7 @@ struct ShowcaseDashboardScreen: View {
                                     HStack(spacing: 4) {
                                         Text(String(format: "C$%.2f/month", item.cost))
                                             .font(Font.system(size: 15, weight: .semibold).monospacedDigit())
-                                            .foregroundColor(.white)
+                                            .foregroundColor(.textPrimary)
                                     }
 
                                     CountdownChip(daysRemaining: item.daysRemaining)

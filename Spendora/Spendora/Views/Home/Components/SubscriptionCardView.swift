@@ -5,16 +5,16 @@
 
 import SwiftUI
 
-// MARK: - SubscriptionCardView (Slate & Rose-Gold Luxury Design)
+// MARK: - SubscriptionCardView (Slate & Rose-Gold Dynamic Light/Dark Design)
 
 /**
- `SubscriptionCardView` implements Spendora's luxury dark card hierarchy:
- - Name: 20pt Semibold White (LARGEST text on card!)
- - Category + Cycle: 15pt Regular Muted Slate
- - Price: 15pt-17pt Semibold White with .monospacedDigit()
- - Next date: 13pt Regular Muted Slate
+ `SubscriptionCardView` implements Spendora's luxury adaptive card hierarchy:
+ - Name: 20pt Semibold .textPrimary (LARGEST text on card!)
+ - Category + Cycle: 15pt Regular Muted Slate (.textSecondary)
+ - Price: 15pt-17pt Semibold .textPrimary with .monospacedDigit()
+ - Next date: 13pt Regular Muted Slate (.textSecondary)
  - "Due in X days": Status pill badge (ALWAYS ON ITS OWN DEDICATED NEW ROW!)
- - Elevation 1 Subtle Shadow, 1px Border Stroke (#2C2C2E) & 18pt Continuous Corner Radius
+ - Elevation 1 Subtle Shadow, Adaptive Border & 18pt Continuous Corner Radius
  */
 struct SubscriptionCardView: View {
 
@@ -48,11 +48,11 @@ struct SubscriptionCardView: View {
             
             // Content Stack
             VStack(alignment: .leading, spacing: AppStyles.Spacing.element) {
-                // ROW 1: SUBSCRIPTION NAME (LARGEST text on card - 20pt Semibold White!)
+                // ROW 1: SUBSCRIPTION NAME (LARGEST text on card - 20pt Semibold!)
                 HStack(alignment: .center) {
                     Text(subscription.displayName)
                         .font(AppStyles.Typography.headline)
-                        .foregroundColor(.white)
+                        .foregroundColor(.textPrimary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
                     
@@ -82,7 +82,7 @@ struct SubscriptionCardView: View {
                 HStack(spacing: 4) {
                     Text(CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost))
                         .font(Font.system(size: 15, weight: .semibold, design: .default).monospacedDigit())
-                        .foregroundColor(.white)
+                        .foregroundColor(.textPrimary)
                     
                     Text(subscription.isOneTime ? "total" : "/month")
                         .font(AppStyles.Typography.caption)

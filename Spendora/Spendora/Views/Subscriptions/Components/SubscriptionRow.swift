@@ -5,13 +5,13 @@
 
 import SwiftUI
 
-// MARK: - SubscriptionRow (Slate & Rose-Gold Luxury Design)
+// MARK: - SubscriptionRow (Slate & Rose-Gold Dynamic Light/Dark Design)
 
 /**
- `SubscriptionRow` renders a subscription list row matching Spendora's luxury dark standards:
- - Name: 20pt Semibold White (LARGEST text on card)
- - Category & Cycle: 15pt Regular Muted Slate
- - Price: 15pt-17pt Semibold White with .monospacedDigit()
+ `SubscriptionRow` renders a subscription list row matching Spendora's luxury standards:
+ - Name: 20pt Semibold .textPrimary (LARGEST text on card)
+ - Category & Cycle: 15pt Regular Muted Slate (.textSecondary)
+ - Price: 15pt-17pt Semibold .textPrimary with .monospacedDigit()
  - Status Badge: Dedicated NEW ROW
  - Corner Radius: 18pt continuous
  */
@@ -47,11 +47,11 @@ struct SubscriptionRow: View {
             
             // Content Stack
             VStack(alignment: .leading, spacing: AppStyles.Spacing.element) {
-                // ROW 1: SUBSCRIPTION NAME (LARGEST text on card - 20pt Semibold White!)
+                // ROW 1: SUBSCRIPTION NAME (LARGEST text on card - 20pt Semibold!)
                 HStack(alignment: .center) {
                     Text(subscription.displayName)
                         .font(AppStyles.Typography.headline)
-                        .foregroundColor(.white)
+                        .foregroundColor(.textPrimary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
                     
@@ -81,7 +81,7 @@ struct SubscriptionRow: View {
                 HStack(spacing: 4) {
                     Text(CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost))
                         .font(Font.system(size: 15, weight: .semibold, design: .default).monospacedDigit())
-                        .foregroundColor(.white)
+                        .foregroundColor(.textPrimary)
                     
                     Text(subscription.isOneTime ? "total" : "/month")
                         .font(AppStyles.Typography.caption)

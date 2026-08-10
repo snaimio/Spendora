@@ -28,7 +28,7 @@ struct CalendarDayView: View {
                 .foregroundColor(
                     isToday
                         ? Color(hex: "#0E0E10")
-                        : (isInMonth ? .white : .textSecondary.opacity(0.35))
+                        : (isInMonth ? .textPrimary : .textSecondary.opacity(0.35))
                 )
                 .frame(width: 32, height: 32)
                 .background(

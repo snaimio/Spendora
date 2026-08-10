@@ -5,15 +5,24 @@
 
 import SwiftUI
 
-// MARK: - Slate & Rose-Gold Metallic Luxury Palette (Apple HIG & OLED Dark Architecture)
+// MARK: - Slate & Warm Gold Luxury Palette (Adaptive Light & Dark Architecture)
 
 /**
- `Color` semantic extension providing Spendora's unified luxury dark-mode architecture:
- - Canvas Background: Deep matte charcoal black `#0E0E10` (OLED Depth, no generic white/flat surfaces).
- - Card Containers: Elevated translucent dark cards `#1C1C1E` with subtle glassmorphic blur, 18pt continuous corner radius, and 1px border stroke `#2C2C2E`.
- - Primary Accent: Warm Champagne Gold / Rose-Gold `#C6A473` for active controls, active chips, and primary CTAs.
- - Functional Colors: System Red `#FF453A` (urgency/cancellations) and System Green `#30D158` (savings/active status).
- - Typography: Primary `#FFFFFF` (Crisp White) and Secondary `#8E8E93` (Muted Slate Grey).
+ `Color` semantic extension providing Spendora's unified dual-mode architecture:
+ 
+ ### ☀️ Light Mode (Apple Cashmere & Warm Gold):
+ - Canvas Background: Soft Warm Cashmere `#F4F5F8`
+ - Cards: Pure Crisp White `#FFFFFF` with 0.5pt hairline `#E5E5EA` and gentle shadow
+ - Primary Text: Midnight Charcoal `#111113`
+ - Secondary Text: Refined Slate Grey `#6E6E73`
+ - Primary Accent: Warm Champagne Gold `#C6A473`
+ 
+ ### 🌙 Dark Mode (OLED Deep Charcoal & Warm Rose-Gold):
+ - Canvas Background: OLED Matte Charcoal Black `#0E0E10`
+ - Cards: Elevated Translucent Charcoal Slate `#1C1C1E` with 1px border `#2C2C2E`
+ - Primary Text: Crisp Pure White `#FFFFFF`
+ - Secondary Text: Muted Slate Grey `#8E8E93`
+ - Primary Accent: Warm Champagne / Rose-Gold `#C6A473`
  */
 extension Color {
     
@@ -32,44 +41,50 @@ extension Color {
     static let brandGold = Color(hex: "#C6A473")
     static let brandSlate = Color(hex: "#8E8E93")
 
-    // MARK: - Adaptive Canvas & Surfaces (OLED Deep Charcoal #0E0E10)
+    // MARK: - Adaptive Canvas & Surfaces (Dynamic Light/Dark)
     static let appBackground = Color(UIColor { trait in
-        trait.userInterfaceStyle == .light
-            ? UIColor(hex: "#141416")                     // Refined Deep Slate in Light
-            : UIColor(hex: "#0E0E10")                     // OLED Pure Charcoal Black in Dark
+        trait.userInterfaceStyle == .dark
+            ? UIColor(hex: "#0E0E10")                     // OLED Matte Charcoal Black in Dark
+            : UIColor(hex: "#F4F5F8")                     // Apple Light Cashmere Canvas in Light
     })
     
     static let cardBackground = Color(UIColor { trait in
-        trait.userInterfaceStyle == .light
-            ? UIColor(hex: "#1F1F23")                     // Elevated Dark Card
-            : UIColor(hex: "#1C1C1E")                     // Elevated Translucent Card
+        trait.userInterfaceStyle == .dark
+            ? UIColor(hex: "#1C1C1E")                     // Elevated Translucent Slate in Dark
+            : UIColor(hex: "#FFFFFF")                     // Pure Crisp White in Light
     })
     
     static let surfaceBackground = cardBackground
     
     static let secondaryCardBackground = Color(UIColor { trait in
-        trait.userInterfaceStyle == .light
-            ? UIColor(hex: "#28282D")
-            : UIColor(hex: "#2C2C2E")                     // Secondary Grouped Card
+        trait.userInterfaceStyle == .dark
+            ? UIColor(hex: "#2C2C2E")                     // Secondary Dark Card
+            : UIColor(hex: "#EBECEF")                     // Soft Light Slate Card
     })
 
-    // MARK: - Typography Hierarchy (Apple High-Contrast White & Slate)
+    // MARK: - Typography Hierarchy (High-Contrast Dynamic Text)
     static let textPrimary = Color(UIColor { trait in
-        trait.userInterfaceStyle == .light
-            ? UIColor(hex: "#FFFFFF")                     // Crisp White
-            : UIColor(hex: "#FFFFFF")
+        trait.userInterfaceStyle == .dark
+            ? UIColor(hex: "#FFFFFF")                     // Crisp Pure White in Dark
+            : UIColor(hex: "#111113")                     // Midnight Black in Light
     })
     
     static let textSecondary = Color(UIColor { trait in
-        trait.userInterfaceStyle == .light
-            ? UIColor(hex: "#9E9EA3")
-            : UIColor(hex: "#8E8E93")                     // Muted Slate Grey
+        trait.userInterfaceStyle == .dark
+            ? UIColor(hex: "#8E8E93")                     // Muted Slate Grey in Dark
+            : UIColor(hex: "#6E6E73")                     // Refined Slate in Light
     })
     
     static let textTertiary = Color(UIColor { trait in
-        trait.userInterfaceStyle == .light
+        trait.userInterfaceStyle == .dark
             ? UIColor(hex: "#636366")
-            : UIColor(hex: "#636366")
+            : UIColor(hex: "#AEAEB2")
+    })
+
+    static let cardBorder = Color(UIColor { trait in
+        trait.userInterfaceStyle == .dark
+            ? UIColor(hex: "#2C2C2E")
+            : UIColor(hex: "#E5E5EA")
     })
 
     // MARK: - Category Colors (Refined Luxury Metallic Palette)
@@ -129,6 +144,8 @@ extension Color {
 // MARK: - Ambient Brand Background & Luxury Glass Card Modifiers
 
 struct SpendoraBrandBackgroundView: View {
+    @Environment(\.colorScheme) private var colorScheme
+    
     var body: some View {
         ZStack {
             Color.appBackground
@@ -136,7 +153,10 @@ struct SpendoraBrandBackgroundView: View {
             
             // Subtle Warm Rose-Gold Ambient Glow (Top-Right)
             RadialGradient(
-                colors: [Color(hex: "#C6A473").opacity(0.08), Color.clear],
+                colors: [
+                    Color(hex: "#C6A473").opacity(colorScheme == .dark ? 0.08 : 0.05),
+                    Color.clear
+                ],
                 center: .topTrailing,
                 startRadius: 10,
                 endRadius: 400
@@ -148,22 +168,28 @@ struct SpendoraBrandBackgroundView: View {
 
 struct SpendoraAppleCardModifier: ViewModifier {
     let cornerRadius: CGFloat
+    @Environment(\.colorScheme) private var colorScheme
 
     func body(content: Content) -> some View {
         content
             .background(Color.cardBackground)
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
-            // Subtle luxury shadow
+            // Subtle luxury shadow adaptive to mode
             .shadow(
-                color: Color.black.opacity(0.40),
-                radius: 8,
+                color: Color.black.opacity(colorScheme == .dark ? 0.35 : 0.04),
+                radius: colorScheme == .dark ? 8 : 6,
                 x: 0,
-                y: 4
+                y: colorScheme == .dark ? 4 : 2
             )
-            // Crisp 1px border stroke (#2C2C2E)
+            // Crisp border stroke adaptive to mode
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .stroke(Color(hex: "#2C2C2E"), lineWidth: 1.0)
+                    .stroke(
+                        colorScheme == .dark
+                            ? Color(hex: "#2C2C2E")
+                            : Color(hex: "#E5E5EA"),
+                        lineWidth: colorScheme == .dark ? 1.0 : 0.5
+                    )
             )
     }
 }
