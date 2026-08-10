@@ -1,116 +1,66 @@
 //
 //  PremiumAppInfoRow.swift
+//  Spendora
 //
 
 import SwiftUI
 
+// MARK: - PremiumAppInfoRow (Obsidian Indigo Executive Branding Card)
 
-// MARK: - PremiumAppInfoRow
-
-/**
- `PremiumAppInfoRow` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for premiumappinforow handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `PremiumAppInfoRow` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
- */
 struct PremiumAppInfoRow: View {
 
-    // MARK: - Properties
-
-
-    // MARK: - Body
-
-    /// Main SwiftUI layout body property.
     var body: some View {
         HStack(spacing: 16) {
             ZStack {
-                // Background Ambient Glow Ring
-                RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .fill(
-                        LinearGradient(
-                            colors: [.brandPrimary.opacity(0.3), .brandSecondary.opacity(0.15)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(width: 66, height: 66)
-                    .blur(radius: 4)
+                // Ambient Glow Container (52x52)
+                RoundedRectangle(cornerRadius: AppStyles.Radius.medium, style: .continuous)
+                    .fill(Color.brandPrimary.opacity(0.12))
+                    .frame(width: 56, height: 56)
 
                 Image("SpendoraLogo")
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .frame(width: 52, height: 52)
-                    .clipShape(Circle())
+                    .frame(width: 48, height: 48)
+                    .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                     .overlay(
-                        Circle()
-                            .stroke(
-                                LinearGradient(
-                                    colors: [Color(hex: "#C6A473"), Color(hex: "#DFCAA6")],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                ),
-                                lineWidth: 2
-                            )
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .stroke(Color.brandPrimary.opacity(0.4), lineWidth: 1.5)
                     )
-                    .shadow(color: Color(hex: "#C6A473").opacity(0.35), radius: 8, x: 0, y: 4)
             }
 
             VStack(alignment: .leading, spacing: 3) {
                 HStack(spacing: 6) {
                     Text("SPENDORA")
-                        .font(.system(size: 18, weight: .black, design: .default))
-                        .tracking(1.2)
-                        .foregroundColor(.white)
+                        .font(.system(size: 17, weight: .bold, design: .default))
+                        .tracking(1.0)
+                        .foregroundColor(.textPrimary)
                     
-                    HStack(spacing: 3) {
-                        Image(systemName: "sparkles")
-                            .font(.system(size: 9))
-                        Text("CAPSTONE")
-                            .font(.system(size: 9, weight: .bold, design: .default))
-                    }
-                    .foregroundColor(Color(hex: "#0E0E10"))
-                    .padding(.horizontal, 7)
-                    .padding(.vertical, 3)
-                    .background(Color.brandPrimary)
-                    .cornerRadius(6)
+                    Text("PRO")
+                        .font(AppStyles.Typography.label)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(Color.brandPrimary)
+                        .clipShape(Capsule())
                 }
 
-                Text("Smart Subscription & Expense Intelligence")
-                    .font(.system(size: 11, weight: .medium, design: .rounded))
-                    .foregroundColor(.secondary)
+                Text("Subscription & Expense Intelligence")
+                    .font(AppStyles.Typography.caption)
+                    .foregroundColor(.textSecondary)
                     .lineLimit(1)
                 
                 Text("Version \(getAppVersion())")
-                    .font(.system(size: 10, weight: .regular, design: .rounded))
-                    .foregroundColor(.secondary.opacity(0.8))
+                    .font(AppStyles.Typography.label)
+                    .foregroundColor(.textTertiary)
             }
 
             Spacer(minLength: 0)
         }
-        .padding(.vertical, 8)
+        .padding(.vertical, 6)
     }
-    
 
-    /**
-     Executes `getAppVersion` for component logic.
-     
-     
-     ## Behavior
-     1. Validates method arguments and current state.
-     2. Executes core computation or state mutation.
-     */
     private func getAppVersion() -> String {
-        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "2.0"
         let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
         return "\(version) (\(build))"
     }

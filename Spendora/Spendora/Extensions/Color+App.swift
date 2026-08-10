@@ -5,116 +5,160 @@
 
 import SwiftUI
 
-// MARK: - Slate & Warm Gold Luxury Palette (Adaptive Light & Dark Architecture)
+// MARK: - Obsidian Indigo & Fintech Luxury Palette
 
 /**
- `Color` semantic extension providing Spendora's unified dual-mode architecture:
+ `Color` semantic extension providing Spendora's unified Revolut × Apple Wallet × Monzo design system:
  
- ### ☀️ Light Mode (Apple Cashmere & Warm Gold):
- - Canvas Background: Soft Warm Cashmere `#F4F5F8`
- - Cards: Pure Crisp White `#FFFFFF` with 0.5pt hairline `#E5E5EA` and gentle shadow
- - Primary Text: Midnight Charcoal `#111113`
- - Secondary Text: Refined Slate Grey `#6E6E73`
- - Primary Accent: Warm Champagne Gold `#C6A473`
+ ### ☀️ Light Mode:
+ - Primary: `#4F46E5` (Obsidian Indigo)
+ - Primary Light: `#EEF2FF`
+ - Primary Dark: `#3730A3`
+ - Canvas Background: `#F8F9FC` (Warm Off-White)
+ - Surface (Card): `#FFFFFF`
+ - Surface Secondary: `#F1F3F9`
+ - Text Primary: `#0F172A`
+ - Text Secondary: `#64748B`
+ - Text Tertiary: `#94A3B8`
+ - Border / Hairline: `#E2E8F0`
  
- ### 🌙 Dark Mode (OLED Deep Charcoal & Warm Rose-Gold):
- - Canvas Background: OLED Matte Charcoal Black `#0E0E10`
- - Cards: Elevated Translucent Charcoal Slate `#1C1C1E` with 1px border `#2C2C2E`
- - Primary Text: Crisp Pure White `#FFFFFF`
- - Secondary Text: Muted Slate Grey `#8E8E93`
- - Primary Accent: Warm Champagne / Rose-Gold `#C6A473`
+ ### 🌙 Dark Mode:
+ - Primary: `#6366F1` (Luminous Indigo)
+ - Primary Light: `#1E1B4B`
+ - Primary Dark: `#4338CA`
+ - Canvas Background: `#0C0D12` (Tinted Obsidian)
+ - Surface (Card): `#161822`
+ - Surface Secondary: `#1F2232`
+ - Text Primary: `#F8FAFC`
+ - Text Secondary: `#94A3B8`
+ - Text Tertiary: `#475569`
+ - Border / Hairline: `#26293B`
  */
 extension Color {
     
-    // MARK: - Core Rose-Gold & Slate Luxury Tokens
-    static let brandPrimary = Color(hex: "#C6A473")       // Warm Champagne Gold / Rose-Gold (SIGNATURE ACCENT)
-    static let brandSecondary = Color(hex: "#FF453A")     // Apple System Red / Urgent Action
-    static let brandAccent = Color(hex: "#DFCAA6")        // Soft Champagne Highlight
-    static let brandSuccess = Color(hex: "#30D158")       // Apple System Green / Active Status
-    static let brandWarning = Color(hex: "#FF9F0A")       // Apple System Amber / Warning
-    static let brandDanger = Color(hex: "#FF453A")        // Apple System Red
-    static let brandPurple = Color(hex: "#BF5AF2")        // Apple System Purple
-    static let brandCyan = Color(hex: "#64D2FF")          // Apple System Cyan
-    static let brandTertiary = Color(hex: "#DFCAA6")
-    static let brandAmber = Color(hex: "#FF9F0A")
-    static let brandRose = Color(hex: "#FF375F")
-    static let brandGold = Color(hex: "#C6A473")
-    static let brandSlate = Color(hex: "#8E8E93")
+    // MARK: - Core Brand Tokens
+    static let brandPrimary = Color(UIColor { trait in
+        trait.userInterfaceStyle == .dark
+            ? UIColor(hex: "#6366F1")                     // Luminous Indigo in Dark
+            : UIColor(hex: "#4F46E5")                     // Obsidian Indigo in Light
+    })
+    
+    static let brandPrimaryLight = Color(UIColor { trait in
+        trait.userInterfaceStyle == .dark
+            ? UIColor(hex: "#1E1B4B")
+            : UIColor(hex: "#EEF2FF")
+    })
+    
+    static let brandPrimaryDark = Color(UIColor { trait in
+        trait.userInterfaceStyle == .dark
+            ? UIColor(hex: "#4338CA")
+            : UIColor(hex: "#3730A3")
+    })
+    
+    static let brandSecondary = Color(UIColor { trait in
+        trait.userInterfaceStyle == .dark
+            ? UIColor(hex: "#F87171")
+            : UIColor(hex: "#EF4444")
+    })
+    
+    static let brandAccent = Color(UIColor { trait in
+        trait.userInterfaceStyle == .dark
+            ? UIColor(hex: "#818CF8")
+            : UIColor(hex: "#6366F1")
+    })
+    
+    static let brandSuccess = Color(UIColor { trait in
+        trait.userInterfaceStyle == .dark
+            ? UIColor(hex: "#34D399")
+            : "#10B981".isEmpty ? UIColor.green : UIColor(hex: "#10B981")
+    })
+    
+    static let brandWarning = Color(UIColor { trait in
+        trait.userInterfaceStyle == .dark
+            ? UIColor(hex: "#FBBF24")
+            : UIColor(hex: "#F59E0B")
+    })
+    
+    static let brandDanger = Color(UIColor { trait in
+        trait.userInterfaceStyle == .dark
+            ? UIColor(hex: "#F87171")
+            : UIColor(hex: "#EF4444")
+    })
 
-    // MARK: - Adaptive Canvas & Surfaces (Dynamic Light/Dark)
+    // MARK: - Adaptive Canvas & Surfaces
     static let appBackground = Color(UIColor { trait in
         trait.userInterfaceStyle == .dark
-            ? UIColor(hex: "#0E0E10")                     // OLED Matte Charcoal Black in Dark
-            : UIColor(hex: "#F4F5F8")                     // Apple Light Cashmere Canvas in Light
+            ? UIColor(hex: "#0C0D12")                     // Tinted Obsidian in Dark
+            : UIColor(hex: "#F8F9FC")                     // Warm Off-White in Light
     })
     
     static let cardBackground = Color(UIColor { trait in
         trait.userInterfaceStyle == .dark
-            ? UIColor(hex: "#1C1C1E")                     // Elevated Translucent Slate in Dark
-            : UIColor(hex: "#FFFFFF")                     // Pure Crisp White in Light
+            ? UIColor(hex: "#161822")                     // Elevated Dark Surface
+            : UIColor(hex: "#FFFFFF")                     // Pure White Card
     })
     
     static let surfaceBackground = cardBackground
     
     static let secondaryCardBackground = Color(UIColor { trait in
         trait.userInterfaceStyle == .dark
-            ? UIColor(hex: "#2C2C2E")                     // Secondary Dark Card
-            : UIColor(hex: "#EBECEF")                     // Soft Light Slate Card
+            ? UIColor(hex: "#1F2232")                     // Nested Dark Container
+            : UIColor(hex: "#F1F3F9")                     // Soft Secondary Surface
     })
 
-    // MARK: - Typography Hierarchy (High-Contrast Dynamic Text)
+    // MARK: - Typography Hierarchy
     static let textPrimary = Color(UIColor { trait in
         trait.userInterfaceStyle == .dark
-            ? UIColor(hex: "#FFFFFF")                     // Crisp Pure White in Dark
-            : UIColor(hex: "#111113")                     // Midnight Black in Light
+            ? UIColor(hex: "#F8FAFC")                     // Crisp White in Dark
+            : UIColor(hex: "#0F172A")                     // Rich Midnight Slate in Light
     })
     
     static let textSecondary = Color(UIColor { trait in
         trait.userInterfaceStyle == .dark
-            ? UIColor(hex: "#8E8E93")                     // Muted Slate Grey in Dark
-            : UIColor(hex: "#6E6E73")                     // Refined Slate in Light
+            ? UIColor(hex: "#94A3B8")                     // Muted Slate in Dark
+            : UIColor(hex: "#64748B")                     // Refined Slate in Light
     })
     
     static let textTertiary = Color(UIColor { trait in
         trait.userInterfaceStyle == .dark
-            ? UIColor(hex: "#636366")
-            : UIColor(hex: "#AEAEB2")
+            ? UIColor(hex: "#475569")
+            : UIColor(hex: "#94A3B8")
     })
 
     static let cardBorder = Color(UIColor { trait in
         trait.userInterfaceStyle == .dark
-            ? UIColor(hex: "#2C2C2E")
-            : UIColor(hex: "#E5E5EA")
+            ? UIColor(hex: "#26293B")
+            : UIColor(hex: "#E2E8F0")
     })
 
-    // MARK: - Category Colors (Refined Luxury Metallic Palette)
-    static let categoryEntertainment = Color(hex: "#FF375F") // Rose Red
-    static let categoryProductivity = Color(hex: "#C6A473")   // Rose Gold
-    static let categoryHealth = Color(hex: "#30D158")         // Emerald Green
-    static let categoryShopping = Color(hex: "#FF9F0A")       // Amber Gold
-    static let categoryFood = Color(hex: "#FF453A")           // Crimson Red
-    static let categoryEducation = Color(hex: "#BF5AF2")      // Purple
-    static let categoryAiTools = Color(hex: "#64D2FF")        // Cyan
-    static let categoryMusic = Color(hex: "#C6A473")          // Champagne Gold
-    static let categoryGaming = Color(hex: "#5E5CE6")         // Violet
-    static let categoryUtilities = Color(hex: "#8E8E93")      // Slate
-    static let categoryOther = Color(hex: "#8E8E93")          // Slate
+    // MARK: - Category Colors (Fintech Clean Palette)
+    static let categoryEntertainment = Color(hex: "#EC4899") // Pink
+    static let categoryProductivity = Color(hex: "#4F46E5")   // Indigo
+    static let categoryHealth = Color(hex: "#10B981")         // Emerald
+    static let categoryShopping = Color(hex: "#F59E0B")       // Amber
+    static let categoryFood = Color(hex: "#EF4444")           // Red
+    static let categoryEducation = Color(hex: "#8B5CF6")      // Purple
+    static let categoryAiTools = Color(hex: "#06B6D4")        // Cyan
+    static let categoryMusic = Color(hex: "#6366F1")          // Violet
+    static let categoryGaming = Color(hex: "#7C3AED")         // Deep Violet
+    static let categoryUtilities = Color(hex: "#64748B")      // Slate
+    static let categoryOther = Color(hex: "#64748B")          // Slate
 
-    // MARK: - Luxury Gradients
+    // MARK: - Gradients
     static let gradientPrimary = LinearGradient(
-        colors: [Color(hex: "#C6A473"), Color(hex: "#DFCAA6")],
+        colors: [Color(hex: "#4F46E5"), Color(hex: "#6366F1")],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
     
     static let gradientHero = LinearGradient(
-        colors: [Color(hex: "#C6A473"), Color(hex: "#E5D2B8"), Color(hex: "#A88452")],
+        colors: [Color(hex: "#4F46E5"), Color(hex: "#7C3AED"), Color(hex: "#EC4899")],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
 
     static let gradientSunset = LinearGradient(
-        colors: [Color(hex: "#FF453A"), Color(hex: "#C6A473")],
+        colors: [Color(hex: "#EF4444"), Color(hex: "#F59E0B")],
         startPoint: .leading,
         endPoint: .trailing
     )
@@ -141,7 +185,7 @@ extension Color {
     }
 }
 
-// MARK: - Ambient Brand Background & Luxury Glass Card Modifiers
+// MARK: - Ambient Brand Background & Luxury Card Modifiers
 
 struct SpendoraBrandBackgroundView: View {
     @Environment(\.colorScheme) private var colorScheme
@@ -151,15 +195,16 @@ struct SpendoraBrandBackgroundView: View {
             Color.appBackground
                 .ignoresSafeArea()
             
-            // Subtle Warm Rose-Gold Ambient Glow (Top-Right)
+            // Subtle Indigo Ambient Glow (Top-Right)
             RadialGradient(
                 colors: [
-                    Color(hex: "#C6A473").opacity(colorScheme == .dark ? 0.08 : 0.05),
+                    (colorScheme == .dark ? Color(hex: "#6366F1") : Color(hex: "#4F46E5"))
+                        .opacity(colorScheme == .dark ? 0.08 : 0.04),
                     Color.clear
                 ],
                 center: .topTrailing,
                 startRadius: 10,
-                endRadius: 400
+                endRadius: 420
             )
             .ignoresSafeArea()
         }
@@ -174,20 +219,17 @@ struct SpendoraAppleCardModifier: ViewModifier {
         content
             .background(Color.cardBackground)
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
-            // Subtle luxury shadow adaptive to mode
             .shadow(
-                color: Color.black.opacity(colorScheme == .dark ? 0.35 : 0.04),
-                radius: colorScheme == .dark ? 8 : 6,
+                color: (colorScheme == .dark ? Color.black : Color(hex: "#0F172A"))
+                    .opacity(colorScheme == .dark ? 0.35 : 0.04),
+                radius: colorScheme == .dark ? 12 : 10,
                 x: 0,
-                y: colorScheme == .dark ? 4 : 2
+                y: colorScheme == .dark ? 6 : 4
             )
-            // Crisp border stroke adaptive to mode
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
                     .stroke(
-                        colorScheme == .dark
-                            ? Color(hex: "#2C2C2E")
-                            : Color(hex: "#E5E5EA"),
+                        Color.cardBorder,
                         lineWidth: colorScheme == .dark ? 1.0 : 0.5
                     )
             )
@@ -199,11 +241,11 @@ extension View {
         self.background(SpendoraBrandBackgroundView())
     }
     
-    func spendora3DCard(cornerRadius: CGFloat = 18) -> some View {
+    func spendora3DCard(cornerRadius: CGFloat = 16) -> some View {
         self.modifier(SpendoraAppleCardModifier(cornerRadius: cornerRadius))
     }
     
-    func appleCard(cornerRadius: CGFloat = 18) -> some View {
+    func appleCard(cornerRadius: CGFloat = 16) -> some View {
         self.modifier(SpendoraAppleCardModifier(cornerRadius: cornerRadius))
     }
 }

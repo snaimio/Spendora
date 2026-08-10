@@ -3,7 +3,7 @@
 //  Spendora
 //
 //  Production-ready, clean, modern SwiftUI UI/UX component sheet & 4-panel screen layout
-//  strictly adhering to Apple HIG (iOS 17/18) and Slate & Warm Rose-Gold (#C6A473) design patterns.
+//  strictly adhering to Spendora's Obsidian Indigo (#4F46E5 / #6366F1) Design System.
 //
 
 import SwiftUI
@@ -29,21 +29,21 @@ struct ShowcaseRenewalItem: Identifiable {
     var isCancelled: Bool = false
 }
 
-// MARK: - Main Showcase Sheet View (4-Panel Adaptive Grid & Screen Layout)
+// MARK: - Main Showcase Sheet View (4-Panel Adaptive Screen Layout)
 
 /**
  `SpendoraShowcaseSheetView` presents the complete production-grade 4-screen layout:
- 1. Dashboard Screen (Hero Header Card C$76.26, Quick Stats 3-Col, Segmented Filter, Subscription Cards)
- 2. Subscriptions List View (Translucent Search Bar #2C2C2E, Active & Cancelled Card Groups)
- 3. Visual Calendar View (Dark Grid with Glowing Rose-Gold Date Rings, Upcoming Billing Feed)
- 4. Settings & Data Privacy View (Branded Rose-Gold Logo Header, Unified #C6A473 Action Rows)
+ 1. Dashboard Screen (Hero Header Card C$76.26, 3-Column Metrics, Segmented Filter, Subscription Cards)
+ 2. Subscriptions List View (Secondary Surface Search Bar, Active & Cancelled Card Groups)
+ 3. Visual Calendar View (Calendar Grid with 1.5pt Indigo Rings, Upcoming Billing Feed)
+ 4. Settings & Data Privacy View (Branded Logo Header, Unified Obsidian Indigo Action Rows)
  */
 struct SpendoraShowcaseSheetView: View {
     @State private var selectedTab: Int = 0
 
     var body: some View {
         ZStack(alignment: .bottom) {
-            // Background Canvas (OLED Charcoal Black #0E0E10 + Ambient Radial Glow)
+            // Background Canvas (Warm Off-White in Light / Tinted Obsidian in Dark)
             SpendoraBrandBackgroundView()
 
             // 4-Screen Page View Carousel
@@ -68,7 +68,6 @@ struct SpendoraShowcaseSheetView: View {
                 .padding(.horizontal, 20)
                 .padding(.bottom, 12)
         }
-        .preferredColorScheme(.dark)
     }
 }
 
@@ -79,41 +78,35 @@ struct ShowcaseDashboardScreen: View {
     private let sortOptions = ["Alphabetical", "Billing Date", "Highest Cost", "Category"]
 
     private let categoryBreakdown: [ShowcaseCategorySpend] = [
-        ShowcaseCategorySpend(category: "Productivity", amount: 28.50, color: Color(hex: "#C6A473")),
-        ShowcaseCategorySpend(category: "AI Tools", amount: 20.00, color: Color(hex: "#64D2FF")),
-        ShowcaseCategorySpend(category: "Entertainment", amount: 17.74, color: Color(hex: "#FF375F")),
-        ShowcaseCategorySpend(category: "Music", amount: 10.02, color: Color(hex: "#DFCAA6"))
+        ShowcaseCategorySpend(category: "Productivity", amount: 28.50, color: Color(hex: "#4F46E5")),
+        ShowcaseCategorySpend(category: "AI Tools", amount: 20.00, color: Color(hex: "#06B6D4")),
+        ShowcaseCategorySpend(category: "Entertainment", amount: 17.74, color: Color(hex: "#EC4899")),
+        ShowcaseCategorySpend(category: "Music", amount: 10.02, color: Color(hex: "#6366F1"))
     ]
 
     private let upcomingRenewals: [ShowcaseRenewalItem] = [
-        ShowcaseRenewalItem(name: "Spotify Premium", category: "Music", cost: 10.02, daysRemaining: 30, icon: "music.note", iconColor: Color(hex: "#C6A473")),
-        ShowcaseRenewalItem(name: "ChatGPT Plus", category: "AI Tools", cost: 20.00, daysRemaining: 6, icon: "cpu.fill", iconColor: Color(hex: "#64D2FF")),
-        ShowcaseRenewalItem(name: "Netflix Standard", category: "Entertainment", cost: 17.74, daysRemaining: 12, icon: "tv.fill", iconColor: Color(hex: "#FF375F")),
-        ShowcaseRenewalItem(name: "iCloud+ 2TB", category: "Productivity", cost: 12.99, daysRemaining: 18, icon: "cloud.fill", iconColor: Color(hex: "#C6A473"))
+        ShowcaseRenewalItem(name: "Spotify Premium", category: "Music", cost: 10.02, daysRemaining: 30, icon: "music.note", iconColor: Color(hex: "#6366F1")),
+        ShowcaseRenewalItem(name: "ChatGPT Plus", category: "AI Tools", cost: 20.00, daysRemaining: 6, icon: "cpu.fill", iconColor: Color(hex: "#06B6D4")),
+        ShowcaseRenewalItem(name: "Netflix Standard", category: "Entertainment", cost: 17.74, daysRemaining: 12, icon: "tv.fill", iconColor: Color(hex: "#EC4899")),
+        ShowcaseRenewalItem(name: "iCloud+ 2TB", category: "Productivity", cost: 12.99, daysRemaining: 18, icon: "cloud.fill", iconColor: Color(hex: "#4F46E5"))
     ]
 
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 16) {
+                VStack(spacing: AppStyles.Spacing.md) {
                     // Minimal Top Navigation Bar
                     HStack(alignment: .center) {
                         // User Avatar & Greeting
                         HStack(spacing: 12) {
                             ZStack {
                                 Circle()
-                                    .fill(
-                                        LinearGradient(
-                                            colors: [Color.brandPrimary, Color.brandAccent],
-                                            startPoint: .topLeading,
-                                            endPoint: .bottomTrailing
-                                        )
-                                    )
+                                    .fill(Color.brandPrimary)
                                     .frame(width: 40, height: 40)
                                 
                                 Text("GU")
                                     .font(.system(size: 14, weight: .bold))
-                                    .foregroundColor(Color(hex: "#0E0E10"))
+                                    .foregroundColor(.white)
                             }
 
                             VStack(alignment: .leading, spacing: 2) {
@@ -137,21 +130,21 @@ struct ShowcaseDashboardScreen: View {
                         } label: {
                             Image(systemName: "plus")
                                 .font(.system(size: 16, weight: .bold))
-                                .foregroundColor(Color(hex: "#0E0E10"))
+                                .foregroundColor(.white)
                                 .frame(width: 38, height: 38)
                                 .background(Color.brandPrimary)
                                 .clipShape(Circle())
-                                .shadow(color: Color.brandPrimary.opacity(0.35), radius: 6, x: 0, y: 2)
+                                .shadow(color: Color.brandPrimary.opacity(0.3), radius: 6, x: 0, y: 2)
                         }
                     }
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, AppStyles.Spacing.cardPadding)
                     .padding(.top, 8)
 
-                    // Hero Header Card: "THIS MONTH" C$76.26 with Rose-Gold Accent
+                    // Hero Header Card: "THIS MONTH" C$76.26
                     VStack(alignment: .leading, spacing: 14) {
                         HStack {
                             Text("THIS MONTH")
-                                .font(AppStyles.Typography.micro)
+                                .font(AppStyles.Typography.label)
                                 .foregroundColor(.textSecondary)
                                 .tracking(1.2)
 
@@ -172,32 +165,32 @@ struct ShowcaseDashboardScreen: View {
                                 .foregroundColor(.textSecondary)
                         }
 
-                        // Rose-Gold Mini Progress Line
+                        // 4pt Capsule Budget Bar
                         GeometryReader { geo in
                             ZStack(alignment: .leading) {
                                 Capsule()
-                                    .fill(Color.secondary.opacity(0.15))
-                                    .frame(height: 5)
+                                    .fill(Color.secondaryCardBackground)
+                                    .frame(height: 4)
 
                                 Capsule()
                                     .fill(Color.brandPrimary)
-                                    .frame(width: geo.size.width * 0.62, height: 5)
+                                    .frame(width: geo.size.width * 0.62, height: 4)
                             }
                         }
-                        .frame(height: 5)
+                        .frame(height: 4)
                         .padding(.top, 2)
                     }
                     .padding(AppStyles.Spacing.cardPadding)
                     .appleCard(cornerRadius: AppStyles.Radius.hero)
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, AppStyles.Spacing.cardPadding)
 
                     // Quick Stats Row: 3-Column Balanced Metric Tiles
                     HStack(spacing: 10) {
-                        MetricSubCard(title: "Yearly", value: "C$915.12")
-                        MetricSubCard(title: "Average", value: "C$19.07")
-                        MetricSubCard(title: "Total", value: "4")
+                        MetricSubCard(title: "YEARLY", value: "C$915.12")
+                        MetricSubCard(title: "AVERAGE", value: "C$19.07")
+                        MetricSubCard(title: "TOTAL", value: "4")
                     }
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, AppStyles.Spacing.cardPadding)
 
                     // Filter Bar: Segmented Controls with Capsule Highlight
                     ScrollView(.horizontal, showsIndicators: false) {
@@ -210,26 +203,30 @@ struct ShowcaseDashboardScreen: View {
                                 } label: {
                                     Text(sortOptions[idx])
                                         .font(AppStyles.Typography.captionBold)
-                                        .padding(.horizontal, 14)
-                                        .padding(.vertical, 7)
+                                        .padding(.horizontal, 12)
+                                        .padding(.vertical, 6)
                                         .background(
                                             Capsule()
-                                                .fill(selectedSortIndex == idx ? Color.brandPrimary : Color.cardBorder.opacity(0.6))
+                                                .fill(selectedSortIndex == idx ? Color.brandPrimary : Color.secondaryCardBackground)
                                         )
-                                        .foregroundColor(selectedSortIndex == idx ? Color(hex: "#0E0E10") : .textSecondary)
+                                        .overlay(
+                                            Capsule()
+                                                .stroke(selectedSortIndex == idx ? Color.clear : Color.cardBorder, lineWidth: 0.5)
+                                        )
+                                        .foregroundColor(selectedSortIndex == idx ? .white : .textSecondary)
                                 }
                             }
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, AppStyles.Spacing.cardPadding)
                     }
                     .padding(.vertical, 2)
 
                     // Subscription Cards Stack
-                    VStack(spacing: 12) {
+                    VStack(spacing: AppStyles.Spacing.md) {
                         ForEach(upcomingRenewals) { item in
-                            HStack(alignment: .top, spacing: AppStyles.Spacing.medium) {
+                            HStack(alignment: .top, spacing: AppStyles.Spacing.md) {
                                 ZStack {
-                                    Circle()
+                                    RoundedRectangle(cornerRadius: AppStyles.Radius.medium, style: .continuous)
                                         .fill(item.iconColor.opacity(0.15))
                                         .frame(width: 42, height: 42)
 
@@ -238,7 +235,7 @@ struct ShowcaseDashboardScreen: View {
                                         .foregroundColor(item.iconColor)
                                 }
 
-                                VStack(alignment: .leading, spacing: AppStyles.Spacing.element) {
+                                VStack(alignment: .leading, spacing: AppStyles.Spacing.xs) {
                                     HStack {
                                         Text(item.name)
                                             .font(AppStyles.Typography.headline)
@@ -279,7 +276,7 @@ struct ShowcaseDashboardScreen: View {
                             .appleCard(cornerRadius: AppStyles.Radius.card)
                         }
                     }
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, AppStyles.Spacing.cardPadding)
                     .padding(.bottom, 90)
                 }
             }
@@ -295,8 +292,8 @@ struct ShowcaseSubscriptionsListScreen: View {
 
     private let activeList: [ShowcaseRenewalItem] = [
         ShowcaseRenewalItem(name: "Spotify Premium", category: "Music", cost: 10.02, daysRemaining: 30, icon: "music.note", iconColor: Color.brandPrimary),
-        ShowcaseRenewalItem(name: "ChatGPT Plus", category: "AI Tools", cost: 20.00, daysRemaining: 6, icon: "cpu.fill", iconColor: Color(hex: "#64D2FF")),
-        ShowcaseRenewalItem(name: "Netflix Standard", category: "Entertainment", cost: 17.74, daysRemaining: 12, icon: "tv.fill", iconColor: Color(hex: "#FF375F")),
+        ShowcaseRenewalItem(name: "ChatGPT Plus", category: "AI Tools", cost: 20.00, daysRemaining: 6, icon: "cpu.fill", iconColor: Color(hex: "#06B6D4")),
+        ShowcaseRenewalItem(name: "Netflix Standard", category: "Entertainment", cost: 17.74, daysRemaining: 12, icon: "tv.fill", iconColor: Color(hex: "#EC4899")),
         ShowcaseRenewalItem(name: "iCloud+ 2TB", category: "Productivity", cost: 12.99, daysRemaining: 18, icon: "cloud.fill", iconColor: Color.brandPrimary)
     ]
 
@@ -308,25 +305,25 @@ struct ShowcaseSubscriptionsListScreen: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 20) {
+                VStack(spacing: AppStyles.Spacing.xl) {
                     // Header
                     HStack {
                         VStack(alignment: .leading, spacing: 2) {
                             Text("PORTFOLIO")
-                                .font(AppStyles.Typography.micro)
+                                .font(AppStyles.Typography.label)
                                 .foregroundColor(.textSecondary)
                                 .tracking(1.2)
 
                             Text("Subscriptions")
-                                .font(AppStyles.Typography.title)
-                                .foregroundColor(.white)
+                                .font(AppStyles.Typography.largeTitle)
+                                .foregroundColor(.textPrimary)
                         }
                         Spacer()
                     }
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, AppStyles.Spacing.cardPadding)
                     .padding(.top, 8)
 
-                    // Integrated Top Search Bar (#2C2C2E border stroke)
+                    // Integrated Top Search Bar
                     HStack(spacing: 10) {
                         Image(systemName: "magnifyingglass")
                             .foregroundColor(.textSecondary)
@@ -334,18 +331,18 @@ struct ShowcaseSubscriptionsListScreen: View {
 
                         TextField("Search all subscriptions...", text: $searchText)
                             .font(AppStyles.Typography.body)
-                            .foregroundColor(.white)
+                            .foregroundColor(.textPrimary)
                             .autocorrectionDisabled()
                     }
                     .padding(.horizontal, 14)
-                    .padding(.vertical, 12)
-                    .background(Color.cardBackground)
+                    .padding(.vertical, 11)
+                    .background(Color.secondaryCardBackground)
                     .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                     .overlay(
                         RoundedRectangle(cornerRadius: 14, style: .continuous)
-                            .stroke(Color(hex: "#2C2C2E"), lineWidth: 1)
+                            .stroke(Color.cardBorder, lineWidth: 0.5)
                     )
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, AppStyles.Spacing.cardPadding)
 
                     // Active Section
                     VStack(alignment: .leading, spacing: 12) {
@@ -357,14 +354,14 @@ struct ShowcaseSubscriptionsListScreen: View {
                                 .tracking(1.0)
                             Spacer()
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, AppStyles.Spacing.cardPadding)
 
-                        VStack(spacing: 12) {
+                        VStack(spacing: AppStyles.Spacing.md) {
                             ForEach(activeList) { item in
                                 ShowcaseRowView(item: item)
                             }
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, AppStyles.Spacing.cardPadding)
                     }
 
                     // Cancelled Section
@@ -377,14 +374,14 @@ struct ShowcaseSubscriptionsListScreen: View {
                                 .tracking(1.0)
                             Spacer()
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, AppStyles.Spacing.cardPadding)
 
-                        VStack(spacing: 12) {
+                        VStack(spacing: AppStyles.Spacing.md) {
                             ForEach(cancelledList) { item in
                                 ShowcaseRowView(item: item)
                             }
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, AppStyles.Spacing.cardPadding)
                     }
                     .padding(.bottom, 90)
                 }
@@ -398,9 +395,9 @@ struct ShowcaseRowView: View {
     let item: ShowcaseRenewalItem
 
     var body: some View {
-        HStack(alignment: .top, spacing: AppStyles.Spacing.medium) {
+        HStack(alignment: .top, spacing: AppStyles.Spacing.md) {
             ZStack {
-                Circle()
+                RoundedRectangle(cornerRadius: AppStyles.Radius.medium, style: .continuous)
                     .fill(item.iconColor.opacity(0.15))
                     .frame(width: 42, height: 42)
 
@@ -409,11 +406,11 @@ struct ShowcaseRowView: View {
                     .foregroundColor(item.iconColor)
             }
 
-            VStack(alignment: .leading, spacing: AppStyles.Spacing.element) {
+            VStack(alignment: .leading, spacing: AppStyles.Spacing.xs) {
                 HStack {
                     Text(item.name)
                         .font(AppStyles.Typography.headline)
-                        .foregroundColor(.white)
+                        .foregroundColor(.textPrimary)
 
                     Spacer()
 
@@ -433,7 +430,7 @@ struct ShowcaseRowView: View {
 
                     Text(String(format: "C$%.2f/mo", item.cost))
                         .font(Font.system(size: 14, weight: .semibold).monospacedDigit())
-                        .foregroundColor(.white)
+                        .foregroundColor(.textPrimary)
                 }
 
                 CountdownChip(daysRemaining: item.daysRemaining, isCancelled: item.isCancelled)
@@ -452,33 +449,33 @@ struct ShowcaseCalendarScreen: View {
     private let billingDates: Set<Int> = [3, 6, 12, 18]
 
     private let upcomingFeed: [ShowcaseRenewalItem] = [
-        ShowcaseRenewalItem(name: "ChatGPT Plus", category: "AI Tools", cost: 20.00, daysRemaining: 6, icon: "cpu.fill", iconColor: Color(hex: "#64D2FF")),
-        ShowcaseRenewalItem(name: "Netflix Standard", category: "Entertainment", cost: 17.74, daysRemaining: 12, icon: "tv.fill", iconColor: Color(hex: "#FF375F")),
+        ShowcaseRenewalItem(name: "ChatGPT Plus", category: "AI Tools", cost: 20.00, daysRemaining: 6, icon: "cpu.fill", iconColor: Color(hex: "#06B6D4")),
+        ShowcaseRenewalItem(name: "Netflix Standard", category: "Entertainment", cost: 17.74, daysRemaining: 12, icon: "tv.fill", iconColor: Color(hex: "#EC4899")),
         ShowcaseRenewalItem(name: "iCloud+ 2TB", category: "Productivity", cost: 12.99, daysRemaining: 18, icon: "cloud.fill", iconColor: Color.brandPrimary)
     ]
 
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 20) {
+                VStack(spacing: AppStyles.Spacing.xl) {
                     // Header
                     HStack {
                         VStack(alignment: .leading, spacing: 2) {
                             Text("SCHEDULE")
-                                .font(AppStyles.Typography.micro)
+                                .font(AppStyles.Typography.label)
                                 .foregroundColor(.textSecondary)
                                 .tracking(1.2)
 
                             Text("Renewal Calendar")
-                                .font(AppStyles.Typography.title)
-                                .foregroundColor(.white)
+                                .font(AppStyles.Typography.largeTitle)
+                                .foregroundColor(.textPrimary)
                         }
                         Spacer()
                     }
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, AppStyles.Spacing.cardPadding)
                     .padding(.top, 8)
 
-                    // Sleek Dark Calendar Grid with Glowing Rose-Gold Rings
+                    // Calendar Grid Card with 1.5pt Rings
                     VStack(spacing: 16) {
                         HStack {
                             Image(systemName: "chevron.left")
@@ -492,7 +489,7 @@ struct ShowcaseCalendarScreen: View {
 
                             Text("October 2026")
                                 .font(AppStyles.Typography.headline)
-                                .foregroundColor(.white)
+                                .foregroundColor(.textPrimary)
 
                             Spacer()
 
@@ -508,7 +505,7 @@ struct ShowcaseCalendarScreen: View {
                         HStack {
                             ForEach(["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"], id: \.self) { day in
                                 Text(day)
-                                    .font(AppStyles.Typography.micro)
+                                    .font(AppStyles.Typography.label)
                                     .foregroundColor(.textSecondary)
                                     .frame(maxWidth: .infinity)
                             }
@@ -519,21 +516,21 @@ struct ShowcaseCalendarScreen: View {
                             ForEach(calendarDays, id: \.self) { day in
                                 VStack(spacing: 3) {
                                     Text("\(day)")
-                                        .font(Font.system(size: 13, weight: billingDates.contains(day) ? .bold : .regular).monospacedDigit())
-                                        .foregroundColor(day == 10 ? Color(hex: "#0E0E10") : (billingDates.contains(day) ? .white : .textSecondary))
+                                        .font(Font.system(size: 13, weight: (day == 10 || billingDates.contains(day)) ? .bold : .regular).monospacedDigit())
+                                        .foregroundColor(day == 10 ? .white : (billingDates.contains(day) ? .textPrimary : .textSecondary))
                                         .frame(width: 30, height: 30)
                                         .background(
                                             Group {
                                                 if day == 10 {
-                                                    // Today Indicator (Rose-Gold)
+                                                    // Today Indicator (Solid Indigo)
                                                     Circle()
                                                         .fill(Color.brandPrimary)
-                                                        .shadow(color: Color.brandPrimary.opacity(0.4), radius: 6, x: 0, y: 2)
+                                                        .shadow(color: Color.brandPrimary.opacity(0.35), radius: 4, x: 0, y: 2)
                                                 } else if billingDates.contains(day) {
-                                                    // Active Billing Day Glowing Ring
+                                                    // Active Billing Day 1.5pt Stroke Ring
                                                     Circle()
                                                         .stroke(Color.brandPrimary, lineWidth: 1.5)
-                                                        .background(Circle().fill(Color.brandPrimary.opacity(0.14)))
+                                                        .background(Circle().fill(Color.brandPrimary.opacity(0.08)))
                                                 }
                                             }
                                         )
@@ -551,7 +548,7 @@ struct ShowcaseCalendarScreen: View {
                     }
                     .padding(AppStyles.Spacing.cardPadding)
                     .appleCard(cornerRadius: AppStyles.Radius.hero)
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, AppStyles.Spacing.cardPadding)
 
                     // Upcoming Billing Days Feed
                     VStack(alignment: .leading, spacing: 12) {
@@ -561,17 +558,17 @@ struct ShowcaseCalendarScreen: View {
                                 .foregroundColor(.brandPrimary)
 
                             Text("UPCOMING BILLING DAYS")
-                                .font(AppStyles.Typography.micro)
+                                .font(AppStyles.Typography.label)
                                 .foregroundColor(.textSecondary)
                                 .tracking(1.2)
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, AppStyles.Spacing.cardPadding)
 
                         VStack(spacing: 10) {
                             ForEach(upcomingFeed) { item in
                                 HStack(spacing: 12) {
                                     ZStack {
-                                        Circle()
+                                        RoundedRectangle(cornerRadius: AppStyles.Radius.medium, style: .continuous)
                                             .fill(item.iconColor.opacity(0.15))
                                             .frame(width: 38, height: 38)
                                         Image(systemName: item.icon)
@@ -583,7 +580,7 @@ struct ShowcaseCalendarScreen: View {
                                         Text(item.name)
                                             .font(AppStyles.Typography.body)
                                             .fontWeight(.semibold)
-                                            .foregroundColor(.white)
+                                            .foregroundColor(.textPrimary)
                                         Text("Due in \(item.daysRemaining) days")
                                             .font(AppStyles.Typography.caption)
                                             .foregroundColor(.textSecondary)
@@ -593,13 +590,13 @@ struct ShowcaseCalendarScreen: View {
 
                                     Text(String(format: "C$%.2f", item.cost))
                                         .font(Font.system(size: 15, weight: .semibold).monospacedDigit())
-                                        .foregroundColor(.white)
+                                        .foregroundColor(.textPrimary)
                                 }
                                 .padding(14)
                                 .appleCard(cornerRadius: AppStyles.Radius.card)
                             }
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, AppStyles.Spacing.cardPadding)
                     }
                     .padding(.bottom, 90)
                 }
@@ -621,49 +618,43 @@ struct ShowcaseSettingsScreen: View {
     var body: some View {
         NavigationStack {
             Form {
-                // Branded Rose-Gold Logo Header Card
+                // Branded Indigo Logo Header Card
                 Section {
                     HStack(spacing: 14) {
                         ZStack {
-                            Circle()
-                                .fill(
-                                    LinearGradient(
-                                        colors: [Color.brandPrimary, Color.brandAccent],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
+                            RoundedRectangle(cornerRadius: AppStyles.Radius.medium, style: .continuous)
+                                .fill(Color.brandPrimary.opacity(0.12))
                                 .frame(width: 52, height: 52)
 
                             Image("SpendoraLogo")
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
-                                .frame(width: 48, height: 48)
-                                .clipShape(Circle())
+                                .frame(width: 44, height: 44)
+                                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                         }
 
                         VStack(alignment: .leading, spacing: 3) {
                             HStack(spacing: 6) {
                                 Text("SPENDORA")
-                                    .font(.system(size: 17, weight: .black))
-                                    .tracking(1.2)
-                                    .foregroundColor(.white)
+                                    .font(.system(size: 17, weight: .bold))
+                                    .tracking(1.0)
+                                    .foregroundColor(.textPrimary)
 
-                                Text("CAPSTONE")
-                                    .font(.system(size: 9, weight: .bold))
-                                    .foregroundColor(Color(hex: "#0E0E10"))
+                                Text("PRO")
+                                    .font(AppStyles.Typography.label)
+                                    .foregroundColor(.white)
                                     .padding(.horizontal, 6)
                                     .padding(.vertical, 2)
                                     .background(Color.brandPrimary)
                                     .clipShape(Capsule())
                             }
 
-                            Text("Smart Subscription & Expense Intelligence")
-                                .font(.system(size: 11, weight: .medium))
+                            Text("Subscription & Expense Intelligence")
+                                .font(AppStyles.Typography.caption)
                                 .foregroundColor(.textSecondary)
                         }
                     }
-                    .padding(.vertical, 6)
+                    .padding(.vertical, 4)
                 }
                 .listRowBackground(Color.cardBackground)
 
@@ -677,7 +668,7 @@ struct ShowcaseSettingsScreen: View {
                                 .frame(width: 24)
 
                             Text("Face ID & Passcode")
-                                .foregroundColor(.white)
+                                .foregroundColor(.textPrimary)
                         }
                     }
                     .tint(.brandPrimary)
@@ -690,7 +681,7 @@ struct ShowcaseSettingsScreen: View {
                                 .frame(width: 24)
 
                             Text("Billing Push Reminders")
-                                .foregroundColor(.white)
+                                .foregroundColor(.textPrimary)
                         }
                     }
                     .tint(.brandPrimary)
@@ -701,7 +692,7 @@ struct ShowcaseSettingsScreen: View {
                 Section("Preferences") {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Default Portfolio Currency")
-                            .font(.system(size: 13, weight: .regular))
+                            .font(AppStyles.Typography.subheadline)
                             .foregroundColor(.textSecondary)
 
                         Picker("Currency", selection: $selectedCurrencyIndex) {
@@ -722,7 +713,7 @@ struct ShowcaseSettingsScreen: View {
                             .foregroundColor(.brandPrimary)
                             .frame(width: 24)
                         Text("Export to CSV (Spreadsheet)")
-                            .foregroundColor(.white)
+                            .foregroundColor(.textPrimary)
                         Spacer()
                         Image(systemName: "chevron.right")
                             .font(.caption)
@@ -734,7 +725,7 @@ struct ShowcaseSettingsScreen: View {
                             .foregroundColor(.brandPrimary)
                             .frame(width: 24)
                         Text("Export Executive Annual PDF")
-                            .foregroundColor(.white)
+                            .foregroundColor(.textPrimary)
                         Spacer()
                         Image(systemName: "chevron.right")
                             .font(.caption)
@@ -746,7 +737,7 @@ struct ShowcaseSettingsScreen: View {
                             .foregroundColor(.brandPrimary)
                             .frame(width: 24)
                         Text("Download Full JSON Backup")
-                            .foregroundColor(.white)
+                            .foregroundColor(.textPrimary)
                         Spacer()
                         Image(systemName: "chevron.right")
                             .font(.caption)
@@ -810,14 +801,14 @@ struct ShowcaseFloatingTabBar: View {
         .clipShape(Capsule())
         .overlay(
             Capsule()
-                .stroke(Color(hex: "#2C2C2E").opacity(0.8), lineWidth: 1)
+                .stroke(Color.cardBorder, lineWidth: 0.5)
         )
-        .shadow(color: Color.black.opacity(0.5), radius: 16, x: 0, y: 6)
+        .shadow(color: Color.black.opacity(0.12), radius: 12, x: 0, y: 4)
     }
 }
 
 // MARK: - Previews
 
-#Preview("Spendora 4-Panel Luxury Showcase") {
+#Preview("Spendora Showcase - Obsidian Indigo") {
     SpendoraShowcaseSheetView()
 }

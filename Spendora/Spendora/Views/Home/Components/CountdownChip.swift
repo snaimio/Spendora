@@ -5,18 +5,19 @@
 
 import SwiftUI
 
-// MARK: - CountdownChip (Luxury Status Badge)
+// MARK: - CountdownChip (Fintech Status Badge Pill)
 
 /**
- `CountdownChip` renders a refined dark-mode status pill container:
- - Paid / Safe (> 7 Days): Dark Emerald container with Subtle Green (#30D158)
- - Due Soon (1-7 Days): Warm Rose-Gold container (#C6A473)
- - Overdue / Due Today: System Red (#FF453A)
- - Cancelled / Paused: Muted Slate (#8E8E93)
+ `CountdownChip` renders a refined 6pt capsule status pill:
+ - Paid / Safe (> 7 Days): Emerald tint (12% opacity) with #10B981 / #34D399 text
+ - Due Soon (1-7 Days): Amber tint (12% opacity) with #F59E0B / #FBBF24 text
+ - Overdue / Due Today: Red tint (12% opacity) with #EF4444 / #F87171 text
+ - Cancelled / Paused: Slate tint (12% opacity) with #64748B / #94A3B8 text
  */
 struct CountdownChip: View {
     let daysRemaining: Int
     var isCancelled: Bool = false
+    @Environment(\.colorScheme) private var colorScheme
     
     private var isSafePaid: Bool {
         daysRemaining > 7 && !isCancelled
@@ -24,25 +25,25 @@ struct CountdownChip: View {
     
     private var badgeTextColor: Color {
         if isCancelled {
-            return Color(hex: "#8E8E93")
+            return colorScheme == .dark ? Color(hex: "#94A3B8") : Color(hex: "#64748B")
         } else if daysRemaining <= 0 {
-            return Color(hex: "#FF453A")
+            return colorScheme == .dark ? Color(hex: "#F87171") : Color(hex: "#DC2626")
         } else if daysRemaining <= 7 {
-            return Color(hex: "#C6A473")
+            return colorScheme == .dark ? Color(hex: "#FBBF24") : Color(hex: "#D97706")
         } else {
-            return Color(hex: "#30D158")
+            return colorScheme == .dark ? Color(hex: "#34D399") : Color(hex: "#059669")
         }
     }
     
     private var badgeBgColor: Color {
         if isCancelled {
-            return Color(hex: "#8E8E93").opacity(0.14)
+            return Color(hex: "#64748B").opacity(0.12)
         } else if daysRemaining <= 0 {
-            return Color(hex: "#FF453A").opacity(0.14)
+            return Color(hex: "#EF4444").opacity(0.12)
         } else if daysRemaining <= 7 {
-            return Color(hex: "#C6A473").opacity(0.14)
+            return Color(hex: "#F59E0B").opacity(0.12)
         } else {
-            return Color(hex: "#30D158").opacity(0.14)
+            return Color(hex: "#10B981").opacity(0.12)
         }
     }
     
@@ -77,20 +78,20 @@ struct CountdownChip: View {
     }
     
     var body: some View {
-        HStack(spacing: 5) {
+        HStack(spacing: 4) {
             Image(systemName: badgeIcon)
-                .font(.system(size: 10, weight: .semibold))
+                .font(.system(size: 9, weight: .semibold))
                 .foregroundColor(badgeTextColor)
             
             Text(badgeText)
-                .font(AppStyles.Typography.micro)
+                .font(AppStyles.Typography.label)
                 .foregroundColor(badgeTextColor)
                 .lineLimit(1)
                 .fixedSize(horizontal: true, vertical: false)
         }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 4)
+        .padding(.horizontal, 6)
+        .padding(.vertical, 3)
         .background(badgeBgColor)
-        .clipShape(Capsule())
+        .clipShape(RoundedRectangle(cornerRadius: AppStyles.Radius.small, style: .continuous))
     }
 }

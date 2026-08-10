@@ -5,16 +5,16 @@
 
 import SwiftUI
 
-// MARK: - SubscriptionCardView (Slate & Rose-Gold Dynamic Light/Dark Design)
+// MARK: - SubscriptionCardView (Fintech 4-Tier Card Hierarchy)
 
 /**
- `SubscriptionCardView` implements Spendora's luxury adaptive card hierarchy:
- - Name: 20pt Semibold .textPrimary (LARGEST text on card!)
- - Category + Cycle: 15pt Regular Muted Slate (.textSecondary)
- - Price: 15pt-17pt Semibold .textPrimary with .monospacedDigit()
- - Next date: 13pt Regular Muted Slate (.textSecondary)
- - "Due in X days": Status pill badge (ALWAYS ON ITS OWN DEDICATED NEW ROW!)
- - Elevation 1 Subtle Shadow, Adaptive Border & 18pt Continuous Corner Radius
+ `SubscriptionCardView` implements Spendora's exact 4-tier visual hierarchy:
+ - Leading: 42×42pt container (12pt corner radius, 15% category tint)
+ - Row 1: Name (18pt Semibold Text Primary) + Trailing Chevron (Text Tertiary)
+ - Row 2: Category • Billing cycle (14pt Medium Text Secondary)
+ - Row 3: Cost (15pt Semibold Monospaced) + Next billing date (13pt Regular)
+ - Row 4: Status badge pill on its own dedicated row
+ - Card Container: 16pt continuous corner radius with 16pt internal padding
  */
 struct SubscriptionCardView: View {
 
@@ -33,10 +33,10 @@ struct SubscriptionCardView: View {
     // MARK: - Body
 
     var body: some View {
-        HStack(alignment: .top, spacing: AppStyles.Spacing.medium) {
-            // Category Icon Badge Container (42x42)
+        HStack(alignment: .top, spacing: AppStyles.Spacing.md) {
+            // Category Icon Badge Container (42x42 with 12pt corner radius)
             ZStack {
-                Circle()
+                RoundedRectangle(cornerRadius: AppStyles.Radius.medium, style: .continuous)
                     .fill(cardColor.opacity(0.15))
                     .frame(width: 42, height: 42)
                 
@@ -47,8 +47,8 @@ struct SubscriptionCardView: View {
             .frame(width: 42)
             
             // Content Stack
-            VStack(alignment: .leading, spacing: AppStyles.Spacing.element) {
-                // ROW 1: SUBSCRIPTION NAME (LARGEST text on card - 20pt Semibold!)
+            VStack(alignment: .leading, spacing: AppStyles.Spacing.xs) {
+                // ROW 1: SUBSCRIPTION NAME (18pt Semibold)
                 HStack(alignment: .center) {
                     Text(subscription.displayName)
                         .font(AppStyles.Typography.headline)
@@ -63,7 +63,7 @@ struct SubscriptionCardView: View {
                         .foregroundColor(.textTertiary)
                 }
                 
-                // ROW 2: CATEGORY & BILLING CYCLE
+                // ROW 2: CATEGORY & BILLING CYCLE (14pt Medium)
                 HStack(spacing: 4) {
                     Text(subscription.effectiveCategory)
                         .font(AppStyles.Typography.subheadline)
