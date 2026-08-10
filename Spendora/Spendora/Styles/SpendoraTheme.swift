@@ -5,15 +5,6 @@
 
 import SwiftUI
 
-// MARK: - SubscriptionStatusFilter
-public enum SubscriptionStatusFilter: String, CaseIterable, Identifiable {
-    case active = "Active"
-    case cancelled = "Cancelled"
-    case all = "All"
-    
-    public var id: String { rawValue }
-}
-
 // MARK: - SpendoraTheme (Apple Native HIG & Emerald Accent Architecture)
 
 public struct SpendoraTheme {
