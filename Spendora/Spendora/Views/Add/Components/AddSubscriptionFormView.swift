@@ -79,8 +79,8 @@ struct AddSubscriptionFormView: View {
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
                         .font(.system(.subheadline, design: .rounded))
-                        .foregroundColor(.primary)
-                        .tint(.primary)
+                        .foregroundColor(SpendoraTheme.accent)
+                        .tint(SpendoraTheme.accent)
                         .onChange(of: linkURL) { _, newValue in
                             if !newValue.isEmpty {
                                 isUserEditedLink = true
@@ -128,7 +128,7 @@ struct AddSubscriptionFormView: View {
                     }
                 }
                 .labelsHidden()
-                .tint(.brandPrimary)
+                .tint(Color(.label))
             }
             
             if !isOneTime {

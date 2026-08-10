@@ -44,11 +44,11 @@ public struct SpendoraTheme {
         public static let separator = Color(.separator)
         public static let border = Color(.separator).opacity(0.6)
         
-        // Semantic Apple Colors
+        // Semantic Apple Colors (Zero System Blue)
         public static let success = SpendoraTheme.accent
         public static let warning = Color(.systemOrange)
         public static let danger = Color(.systemRed)
-        public static let link = Color(.systemBlue)
+        public static let link = SpendoraTheme.accent
         public static let cancelled = Color(.secondaryLabel)
         
         public static let coral = SpendoraTheme.accent
@@ -58,7 +58,7 @@ public struct SpendoraTheme {
     }
 
     // MARK: - Typography Scale (SF Pro & SF Rounded for Numbers)
-    public static let heroNumber = Font.system(size: 48, weight: .semibold, design: .rounded).monospacedDigit()
+    public static let heroNumber = Font.system(size: 46, weight: .semibold, design: .rounded).monospacedDigit()
     public static let statNumber = Font.system(size: 20, weight: .semibold, design: .rounded).monospacedDigit()
     public static let cardAmount = Font.system(size: 16, weight: .semibold, design: .rounded).monospacedDigit()
     
@@ -100,7 +100,7 @@ public struct SpendoraTheme {
     }
 }
 
-// MARK: - Native Inset Card Modifier
+// MARK: - Native Inset Card Modifier with 0.5pt Separator Stroke
 
 public struct SpendoraAppleCardModifier: ViewModifier {
     let cornerRadius: CGFloat
@@ -109,6 +109,10 @@ public struct SpendoraAppleCardModifier: ViewModifier {
         content
             .background(Color(.secondarySystemBackground))
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .stroke(Color(.separator), lineWidth: 0.5)
+            )
     }
 }
 

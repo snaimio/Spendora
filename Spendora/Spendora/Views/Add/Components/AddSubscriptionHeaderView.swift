@@ -33,15 +33,9 @@ struct AddSubscriptionHeaderView: View {
     /// Main SwiftUI layout body property.
     var body: some View {
         VStack(spacing: 8) {
-            Image(systemName: "sparkles.rectangle.stack.fill")
-                .font(.system(size: 36))
-                .foregroundStyle(
-                    LinearGradient(
-                        colors: [.brandPrimary, .brandSecondary],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
+            Image(systemName: "plus.circle.fill")
+                .font(.system(size: 44))
+                .foregroundColor(SpendoraTheme.accent)
                 .padding(.top, 8)
             
             Text("Add Subscription")

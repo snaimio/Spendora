@@ -137,24 +137,29 @@ struct SubscriptionCalendarView: View {
                                         // Name & Date
                                         VStack(alignment: .leading, spacing: 2) {
                                             Text(sub.displayName)
-                                                .font(.headline)
+                                                .font(.system(size: 15, weight: .semibold))
                                                 .foregroundColor(Color(.label))
                                             
                                             Text(sub.formattedNextBillingDate)
                                                 .font(.caption)
-                                                .foregroundColor(.secondary)
+                                                .foregroundColor(Color(.secondaryLabel))
                                         }
                                         
                                         Spacer()
                                         
-                                        // Amount in Accent
+                                        // Amount in Darker Accent (#1A8A7F)
                                         Text(CurrencyManager.shared.format(sub.isOneTime ? sub.cost : sub.monthlyCost))
-                                            .font(SpendoraTheme.cardAmount)
-                                            .foregroundColor(SpendoraTheme.accent)
+                                            .font(.system(size: 15, weight: .semibold, design: .rounded))
+                                            .monospacedDigit()
+                                            .foregroundColor(SpendoraTheme.accentText)
                                     }
                                     .padding(12)
                                     .background(Color(.secondarySystemBackground))
                                     .clipShape(RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous)
+                                            .stroke(Color(.separator), lineWidth: 0.5)
+                                    )
                                     .onTapGesture {
                                         generator.impactOccurred()
                                         selectedSubscription = sub

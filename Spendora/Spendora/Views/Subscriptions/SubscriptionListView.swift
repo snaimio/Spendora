@@ -117,6 +117,21 @@ struct SubscriptionListView: View {
                                 subscriptionListRow(for: subscription)
                                     .opacity(subscription.isCancelled ? 0.75 : 1.0)
                             }
+                            
+                            if statusFilter == .cancelled && cancelledSubscriptions.count <= 1 {
+                                VStack(spacing: 8) {
+                                    Image(systemName: "checkmark.seal.fill")
+                                        .font(.system(size: 32))
+                                        .foregroundColor(SpendoraTheme.accent.opacity(0.4))
+                                    Text("You're in good shape")
+                                        .font(.system(size: 14, weight: .medium))
+                                        .foregroundColor(Color(.secondaryLabel))
+                                }
+                                .frame(maxWidth: .infinity)
+                                .padding(.top, 40)
+                                .listRowBackground(Color.clear)
+                                .listRowSeparator(.hidden)
+                            }
                         }
                     }
                     .listStyle(.insetGrouped)
@@ -132,9 +147,12 @@ struct SubscriptionListView: View {
                         showingAddSheet = true
                     } label: {
                         Image(systemName: "plus")
-                            .font(.system(size: 17, weight: .bold))
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(.white)
+                            .frame(width: 36, height: 36)
+                            .background(SpendoraTheme.accent)
+                            .clipShape(Circle())
                     }
-                    .tint(SpendoraTheme.accent)
                 }
             }
             .sheet(item: $selectedSubscription) { subscription in

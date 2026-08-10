@@ -11,12 +11,17 @@ struct PremiumAppInfoRow: View {
 
     var body: some View {
         HStack(spacing: 16) {
-            // App Icon 52x52pt (12pt radius)
+            // App Icon 56x56pt (13pt radius with white contrast backing)
             Image("SpendoraLogo")
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-                .frame(width: 52, height: 52)
-                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .frame(width: 56, height: 56)
+                .clipShape(RoundedRectangle(cornerRadius: 13, style: .continuous))
+                .background(
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .fill(Color.white)
+                        .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+                )
 
             VStack(alignment: .leading, spacing: 3) {
                 HStack(spacing: 8) {

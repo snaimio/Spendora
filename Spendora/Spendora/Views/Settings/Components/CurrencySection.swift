@@ -42,6 +42,7 @@ struct CurrencySection: View {
                         .tag(currency)
                 }
             }
+            .tint(SpendoraTheme.accent)
             .onChange(of: selectedCurrency) { _, newValue in
                 currencyManager.setCurrency(newValue)
             }

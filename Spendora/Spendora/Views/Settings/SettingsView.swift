@@ -95,29 +95,77 @@ struct SettingsView: View {
                         Button {
                             showingYearlyReport = true
                         } label: {
-                            Label("Yearly Executive Summary", systemImage: "calendar")
-                                .foregroundColor(Color(.label))
+                            HStack {
+                                Image(systemName: "calendar.badge.checkmark")
+                                    .font(.system(size: 16, weight: .medium))
+                                    .foregroundColor(SpendoraTheme.accent)
+                                    .frame(width: 28)
+                                Text("Yearly Executive Summary")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(Color(.label))
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 12, weight: .semibold))
+                                    .foregroundColor(Color(.tertiaryLabel))
+                            }
+                            .frame(minHeight: 44)
                         }
                         
                         Button {
                             showingChallenges = true
                         } label: {
-                            Label("Spending Challenges", systemImage: "trophy")
-                                .foregroundColor(Color(.label))
+                            HStack {
+                                Image(systemName: "trophy.fill")
+                                    .font(.system(size: 16, weight: .medium))
+                                    .foregroundColor(SpendoraTheme.accent)
+                                    .frame(width: 28)
+                                Text("Spending Challenges")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(Color(.label))
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 12, weight: .semibold))
+                                    .foregroundColor(Color(.tertiaryLabel))
+                            }
+                            .frame(minHeight: 44)
                         }
                         
                         Button {
                             showingSavingsScore = true
                         } label: {
-                            Label("Savings Intelligence Score", systemImage: "star")
-                                .foregroundColor(Color(.label))
+                            HStack {
+                                Image(systemName: "star.fill")
+                                    .font(.system(size: 16, weight: .medium))
+                                    .foregroundColor(SpendoraTheme.accent)
+                                    .frame(width: 28)
+                                Text("Savings Intelligence Score")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(Color(.label))
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 12, weight: .semibold))
+                                    .foregroundColor(Color(.tertiaryLabel))
+                            }
+                            .frame(minHeight: 44)
                         }
                         
                         Button {
                             showingAIInsights = true
                         } label: {
-                            Label("AI Cost Optimizations", systemImage: "brain.head.profile")
-                                .foregroundColor(Color(.label))
+                            HStack {
+                                Image(systemName: "brain.head.profile")
+                                    .font(.system(size: 16, weight: .medium))
+                                    .foregroundColor(SpendoraTheme.accent)
+                                    .frame(width: 28)
+                                Text("AI Insights")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(Color(.label))
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 12, weight: .semibold))
+                                    .foregroundColor(Color(.tertiaryLabel))
+                            }
+                            .frame(minHeight: 44)
                         }
                     }
                     
@@ -127,43 +175,101 @@ struct SettingsView: View {
                         NotificationsSection()
                     }
                     
-                    // Section: Data & Backup
+                    // Section: Data & Backup (With Explicit Chevrons)
                     Section("Data Management") {
                         Button {
                             exportCSV()
                         } label: {
-                            Label("Export to CSV", systemImage: "square.and.arrow.up")
-                                .foregroundColor(Color(.label))
+                            HStack {
+                                Image(systemName: "square.and.arrow.up")
+                                    .font(.system(size: 16, weight: .medium))
+                                    .foregroundColor(SpendoraTheme.accent)
+                                    .frame(width: 28)
+                                Text("Export to CSV")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(Color(.label))
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 12, weight: .semibold))
+                                    .foregroundColor(Color(.tertiaryLabel))
+                            }
+                            .frame(minHeight: 44)
                         }
                         
                         Button {
                             exportPDF()
                         } label: {
-                            Label("Export PDF Report", systemImage: "doc.richtext")
-                                .foregroundColor(Color(.label))
+                            HStack {
+                                Image(systemName: "doc.richtext")
+                                    .font(.system(size: 16, weight: .medium))
+                                    .foregroundColor(SpendoraTheme.accent)
+                                    .frame(width: 28)
+                                Text("Export PDF Report")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(Color(.label))
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 12, weight: .semibold))
+                                    .foregroundColor(Color(.tertiaryLabel))
+                            }
+                            .frame(minHeight: 44)
                         }
                         
                         Button {
                             exportBackup()
                         } label: {
-                            Label("Create Encrypted Backup", systemImage: "arrow.up.doc")
-                                .foregroundColor(Color(.label))
+                            HStack {
+                                Image(systemName: "arrow.up.doc")
+                                    .font(.system(size: 16, weight: .medium))
+                                    .foregroundColor(SpendoraTheme.accent)
+                                    .frame(width: 28)
+                                Text("Create Encrypted Backup")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(Color(.label))
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 12, weight: .semibold))
+                                    .foregroundColor(Color(.tertiaryLabel))
+                            }
+                            .frame(minHeight: 44)
                         }
                         
                         Button {
                             showingDocumentPicker = true
                         } label: {
-                            Label("Restore from Backup", systemImage: "arrow.down.doc")
-                                .foregroundColor(Color(.label))
+                            HStack {
+                                Image(systemName: "arrow.down.doc")
+                                    .font(.system(size: 16, weight: .medium))
+                                    .foregroundColor(SpendoraTheme.accent)
+                                    .frame(width: 28)
+                                Text("Restore from Backup")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(Color(.label))
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 12, weight: .semibold))
+                                    .foregroundColor(Color(.tertiaryLabel))
+                            }
+                            .frame(minHeight: 44)
                         }
                     }
                     
-                    // Section: Danger Zone (Reset All Data)
+                    // Section: Danger Zone (Reset All Data - Red Trash Icon)
                     Section {
                         Button(role: .destructive) {
                             showingResetAlert = true
                         } label: {
-                            Label("Reset All Data", systemImage: "trash")
+                            HStack {
+                                Image(systemName: "trash.fill")
+                                    .font(.system(size: 16, weight: .medium))
+                                    .foregroundColor(Color(.systemRed))
+                                    .frame(width: 28)
+                                Text("Reset All Data")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(Color(.systemRed))
+                                Spacer()
+                            }
+                            .frame(minHeight: 44)
                         }
                     }
                     
@@ -172,8 +278,20 @@ struct SettingsView: View {
                         Button {
                             showingPrivacyPolicy = true
                         } label: {
-                            Label("Privacy Policy", systemImage: "hand.raised")
-                                .foregroundColor(Color(.label))
+                            HStack {
+                                Image(systemName: "hand.raised.fill")
+                                    .font(.system(size: 16, weight: .medium))
+                                    .foregroundColor(SpendoraTheme.accent)
+                                    .frame(width: 28)
+                                Text("Privacy Policy")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(Color(.label))
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 12, weight: .semibold))
+                                    .foregroundColor(Color(.tertiaryLabel))
+                            }
+                            .frame(minHeight: 44)
                         }
                     }
                 }

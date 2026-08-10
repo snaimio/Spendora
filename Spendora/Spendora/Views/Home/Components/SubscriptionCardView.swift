@@ -14,7 +14,11 @@ struct SubscriptionCardView: View {
     let subscription: Subscription
 
     private var categoryColor: Color {
-        subscription.categoryEnum.color
+        subscription.isCancelled ? Color(.tertiaryLabel) : subscription.categoryEnum.color
+    }
+
+    private var iconBackground: Color {
+        subscription.isCancelled ? Color(.secondarySystemFill) : subscription.categoryEnum.color.opacity(0.15)
     }
 
     private var categoryIcon: String {
@@ -25,10 +29,10 @@ struct SubscriptionCardView: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
-            // Leading icon container 44x44pt (10pt radius)
+            // Leading icon container 44x44pt (10pt radius) — Muted if cancelled
             ZStack {
                 RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .fill(categoryColor.opacity(0.15))
+                    .fill(iconBackground)
                     .frame(width: 44, height: 44)
                 
                 Image(systemName: categoryIcon)
@@ -54,7 +58,7 @@ struct SubscriptionCardView: View {
                 // Row 2: Category · Billing cycle
                 Text("\(subscription.effectiveCategory) · \(subscription.isOneTime ? "Lifetime" : (subscription.isYearly ? "Yearly" : "Monthly"))")
                     .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(Color(.secondaryLabel))
                 
                 // Row 3: Cost cardAmount in Color(.label) + Next billing date
                 HStack {
@@ -62,10 +66,10 @@ struct SubscriptionCardView: View {
                         .font(SpendoraTheme.cardAmount)
                         .foregroundColor(Color(.label))
                     
-                    if !subscription.isOneTime {
+                    if !subscription.isOneTime && !subscription.isCancelled {
                         Text("· Next: \(subscription.formattedNextBillingDate)")
                             .font(.caption)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(Color(.secondaryLabel))
                             .lineLimit(1)
                     }
                 }
@@ -78,5 +82,9 @@ struct SubscriptionCardView: View {
         .padding(SpendoraTheme.cardPadding)
         .background(Color(.secondarySystemBackground))
         .clipShape(RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous)
+                .stroke(Color(.separator), lineWidth: 0.5)
+        )
     }
 }

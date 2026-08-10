@@ -91,48 +91,54 @@ struct HomeView: View {
                         showingNotificationCenter = true
                     } label: {
                         ZStack(alignment: .topTrailing) {
-                            Image(systemName: "bell")
-                                .font(.system(size: 17, weight: .semibold))
+                            Image(systemName: "bell.fill")
+                                .font(.system(size: 16, weight: .medium))
+                                .foregroundColor(SpendoraTheme.accent)
+                                .frame(width: 36, height: 36)
+                                .background(SpendoraTheme.accentTint)
+                                .clipShape(Circle())
                             
                             if notificationCenterService.unreadCount > 0 {
                                 Circle()
                                     .fill(Color(.systemRed))
                                     .frame(width: 8, height: 8)
-                                    .offset(x: 2, y: -2)
+                                    .offset(x: -2, y: 2)
                             }
                         }
                     }
-                    .tint(SpendoraTheme.accent)
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
-                    HStack(spacing: 12) {
+                    HStack(spacing: 8) {
                         Button {
                             generator.impactOccurred()
                             showingAddSheet = true
                         } label: {
                             Image(systemName: "plus")
-                                .font(.system(size: 17, weight: .bold))
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundColor(.white)
+                                .frame(width: 36, height: 36)
+                                .background(SpendoraTheme.accent)
+                                .clipShape(Circle())
                         }
-                        .tint(SpendoraTheme.accent)
                         
                         Menu {
                             Button {
                                 showingYearlyReport = true
                             } label: {
-                                Label("Yearly Report", systemImage: "calendar")
+                                Label("Yearly Executive Summary", systemImage: "calendar.badge.checkmark")
                             }
                             
                             Button {
                                 showingChallenges = true
                             } label: {
-                                Label("Challenges", systemImage: "trophy")
+                                Label("Spending Challenges", systemImage: "trophy.fill")
                             }
                             
                             Button {
                                 showingSavingsScore = true
                             } label: {
-                                Label("Savings Score", systemImage: "star")
+                                Label("Savings Intelligence Score", systemImage: "star.fill")
                             }
                             
                             Button {
@@ -141,23 +147,23 @@ struct HomeView: View {
                                 Label("AI Insights", systemImage: "brain.head.profile")
                             }
                         } label: {
-                            Image(systemName: "ellipsis.circle")
-                                .font(.system(size: 17))
+                            Image(systemName: "ellipsis")
+                                .font(.system(size: 14, weight: .medium))
+                                .foregroundColor(Color(.secondaryLabel))
+                                .frame(width: 36, height: 36)
+                                .background(Color(.secondarySystemBackground))
+                                .clipShape(Circle())
                         }
-                        .tint(SpendoraTheme.accent)
                         
                         Button {
                             showingProfileSheet = true
                         } label: {
-                            ZStack {
-                                Circle()
-                                    .fill(SpendoraTheme.accentTint)
-                                    .frame(width: 32, height: 32)
-                                
-                                Text(profileManager.profile.initials)
-                                    .font(.system(size: 12, weight: .bold))
-                                    .foregroundColor(SpendoraTheme.accentText)
-                            }
+                            Text(profileManager.profile.initials)
+                                .font(.system(size: 13, weight: .semibold))
+                                .foregroundColor(.white)
+                                .frame(width: 36, height: 36)
+                                .background(SpendoraTheme.accent)
+                                .clipShape(Circle())
                         }
                     }
                 }

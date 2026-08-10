@@ -67,7 +67,8 @@ struct ShowcaseDashboardScreen: View {
         ShowcaseRenewalItem(name: "Spotify Premium", category: "Music", cost: 10.02, daysRemaining: 30, icon: "music.note", iconColor: Color(.systemPurple)),
         ShowcaseRenewalItem(name: "ChatGPT Plus", category: "AI Tools", cost: 20.00, daysRemaining: 6, icon: "cpu.fill", iconColor: Color(.systemCyan)),
         ShowcaseRenewalItem(name: "Netflix Standard", category: "Entertainment", cost: 17.74, daysRemaining: 12, icon: "tv.fill", iconColor: Color(.systemPink)),
-        ShowcaseRenewalItem(name: "iCloud+ 2TB", category: "Productivity", cost: 12.99, daysRemaining: 18, icon: "cloud.fill", iconColor: SpendoraTheme.accent)
+        ShowcaseRenewalItem(name: "iCloud+ 2TB", category: "Productivity", cost: 12.99, daysRemaining: 18, icon: "cloud.fill", iconColor: SpendoraTheme.accent),
+        ShowcaseRenewalItem(name: "Grubhub+", category: "Food & Dining", cost: 9.99, daysRemaining: 0, icon: "takeoutbag.and.cup.and.straw.fill", iconColor: Color(.secondaryLabel), isCancelled: true)
     ]
 
     var body: some View {
@@ -79,7 +80,7 @@ struct ShowcaseDashboardScreen: View {
                         HStack {
                             Text("THIS MONTH")
                                 .font(.caption.weight(.semibold))
-                                .foregroundColor(.secondary)
+                                .foregroundColor(Color(.secondaryLabel))
                                 .textCase(.uppercase)
 
                             Spacer()
@@ -91,13 +92,14 @@ struct ShowcaseDashboardScreen: View {
 
                         VStack(alignment: .leading, spacing: 4) {
                             Text("C$76.26")
-                                .font(SpendoraTheme.heroNumber)
+                                .font(.system(size: 46, weight: .semibold, design: .rounded))
+                                .monospacedDigit()
                                 .foregroundColor(Color(.label))
                                 .contentTransition(.numericText())
 
                             Text("4 active subscriptions")
                                 .font(.subheadline)
-                                .foregroundColor(.secondary)
+                                .foregroundColor(Color(.secondaryLabel))
                         }
 
                         Divider()
@@ -119,7 +121,7 @@ struct ShowcaseDashboardScreen: View {
                                     .foregroundColor(Color(.label))
                                 Text("Due in 6 days")
                                     .font(.caption)
-                                    .foregroundColor(.secondary)
+                                    .foregroundColor(Color(.secondaryLabel))
                             }
 
                             Spacer()
@@ -132,6 +134,10 @@ struct ShowcaseDashboardScreen: View {
                     .padding(SpendoraTheme.cardPadding)
                     .background(Color(.secondarySystemBackground))
                     .clipShape(RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous)
+                            .stroke(Color(.separator), lineWidth: 0.5)
+                    )
 
                     // Stat Row: 3 Equal Cards (12pt radius)
                     HStack(spacing: 10) {
@@ -176,12 +182,12 @@ struct ShowcaseDashboardScreen: View {
                             HStack(alignment: .top, spacing: 12) {
                                 ZStack {
                                     RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                        .fill(item.iconColor.opacity(0.15))
+                                        .fill(item.isCancelled ? Color(.secondarySystemFill) : item.iconColor.opacity(0.15))
                                         .frame(width: 44, height: 44)
 
                                     Image(systemName: item.icon)
                                         .font(.system(size: 18, weight: .medium))
-                                        .foregroundColor(item.iconColor)
+                                        .foregroundColor(item.isCancelled ? Color(.tertiaryLabel) : item.iconColor)
                                 }
 
                                 VStack(alignment: .leading, spacing: 4) {
@@ -199,25 +205,31 @@ struct ShowcaseDashboardScreen: View {
 
                                     Text("\(item.category) · Monthly")
                                         .font(.subheadline)
-                                        .foregroundColor(.secondary)
+                                        .foregroundColor(Color(.secondaryLabel))
 
                                     HStack {
                                         Text(String(format: "C$%.2f", item.cost))
                                             .font(SpendoraTheme.cardAmount)
                                             .foregroundColor(Color(.label))
 
-                                        Text("· Next: Oct \(item.daysRemaining)")
-                                            .font(.caption)
-                                            .foregroundColor(.secondary)
+                                        if !item.isCancelled {
+                                            Text("· Next: Oct \(item.daysRemaining)")
+                                                .font(.caption)
+                                                .foregroundColor(Color(.secondaryLabel))
+                                        }
                                     }
 
-                                    StatusBadgeView(daysUntil: item.daysRemaining)
+                                    StatusBadgeView(daysUntil: item.daysRemaining, isCancelled: item.isCancelled)
                                         .padding(.top, 2)
                                 }
                             }
                             .padding(SpendoraTheme.cardPadding)
                             .background(Color(.secondarySystemBackground))
                             .clipShape(RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous)
+                                    .stroke(Color(.separator), lineWidth: 0.5)
+                            )
                         }
                     }
                 }
@@ -228,12 +240,38 @@ struct ShowcaseDashboardScreen: View {
             .navigationTitle("Spendora")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Image(systemName: "bell.fill")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(SpendoraTheme.accent)
+                        .frame(width: 36, height: 36)
+                        .background(SpendoraTheme.accentTint)
+                        .clipShape(Circle())
+                }
+                
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button { } label: {
+                    HStack(spacing: 8) {
                         Image(systemName: "plus")
-                            .font(.system(size: 17, weight: .bold))
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(.white)
+                            .frame(width: 36, height: 36)
+                            .background(SpendoraTheme.accent)
+                            .clipShape(Circle())
+                        
+                        Image(systemName: "ellipsis")
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundColor(Color(.secondaryLabel))
+                            .frame(width: 36, height: 36)
+                            .background(Color(.secondarySystemBackground))
+                            .clipShape(Circle())
+                        
+                        Text("GU")
+                            .font(.system(size: 13, weight: .semibold))
+                            .foregroundColor(.white)
+                            .frame(width: 36, height: 36)
+                            .background(SpendoraTheme.accent)
+                            .clipShape(Circle())
                     }
-                    .tint(SpendoraTheme.accent)
                 }
             }
         }
@@ -259,7 +297,7 @@ struct ShowcaseSubscriptionsListScreen: View {
                     HStack {
                         Text("\(activeList.count) subscriptions")
                             .font(.caption)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(Color(.secondaryLabel))
 
                         Spacer()
 
@@ -299,7 +337,7 @@ struct ShowcaseSubscriptionsListScreen: View {
 
                                 Text("\(item.category) · Monthly")
                                     .font(.subheadline)
-                                    .foregroundColor(.secondary)
+                                    .foregroundColor(Color(.secondaryLabel))
 
                                 HStack {
                                     Text(String(format: "C$%.2f", item.cost))
@@ -308,7 +346,7 @@ struct ShowcaseSubscriptionsListScreen: View {
 
                                     Text("· Next: Oct \(item.daysRemaining)")
                                         .font(.caption)
-                                        .foregroundColor(.secondary)
+                                        .foregroundColor(Color(.secondaryLabel))
                                 }
 
                                 StatusBadgeView(daysUntil: item.daysRemaining)
@@ -318,6 +356,10 @@ struct ShowcaseSubscriptionsListScreen: View {
                         .padding(SpendoraTheme.cardPadding)
                         .background(Color(.secondarySystemBackground))
                         .clipShape(RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous)
+                                .stroke(Color(.separator), lineWidth: 0.5)
+                        )
                         .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
                         .listRowSeparator(.hidden)
                         .listRowBackground(Color.clear)
@@ -327,6 +369,16 @@ struct ShowcaseSubscriptionsListScreen: View {
             .listStyle(.insetGrouped)
             .navigationTitle("Subscriptions")
             .searchable(text: $searchText, prompt: "Search subscriptions")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Image(systemName: "plus")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.white)
+                        .frame(width: 36, height: 36)
+                        .background(SpendoraTheme.accent)
+                        .clipShape(Circle())
+                }
+            }
         }
     }
 }
@@ -353,7 +405,7 @@ struct ShowcaseCalendarScreen: View {
                             ForEach(["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"], id: \.self) { day in
                                 Text(day)
                                     .font(.caption2.weight(.semibold))
-                                    .foregroundColor(.secondary)
+                                    .foregroundColor(Color(.secondaryLabel))
                                     .frame(maxWidth: .infinity)
                             }
                         }
@@ -363,7 +415,7 @@ struct ShowcaseCalendarScreen: View {
                                 VStack(spacing: 2) {
                                     Text("\(day)")
                                         .font(Font.system(size: 14, weight: (day == 10 || billingDates.contains(day)) ? .bold : .regular, design: .rounded).monospacedDigit())
-                                        .foregroundColor(day == 10 ? .white : (billingDates.contains(day) ? Color(.label) : .secondary))
+                                        .foregroundColor(day == 10 ? .white : (billingDates.contains(day) ? Color(.label) : Color(.secondaryLabel)))
                                         .frame(width: 36, height: 36)
                                         .background(
                                             Group {
@@ -388,6 +440,10 @@ struct ShowcaseCalendarScreen: View {
                     .padding(SpendoraTheme.cardPadding)
                     .background(Color(.secondarySystemBackground))
                     .clipShape(RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous)
+                            .stroke(Color(.separator), lineWidth: 0.5)
+                    )
                 }
                 .padding(.horizontal, SpendoraTheme.cardPadding)
                 .padding(.top, 8)
@@ -418,14 +474,68 @@ struct ShowcaseSettingsScreen: View {
                             .tint(SpendoraTheme.accent)
                     }
 
+                    Section("Intelligence") {
+                        HStack {
+                            Image(systemName: "calendar.badge.checkmark")
+                                .foregroundColor(SpendoraTheme.accent)
+                                .frame(width: 28)
+                            Text("Yearly Executive Summary")
+                                .foregroundColor(Color(.label))
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundColor(Color(.tertiaryLabel))
+                        }
+                        
+                        HStack {
+                            Image(systemName: "brain.head.profile")
+                                .foregroundColor(SpendoraTheme.accent)
+                                .frame(width: 28)
+                            Text("AI Insights")
+                                .foregroundColor(Color(.label))
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundColor(Color(.tertiaryLabel))
+                        }
+                    }
+
                     Section("Data Management") {
-                        Label("Export to CSV", systemImage: "square.and.arrow.up")
-                        Label("Export PDF Report", systemImage: "doc.richtext")
+                        HStack {
+                            Image(systemName: "square.and.arrow.up")
+                                .foregroundColor(SpendoraTheme.accent)
+                                .frame(width: 28)
+                            Text("Export to CSV")
+                                .foregroundColor(Color(.label))
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundColor(Color(.tertiaryLabel))
+                        }
+                        
+                        HStack {
+                            Image(systemName: "doc.richtext")
+                                .foregroundColor(SpendoraTheme.accent)
+                                .frame(width: 28)
+                            Text("Export PDF Report")
+                                .foregroundColor(Color(.label))
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundColor(Color(.tertiaryLabel))
+                        }
                     }
 
                     Section {
                         Button(role: .destructive) { } label: {
-                            Label("Reset All Data", systemImage: "trash")
+                            HStack {
+                                Image(systemName: "trash.fill")
+                                    .foregroundColor(Color(.systemRed))
+                                    .frame(width: 28)
+                                Text("Reset All Data")
+                                    .foregroundColor(Color(.systemRed))
+                                Spacer()
+                            }
                         }
                     }
                 }
