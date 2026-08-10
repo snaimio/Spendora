@@ -36,6 +36,20 @@ struct YearlyReportView: View {
 
     private let monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
+    private var currentYear: Int {
+        Calendar.current.component(.year, from: Date())
+    }
+    
+    private var minYear: Int {
+        let calendar = Calendar.current
+        let earliest = subscriptions.map { calendar.component(.year, from: $0.createdAt) }.min() ?? (currentYear - 2)
+        return max(currentYear - 3, min(earliest, currentYear))
+    }
+    
+    private var maxYear: Int {
+        currentYear + 1 // Capped strictly at +1 year for realistic next-year projection
+    }
+
     // MARK: - Year-Aware Computations
 
     /// Subscriptions that were active at any point during the selected year
@@ -147,7 +161,12 @@ struct YearlyReportView: View {
             ScrollView {
                 VStack(spacing: SpendoraTheme.sectionSpacing) {
                     // MARK: - Year Selector Header
-                    YearSelectorBar(selectedYear: $selectedYear)
+                    YearSelectorBar(
+                        selectedYear: $selectedYear,
+                        minYear: minYear,
+                        maxYear: maxYear,
+                        currentYear: currentYear
+                    )
                     
                     // MARK: - Executive Financial Summary Card
                     ExecutiveYearlySummaryCard(
@@ -276,46 +295,65 @@ struct YearlyReportView: View {
 
 struct YearSelectorBar: View {
     @Binding var selectedYear: Int
+    let minYear: Int
+    let maxYear: Int
+    let currentYear: Int
+
+    private var yearTitle: String {
+        if selectedYear == currentYear {
+            return "\(selectedYear) Financial Year"
+        } else if selectedYear > currentYear {
+            return "\(selectedYear) Projected Run Rate"
+        } else {
+            return "\(selectedYear) Historical Statement"
+        }
+    }
 
     var body: some View {
         HStack {
             Button {
-                withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
-                    selectedYear -= 1
+                if selectedYear > minYear {
+                    withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+                        selectedYear -= 1
+                    }
                 }
             } label: {
                 Image(systemName: "chevron.left")
                     .font(.system(size: 14, weight: .semibold))
-                    .foregroundColor(SpendoraTheme.accent)
+                    .foregroundColor(selectedYear > minYear ? SpendoraTheme.accent : Color(.tertiaryLabel))
                     .frame(width: 36, height: 36)
-                    .background(SpendoraTheme.accentTint)
+                    .background(selectedYear > minYear ? SpendoraTheme.accentTint : Color(.secondarySystemFill))
                     .clipShape(Circle())
             }
+            .disabled(selectedYear <= minYear)
             
             Spacer()
             
             HStack(spacing: 8) {
-                Image(systemName: "calendar")
+                Image(systemName: selectedYear > currentYear ? "chart.line.uptrend.xyaxis" : "calendar")
                     .foregroundColor(SpendoraTheme.accent)
-                Text("\(selectedYear) Financial Year")
-                    .font(.system(size: 17, weight: .bold, design: .rounded))
+                Text(yearTitle)
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
                     .foregroundColor(Color(.label))
             }
             
             Spacer()
             
             Button {
-                withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
-                    selectedYear += 1
+                if selectedYear < maxYear {
+                    withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+                        selectedYear += 1
+                    }
                 }
             } label: {
                 Image(systemName: "chevron.right")
                     .font(.system(size: 14, weight: .semibold))
-                    .foregroundColor(SpendoraTheme.accent)
+                    .foregroundColor(selectedYear < maxYear ? SpendoraTheme.accent : Color(.tertiaryLabel))
                     .frame(width: 36, height: 36)
-                    .background(SpendoraTheme.accentTint)
+                    .background(selectedYear < maxYear ? SpendoraTheme.accentTint : Color(.secondarySystemFill))
                     .clipShape(Circle())
             }
+            .disabled(selectedYear >= maxYear)
         }
         .padding(12)
         .background(Color(.secondarySystemBackground))
