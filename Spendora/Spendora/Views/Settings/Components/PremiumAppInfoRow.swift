@@ -5,62 +5,49 @@
 
 import SwiftUI
 
-// MARK: - PremiumAppInfoRow (Golden UX Spendora Brand Header Card)
+// MARK: - PremiumAppInfoRow (Apple Native Brand Card)
 
 struct PremiumAppInfoRow: View {
 
     var body: some View {
         HStack(spacing: 16) {
-            // App icon 52x52pt 16pt radius white border 2pt
+            // App Icon 52x52pt (12pt radius)
             Image("SpendoraLogo")
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(width: 52, height: 52)
-                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16, style: .continuous)
-                        .stroke(Color.white, lineWidth: 2)
-                )
-                .shadow(color: Color.black.opacity(0.12), radius: 8, x: 0, y: 3)
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 3) {
                 HStack(spacing: 8) {
-                    // "SPENDORA" 22pt bold white letter-spaced
-                    Text("SPENDORA")
-                        .font(.system(size: 22, weight: .bold, design: .default))
-                        .tracking(1.2)
-                        .foregroundColor(.white)
+                    Text("Spendora")
+                        .font(.title2.weight(.bold))
+                        .foregroundColor(Color(.label))
                     
-                    // "✦ CAPSTONE" coral-on-white reversed pill
                     Text("✦ CAPSTONE")
-                        .font(.system(size: 10, weight: .bold))
-                        .foregroundColor(SpendoraTheme.Colors.coral)
-                        .padding(.horizontal, 7)
-                        .padding(.vertical, 3)
-                        .background(Color.white)
+                        .font(.caption2.weight(.bold))
+                        .foregroundColor(SpendoraTheme.accent)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(SpendoraTheme.accentTint)
                         .clipShape(Capsule())
                 }
 
-                // "Smart Subscription & Expense Intelligence" 13pt white 80% opacity
                 Text("Smart Subscription & Expense Intelligence")
-                    .font(.system(size: 13, weight: .regular))
-                    .foregroundColor(Color.white.opacity(0.80))
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
                     .lineLimit(1)
                 
-                // Version "1.0 (1)" 12pt white 60% opacity
                 Text("Version \(getAppVersion())")
-                    .font(.system(size: 12, weight: .regular))
-                    .foregroundColor(Color.white.opacity(0.60))
+                    .font(.caption)
+                    .foregroundColor(.secondary)
             }
 
             Spacer(minLength: 0)
         }
-        .padding(SpendoraTheme.Spacing.lg)
-        .background(
-            SpendoraTheme.Colors.coralGradient
-        )
-        .clipShape(RoundedRectangle(cornerRadius: SpendoraTheme.Radius.card, style: .continuous))
-        .shadow(color: SpendoraTheme.Colors.coral.opacity(0.25), radius: 14, x: 0, y: 6)
+        .padding(SpendoraTheme.cardPadding)
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous))
     }
 
     private func getAppVersion() -> String {

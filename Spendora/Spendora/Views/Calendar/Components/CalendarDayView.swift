@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-// MARK: - CalendarDayView (Golden UX 44x44 Touch Target & 36x36 Indicator)
+// MARK: - CalendarDayView (Apple Native 44x44 Day Cell)
 
 struct CalendarDayView: View {
 
@@ -21,30 +21,28 @@ struct CalendarDayView: View {
     var body: some View {
         VStack(spacing: 2) {
             Text(Calendar.current.component(.day, from: date).formatted())
-                .font(Font.system(size: 13, weight: (isToday || !subscriptions.isEmpty) ? .bold : .regular, design: .default).monospacedDigit())
+                .font(Font.system(size: 14, weight: (isToday || !subscriptions.isEmpty) ? .bold : .regular, design: .rounded).monospacedDigit())
                 .foregroundColor(
                     isToday
                         ? .white
-                        : (isInMonth ? SpendoraTheme.Colors.textPrimary : SpendoraTheme.Colors.textTertiary.opacity(0.25))
+                        : (isInMonth ? Color(.label) : Color(.tertiaryLabel).opacity(0.3))
                 )
                 .frame(width: 36, height: 36)
                 .background(
                     Group {
                         if isToday {
                             Circle()
-                                .fill(SpendoraTheme.Colors.coralGradient)
-                                .shadow(color: SpendoraTheme.Colors.coral.opacity(0.35), radius: 6, x: 0, y: 2)
+                                .fill(SpendoraTheme.accent)
                         } else if !subscriptions.isEmpty {
                             Circle()
-                                .stroke(SpendoraTheme.Colors.coral, lineWidth: 2.0)
-                                .background(Circle().fill(SpendoraTheme.Colors.coralTint))
+                                .stroke(SpendoraTheme.accent, lineWidth: 2)
                         }
                     }
                 )
             
             if !subscriptions.isEmpty {
                 Circle()
-                    .fill(SpendoraTheme.Colors.coral)
+                    .fill(SpendoraTheme.accent)
                     .frame(width: 5, height: 5)
             } else {
                 Spacer().frame(height: 5)

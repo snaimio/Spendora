@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-// MARK: - SubscriptionCardView (Golden UX 20pt Card Architecture)
+// MARK: - SubscriptionCardView (Apple HIG Card Anatomy)
 
 struct SubscriptionCardView: View {
 
@@ -13,90 +13,70 @@ struct SubscriptionCardView: View {
 
     let subscription: Subscription
 
-    private var cardColor: Color {
+    private var categoryColor: Color {
         subscription.categoryEnum.color
     }
 
-    private var cardIcon: String {
+    private var categoryIcon: String {
         UniqueSubscriptionThemeHelper.resolveIcon(for: subscription)
     }
 
     // MARK: - Body
 
     var body: some View {
-        HStack(alignment: .top, spacing: SpendoraTheme.Spacing.md) {
-            // Leading icon container: 46x46pt, 14pt radius, 20% opacity background
+        HStack(alignment: .top, spacing: 12) {
+            // Leading icon container 44x44pt (10pt radius)
             ZStack {
-                RoundedRectangle(cornerRadius: SpendoraTheme.Radius.iconBox, style: .continuous)
-                    .fill(cardColor.opacity(0.20))
-                    .frame(width: 46, height: 46)
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(categoryColor.opacity(0.15))
+                    .frame(width: 44, height: 44)
                 
-                Image(systemName: cardIcon)
-                    .font(.system(size: 20, weight: .semibold))
-                    .foregroundColor(cardColor)
+                Image(systemName: categoryIcon)
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundColor(categoryColor)
             }
-            .frame(width: 46)
             
-            // Content Stack
-            VStack(alignment: .leading, spacing: SpendoraTheme.Spacing.xs) {
-                // ROW 1: Subscription Name (17pt semibold charcoal) + Chevron #FFB3A7 (13pt)
-                HStack(alignment: .center) {
+            VStack(alignment: .leading, spacing: 4) {
+                // Row 1: Name + Trailing Chevron
+                HStack {
                     Text(subscription.displayName)
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundColor(SpendoraTheme.Colors.textPrimary)
+                        .font(.headline)
+                        .foregroundColor(Color(.label))
                         .lineLimit(1)
-                        .minimumScaleFactor(0.8)
                     
                     Spacer()
                     
                     Image(systemName: "chevron.right")
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundColor(SpendoraTheme.Colors.chevron)
+                        .font(.caption.weight(.semibold))
+                        .foregroundColor(Color(.tertiaryLabel))
                 }
                 
-                // ROW 2: Category in category color, bullet · separator, cycle plain secondary
-                HStack(spacing: 4) {
-                    Text(subscription.effectiveCategory)
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(cardColor)
-                    
-                    Text("·")
-                        .font(.system(size: 14, weight: .bold))
-                        .foregroundColor(SpendoraTheme.Colors.textTertiary)
-                    
-                    Text(subscription.isOneTime ? "Lifetime" : (subscription.isYearly ? "Yearly" : "Monthly"))
-                        .font(.system(size: 14, weight: .regular))
-                        .foregroundColor(SpendoraTheme.Colors.textSecondary)
-                }
+                // Row 2: Category · Billing cycle
+                Text("\(subscription.effectiveCategory) · \(subscription.isOneTime ? "Lifetime" : (subscription.isYearly ? "Yearly" : "Monthly"))")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
                 
-                // ROW 3: Cost (15pt semibold monospaced charcoal) + "Next: date" (13pt secondary right aligned)
-                HStack(spacing: 4) {
+                // Row 3: Cost cardAmount in Color(.label) + Next billing date
+                HStack {
                     Text(CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost))
-                        .font(Font.system(size: 15, weight: .semibold, design: .default).monospacedDigit())
-                        .foregroundColor(SpendoraTheme.Colors.textPrimary)
-                    
-                    Text(subscription.isOneTime ? "total" : "/month")
-                        .font(SpendoraTheme.Typography.caption)
-                        .foregroundColor(SpendoraTheme.Colors.textSecondary)
-                    
-                    Spacer()
+                        .font(SpendoraTheme.cardAmount)
+                        .foregroundColor(Color(.label))
                     
                     if !subscription.isOneTime {
-                        Text("Next: \(subscription.formattedNextBillingDate)")
-                            .font(.system(size: 13, weight: .regular))
-                            .foregroundColor(SpendoraTheme.Colors.textSecondary)
+                        Text("· Next: \(subscription.formattedNextBillingDate)")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                             .lineLimit(1)
                     }
                 }
                 
-                // ROW 4: Status badge left aligned, 8pt top spacing from row 3
-                CountdownChip(daysRemaining: subscription.daysUntilBilling, isCancelled: subscription.isCancelled)
-                    .padding(.top, 8)
+                // Row 4: Status Badge
+                StatusBadgeView(daysUntil: subscription.daysUntilBilling, isCancelled: subscription.isCancelled)
+                    .padding(.top, 2)
             }
-            .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
         }
-        .padding(SpendoraTheme.Spacing.lg)
-        .spendoraCard(cornerRadius: SpendoraTheme.Radius.card)
-        .pressableCard()
+        .padding(SpendoraTheme.cardPadding)
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous))
     }
 }

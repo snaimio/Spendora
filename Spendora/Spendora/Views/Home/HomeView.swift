@@ -7,24 +7,8 @@ import SwiftUI
 import SwiftData
 import WidgetKit
 
-// MARK: - SubscriptionStatusFilter Enum
+// MARK: - HomeView (Apple Native HIG Dashboard)
 
-enum SubscriptionStatusFilter: String, CaseIterable, Identifiable {
-    case active = "Active"
-    case cancelled = "Cancelled"
-    case all = "All"
-    
-    var id: String { rawValue }
-}
-
-// MARK: - HomeView
-
-/**
- `HomeView` main executive dashboard adhering to Apple HIG Fintech Industry Standards:
- - Segmented Status Control (Active | Cancelled | All)
- - Machined Steel Spending Gauge Meter & Executive Totals
- - Clean Subscriptions Cards List with high-contrast distinct typography
- */
 struct HomeView: View {
 
     // MARK: - Properties
@@ -32,11 +16,11 @@ struct HomeView: View {
     @Environment(\.modelContext) var modelContext
     @Query var subscriptions: [Subscription]
     
-    // UI state management
+    @State var searchText = ""
     @State var showingAddSheet = false
     @State var selectedSubscription: Subscription?
-    @State var searchText = ""
-    @State var refreshID = 0
+    @State var refreshID = UUID()
+    
     @State var sortOption: SortOption = .alphabetical
     @State var statusFilter: SubscriptionStatusFilter = .active
     @State var animateHeader = false
@@ -52,74 +36,54 @@ struct HomeView: View {
     @ObservedObject var notificationCenterService = NotificationCenterService.shared
     
     let generator = UIImpactFeedbackGenerator(style: .medium)
-    
 
     // MARK: - Body
 
     var body: some View {
         NavigationStack {
-            ZStack {
-                SpendoraBrandBackgroundView()
-                
-                ScrollView {
-                    VStack(spacing: 20) {
-                        // Single Integrated Hero Summary Card (Monthly Spend, Gauge & Next Charge)
-                        HeroCardView(
-                            totalMonthly: totalMonthly,
-                            totalYearly: totalYearly,
-                            count: activeSubscriptions.count,
-                            subscriptionCount: activeSubscriptions.count,
-                            nextSubscription: nextSubscription
-                        )
-                        .opacity(animateHeader ? 1 : 0)
-                        .offset(y: animateHeader ? 0 : 8)
-                        
-                        if !subscriptions.isEmpty {
-                            // Search Bar, Sort Chips & Status Segmented Filter
-                            VStack(spacing: 12) {
-                                SearchBarView(searchText: $searchText)
-                                
-                                HStack {
-                                    // Industry Standard Segmented Status Filter (Active | Cancelled | All)
-                                    Picker("Filter", selection: $statusFilter) {
-                                        Text("Active (\(activeSubscriptions.count))").tag(SubscriptionStatusFilter.active)
-                                        Text("Cancelled (\(cancelledSubscriptions.count))").tag(SubscriptionStatusFilter.cancelled)
-                                        Text("All (\(filteredSubscriptions.count))").tag(SubscriptionStatusFilter.all)
-                                    }
-                                    .pickerStyle(.segmented)
-                                }
-                                
-                                SortChipsView(sortOption: $sortOption)
+            ScrollView {
+                VStack(spacing: SpendoraTheme.sectionSpacing) {
+                    // A. Hero Spend Card (Monthly Spend, Gauge & Next Charge)
+                    HeroCardView(
+                        totalMonthly: totalMonthly,
+                        totalYearly: totalYearly,
+                        count: activeSubscriptions.count,
+                        subscriptionCount: activeSubscriptions.count,
+                        nextSubscription: nextSubscription
+                    )
+                    
+                    if !subscriptions.isEmpty {
+                        // Segmented Filter & Sort Controls
+                        VStack(spacing: 12) {
+                            Picker("Filter", selection: $statusFilter) {
+                                Text("Active (\(activeSubscriptions.count))").tag(SubscriptionStatusFilter.active)
+                                Text("Cancelled (\(cancelledSubscriptions.count))").tag(SubscriptionStatusFilter.cancelled)
+                                Text("All (\(filteredSubscriptions.count))").tag(SubscriptionStatusFilter.all)
                             }
+                            .pickerStyle(.segmented)
                             
-                            // DISPLAY CONTENT BASED ON STATUS FILTER
-                            switch statusFilter {
-                            case .active:
-                                activeSubscriptionsSection
-                            case .cancelled:
-                                cancelledSubscriptionsSection
-                            case .all:
-                                allSubscriptionsSection
-                            }
-                        } else {
-                            EmptyStateView()
+                            SortChipsView(sortOption: $sortOption)
                         }
+                        
+                        // C. Subscription List (LazyVStack(spacing: 8))
+                        switch statusFilter {
+                        case .active:
+                            activeSubscriptionsSection
+                        case .cancelled:
+                            cancelledSubscriptionsSection
+                        case .all:
+                            allSubscriptionsSection
+                        }
+                    } else {
+                        EmptyStateView()
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 12)
-                    .padding(.bottom, 32)
                 }
-                .id(refreshID)
-                .onAppear {
-                    updateWidgetData()
-                    NotificationCenterService.shared.syncWithSystemNotifications()
-                    withAnimation(.easeOut(duration: 0.6)) {
-                        animateHeader = true
-                    }
-                }
+                .padding(.horizontal, SpendoraTheme.cardPadding)
+                .padding(.top, 8)
+                .padding(.bottom, 24)
             }
-            .navigationTitle("Dashboard")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("Spendora")
+            .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
@@ -127,231 +91,175 @@ struct HomeView: View {
                         showingNotificationCenter = true
                     } label: {
                         ZStack(alignment: .topTrailing) {
-                            Image(systemName: "bell.fill")
+                            Image(systemName: "bell")
                                 .font(.system(size: 17, weight: .semibold))
-                                .foregroundColor(SpendoraTheme.Colors.coral)
                             
                             if notificationCenterService.unreadCount > 0 {
                                 Circle()
-                                    .fill(SpendoraTheme.Colors.danger)
+                                    .fill(Color(.systemRed))
                                     .frame(width: 8, height: 8)
                                     .offset(x: 2, y: -2)
                             }
                         }
                     }
+                    .tint(SpendoraTheme.accent)
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
-                    HStack(spacing: 10) {
-                        // Coral Gradient + Button Pill
+                    HStack(spacing: 12) {
                         Button {
                             generator.impactOccurred()
                             showingAddSheet = true
                         } label: {
-                            HStack(spacing: 4) {
-                                Image(systemName: "plus")
-                                    .font(.system(size: 13, weight: .bold))
-                                Text("Add")
-                                    .font(.system(size: 13, weight: .semibold))
-                            }
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 6)
-                            .background(SpendoraTheme.Colors.coralGradient)
-                            .clipShape(Capsule())
-                            .shadow(color: SpendoraTheme.Colors.coral.opacity(0.3), radius: 4, y: 2)
+                            Image(systemName: "plus")
+                                .font(.system(size: 17, weight: .bold))
                         }
+                        .tint(SpendoraTheme.accent)
                         
                         Menu {
                             Button {
-                                DispatchQueue.main.async {
-                                    showingYearlyReport = true
-                                }
+                                showingYearlyReport = true
                             } label: {
                                 Label("Yearly Report", systemImage: "calendar")
                             }
                             
                             Button {
-                                DispatchQueue.main.async {
-                                    showingChallenges = true
-                                }
+                                showingChallenges = true
                             } label: {
                                 Label("Challenges", systemImage: "trophy")
                             }
                             
                             Button {
-                                DispatchQueue.main.async {
-                                    showingSavingsScore = true
-                                }
+                                showingSavingsScore = true
                             } label: {
-                                Label("Savings Score", systemImage: "star.circle.fill")
+                                Label("Savings Score", systemImage: "star")
                             }
                             
                             Button {
-                                DispatchQueue.main.async {
-                                    showingAIInsights = true
-                                }
+                                showingAIInsights = true
                             } label: {
                                 Label("AI Insights", systemImage: "brain.head.profile")
                             }
                         } label: {
-                            Image(systemName: "ellipsis.circle.fill")
-                                .font(.system(size: 20))
-                                .foregroundColor(SpendoraTheme.Colors.coralWarm)
+                            Image(systemName: "ellipsis.circle")
+                                .font(.system(size: 17))
                         }
+                        .tint(SpendoraTheme.accent)
                         
-                        // Profile Avatar Button (Warm Coral)
                         Button {
-                            generator.impactOccurred()
                             showingProfileSheet = true
                         } label: {
                             ZStack {
                                 Circle()
-                                    .fill(SpendoraTheme.Colors.coralGradient)
+                                    .fill(SpendoraTheme.accentTint)
                                     .frame(width: 32, height: 32)
                                 
                                 Text(profileManager.profile.initials)
                                     .font(.system(size: 12, weight: .bold))
-                                    .foregroundColor(.white)
+                                    .foregroundColor(SpendoraTheme.accentText)
                             }
                         }
                     }
                 }
             }
-            .background(homeSheetModifiers)
-            .onChange(of: subscriptions.count) { _, _ in
-                updateWidgetData()
+            .sheet(item: $selectedSubscription) { subscription in
+                SubscriptionDetailView(subscription: subscription)
             }
+            .sheet(isPresented: $showingAddSheet) {
+                AddSubscriptionView()
+            }
+            .sheet(isPresented: $showingNotificationCenter) {
+                NotificationCenterSheet()
+            }
+            .sheet(isPresented: $showingProfileSheet) {
+                ProfileView()
+            }
+            .sheet(isPresented: $showingYearlyReport) {
+                YearlyReportView()
+            }
+            .sheet(isPresented: $showingChallenges) {
+                ChallengesView()
+            }
+            .sheet(isPresented: $showingSavingsScore) {
+                SavingsScoreView()
+            }
+            .sheet(isPresented: $showingAIInsights) {
+                AIInsightsView()
+            }
+            .animation(.spring(response: 0.35, dampingFraction: 0.8), value: subscriptions.count)
         }
     }
     
-    // MARK: - Active Subscriptions Section
+    // MARK: - Section Builders (LazyVStack(spacing: 8))
+
     private var activeSubscriptionsSection: some View {
-        VStack(spacing: 10) {
+        LazyVStack(alignment: .leading, spacing: 8) {
             HStack {
                 Text("Active Subscriptions")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(SpendoraTheme.Colors.textPrimary)
+                    .font(.headline.weight(.semibold))
+                    .foregroundColor(Color(.label))
+                
                 Spacer()
+                
                 Text("\(activeSubscriptions.count)")
-                    .font(.system(size: 11, weight: .bold))
-                    .foregroundColor(SpendoraTheme.Colors.coral)
+                    .font(.caption.weight(.semibold))
+                    .foregroundColor(SpendoraTheme.accent)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 3)
-                    .background(SpendoraTheme.Colors.coralTint)
+                    .background(SpendoraTheme.accentTint)
                     .clipShape(Capsule())
             }
-            .padding(.horizontal, 4)
+            .padding(.horizontal, 2)
+            .padding(.bottom, 2)
             
-            if activeSubscriptions.isEmpty {
-                Text("No active subscriptions found.")
-                    .font(SpendoraTheme.Typography.subheadline)
-                    .foregroundColor(SpendoraTheme.Colors.textSecondary)
-                    .padding(.vertical, 20)
-            } else {
-                ForEach(activeSubscriptions) { subscription in
-                    SubscriptionCardView(subscription: subscription)
-                        .onTapGesture {
-                            generator.impactOccurred()
-                            selectedSubscription = subscription
-                        }
-                }
+            ForEach(activeSubscriptions) { subscription in
+                SubscriptionCardView(subscription: subscription)
+                    .onTapGesture {
+                        generator.impactOccurred()
+                        selectedSubscription = subscription
+                    }
             }
         }
     }
-    
-    // MARK: - Cancelled Subscriptions Section
+
     private var cancelledSubscriptionsSection: some View {
-        VStack(spacing: 10) {
+        LazyVStack(alignment: .leading, spacing: 8) {
             HStack {
                 Text("Cancelled & Paused")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(SpendoraTheme.Colors.textPrimary)
+                    .font(.headline.weight(.semibold))
+                    .foregroundColor(Color(.label))
+                
                 Spacer()
+                
                 Text("\(cancelledSubscriptions.count)")
-                    .font(.system(size: 11, weight: .bold))
-                    .foregroundColor(SpendoraTheme.Colors.cancelled)
+                    .font(.caption.weight(.semibold))
+                    .foregroundColor(Color(.secondaryLabel))
                     .padding(.horizontal, 8)
                     .padding(.vertical, 3)
-                    .background(SpendoraTheme.Colors.cancelled.opacity(0.14))
+                    .background(Color(.tertiarySystemBackground))
                     .clipShape(Capsule())
             }
-            .padding(.horizontal, 4)
+            .padding(.horizontal, 2)
+            .padding(.bottom, 2)
             
-            if cancelledSubscriptions.isEmpty {
-                Text("No cancelled subscriptions found.")
-                    .font(SpendoraTheme.Typography.subheadline)
-                    .foregroundColor(SpendoraTheme.Colors.textSecondary)
-                    .padding(.vertical, 20)
-            } else {
-                ForEach(cancelledSubscriptions) { subscription in
-                    SubscriptionCardView(subscription: subscription)
-                        .opacity(0.75)
-                        .onTapGesture {
-                            generator.impactOccurred()
-                            selectedSubscription = subscription
-                        }
-                }
+            ForEach(cancelledSubscriptions) { subscription in
+                SubscriptionCardView(subscription: subscription)
+                    .opacity(0.75)
+                    .onTapGesture {
+                        generator.impactOccurred()
+                        selectedSubscription = subscription
+                    }
             }
         }
     }
-    
-    // MARK: - All Subscriptions Section
+
     private var allSubscriptionsSection: some View {
         VStack(spacing: 16) {
             if !activeSubscriptions.isEmpty {
-                VStack(spacing: 10) {
-                    HStack {
-                        Text("Active Subscriptions")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(SpendoraTheme.Colors.textPrimary)
-                        Spacer()
-                        Text("\(activeSubscriptions.count)")
-                            .font(.system(size: 11, weight: .bold))
-                            .foregroundColor(SpendoraTheme.Colors.coral)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 3)
-                            .background(SpendoraTheme.Colors.coralTint)
-                            .clipShape(Capsule())
-                    }
-                    .padding(.horizontal, 4)
-                    
-                    ForEach(activeSubscriptions) { subscription in
-                        SubscriptionCardView(subscription: subscription)
-                            .onTapGesture {
-                                generator.impactOccurred()
-                                selectedSubscription = subscription
-                            }
-                    }
-                }
+                activeSubscriptionsSection
             }
-            
             if !cancelledSubscriptions.isEmpty {
-                VStack(spacing: 10) {
-                    HStack {
-                        Text("Cancelled & Paused")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(SpendoraTheme.Colors.textPrimary)
-                        Spacer()
-                        Text("\(cancelledSubscriptions.count)")
-                            .font(.system(size: 11, weight: .bold))
-                            .foregroundColor(SpendoraTheme.Colors.cancelled)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 3)
-                            .background(SpendoraTheme.Colors.cancelled.opacity(0.14))
-                            .clipShape(Capsule())
-                    }
-                    .padding(.horizontal, 4)
-                    
-                    ForEach(cancelledSubscriptions) { subscription in
-                        SubscriptionCardView(subscription: subscription)
-                            .opacity(0.75)
-                            .onTapGesture {
-                                generator.impactOccurred()
-                                selectedSubscription = subscription
-                            }
-                    }
-                }
+                cancelledSubscriptionsSection
             }
         }
     }

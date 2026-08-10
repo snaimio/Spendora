@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-// MARK: - HeroCardView (Golden UX 20pt Radius & 52pt Hero Architecture)
+// MARK: - HeroCardView (Apple Native 12pt Inset Secondary Surface)
 
 struct HeroCardView: View {
 
@@ -24,8 +24,8 @@ struct HeroCardView: View {
     // MARK: - Body
 
     var body: some View {
-        VStack(spacing: SpendoraTheme.Spacing.md) {
-            // HERO SPEND CARD (20pt radius, white, coral shadow)
+        VStack(spacing: SpendoraTheme.sectionSpacing) {
+            // A. Hero Spend Card (12pt Radius, secondarySystemBackground, 16pt Padding)
             ThisMonthCardView(
                 totalMonthly: totalMonthly,
                 totalYearly: totalYearly,
@@ -34,7 +34,7 @@ struct HeroCardView: View {
                 nextSubscription: nextSubscription
             )
             
-            // STAT ROW (3 equal cards with 10pt spacing)
+            // B. Stat Row (HStack(spacing: 10) three equal cards)
             ExecutiveMetricsRow(
                 totalYearly: totalYearly,
                 averageMonthly: averageMonthlyCost,
@@ -44,7 +44,7 @@ struct HeroCardView: View {
     }
 }
 
-// MARK: - ThisMonthCardView (Top Priority Hero Element)
+// MARK: - ThisMonthCardView (Apple Native Hero Card)
 
 struct ThisMonthCardView: View {
     let totalMonthly: Double
@@ -52,7 +52,6 @@ struct ThisMonthCardView: View {
     let count: Int
     let subscriptionCount: Int
     var nextSubscription: Subscription? = nil
-    @Environment(\.colorScheme) private var colorScheme
 
     private var monthlyBudget: Double {
         BudgetService.shared.monthlyBudget
@@ -65,142 +64,125 @@ struct ThisMonthCardView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             VStack(alignment: .leading, spacing: 14) {
-                // Top row: "THIS MONTH" 11pt semibold uppercase #FF8E53 + right coral budget pill
+                // Top Header: "THIS MONTH"
                 HStack(alignment: .center) {
                     Text("THIS MONTH")
-                        .font(.system(size: 11, weight: .semibold))
-                        .foregroundColor(SpendoraTheme.Colors.coralWarm)
-                        .tracking(1.2)
+                        .font(.caption.weight(.semibold))
+                        .foregroundColor(.secondary)
+                        .textCase(.uppercase)
                     
                     Spacer()
                     
                     if monthlyBudget > 0 {
                         HStack(spacing: 4) {
                             Circle()
-                                .fill(budgetProgress >= 0.9 ? SpendoraTheme.Colors.danger : SpendoraTheme.Colors.coral)
+                                .fill(budgetProgress >= 0.9 ? Color(.systemRed) : SpendoraTheme.accent)
                                 .frame(width: 6, height: 6)
                             
                             Text(String(format: "%.0f%% used", budgetProgress * 100))
-                                .font(.system(size: 11, weight: .semibold))
-                                .foregroundColor(SpendoraTheme.Colors.coral)
+                                .font(.caption.weight(.semibold))
+                                .foregroundColor(.secondary)
                         }
                         .padding(.horizontal, 8)
                         .padding(.vertical, 3)
-                        .background(SpendoraTheme.Colors.coralTint)
+                        .background(Color(.tertiarySystemBackground))
                         .clipShape(Capsule())
                     }
                 }
 
-                // Middle: monthly total 52pt bold monospaced — owns the screen
+                // Monthly Total — 52pt Bold Rounded Monospaced in Color(.label)
                 VStack(alignment: .leading, spacing: 4) {
                     Text(CurrencyManager.shared.format(totalMonthly))
-                        .font(SpendoraTheme.Typography.heroAmount)
-                        .foregroundColor(SpendoraTheme.Colors.textPrimary)
+                        .font(SpendoraTheme.heroNumber)
+                        .foregroundColor(Color(.label))
                         .contentTransition(.numericText())
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
                     
-                    // Below total: "X active subscriptions" 14pt secondary
                     Text("\(count) active \(count == 1 ? "subscription" : "subscriptions")")
-                        .font(.system(size: 14, weight: .regular))
-                        .foregroundColor(SpendoraTheme.Colors.textSecondary)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
                 }
                 
-                // Capsule Budget Progress Bar
+                // Native Capsule Budget Indicator
                 if monthlyBudget > 0 {
                     VStack(alignment: .leading, spacing: 6) {
                         GeometryReader { geo in
                             ZStack(alignment: .leading) {
                                 Capsule()
-                                    .fill(SpendoraTheme.Colors.coralTint)
-                                    .frame(height: 5)
+                                    .fill(Color(.tertiarySystemBackground))
+                                    .frame(height: 4)
                                 
                                 Capsule()
                                     .fill(
                                         budgetProgress >= 0.9
-                                            ? SpendoraTheme.Colors.danger
-                                            : SpendoraTheme.Colors.coral
+                                            ? Color(.systemRed)
+                                            : SpendoraTheme.accent
                                     )
-                                    .frame(width: max(5, geo.size.width * CGFloat(budgetProgress)), height: 5)
+                                    .frame(width: max(4, geo.size.width * CGFloat(budgetProgress)), height: 4)
                             }
                         }
-                        .frame(height: 5)
+                        .frame(height: 4)
                         
                         HStack {
                             Text("Budget: \(CurrencyManager.shared.format(monthlyBudget))")
-                                .font(SpendoraTheme.Typography.caption)
-                                .foregroundColor(SpendoraTheme.Colors.textSecondary)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
                             Spacer()
                             Text("\(CurrencyManager.shared.format(max(0, monthlyBudget - totalMonthly))) left")
-                                .font(SpendoraTheme.Typography.caption)
-                                .foregroundColor(monthlyBudget >= totalMonthly ? SpendoraTheme.Colors.success : SpendoraTheme.Colors.danger)
+                                .font(.caption)
+                                .foregroundColor(monthlyBudget >= totalMonthly ? SpendoraTheme.accent : Color(.systemRed))
                         }
                     }
                     .padding(.top, 2)
                 }
             }
-            .padding(SpendoraTheme.Spacing.lg)
+            .padding(SpendoraTheme.cardPadding)
             
-            // Next charge section inside hero card below 0.5pt divider #F0EBE3
+            // Next Charge Row below native Divider()
             if let next = nextSubscription {
                 Divider()
-                    .background(SpendoraTheme.Colors.border)
                 
-                VStack(alignment: .leading, spacing: 10) {
-                    HStack {
-                        Text("NEXT CHARGE")
-                            .font(.system(size: 10, weight: .semibold))
-                            .foregroundColor(SpendoraTheme.Colors.coralWarm)
-                            .tracking(1.0)
+                HStack(alignment: .center, spacing: 12) {
+                    // Icon 40x40pt .background(Color(.tertiarySystemBackground))
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .fill(Color(.tertiarySystemBackground))
+                            .frame(width: 40, height: 40)
                         
-                        Spacer()
+                        Image(systemName: UniqueSubscriptionThemeHelper.resolveIcon(for: next))
+                            .font(.system(size: 18, weight: .medium))
+                            .foregroundColor(next.categoryEnum.color)
                     }
                     
-                    HStack(alignment: .center, spacing: 12) {
-                        // Leading service icon 44x44 rounded
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                .fill(next.categoryEnum.color.opacity(0.15))
-                                .frame(width: 44, height: 44)
-                            
-                            Image(systemName: UniqueSubscriptionThemeHelper.resolveIcon(for: next))
-                                .font(.system(size: 18, weight: .semibold))
-                                .foregroundColor(next.categoryEnum.color)
-                        }
+                    // Name .font(.headline), Date .font(.caption).foregroundColor(.secondary)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(next.displayName)
+                            .font(.headline)
+                            .foregroundColor(Color(.label))
+                            .lineLimit(1)
                         
-                        // Service name 17pt semibold, date 13pt secondary
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(next.displayName)
-                                .font(.system(size: 17, weight: .semibold))
-                                .foregroundColor(SpendoraTheme.Colors.textPrimary)
-                                .lineLimit(1)
-                            
-                            Text(next.formattedNextBillingDate)
-                                .font(SpendoraTheme.Typography.caption)
-                                .foregroundColor(SpendoraTheme.Colors.textSecondary)
-                        }
-                        
-                        Spacer()
-                        
-                        // Cost 17pt semibold coral monospaced
-                        Text(CurrencyManager.shared.format(next.isOneTime ? next.cost : next.monthlyCost))
-                            .font(Font.system(size: 17, weight: .semibold, design: .default).monospacedDigit())
-                            .foregroundColor(SpendoraTheme.Colors.coral)
+                        Text(next.formattedNextBillingDate)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                     }
                     
-                    // Status badge on next charge row
-                    CountdownChip(daysRemaining: next.daysUntilBilling, isCancelled: next.isCancelled)
-                        .padding(.top, 2)
+                    Spacer()
+                    
+                    // Cost cardAmount in accent color
+                    Text(CurrencyManager.shared.format(next.isOneTime ? next.cost : next.monthlyCost))
+                        .font(SpendoraTheme.cardAmount)
+                        .foregroundColor(SpendoraTheme.accent)
                 }
-                .padding(SpendoraTheme.Spacing.lg)
-                .background(SpendoraTheme.Colors.coralTint.opacity(0.35))
+                .padding(SpendoraTheme.cardPadding)
             }
         }
-        .spendoraCard(cornerRadius: SpendoraTheme.Radius.hero)
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous))
     }
 }
 
-// MARK: - ExecutiveMetricsRow (Stat Row: 3 Equal Mini-Cards)
+// MARK: - ExecutiveMetricsRow (Stat Row: 3 Equal Cards)
 
 struct ExecutiveMetricsRow: View {
     let totalYearly: Double
@@ -227,7 +209,7 @@ struct ExecutiveMetricsRow: View {
     }
 }
 
-// MARK: - MetricSubCard (12pt Radius, 12pt Padding, 10pt Label #FF8E53, 18pt Bold Value)
+// MARK: - MetricSubCard (12pt Radius, secondarySystemBackground, label / statNumber)
 
 struct MetricSubCard: View {
     let title: String
@@ -236,19 +218,20 @@ struct MetricSubCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title)
-                .font(.system(size: 10, weight: .semibold))
-                .foregroundColor(SpendoraTheme.Colors.coralWarm)
-                .tracking(0.8)
+                .font(.caption.weight(.semibold))
+                .foregroundColor(.secondary)
+                .textCase(.uppercase)
                 .lineLimit(1)
             
             Text(value)
-                .font(Font.system(size: 18, weight: .bold, design: .default).monospacedDigit())
-                .foregroundColor(SpendoraTheme.Colors.textPrimary)
+                .font(SpendoraTheme.statNumber)
+                .foregroundColor(Color(.label))
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
         }
         .padding(12)
         .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-        .spendoraCard(cornerRadius: SpendoraTheme.Radius.subCard)
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous))
     }
 }

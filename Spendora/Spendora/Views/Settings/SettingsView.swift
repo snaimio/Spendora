@@ -1,13 +1,7 @@
 //
 //  SettingsView.swift
+//  Spendora
 //
-
-/**
- * Main/Core Functions & Purpose:
- * SettingsView screen presenting configuration options for user profile management,
- * global currency conversion, appearance theme selection, notification alerts, iCloud Sync & Backup,
- * data export (CSV/PDF), and Capstone project information.
- */
 
 import SwiftUI
 import SwiftData
@@ -15,33 +9,16 @@ import WidgetKit
 import UniformTypeIdentifiers
 import UIKit
 
+// MARK: - SettingsView (Apple Native Form Screen)
 
-// MARK: - SettingsView
-
-/**
- `SettingsView` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for settingsview handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `SettingsView` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
- */
 struct SettingsView: View {
 
     // MARK: - Properties
 
     @Environment(\.modelContext) var modelContext
     @Query var subscriptions: [Subscription]
+    @AppStorage("isDarkMode") private var isDarkMode = false
     
-    // UI presentation states
     @State var showingResetAlert = false
     @State var showingPrivacyPolicy = false
     @State var showingResetConfirmation = false
@@ -59,60 +36,150 @@ struct SettingsView: View {
     
     @ObservedObject var profileManager = UserProfileManager.shared
     @State var showingProfileSheet = false
-    
 
     // MARK: - Body
 
-    /// Main SwiftUI layout body property.
     var body: some View {
         NavigationStack {
-            List {
-                Section {
-                    PremiumAppInfoRow()
-                }
+            VStack(spacing: 0) {
+                // Brand Header: Above Form as a custom card
+                PremiumAppInfoRow()
+                    .padding(.horizontal, 16)
+                    .padding(.top, 8)
+                    .padding(.bottom, 8)
                 
-                Section("User Profile") {
-                    SettingsUserProfileRow {
-                        showingProfileSheet = true
+                // Form: Native iOS Settings Look
+                Form {
+                    // Section: User Profile
+                    Section("User Profile") {
+                        Button {
+                            showingProfileSheet = true
+                        } label: {
+                            HStack(spacing: 12) {
+                                ZStack {
+                                    Circle()
+                                        .fill(SpendoraTheme.accentTint)
+                                        .frame(width: 40, height: 40)
+                                    
+                                    Text(profileManager.profile.initials)
+                                        .font(.headline.weight(.semibold))
+                                        .foregroundColor(SpendoraTheme.accentText)
+                                }
+                                
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(profileManager.profile.displayName)
+                                        .font(.headline)
+                                        .foregroundColor(Color(.label))
+                                    
+                                    Text(profileManager.profile.isGuest ? "Guest Mode (Local)" : profileManager.profile.email)
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                
+                                Spacer()
+                            }
+                        }
+                    }
+                    
+                    // Section: Appearance
+                    Section("Appearance") {
+                        Toggle(isOn: $isDarkMode) {
+                            Label("Dark Mode", systemImage: "moon.fill")
+                                .foregroundColor(Color(.label))
+                        }
+                        .tint(SpendoraTheme.accent)
+                    }
+                    
+                    // Section: Reports & Insights
+                    Section("Intelligence") {
+                        Button {
+                            showingYearlyReport = true
+                        } label: {
+                            Label("Yearly Executive Summary", systemImage: "calendar")
+                                .foregroundColor(Color(.label))
+                        }
+                        
+                        Button {
+                            showingChallenges = true
+                        } label: {
+                            Label("Spending Challenges", systemImage: "trophy")
+                                .foregroundColor(Color(.label))
+                        }
+                        
+                        Button {
+                            showingSavingsScore = true
+                        } label: {
+                            Label("Savings Intelligence Score", systemImage: "star")
+                                .foregroundColor(Color(.label))
+                        }
+                        
+                        Button {
+                            showingAIInsights = true
+                        } label: {
+                            Label("AI Cost Optimizations", systemImage: "brain.head.profile")
+                                .foregroundColor(Color(.label))
+                        }
+                    }
+                    
+                    // Section: Preferences
+                    Section("Preferences") {
+                        CurrencySection()
+                        NotificationsSection()
+                    }
+                    
+                    // Section: Data & Backup
+                    Section("Data Management") {
+                        Button {
+                            exportCSV()
+                        } label: {
+                            Label("Export to CSV", systemImage: "square.and.arrow.up")
+                                .foregroundColor(Color(.label))
+                        }
+                        
+                        Button {
+                            exportPDF()
+                        } label: {
+                            Label("Export PDF Report", systemImage: "doc.richtext")
+                                .foregroundColor(Color(.label))
+                        }
+                        
+                        Button {
+                            exportBackup()
+                        } label: {
+                            Label("Create Encrypted Backup", systemImage: "arrow.up.doc")
+                                .foregroundColor(Color(.label))
+                        }
+                        
+                        Button {
+                            showingDocumentPicker = true
+                        } label: {
+                            Label("Restore from Backup", systemImage: "arrow.down.doc")
+                                .foregroundColor(Color(.label))
+                        }
+                    }
+                    
+                    // Section: Danger Zone (Reset All Data)
+                    Section {
+                        Button(role: .destructive) {
+                            showingResetAlert = true
+                        } label: {
+                            Label("Reset All Data", systemImage: "trash")
+                        }
+                    }
+                    
+                    // Section: About
+                    Section {
+                        Button {
+                            showingPrivacyPolicy = true
+                        } label: {
+                            Label("Privacy Policy", systemImage: "hand.raised")
+                                .foregroundColor(Color(.label))
+                        }
                     }
                 }
-                
-                AppearanceSection()
-                
-                ReportsSection(
-                    subscriptions: subscriptions,
-                    showingYearlyReport: $showingYearlyReport,
-                    showingChallenges: $showingChallenges,
-                    showingSavingsScore: $showingSavingsScore,
-                    showingAIInsights: $showingAIInsights,
-                    showingSpendingChart: $showingSpendingChart
-                )
-                
-                AppTourSection(showingOnboarding: $showingOnboarding)
-                
-                CurrencySection()
-                
-                NotificationsSection()
-                
-                Section("Cloud") {
-                    CloudSyncView()
-                        .listRowInsets(EdgeInsets())
-                }
-                
-                SupportSection(shareApp: shareApp)
-                
-                SettingsDataManagementSection(
-                    exportCSV: exportCSV,
-                    exportPDF: exportPDF,
-                    exportBackup: exportBackup,
-                    importBackup: { showingDocumentPicker = true },
-                    resetData: { showingResetAlert = true }
-                )
-                
-                LegalSection(showingPrivacyPolicy: $showingPrivacyPolicy)
             }
-            .listStyle(.insetGrouped)
             .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.large)
             .alert("Reset All Data", isPresented: $showingResetAlert) {
                 Button("Cancel", role: .cancel) { }
                 Button("Reset", role: .destructive) {
@@ -124,11 +191,6 @@ struct SettingsView: View {
             .sheet(isPresented: $showingProfileSheet) {
                 ProfileView()
             }
-            .alert("Success", isPresented: $showingResetConfirmation) {
-                Button("OK", role: .cancel) { }
-            } message: {
-                Text("All data has been reset successfully.")
-            }
             .sheet(isPresented: $showingShareSheet) {
                 ShareSheet(items: shareItems)
             }
@@ -139,42 +201,57 @@ struct SettingsView: View {
                 PremiumOnboardingView(hasCompletedOnboarding: $showingOnboarding)
             }
             .sheet(isPresented: $showingYearlyReport) {
-                NavigationStack {
-                    YearlyReportView(subscriptions: subscriptions)
-                }
+                YearlyReportView()
             }
             .sheet(isPresented: $showingChallenges) {
-                NavigationStack {
-                    ChallengesView(subscriptions: subscriptions)
-                }
+                ChallengesView()
             }
             .sheet(isPresented: $showingSavingsScore) {
-                NavigationStack {
-                    SavingsScoreView(subscriptions: subscriptions)
-                }
+                SavingsScoreView()
             }
             .sheet(isPresented: $showingAIInsights) {
-                NavigationStack {
-                    AIInsightsView(subscriptions: subscriptions)
-                }
+                AIInsightsView()
             }
-            .sheet(isPresented: $showingSpendingChart) {
-                NavigationStack {
-                    SpendingChartView(subscriptions: subscriptions)
-                }
-            }
-            .fileImporter(
-                isPresented: $showingDocumentPicker,
-                allowedContentTypes: [.json],
-                allowsMultipleSelection: false
-            ) { result in
-                do {
-                    let url = try result.get().first!
-                    importBackup(from: url)
-                } catch {
-                    print("Failed to select file: \(error)")
-                }
-            }
+        }
+    }
+    
+    // MARK: - Actions
+
+    func exportCSV() {
+        if let url = ExportService.shared.exportToCSV(subscriptions: subscriptions) {
+            shareItems = [url]
+            showingShareSheet = true
+        }
+    }
+    
+    func exportPDF() {
+        let renderer = PDFReportRenderer(subscriptions: subscriptions)
+        if let url = renderer.generatePDF() {
+            shareItems = [url]
+            showingShareSheet = true
+        }
+    }
+    
+    func exportBackup() {
+        if let url = BackupService.shared.createBackup(subscriptions: subscriptions) {
+            shareItems = [url]
+            showingShareSheet = true
+        }
+    }
+    
+    func resetAllData() {
+        for sub in subscriptions {
+            NotificationService.shared.cancel(for: sub)
+            modelContext.delete(sub)
+        }
+        try? modelContext.save()
+        showingResetConfirmation = true
+    }
+    
+    func shareApp() {
+        if let url = URL(string: "https://apps.apple.com/app/spendora") {
+            shareItems = [url]
+            showingShareSheet = true
         }
     }
 }

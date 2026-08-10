@@ -5,85 +5,81 @@
 
 import SwiftUI
 
-// MARK: - SpendoraTheme (Fintech Studio 60-30-10 & Golden UX Architecture)
+// MARK: - SpendoraTheme (Apple Native HIG & Emerald Accent Architecture)
 
 public struct SpendoraTheme {
 
-    // MARK: - Colors (60-30-10 Palette)
+    // MARK: - Emerald Signature Accent (#00C07A Light / #00D988 Dark)
+    public static let accent = Color(UIColor { trait in
+        trait.userInterfaceStyle == .dark
+            ? UIColor(hex: "#00D988")
+            : UIColor(hex: "#00C07A")
+    })
+    
+    public static let accentTint = Color(UIColor { trait in
+        trait.userInterfaceStyle == .dark
+            ? UIColor(hex: "#00D988").withAlphaComponent(0.15)
+            : UIColor(hex: "#00C07A").withAlphaComponent(0.12)
+    })
+    
+    public static let accentText = Color(UIColor { trait in
+        trait.userInterfaceStyle == .dark
+            ? UIColor(hex: "#00D988")
+            : UIColor(hex: "#007A4C")
+    })
+
+    // MARK: - Native Apple System Surfaces & Labels
     public struct Colors {
-        // 60% — Canvas
-        public static let canvasLight = Color(hex: "#FFFBF5")
-        public static let canvasDark = Color(hex: "#0F0E17")
-        public static let canvas = Color(UIColor { trait in
-            trait.userInterfaceStyle == .dark ? UIColor(hex: "#0F0E17") : UIColor(hex: "#FFFBF5")
-        })
-
-        // 30% — Surfaces & Text
-        public static let cardLight = Color(hex: "#FFFFFF")
-        public static let cardDark = Color(hex: "#1C1B29")
-        public static let cardElevatedDark = Color(hex: "#242336")
-        public static let card = Color(UIColor { trait in
-            trait.userInterfaceStyle == .dark ? UIColor(hex: "#1C1B29") : UIColor(hex: "#FFFFFF")
-        })
-        public static let cardElevated = Color(UIColor { trait in
-            trait.userInterfaceStyle == .dark ? UIColor(hex: "#242336") : UIColor(hex: "#FFFFFF")
-        })
+        public static let canvas = Color(.systemBackground)
+        public static let secondaryCanvas = Color(.secondarySystemBackground)
+        public static let tertiaryCanvas = Color(.tertiarySystemBackground)
         
-        public static let borderLight = Color(hex: "#F0EBE3")
-        public static let borderDark = Color(hex: "#2A2838")
-        public static let border = Color(UIColor { trait in
-            trait.userInterfaceStyle == .dark ? UIColor(hex: "#2A2838") : UIColor(hex: "#F0EBE3")
-        })
-
-        public static let textPrimary = Color(UIColor { trait in
-            trait.userInterfaceStyle == .dark ? UIColor(hex: "#F5F0E8") : UIColor(hex: "#1A1A2E")
-        })
-        public static let textSecondary = Color(hex: "#8A8A9A")
-        public static let textTertiary = Color(hex: "#A0A0B0")
-
-        // 10% — Coral Fire Accent
-        public static let coral = Color(hex: "#FF6B6B")
-        public static let coralDeep = Color(hex: "#E85555")
-        public static let coralWarm = Color(hex: "#FF8E53")
-        public static let coralTint = Color(UIColor { trait in
-            trait.userInterfaceStyle == .dark ? UIColor(hex: "#211E30") : UIColor(hex: "#FFF0EE")
-        })
-        public static let chevron = Color(hex: "#FFB3A7")
-
-        // Semantic Colors
-        public static let success = Color(hex: "#00C9A7")     // Mint
-        public static let warning = Color(hex: "#FFB347")     // Warm Orange
-        public static let danger = Color(hex: "#FF4757")      // Vivid Red
-        public static let cancelled = Color(hex: "#A0A0B0")   // Muted Slate
-
-        // Gradients
-        public static let coralGradient = LinearGradient(
-            colors: [Color(hex: "#FF6B6B"), Color(hex: "#FF8E53")],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
+        public static let card = Color(.secondarySystemBackground)
+        public static let cardElevated = Color(.tertiarySystemBackground)
         
-        public static let heroGradient = LinearGradient(
-            colors: [Color(hex: "#FF6B6B"), Color(hex: "#FF8E53"), Color(hex: "#FFA07A")],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
+        public static let textPrimary = Color(.label)
+        public static let textSecondary = Color(.secondaryLabel)
+        public static let textTertiary = Color(.tertiaryLabel)
+        
+        public static let separator = Color(.separator)
+        public static let border = Color(.separator).opacity(0.6)
+        
+        // Semantic Apple Colors
+        public static let success = Color(.systemGreen)
+        public static let warning = Color(.systemOrange)
+        public static let danger = Color(.systemRed)
+        public static let link = Color(.systemBlue)
+        public static let cancelled = Color(.tertiaryLabel)
+        
+        public static let coral = SpendoraTheme.accent
+        public static let coralWarm = SpendoraTheme.accent
+        public static let coralTint = SpendoraTheme.accentTint
+        public static let chevron = Color(.tertiaryLabel)
     }
 
-    // MARK: - Typography Scale (SF Pro & Monospaced Digits)
+    // MARK: - Typography Scale (SF Pro & SF Rounded for Numbers)
+    public static let heroNumber = Font.system(size: 52, weight: .bold, design: .rounded).monospacedDigit()
+    public static let statNumber = Font.system(size: 20, weight: .semibold, design: .rounded).monospacedDigit()
+    public static let cardAmount = Font.system(size: 16, weight: .semibold, design: .rounded).monospacedDigit()
+    
     public struct Typography {
-        public static let heroAmount = Font.system(size: 52, weight: .bold, design: .default).monospacedDigit()
-        public static let largeTitle = Font.system(size: 32, weight: .bold, design: .default)
-        public static let title = Font.system(size: 22, weight: .bold, design: .default)
-        public static let headline = Font.system(size: 17, weight: .semibold, design: .default)
-        public static let body = Font.system(size: 15, weight: .regular, design: .default)
-        public static let subheadline = Font.system(size: 14, weight: .medium, design: .default)
-        public static let caption = Font.system(size: 13, weight: .regular, design: .default)
-        public static let label = Font.system(size: 11, weight: .semibold, design: .default)
-        public static let micro = Font.system(size: 10, weight: .semibold, design: .default)
+        public static let heroAmount = SpendoraTheme.heroNumber
+        public static let largeTitle = Font.largeTitle.weight(.bold)
+        public static let title = Font.title2.weight(.bold)
+        public static let headline = Font.headline
+        public static let body = Font.body
+        public static let subheadline = Font.subheadline
+        public static let caption = Font.caption
+        public static let label = Font.caption.weight(.semibold)
+        public static let micro = Font.caption2.weight(.semibold)
     }
 
-    // MARK: - Spacing Grid Tokens
+    // MARK: - Spacing Tokens (Apple HIG 20pt / 16pt / 12pt)
+    public static let cardPadding: CGFloat = 16
+    public static let sectionSpacing: CGFloat = 20
+    public static let cardRadius: CGFloat = 12
+    public static let accentBarWidth: CGFloat = 3
+    
     public struct Spacing {
         public static let xs: CGFloat = 4
         public static let sm: CGFloat = 8
@@ -91,88 +87,48 @@ public struct SpendoraTheme {
         public static let lg: CGFloat = 16
         public static let xl: CGFloat = 20
         public static let xxl: CGFloat = 24
-        public static let xxxl: CGFloat = 32
     }
 
-    // MARK: - Corner Radius Tokens
     public struct Radius {
         public static let badge: CGFloat = 6
         public static let pill: CGFloat = 8
         public static let subCard: CGFloat = 12
-        public static let button: CGFloat = 14
-        public static let iconBox: CGFloat = 14
-        public static let card: CGFloat = 20
-        public static let hero: CGFloat = 20
+        public static let button: CGFloat = 12
+        public static let iconBox: CGFloat = 10
+        public static let card: CGFloat = 12
+        public static let hero: CGFloat = 12
     }
 }
 
-// MARK: - Card & Press Modifiers
+// MARK: - Native Inset Card Modifier
 
-public struct SpendoraFintechCardModifier: ViewModifier {
-    @Environment(\.colorScheme) private var colorScheme
+public struct SpendoraAppleCardModifier: ViewModifier {
     let cornerRadius: CGFloat
 
     public func body(content: Content) -> some View {
         content
-            .background(SpendoraTheme.Colors.card)
+            .background(Color(.secondarySystemBackground))
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
-            .shadow(
-                color: colorScheme == .dark
-                    ? Color.black.opacity(0.40)
-                    : SpendoraTheme.Colors.coral.opacity(0.07),
-                radius: 16,
-                x: 0,
-                y: colorScheme == .dark ? 8 : 6
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .stroke(SpendoraTheme.Colors.border, lineWidth: 0.5)
-            )
     }
 }
 
-public typealias SpendoraCoralShadowModifier = SpendoraFintechCardModifier
-
-public struct PressEffectModifier: ViewModifier {
-    @State private var isPressed = false
-
-    public func body(content: Content) -> some View {
-        content
-            .scaleEffect(isPressed ? 0.97 : 1.0)
-            .animation(.spring(response: 0.25, dampingFraction: 0.7), value: isPressed)
-            .simultaneousGesture(
-                DragGesture(minimumDistance: 0)
-                    .onChanged { _ in isPressed = true }
-                    .onEnded { _ in isPressed = false }
-            )
-    }
-}
-
-public struct CardPressEffectModifier: ViewModifier {
-    @State private var isPressed = false
-
-    public func body(content: Content) -> some View {
-        content
-            .scaleEffect(isPressed ? 0.98 : 1.0)
-            .animation(.spring(response: 0.25, dampingFraction: 0.7), value: isPressed)
-            .simultaneousGesture(
-                DragGesture(minimumDistance: 0)
-                    .onChanged { _ in isPressed = true }
-                    .onEnded { _ in isPressed = false }
-            )
-    }
-}
+public typealias SpendoraCoralShadowModifier = SpendoraAppleCardModifier
+public typealias SpendoraFintechCardModifier = SpendoraAppleCardModifier
 
 extension View {
-    public func spendoraCard(cornerRadius: CGFloat = 20) -> some View {
-        self.modifier(SpendoraFintechCardModifier(cornerRadius: cornerRadius))
+    public func spendoraCard(cornerRadius: CGFloat = 12) -> some View {
+        self.modifier(SpendoraAppleCardModifier(cornerRadius: cornerRadius))
+    }
+    
+    public func appleCard(cornerRadius: CGFloat = 12) -> some View {
+        self.modifier(SpendoraAppleCardModifier(cornerRadius: cornerRadius))
     }
     
     public func pressableButton() -> some View {
-        self.modifier(PressEffectModifier())
+        self
     }
     
     public func pressableCard() -> some View {
-        self.modifier(CardPressEffectModifier())
+        self
     }
 }
