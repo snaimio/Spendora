@@ -35,6 +35,9 @@ struct SettingsView: View {
     @State var showingSpendingChart = false
     
     @ObservedObject var profileManager = UserProfileManager.shared
+    @ObservedObject private var currencyManager = CurrencyManager.shared
+    @AppStorage("notificationsEnabled") private var notificationsEnabled = true
+    @State private var notificationTime = Date()
     @State var showingProfileSheet = false
 
     // MARK: - Body
@@ -169,10 +172,62 @@ struct SettingsView: View {
                         }
                     }
                     
-                    // Section: Preferences
+                    // Section: Preferences (Clean Native 44pt Apple HIG Rows)
                     Section("Preferences") {
-                        CurrencySection()
-                        NotificationsSection()
+                        // Currency Picker Row
+                        HStack {
+                            Image(systemName: "dollarsign.circle.fill")
+                                .font(.system(size: 16, weight: .medium))
+                                .foregroundColor(SpendoraTheme.accent)
+                                .frame(width: 28)
+                            
+                            Picker("Currency", selection: Binding(
+                                get: { currencyManager.currentCurrency },
+                                set: { currencyManager.setCurrency($0) }
+                            )) {
+                                ForEach(Currency.allCases) { currency in
+                                    Text(currency.pickerLabel).tag(currency)
+                                }
+                            }
+                            .tint(SpendoraTheme.accent)
+                        }
+                        .frame(minHeight: 44)
+                        
+                        // Notifications Toggle Row
+                        HStack {
+                            Image(systemName: "bell.fill")
+                                .font(.system(size: 16, weight: .medium))
+                                .foregroundColor(SpendoraTheme.accent)
+                                .frame(width: 28)
+                            
+                            Toggle("Billing Reminders", isOn: $notificationsEnabled)
+                                .tint(SpendoraTheme.accent)
+                                .onChange(of: notificationsEnabled) { _, enabled in
+                                    if enabled {
+                                        NotificationService.shared.requestPermission()
+                                    } else {
+                                        NotificationService.shared.cancelAll()
+                                    }
+                                }
+                        }
+                        .frame(minHeight: 44)
+                        
+                        // Notification Time Row
+                        if notificationsEnabled {
+                            HStack {
+                                Image(systemName: "clock.fill")
+                                    .font(.system(size: 16, weight: .medium))
+                                    .foregroundColor(SpendoraTheme.accent)
+                                    .frame(width: 28)
+                                
+                                DatePicker("Reminder Time", selection: $notificationTime, displayedComponents: .hourAndMinute)
+                                    .tint(SpendoraTheme.accent)
+                                    .onChange(of: notificationTime) { _, newTime in
+                                        UserDefaults.standard.set(newTime, forKey: "notificationTime")
+                                    }
+                            }
+                            .frame(minHeight: 44)
+                        }
                     }
                     
                     // Section: Data & Backup (With Explicit Chevrons)
