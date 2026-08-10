@@ -5,12 +5,12 @@
 
 import SwiftUI
 
-// MARK: - HeroCardView (Container for 2 Standalone Executive Cards)
+// MARK: - HeroCardView (Executive Dashboard Hero & Spotlight Cards)
 
 /**
- `HeroCardView` presents two distinct, standalone cards with embedded sub-card metrics for maximum visual clarity:
- 1. `ThisMonthCardView`: Executive monthly spend with embedded Yearly & Average sub-cards in Spendora Teal (#00D4AA).
- 2. `NextChargeSpotlightCardView`: Dedicated spotlight card for the imminent upcoming renewal.
+ `HeroCardView` presents the primary executive dashboard components:
+ 1. `ThisMonthCardView`: Hero gradient section (#00D4AA → #00B4D8 → #6C5CE7), 42pt Black Hero price, Budget progress bar, and Yearly/Avg mini-cards.
+ 2. `NextChargeSpotlightCardView`: Spotlight upcoming renewal card with countdown chip on a dedicated row.
  */
 struct HeroCardView: View {
 
@@ -29,8 +29,8 @@ struct HeroCardView: View {
     // MARK: - Body
 
     var body: some View {
-        VStack(spacing: 20) {
-            // CARD 1: Executive Monthly Spend Card (Spendora Teal Theme)
+        VStack(spacing: AppStyles.Spacing.large) {
+            // CARD 1: Executive Monthly Spend Hero Card (Teal → Blue → Purple Gradient)
             ThisMonthCardView(
                 totalMonthly: totalMonthly,
                 totalYearly: totalYearly,
@@ -47,7 +47,7 @@ struct HeroCardView: View {
     }
 }
 
-// MARK: - Card 1: This Month Executive Spend Card View (Spendora Teal Theme)
+// MARK: - Card 1: This Month Executive Spend Card View
 
 struct ThisMonthCardView: View {
     let totalMonthly: Double
@@ -57,28 +57,30 @@ struct ThisMonthCardView: View {
     let averageMonthlyCost: Double
     @Environment(\.colorScheme) private var colorScheme
 
+    private var monthlyBudget: Double {
+        BudgetService.shared.monthlyBudget
+    }
+
+    private var budgetProgress: Double {
+        monthlyBudget > 0 ? min(1.0, totalMonthly / monthlyBudget) : 0.0
+    }
+
     var body: some View {
         VStack(spacing: 0) {
-            // Top Accent Spendora Teal Gradient Bar (#00D4AA → #00B4D8)
+            // Top Accent Spendora Hero Gradient Bar (#00D4AA → #00B4D8 → #6C5CE7)
             Rectangle()
-                .fill(
-                    LinearGradient(
-                        colors: [Color(hex: "#00D4AA"), Color(hex: "#00B4D8"), Color(hex: "#6C5CE7")],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                )
+                .fill(Color.gradientHero)
                 .frame(height: 5)
 
-            VStack(alignment: .leading, spacing: 16) {
-                // Header Row: Icon, Title & Active Budget Chip
+            VStack(alignment: .leading, spacing: AppStyles.Spacing.cardPadding) {
+                // Header Row: Label & Active Budget Pill
                 HStack {
                     HStack(spacing: 6) {
                         Image(systemName: "calendar")
                             .font(.system(size: 13, weight: .bold))
-                            .foregroundColor(Color(hex: "#00D4AA"))
+                            .foregroundColor(.brandPrimary)
                         Text("THIS MONTH")
-                            .font(.system(size: 12, weight: .bold, design: .rounded))
+                            .font(AppStyles.Typography.micro)
                             .foregroundColor(.textSecondary)
                             .tracking(1.5)
                     }
@@ -87,64 +89,101 @@ struct ThisMonthCardView: View {
                     
                     HStack(spacing: 4) {
                         Image(systemName: "checkmark.seal.fill")
-                            .font(.system(size: 12))
-                            .foregroundColor(Color(hex: "#00D4AA"))
+                            .font(.system(size: 11))
+                            .foregroundColor(.brandPrimary)
                         Text("Active Budget")
-                            .font(.system(size: 11, weight: .bold, design: .rounded))
-                            .foregroundColor(Color(hex: "#00D4AA"))
+                            .font(AppStyles.Typography.micro)
+                            .foregroundColor(.brandPrimary)
                     }
                     .padding(.horizontal, 10)
                     .padding(.vertical, 4)
-                    .background(Color(hex: "#00D4AA").opacity(0.14))
-                    .cornerRadius(10)
+                    .background(Color.brandPrimary.opacity(0.14))
+                    .cornerRadius(AppStyles.Radius.chip)
                 }
 
-                // Main Monthly Spend Hero Amount (Spendora Teal #00D4AA)
-                VStack(alignment: .leading, spacing: 2) {
+                // Main Monthly Spend Hero Amount (42pt Black Monospaced)
+                VStack(alignment: .leading, spacing: AppStyles.Spacing.element) {
                     Text(CurrencyManager.shared.format(totalMonthly))
-                        .font(.system(size: 38, weight: .black, design: .rounded))
-                        .foregroundColor(Color(hex: "#00D4AA"))
+                        .font(AppStyles.Typography.heroPrice)
+                        .foregroundColor(.brandPrimary)
                         .contentTransition(.numericText())
                         .lineLimit(1)
                         .minimumScaleFactor(0.6)
                     
                     if count > 0 {
                         Text("\(count) active \(count == 1 ? "subscription" : "subscriptions") total")
-                            .font(.system(size: 13, weight: .medium, design: .rounded))
+                            .font(AppStyles.Typography.caption)
                             .foregroundColor(.textSecondary)
                     }
                 }
                 
-                // Embedded 2-Column Mini Metric Cards (Yearly & Average)
+                // Budget Progress Bar
+                if monthlyBudget > 0 {
+                    VStack(alignment: .leading, spacing: 6) {
+                        HStack {
+                            Text("Monthly Budget: \(CurrencyManager.shared.format(monthlyBudget))")
+                                .font(AppStyles.Typography.caption)
+                                .foregroundColor(.textSecondary)
+                            
+                            Spacer()
+                            
+                            Text(String(format: "%.0f%% Used", budgetProgress * 100))
+                                .font(AppStyles.Typography.micro)
+                                .foregroundColor(budgetProgress >= 0.9 ? .brandSecondary : .brandPrimary)
+                        }
+                        
+                        GeometryReader { geo in
+                            ZStack(alignment: .leading) {
+                                Capsule()
+                                    .fill(Color.secondary.opacity(0.15))
+                                    .frame(height: 6)
+                                
+                                Capsule()
+                                    .fill(
+                                        LinearGradient(
+                                            colors: budgetProgress >= 0.9 ? [.brandWarning, .brandSecondary] : [.brandPrimary, .brandTertiary],
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
+                                    )
+                                    .frame(width: max(6, geo.size.width * CGFloat(budgetProgress)), height: 6)
+                            }
+                        }
+                        .frame(height: 6)
+                    }
+                    .padding(.vertical, 2)
+                }
+                
+                // Embedded 2-Column Mini Metric Cards (Yearly Total & Avg Per Sub)
                 HStack(spacing: 12) {
                     MetricSubCard(
                         icon: "calendar.badge.clock",
                         title: "Yearly Total",
                         value: CurrencyManager.shared.format(totalYearly),
-                        color: Color(hex: "#00B4D8")
+                        color: .brandTertiary
                     )
                     
                     MetricSubCard(
                         icon: "chart.line.uptrend.xyaxis",
                         title: "Avg Per Sub",
                         value: CurrencyManager.shared.format(averageMonthlyCost),
-                        color: Color(hex: "#6C5CE7")
+                        color: .brandPurple
                     )
                 }
             }
-            .padding(18)
+            .padding(AppStyles.Spacing.cardPadding)
         }
         .background(Color.cardBackground)
-        .cornerRadius(22)
+        .cornerRadius(AppStyles.Radius.hero)
         .shadow(color: Color.black.opacity(0.06), radius: 12, x: 0, y: 4)
         .overlay(
-            RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .stroke(Color(hex: "#00D4AA").opacity(0.25), lineWidth: 1.2)
+            RoundedRectangle(cornerRadius: AppStyles.Radius.hero, style: .continuous)
+                .stroke(Color.brandPrimary.opacity(0.25), lineWidth: 1.2)
         )
     }
 }
 
-// MARK: - Card 2: Next Charge Spotlight Card View (Sunset Coral & Gold Theme)
+// MARK: - Card 2: Next Charge Spotlight Card View
 
 struct NextChargeSpotlightCardView: View {
     let subscription: Subscription
@@ -152,113 +191,108 @@ struct NextChargeSpotlightCardView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // Top Accent Sunset Coral & Gold Bar (#FF6B6B → #FFD93D)
+            // Top Accent Sunset Bar (#FF6B6B → #FFD93D)
             Rectangle()
-                .fill(
-                    LinearGradient(
-                        colors: [Color(hex: "#FF6B6B"), Color(hex: "#FFD93D")],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                )
+                .fill(Color.gradientSunset)
                 .frame(height: 5)
 
             VStack(alignment: .leading, spacing: 14) {
-                // Header Row: Icon, Title & Countdown Badge
+                // Header Row: Label & Countdown Badge
                 HStack {
                     HStack(spacing: 6) {
                         Image(systemName: "bell.badge.fill")
                             .font(.system(size: 13, weight: .bold))
-                            .foregroundColor(Color(hex: "#FFD93D"))
+                            .foregroundColor(.brandAccent)
                         
                         Text("NEXT CHARGE SPOTLIGHT")
-                            .font(.system(size: 12, weight: .bold, design: .rounded))
+                            .font(AppStyles.Typography.micro)
                             .foregroundColor(.textSecondary)
                             .tracking(1.5)
                     }
                     
                     Spacer()
-                    
-                    CountdownChip(daysRemaining: subscription.daysUntilBilling, isCancelled: subscription.isCancelled)
                 }
 
-                // Embedded Clean Spotlight Sub-Card
+                // Spotlight Content Row
                 HStack(alignment: .center, spacing: 14) {
                     // Emblem Circle Icon
                     ZStack {
                         Circle()
                             .fill(
                                 LinearGradient(
-                                    colors: [Color(hex: "#FFD93D"), Color(hex: "#FF8A5C")],
+                                    colors: [subscription.categoryEnum.color, subscription.categoryEnum.color.opacity(0.75)],
                                     startPoint: .topLeading,
                                     endPoint: .bottomTrailing
                                 )
                             )
                             .frame(width: 44, height: 44)
-                            .shadow(color: Color(hex: "#FFD93D").opacity(0.3), radius: 4, y: 2)
+                            .shadow(color: subscription.categoryEnum.color.opacity(0.3), radius: 4, y: 2)
                         
                         Image(systemName: UniqueSubscriptionThemeHelper.resolveIcon(for: subscription))
                             .font(.system(size: 18, weight: .bold))
-                            .foregroundColor(Color(hex: "#0F0F1A"))
+                            .foregroundColor(.white)
                     }
                     
                     // Subscription Name & Next Billing Date
                     VStack(alignment: .leading, spacing: 3) {
                         Text(subscription.displayName)
-                            .font(.system(size: 17, weight: .bold, design: .rounded))
+                            .font(AppStyles.Typography.headline)
                             .foregroundColor(.textPrimary)
                             .lineLimit(1)
-                            .minimumScaleFactor(0.8)
+                            .minimumScaleFactor(0.75)
                         
                         HStack(spacing: 4) {
                             Image(systemName: "calendar")
                                 .font(.system(size: 11))
                                 .foregroundColor(.textSecondary)
                             Text("Renewal: \(subscription.formattedNextBillingDate)")
-                                .font(.system(size: 13, weight: .medium, design: .rounded))
+                                .font(AppStyles.Typography.caption)
                                 .foregroundColor(.textSecondary)
                                 .lineLimit(1)
                         }
                     }
                     .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                     
-                    // Cost Figure (Coral Red #FF6B6B)
+                    // Cost Figure (Coral Red)
                     VStack(alignment: .trailing, spacing: 2) {
                         Text(CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost))
-                            .font(.system(size: 20, weight: .bold, design: .rounded))
-                            .foregroundColor(Color(hex: "#FF6B6B"))
+                            .font(Font.system(size: 20, weight: .bold, design: .rounded))
+                            .foregroundColor(.brandSecondary)
                             .lineLimit(1)
                             .minimumScaleFactor(0.7)
                         
                         Text(subscription.isOneTime ? "Lifetime" : (subscription.isYearly ? "/yr" : "/mo"))
-                            .font(.system(size: 12, weight: .semibold, design: .rounded))
+                            .font(AppStyles.Typography.caption2)
                             .foregroundColor(.textSecondary)
                     }
                     .fixedSize(horizontal: true, vertical: false)
                 }
                 .padding(14)
                 .background(
-                    RoundedRectangle(cornerRadius: 16)
+                    RoundedRectangle(cornerRadius: AppStyles.Radius.card)
                         .fill(colorScheme == .dark ? Color.white.opacity(0.04) : Color(hex: "#FFFDF5"))
                 )
                 .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(Color(hex: "#FFD93D").opacity(0.3), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: AppStyles.Radius.card)
+                        .stroke(Color.brandAccent.opacity(0.3), lineWidth: 1)
                 )
+                
+                // Countdown chip ALWAYS on its own new dedicated row
+                CountdownChip(daysRemaining: subscription.daysUntilBilling, isCancelled: subscription.isCancelled)
             }
-            .padding(18)
+            .padding(AppStyles.Spacing.cardPadding)
         }
         .background(Color.cardBackground)
-        .cornerRadius(22)
+        .cornerRadius(AppStyles.Radius.hero)
         .shadow(color: Color.black.opacity(0.06), radius: 12, x: 0, y: 4)
         .overlay(
-            RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .stroke(Color(hex: "#FFD93D").opacity(0.35), lineWidth: 1.2)
+            RoundedRectangle(cornerRadius: AppStyles.Radius.hero, style: .continuous)
+                .stroke(Color.brandAccent.opacity(0.35), lineWidth: 1.2)
         )
     }
 }
 
-// MARK: - MetricSubCard (Embedded Clean Mini Card)
+// MARK: - MetricSubCard (Embedded Mini Container)
 
 struct MetricSubCard: View {
     let icon: String
@@ -274,13 +308,13 @@ struct MetricSubCard: View {
                     .font(.system(size: 11, weight: .bold))
                     .foregroundColor(color)
                 Text(title)
-                    .font(.system(size: 11, weight: .medium, design: .rounded))
+                    .font(AppStyles.Typography.micro)
                     .foregroundColor(.textSecondary)
                     .lineLimit(1)
             }
             
             Text(value)
-                .font(.system(size: 16, weight: .bold, design: .rounded))
+                .font(Font.system(size: 16, weight: .bold, design: .rounded))
                 .foregroundColor(color)
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
@@ -289,11 +323,11 @@ struct MetricSubCard: View {
         .padding(.vertical, 10)
         .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
         .background(
-            RoundedRectangle(cornerRadius: 14)
+            RoundedRectangle(cornerRadius: AppStyles.Radius.medium)
                 .fill(colorScheme == .dark ? Color.white.opacity(0.04) : Color.black.opacity(0.025))
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 14)
+            RoundedRectangle(cornerRadius: AppStyles.Radius.medium)
                 .stroke(color.opacity(0.2), lineWidth: 1)
         )
     }

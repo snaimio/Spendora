@@ -1,109 +1,83 @@
 //
 //  ChallengeCard.swift
+//  Spendora
 //
-
-/**
- * Main/Core Functions & Purpose:
- * Challenge model definition and ChallengeCard view component displaying savings challenge progress and completion badge.
- */
 
 import SwiftUI
 
+// MARK: - Challenge Model
 
-// MARK: - Challenge
-
-/**
- `Challenge` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for challenge handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `Challenge` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
- */
 struct Challenge: Identifiable {
-
-    // MARK: - Properties
-
-    let id: String  // id property
-    let title: String  // title property
-    let description: String  // description property
-    let icon: String  // icon property
-    let isCompleted: Bool  // isCompleted property
-    let color: Color  // color property
+    let id: String
+    let title: String
+    let description: String
+    let icon: String
+    let isCompleted: Bool
+    let color: Color
 }
 
-
-// MARK: - ChallengeCard
+// MARK: - ChallengeCard (Spendora 60-30-10 System)
 
 /**
- `ChallengeCard` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for challengecard handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `ChallengeCard` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
+ `ChallengeCard` displays an individual gamified financial milestone with 3D elevation and semantic success indicators.
  */
 struct ChallengeCard: View {
 
     // MARK: - Properties
 
-    let challenge: Challenge  // challenge property
-    
+    let challenge: Challenge
 
     // MARK: - Body
 
-    /// Main SwiftUI layout body property.
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 10) {
             ZStack {
                 Circle()
-                    .fill(challenge.isCompleted ? challenge.color : Color.gray.opacity(0.2))
-                    .frame(width: 50, height: 50)
+                    .fill(
+                        challenge.isCompleted
+                            ? LinearGradient(colors: [challenge.color, challenge.color.opacity(0.75)], startPoint: .topLeading, endPoint: .bottomTrailing)
+                            : LinearGradient(colors: [Color.secondary.opacity(0.18), Color.secondary.opacity(0.08)], startPoint: .topLeading, endPoint: .bottomTrailing)
+                    )
+                    .frame(width: 48, height: 48)
+                    .shadow(color: challenge.isCompleted ? challenge.color.opacity(0.35) : .clear, radius: 6, y: 3)
                 
                 Image(systemName: challenge.icon)
-                    .font(.title2)
-                    .foregroundColor(challenge.isCompleted ? .white : .gray)
+                    .font(.system(size: 20, weight: .bold))
+                    .foregroundColor(challenge.isCompleted ? .white : .textTertiary)
             }
             
             Text(challenge.title)
-                .font(.subheadline)
-                .fontWeight(.semibold)
+                .font(AppStyles.Typography.subheadline)
+                .fontWeight(.bold)
+                .foregroundColor(.textPrimary)
                 .multilineTextAlignment(.center)
-                .lineLimit(2)
+                .lineLimit(1)
             
             Text(challenge.description)
-                .font(.caption2)
-                .foregroundColor(.secondary)
+                .font(AppStyles.Typography.caption)
+                .foregroundColor(.textSecondary)
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
+                .minimumScaleFactor(0.85)
             
             if challenge.isCompleted {
-                Label("Done", systemImage: "checkmark.circle.fill")
-                    .font(.caption2)
-                    .foregroundColor(.green)
+                HStack(spacing: 4) {
+                    Image(systemName: "checkmark.seal.fill")
+                        .font(.system(size: 11, weight: .bold))
+                    Text("Completed")
+                        .font(AppStyles.Typography.micro)
+                }
+                .foregroundColor(.brandPrimary)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 3)
+                .background(Color.brandPrimary.opacity(0.15))
+                .cornerRadius(AppStyles.Radius.chip)
             }
         }
-        .padding()
-        .frame(height: 140)
-        .background(Color(.systemBackground))
-        .cornerRadius(16)
-        .shadow(color: Color.black.opacity(0.04), radius: 5)
-        .opacity(challenge.isCompleted ? 1 : 0.6)
+        .padding(AppStyles.Spacing.cardPadding)
+        .frame(height: 155)
+        .frame(maxWidth: .infinity)
+        .spendora3DCard(cornerRadius: AppStyles.Radius.card)
+        .opacity(challenge.isCompleted ? 1.0 : 0.65)
     }
 }

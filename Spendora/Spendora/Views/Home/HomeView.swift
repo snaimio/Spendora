@@ -313,7 +313,7 @@ struct HomeView: View {
                     HStack {
                         HStack(spacing: 6) {
                             Image(systemName: "checkmark.shield.fill")
-                                .foregroundColor(Color(hex: "#10B981"))
+                                .foregroundColor(.brandPrimary)
                                 .font(.headline)
                             Text("Active Subscriptions")
                                 .font(.system(.headline, design: .rounded))
@@ -322,10 +322,10 @@ struct HomeView: View {
                         Spacer()
                         Text("\(activeSubscriptions.count) Active")
                             .font(.system(size: 11, weight: .bold, design: .rounded))
-                            .foregroundColor(Color(hex: "#10B981"))
+                            .foregroundColor(.brandPrimary)
                             .padding(.horizontal, 8)
                             .padding(.vertical, 3)
-                            .background(Color(hex: "#10B981").opacity(0.14))
+                            .background(Color.brandPrimary.opacity(0.14))
                             .cornerRadius(8)
                     }
                     .padding(.horizontal, 4)
@@ -345,7 +345,7 @@ struct HomeView: View {
                     HStack {
                         HStack(spacing: 6) {
                             Image(systemName: "xmark.circle.fill")
-                                .foregroundColor(Color(hex: "#F97316"))
+                                .foregroundColor(.brandSecondary)
                                 .font(.headline)
                             Text("Cancelled & Paused")
                                 .font(.system(.headline, design: .rounded))
@@ -354,10 +354,10 @@ struct HomeView: View {
                         Spacer()
                         Text("\(cancelledSubscriptions.count) Inactive")
                             .font(.system(size: 11, weight: .bold, design: .rounded))
-                            .foregroundColor(Color(hex: "#F97316"))
+                            .foregroundColor(.brandSecondary)
                             .padding(.horizontal, 8)
                             .padding(.vertical, 3)
-                            .background(Color(hex: "#F97316").opacity(0.14))
+                            .background(Color.brandSecondary.opacity(0.14))
                             .cornerRadius(8)
                     }
                     .padding(.horizontal, 4)

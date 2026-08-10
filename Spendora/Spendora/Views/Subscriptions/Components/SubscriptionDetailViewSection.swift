@@ -1,57 +1,90 @@
 //
 //  SubscriptionDetailViewSection.swift
+//  Spendora
 //
-
-/**
- * Main/Core Functions & Purpose:
- * SubscriptionDetailViewSection component displaying the read-only service details, billing dates,
- * cancellation status cards, provider deep-link buttons, and notes.
- */
 
 import SwiftUI
 import SwiftData
 
-
 // MARK: - SubscriptionDetailViewSection
 
 /**
- `SubscriptionDetailViewSection` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for subscriptiondetailviewsection handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `SubscriptionDetailViewSection` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
+ `SubscriptionDetailViewSection` displays service details, hero gradient badge, billing dates,
+ provider direct management, and cancellation actions with Spendora's 60-30-10 color hierarchy.
  */
 struct SubscriptionDetailViewSection: View {
 
     // MARK: - Properties
 
-    let subscription: Subscription  // subscription property
-    let name: String  // name property
-    let cost: String  // cost property
-    let isYearly: Bool  // isYearly property
-    let category: String  // category property
-    let paymentMethod: String  // paymentMethod property
-    let getCancellationURL: () -> URL?  // getCancellationURL property
+    let subscription: Subscription
+    let name: String
+    let cost: String
+    let isYearly: Bool
+    let category: String
+    let paymentMethod: String
+    let getCancellationURL: () -> URL?
     @Binding var showingCancelSheet: Bool
-    
+
+    private var categoryColor: Color {
+        subscription.categoryEnum.color
+    }
+
+    private var categoryIcon: String {
+        UniqueSubscriptionThemeHelper.resolveIcon(for: subscription)
+    }
 
     // MARK: - Body
 
-    /// Main SwiftUI layout body property.
     var body: some View {
         Group {
+            // Hero Service Emblem Header Card
+            Section {
+                VStack(spacing: 12) {
+                    ZStack {
+                        Circle()
+                            .fill(
+                                LinearGradient(
+                                    colors: [categoryColor, categoryColor.opacity(0.75)],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                            .frame(width: 72, height: 72)
+                            .shadow(color: categoryColor.opacity(0.4), radius: 10, x: 0, y: 4)
+                        
+                        Image(systemName: categoryIcon)
+                            .font(.system(size: 32, weight: .bold))
+                            .foregroundColor(.white)
+                    }
+                    
+                    VStack(spacing: 4) {
+                        Text(name)
+                            .font(AppStyles.Typography.title)
+                            .foregroundColor(.textPrimary)
+                        
+                        Text(subscription.isOneTime ? "\(CurrencyManager.shared.format(subscription.cost)) • One-Time" : "\(CurrencyManager.shared.format(subscription.monthlyCost))/month")
+                            .font(Font.system(size: 18, weight: .bold, design: .rounded))
+                            .foregroundColor(.brandSecondary)
+                    }
+                    
+                    // Usage Stars Rating Display
+                    HStack(spacing: 4) {
+                        ForEach(1...5, id: \.self) { star in
+                            Image(systemName: star <= subscription.usageRating ? "star.fill" : "star")
+                                .font(.system(size: 13))
+                                .foregroundColor(star <= subscription.usageRating ? .brandAccent : .secondary.opacity(0.3))
+                        }
+                    }
+                    .padding(.top, 2)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
+            }
+            .listRowBackground(Color.clear)
+            
             Section("Service Info") {
                 DetailRow(icon: "tag.fill", title: "Name", value: name)
-                DetailRow(icon: "dollarsign.circle.fill", title: "Cost", value: subscription.isOneTime ? "$\(cost) (One-Time)" : "$\(cost)/\(isYearly ? "year" : "month")")
+                DetailRow(icon: "dollarsign.circle.fill", title: "Cost", value: subscription.isOneTime ? "\(CurrencyManager.shared.format(subscription.cost)) (One-Time)" : "\(CurrencyManager.shared.format(subscription.cost))/\(isYearly ? "year" : "month")")
                 DetailRow(icon: "folder.fill", title: "Category", value: category)
                 DetailRow(icon: PaymentMethod.from(paymentMethod).icon, title: "Payment Method", value: PaymentMethod.from(paymentMethod).displayName)
                 DetailRow(icon: "repeat.circle.fill", title: "Billing Cycle", value: subscription.isOneTime ? "One-Time (Lifetime)" : (isYearly ? "Yearly" : "Monthly"))
@@ -66,7 +99,7 @@ struct SubscriptionDetailViewSection: View {
                         Image(systemName: "creditcard.circle.fill")
                             .foregroundColor(.brandPrimary)
                         Text("Record Payment")
-                            .font(.system(.body, design: .rounded))
+                            .font(AppStyles.Typography.body)
                             .foregroundColor(.textPrimary)
                         Spacer()
                         MarkAsPaidButton(subscription: subscription)
@@ -109,7 +142,7 @@ struct SubscriptionDetailViewSection: View {
                         Spacer()
                         Image(systemName: "chevron.right")
                             .font(.caption)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(.textTertiary)
                     }
                 }
                 
@@ -126,7 +159,7 @@ struct SubscriptionDetailViewSection: View {
                                 .font(.system(size: 18, weight: .bold))
                                 .foregroundColor(.brandPrimary)
                             Text("Reactivate Subscription")
-                                .font(.system(.body, design: .rounded))
+                                .font(AppStyles.Typography.body)
                                 .fontWeight(.bold)
                                 .foregroundColor(.brandPrimary)
                             Spacer()
@@ -137,14 +170,14 @@ struct SubscriptionDetailViewSection: View {
                         showingCancelSheet = true
                     } label: {
                         HStack {
-                            Image(systemName: "checkmark.circle")
-                                .foregroundColor(.orange)
+                            Image(systemName: "xmark.circle")
+                                .foregroundColor(.brandSecondary)
                             Text("Mark as Cancelled")
-                                .foregroundColor(.orange)
+                                .foregroundColor(.brandSecondary)
                             Spacer()
                             Image(systemName: "chevron.right")
                                 .font(.caption)
-                                .foregroundColor(.secondary)
+                                .foregroundColor(.textTertiary)
                         }
                     }
                 }

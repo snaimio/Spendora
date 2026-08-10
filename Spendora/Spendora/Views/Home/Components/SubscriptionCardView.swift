@@ -5,15 +5,16 @@
 
 import SwiftUI
 
-// MARK: - SubscriptionCardView
+// MARK: - SubscriptionCardView (Apple HIG Typography & Hierarchy)
 
 /**
- `SubscriptionCardView` implements Spendora Teal brand typography & color hierarchy:
- - 1. Category Icon Emblem with Category Brand Color
- - 2. SUBSCRIPTION NAME TITLE: 17pt Bold Rounded (.textPrimary)
- - 3. PRICE ($XX.XX): 17pt Bold Coral Font (#FF6B6B)
- - 4. CYCLE & DATES: 13pt Regular Font (.textSecondary)
- - 5. STATUS BADGE: Spendora Teal / Coral / Gold CountdownChip
+ `SubscriptionCardView` implements the competitor-best card hierarchy:
+ - Name: 20pt Bold (LARGEST text on card!)
+ - Category + Cycle: 13pt-15pt Regular
+ - Price: 17pt Bold Coral (.brandSecondary)
+ - Next Date: 13pt Regular
+ - "Due in X days": 12pt Bold (ALWAYS ON ITS OWN DEDICATED ROW!)
+ - Elevation 2 Shadow & 16pt Corner Radius
  */
 struct SubscriptionCardView: View {
 
@@ -32,8 +33,8 @@ struct SubscriptionCardView: View {
     // MARK: - Body
 
     var body: some View {
-        HStack(alignment: .top, spacing: 14) {
-            // Category Emblem Badge Container (46x46pt)
+        HStack(alignment: .top, spacing: AppStyles.Spacing.medium) {
+            // Category Circular Emblem Container (46x46)
             ZStack {
                 Circle()
                     .fill(
@@ -52,12 +53,12 @@ struct SubscriptionCardView: View {
             }
             .frame(width: 46)
             
-            // Card Content Stack
-            VStack(alignment: .leading, spacing: 4) {
-                // ROW 1: SUBSCRIPTION NAME
+            // Content Stack
+            VStack(alignment: .leading, spacing: AppStyles.Spacing.element) {
+                // ROW 1: SUBSCRIPTION NAME (LARGEST text on card - 20pt Bold!)
                 HStack(alignment: .center) {
                     Text(subscription.displayName)
-                        .font(.system(size: 17, weight: .bold, design: .rounded))
+                        .font(AppStyles.Typography.headline)
                         .foregroundColor(.textPrimary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.75)
@@ -66,27 +67,27 @@ struct SubscriptionCardView: View {
                     
                     Image(systemName: "chevron.right")
                         .font(.system(size: 12, weight: .bold))
-                        .foregroundColor(.textSecondary)
+                        .foregroundColor(.textTertiary)
                 }
                 
-                // ROW 2: PRICE & BILLING CYCLE (Coral #FF6B6B)
+                // ROW 2: PRICE & BILLING CYCLE (Price: 17pt Bold Coral Red)
                 HStack(spacing: 4) {
                     Text(CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost))
-                        .font(.system(size: 17, weight: .bold, design: .rounded))
-                        .foregroundColor(Color(hex: "#FF6B6B"))
+                        .font(Font.system(size: 17, weight: .bold, design: .rounded))
+                        .foregroundColor(.brandSecondary)
                     
                     if subscription.isOneTime {
                         Text("• Lifetime")
-                            .font(.system(size: 13, weight: .semibold, design: .rounded))
-                            .foregroundColor(Color(hex: "#FFD93D"))
+                            .font(AppStyles.Typography.captionBold)
+                            .foregroundColor(.brandAccent)
                     } else {
                         Text("/month")
-                            .font(.system(size: 13, weight: .medium, design: .rounded))
+                            .font(AppStyles.Typography.caption)
                             .foregroundColor(.textSecondary)
                         
                         if subscription.isYearly {
                             Text("• Yearly")
-                                .font(.system(size: 13, weight: .medium, design: .rounded))
+                                .font(AppStyles.Typography.caption)
                                 .foregroundColor(.textSecondary)
                         }
                     }
@@ -100,29 +101,30 @@ struct SubscriptionCardView: View {
                             .foregroundColor(.textSecondary)
                         
                         Text("Renewal: \(subscription.formattedNextBillingDate)")
-                            .font(.system(size: 13, weight: .regular, design: .rounded))
+                            .font(AppStyles.Typography.caption)
                             .foregroundColor(.textSecondary)
+                            .lineLimit(1)
                     }
                 } else {
                     HStack(spacing: 4) {
                         Image(systemName: "checkmark.seal.fill")
                             .font(.system(size: 11, weight: .bold))
-                            .foregroundColor(Color(hex: "#00D4AA"))
+                            .foregroundColor(.brandPrimary)
                         
                         Text("One-Time Purchase")
-                            .font(.system(size: 13, weight: .bold, design: .rounded))
-                            .foregroundColor(Color(hex: "#00D4AA"))
+                            .font(AppStyles.Typography.captionBold)
+                            .foregroundColor(.brandPrimary)
                     }
                 }
                 
-                // ROW 4: STATUS BADGE
+                // ROW 4: STATUS BADGE (ALWAYS ON ITS OWN DEDICATED NEW ROW!)
                 CountdownChip(daysRemaining: subscription.daysUntilBilling, isCancelled: subscription.isCancelled)
                     .padding(.top, 2)
             }
             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
         }
-        .padding(.horizontal, 16)
+        .padding(.horizontal, AppStyles.Spacing.cardPadding)
         .padding(.vertical, 14)
-        .spendora3DCard(cornerRadius: 18)
+        .spendora3DCard(cornerRadius: AppStyles.Radius.card)
     }
 }

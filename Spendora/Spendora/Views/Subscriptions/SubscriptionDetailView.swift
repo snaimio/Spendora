@@ -70,7 +70,7 @@ struct SubscriptionDetailView: View {
         _isYearly = State(initialValue: subscription.isYearly)
         _nextBillingDate = State(initialValue: subscription.nextBillingDate)
         _notes = State(initialValue: subscription.notes ?? "")
-        _colorHex = State(initialValue: subscription.colorHex ?? "#6C63FF")
+        _colorHex = State(initialValue: subscription.colorHex ?? "#00D4AA")
         _isTrial = State(initialValue: subscription.isTrial)
         _usageRating = State(initialValue: subscription.usageRating)
         _paymentMethod = State(initialValue: subscription.paymentMethod ?? "Not Set")
