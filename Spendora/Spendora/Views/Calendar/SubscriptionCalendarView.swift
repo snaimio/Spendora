@@ -212,8 +212,8 @@ struct SubscriptionCalendarView: View {
             }
         }
         let remaining = (7 - (days.count % 7)) % 7
-        if let lastDay = days.last {
-            for dayOffset in 1...max(0, remaining) {
+        if remaining > 0, let lastDay = days.last {
+            for dayOffset in 1...remaining {
                 if let date = calendar.date(byAdding: .day, value: dayOffset, to: lastDay) {
                     days.append(date)
                 }

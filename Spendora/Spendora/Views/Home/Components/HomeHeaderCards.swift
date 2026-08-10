@@ -109,6 +109,8 @@ struct ThisMonthCardView: View {
                 if monthlyBudget > 0 {
                     VStack(alignment: .leading, spacing: 6) {
                         GeometryReader { geo in
+                            let width = max(0, geo.size.width)
+                            let fillWidth = max(0, min(width, width * CGFloat(max(0.0, min(1.0, budgetProgress)))))
                             ZStack(alignment: .leading) {
                                 Capsule()
                                     .fill(Color(.tertiarySystemBackground))
@@ -120,7 +122,7 @@ struct ThisMonthCardView: View {
                                             ? Color(.systemRed)
                                             : SpendoraTheme.accent
                                     )
-                                    .frame(width: max(4, geo.size.width * CGFloat(budgetProgress)), height: 4)
+                                    .frame(width: fillWidth, height: 4)
                             }
                         }
                         .frame(height: 4)
