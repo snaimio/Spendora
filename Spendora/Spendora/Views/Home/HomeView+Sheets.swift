@@ -24,7 +24,7 @@ extension HomeView {
                     AddSubscriptionView()
                 }
                 .onDisappear {
-                    refreshID += 1
+                    refreshID = UUID()
                     updateWidgetData()
                 }
             }
