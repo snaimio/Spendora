@@ -114,4 +114,17 @@ extension Subscription {
     var formattedNextBillingDate: String {
         nextBillingDate.formatted(.dateTime.month(.abbreviated).day().year())
     }
+
+    func markAsPaid() {
+        let calendar = Calendar.current
+        if isYearly {
+            if let next = calendar.date(byAdding: .year, value: 1, to: nextBillingDate) {
+                nextBillingDate = next
+            }
+        } else {
+            if let next = calendar.date(byAdding: .month, value: 1, to: nextBillingDate) {
+                nextBillingDate = next
+            }
+        }
+    }
 }
