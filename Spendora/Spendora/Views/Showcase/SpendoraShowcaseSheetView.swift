@@ -716,7 +716,7 @@ struct ShowcaseSettingsScreen: View {
                 .listRowBackground(Color.cardBackground)
 
                 // Section: Data & Backup
-                Section("Data Management") {
+                Section {
                     HStack {
                         Image(systemName: "tablecells.fill")
                             .foregroundColor(.brandPrimary)
@@ -752,6 +752,8 @@ struct ShowcaseSettingsScreen: View {
                             .font(.caption)
                             .foregroundColor(.textSecondary)
                     }
+                } header: {
+                    Text("Data Management")
                 } footer: {
                     Text("Your financial records stay 100% on-device and private. Zero external cloud tracking.")
                         .foregroundColor(.textSecondary)
