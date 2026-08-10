@@ -7,7 +7,7 @@ import SwiftUI
 
 // MARK: - PremiumSettingsRow (Golden UX 64pt Row Standard)
 
-struct PremiumSettingsRow<Content: View>: View {
+struct PremiumSettingsRow: View {
 
     // MARK: - Properties
 
@@ -15,20 +15,33 @@ struct PremiumSettingsRow<Content: View>: View {
     let title: String
     let subtitle: String?
     var isDestructive: Bool = false
-    let trailing: Content?
+    let trailing: AnyView?
     
     init(
         icon: String,
         title: String,
         subtitle: String? = nil,
-        isDestructive: Bool = false,
-        @ViewBuilder trailing: () -> Content?
+        isDestructive: Bool = false
     ) {
         self.icon = icon
         self.title = title
         self.subtitle = subtitle
         self.isDestructive = isDestructive
-        self.trailing = trailing()
+        self.trailing = nil
+    }
+
+    init<Trailing: View>(
+        icon: String,
+        title: String,
+        subtitle: String? = nil,
+        isDestructive: Bool = false,
+        @ViewBuilder trailing: () -> Trailing
+    ) {
+        self.icon = icon
+        self.title = title
+        self.subtitle = subtitle
+        self.isDestructive = isDestructive
+        self.trailing = AnyView(trailing())
     }
     
     // MARK: - Body
@@ -71,13 +84,5 @@ struct PremiumSettingsRow<Content: View>: View {
         }
         .frame(minHeight: 64)
         .contentShape(Rectangle())
-    }
-}
-
-extension PremiumSettingsRow where Content == EmptyView {
-    init(icon: String, title: String, subtitle: String? = nil, isDestructive: Bool = false) {
-        self.init(icon: icon, title: title, subtitle: subtitle, isDestructive: isDestructive) {
-            nil
-        }
     }
 }
