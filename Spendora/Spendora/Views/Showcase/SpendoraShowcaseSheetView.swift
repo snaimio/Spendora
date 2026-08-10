@@ -2,7 +2,7 @@
 //  SpendoraShowcaseSheetView.swift
 //  Spendora
 //
-//  Apple Native HIG Showcase Sheet View adhering strictly to Emerald #00C07A Accent
+//  Apple Native HIG Showcase Sheet View adhering strictly to Sage Teal #2AB7A9 Accent
 //  and Color(.systemBackground) / Color(.secondarySystemBackground) surfaces.
 //
 

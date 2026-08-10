@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-// MARK: - StatusBadgeView (Apple Semantic Status Badge)
+// MARK: - StatusBadgeView (Apple Semantic Status Badge with Sage Teal)
 
 struct StatusBadgeView: View {
     let daysUntil: Int
@@ -22,6 +22,20 @@ struct StatusBadgeView: View {
             return Color(hex: "F59E0B")
         } else {
             return SpendoraTheme.accent
+        }
+    }
+
+    var badgeTextColor: Color {
+        if isCancelled {
+            return Color(.secondaryLabel)
+        } else if daysUntil < 0 {
+            return Color(.systemRed)
+        } else if daysUntil <= 3 {
+            return Color(.systemOrange)
+        } else if daysUntil <= 7 {
+            return Color(hex: "D97706")
+        } else {
+            return SpendoraTheme.accentText
         }
     }
 
@@ -45,7 +59,7 @@ struct StatusBadgeView: View {
             
             Text(badgeText)
                 .font(.caption.weight(.semibold))
-                .foregroundColor(badgeColor)
+                .foregroundColor(badgeTextColor)
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 4)

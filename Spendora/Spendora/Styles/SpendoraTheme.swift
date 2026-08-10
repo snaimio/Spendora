@@ -5,27 +5,27 @@
 
 import SwiftUI
 
-// MARK: - SpendoraTheme (Apple Native HIG & Emerald Accent Architecture)
+// MARK: - SpendoraTheme (Apple Native HIG & Sage Teal #2AB7A9 Architecture)
 
 public struct SpendoraTheme {
 
-    // MARK: - Emerald Signature Accent (#00C07A Light / #00D988 Dark)
+    // MARK: - Sage Teal Signature Accent (#2AB7A9 Light / #3ECFBF Dark)
     public static let accent = Color(UIColor { trait in
         trait.userInterfaceStyle == .dark
-            ? UIColor(hex: "#00D988")
-            : UIColor(hex: "#00C07A")
+            ? UIColor(hex: "#3ECFBF")
+            : UIColor(hex: "#2AB7A9")
     })
     
     public static let accentTint = Color(UIColor { trait in
         trait.userInterfaceStyle == .dark
-            ? UIColor(hex: "#00D988").withAlphaComponent(0.15)
-            : UIColor(hex: "#00C07A").withAlphaComponent(0.12)
+            ? UIColor(hex: "#3ECFBF").withAlphaComponent(0.15)
+            : UIColor(hex: "#2AB7A9").withAlphaComponent(0.12)
     })
     
     public static let accentText = Color(UIColor { trait in
         trait.userInterfaceStyle == .dark
-            ? UIColor(hex: "#00D988")
-            : UIColor(hex: "#007A4C")
+            ? UIColor(hex: "#3ECFBF")
+            : UIColor(hex: "#1A8A7F")
     })
 
     // MARK: - Native Apple System Surfaces & Labels
@@ -45,11 +45,11 @@ public struct SpendoraTheme {
         public static let border = Color(.separator).opacity(0.6)
         
         // Semantic Apple Colors
-        public static let success = Color(.systemGreen)
+        public static let success = SpendoraTheme.accent
         public static let warning = Color(.systemOrange)
         public static let danger = Color(.systemRed)
         public static let link = Color(.systemBlue)
-        public static let cancelled = Color(.tertiaryLabel)
+        public static let cancelled = Color(.secondaryLabel)
         
         public static let coral = SpendoraTheme.accent
         public static let coralWarm = SpendoraTheme.accent

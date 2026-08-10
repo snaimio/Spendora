@@ -75,7 +75,7 @@ struct AddSubscriptionView: View {
                                     Text("See All")
                                         .font(.system(.subheadline, design: .rounded))
                                         .fontWeight(.bold)
-                                        .foregroundColor(Color(hex: "#00D4AA"))
+                                        .foregroundColor(SpendoraTheme.accent)
                                 }
                             }
                             .padding(.horizontal, 20)
@@ -167,7 +167,7 @@ struct AddSubscriptionView: View {
                         dismiss()
                     }
                     .font(.system(.body, design: .rounded))
-                    .foregroundColor(Color(hex: "#FF6B6B"))
+                    .foregroundColor(Color(.secondaryLabel))
                 }
                 ToolbarItemGroup(placement: .keyboard) {
                     Spacer()
@@ -176,7 +176,7 @@ struct AddSubscriptionView: View {
                     }
                     .font(.system(.body, design: .rounded))
                     .fontWeight(.semibold)
-                    .foregroundColor(Color(hex: "#00D4AA"))
+                    .foregroundColor(SpendoraTheme.accent)
                 }
             }
             .alert("Error", isPresented: $showingError) {

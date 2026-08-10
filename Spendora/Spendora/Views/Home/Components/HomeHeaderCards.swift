@@ -44,7 +44,7 @@ struct HeroCardView: View {
     }
 }
 
-// MARK: - ThisMonthCardView (Apple Native Hero Card)
+// MARK: - ThisMonthCardView (Apple Native Hero Card with Neutral Labels & Sage Teal Accents)
 
 struct ThisMonthCardView: View {
     let totalMonthly: Double
@@ -64,11 +64,11 @@ struct ThisMonthCardView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             VStack(alignment: .leading, spacing: 14) {
-                // Top Header: "THIS MONTH"
+                // Top Header: "THIS MONTH" in neutral secondaryLabel
                 HStack(alignment: .center) {
                     Text("THIS MONTH")
                         .font(.caption.weight(.semibold))
-                        .foregroundColor(.secondary)
+                        .foregroundColor(Color(.secondaryLabel))
                         .textCase(.uppercase)
                     
                     Spacer()
@@ -81,7 +81,7 @@ struct ThisMonthCardView: View {
                             
                             Text(String(format: "%.0f%% used", budgetProgress * 100))
                                 .font(.caption.weight(.semibold))
-                                .foregroundColor(.secondary)
+                                .foregroundColor(Color(.secondaryLabel))
                         }
                         .padding(.horizontal, 8)
                         .padding(.vertical, 3)
@@ -93,7 +93,7 @@ struct ThisMonthCardView: View {
                 // Monthly Total — 52pt Bold Rounded Monospaced in Color(.label)
                 VStack(alignment: .leading, spacing: 4) {
                     Text(CurrencyManager.shared.format(totalMonthly))
-                        .font(SpendoraTheme.heroNumber)
+                        .font(Font.system(size: 52, weight: .bold, design: .rounded).monospacedDigit())
                         .foregroundColor(Color(.label))
                         .contentTransition(.numericText())
                         .lineLimit(1)
@@ -101,7 +101,7 @@ struct ThisMonthCardView: View {
                     
                     Text("\(count) active \(count == 1 ? "subscription" : "subscriptions")")
                         .font(.subheadline)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(Color(.secondaryLabel))
                 }
                 
                 // Native Capsule Budget Indicator
@@ -127,7 +127,7 @@ struct ThisMonthCardView: View {
                         HStack {
                             Text("Budget: \(CurrencyManager.shared.format(monthlyBudget))")
                                 .font(.caption)
-                                .foregroundColor(.secondary)
+                                .foregroundColor(Color(.secondaryLabel))
                             Spacer()
                             Text("\(CurrencyManager.shared.format(max(0, monthlyBudget - totalMonthly))) left")
                                 .font(.caption)
@@ -164,12 +164,12 @@ struct ThisMonthCardView: View {
                         
                         Text(next.formattedNextBillingDate)
                             .font(.caption)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(Color(.secondaryLabel))
                     }
                     
                     Spacer()
                     
-                    // Cost cardAmount in accent color
+                    // Cost cardAmount in Sage Teal accent color
                     Text(CurrencyManager.shared.format(next.isOneTime ? next.cost : next.monthlyCost))
                         .font(SpendoraTheme.cardAmount)
                         .foregroundColor(SpendoraTheme.accent)
@@ -209,7 +209,7 @@ struct ExecutiveMetricsRow: View {
     }
 }
 
-// MARK: - MetricSubCard (12pt Radius, secondarySystemBackground, label / statNumber)
+// MARK: - MetricSubCard (12pt Radius, secondarySystemBackground, secondaryLabel / statNumber)
 
 struct MetricSubCard: View {
     let title: String
@@ -218,8 +218,8 @@ struct MetricSubCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title)
-                .font(.caption.weight(.semibold))
-                .foregroundColor(.secondary)
+                .font(.caption)
+                .foregroundColor(Color(.secondaryLabel))
                 .textCase(.uppercase)
                 .lineLimit(1)
             
