@@ -1,105 +1,91 @@
 //
 //  ShareableYearlyReport.swift
+//  Spendora
 //
 
 import SwiftUI
 
+// MARK: - ShareableYearlyReport (Apple HIG Branded Financial Statement)
 
-// MARK: - ShareableYearlyReport
-
-/**
- `ShareableYearlyReport` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for shareableyearlyreport handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `ShareableYearlyReport` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
- */
 struct ShareableYearlyReport: View {
 
     // MARK: - Properties
 
-    let year: Int  // year property
-    let totalYearly: Double  // totalYearly property
-    let averageMonthly: Double  // averageMonthly property
-    let topCategory: String  // topCategory property
-    
+    let year: Int
+    let totalYearly: Double
+    let averageMonthly: Double
+    let topCategory: String
 
     // MARK: - Body
 
-    /// Main SwiftUI layout body property.
     var body: some View {
-        VStack(spacing: 24) {
-            Spacer()
-            
-            Text("\(year) Spending Report")
-                .font(.title2)
-                .fontWeight(.bold)
-                .foregroundColor(.primary)
-            
-            Image(systemName: "creditcard.and.123")
-                .font(.system(size: 50))
-                .foregroundStyle(
-                    LinearGradient(
-                        colors: [Color(hex: "#FF6B6B"), Color(hex: "#4ECDC4")],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                )
-            
-            VStack(spacing: 16) {
-                HStack {
-                    Text("Total Yearly")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    Spacer()
-                    Text(CurrencyManager.shared.format(totalYearly))
-                        .font(.title3)
-                        .fontWeight(.bold)
-                }
+        VStack(spacing: 20) {
+            HStack(spacing: 10) {
+                Image("SpendoraLogo")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 36, height: 36)
+                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                 
-                HStack {
-                    Text("Monthly Average")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    Spacer()
+                Text("Spendora Financial Statement")
+                    .font(.headline)
+                    .foregroundColor(Color(.label))
+                
+                Spacer()
+                
+                Text("\(year)")
+                    .font(.title2.weight(.bold))
+                    .foregroundColor(SpendoraTheme.accent)
+            }
+
+            Divider()
+
+            VStack(spacing: 6) {
+                Text("ANNUAL TOTAL EXPENDITURE")
+                    .font(.caption.weight(.semibold))
+                    .foregroundColor(Color(.secondaryLabel))
+                    .textCase(.uppercase)
+                    .tracking(1.0)
+                
+                Text(CurrencyManager.shared.format(totalYearly))
+                    .font(.system(size: 34, weight: .bold, design: .rounded))
+                    .foregroundColor(Color(.label))
+            }
+
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Monthly Avg")
+                        .font(.caption2)
+                        .foregroundColor(Color(.secondaryLabel))
                     Text(CurrencyManager.shared.format(averageMonthly))
-                        .font(.title3)
-                        .fontWeight(.bold)
+                        .font(.headline.weight(.semibold))
+                        .foregroundColor(SpendoraTheme.accentText)
                 }
                 
-                if topCategory != "None" {
-                    HStack {
-                        Text("Top Category")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        Spacer()
-                        Text(topCategory)
-                            .font(.title3)
-                            .fontWeight(.bold)
-                    }
+                Spacer()
+                
+                VStack(alignment: .trailing, spacing: 4) {
+                    Text("Top Category")
+                        .font(.caption2)
+                        .foregroundColor(Color(.secondaryLabel))
+                    Text(topCategory)
+                        .font(.headline.weight(.semibold))
+                        .foregroundColor(Color(.label))
                 }
             }
-            .padding()
-            .background(Color(.secondarySystemBackground))
-            .cornerRadius(16)
+            .padding(.top, 4)
             
-            Text("Generated by Spendora")
+            Text("Generated with Spendora")
                 .font(.caption2)
-                .foregroundColor(.secondary)
-            
-            Spacer()
+                .foregroundColor(Color(.tertiaryLabel))
         }
-        .padding()
-        .frame(width: 350, height: 450)
-        .background(Color(.systemBackground))
+        .padding(24)
+        .frame(width: 360)
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(Color(.separator), lineWidth: 0.5)
+        )
     }
 }
