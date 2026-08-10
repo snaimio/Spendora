@@ -5,45 +5,21 @@
 
 import SwiftUI
 
-// MARK: - CountdownChip (Fintech Status Badge Pill)
+// MARK: - CountdownChip (60-30-10 Semantic Status Badge)
 
-/**
- `CountdownChip` renders a refined 6pt capsule status pill:
- - Paid / Safe (> 7 Days): Emerald tint (12% opacity) with #10B981 / #34D399 text
- - Due Soon (1-7 Days): Amber tint (12% opacity) with #F59E0B / #FBBF24 text
- - Overdue / Due Today: Red tint (12% opacity) with #EF4444 / #F87171 text
- - Cancelled / Paused: Slate tint (12% opacity) with #64748B / #94A3B8 text
- */
 struct CountdownChip: View {
     let daysRemaining: Int
     var isCancelled: Bool = false
-    @Environment(\.colorScheme) private var colorScheme
     
-    private var isSafePaid: Bool {
-        daysRemaining > 7 && !isCancelled
-    }
-    
-    private var badgeTextColor: Color {
+    private var badgeColor: Color {
         if isCancelled {
-            return colorScheme == .dark ? Color(hex: "#94A3B8") : Color(hex: "#64748B")
+            return SpendoraTheme.Colors.cancelled
         } else if daysRemaining <= 0 {
-            return colorScheme == .dark ? Color(hex: "#F87171") : Color(hex: "#DC2626")
+            return SpendoraTheme.Colors.danger    // Vivid Red #FF4757
         } else if daysRemaining <= 7 {
-            return colorScheme == .dark ? Color(hex: "#FBBF24") : Color(hex: "#D97706")
+            return SpendoraTheme.Colors.warning   // Warm Orange #FFB347
         } else {
-            return colorScheme == .dark ? Color(hex: "#34D399") : Color(hex: "#059669")
-        }
-    }
-    
-    private var badgeBgColor: Color {
-        if isCancelled {
-            return Color(hex: "#64748B").opacity(0.12)
-        } else if daysRemaining <= 0 {
-            return Color(hex: "#EF4444").opacity(0.12)
-        } else if daysRemaining <= 7 {
-            return Color(hex: "#F59E0B").opacity(0.12)
-        } else {
-            return Color(hex: "#10B981").opacity(0.12)
+            return SpendoraTheme.Colors.success   // Mint #00C9A7
         }
     }
     
@@ -81,17 +57,17 @@ struct CountdownChip: View {
         HStack(spacing: 4) {
             Image(systemName: badgeIcon)
                 .font(.system(size: 9, weight: .semibold))
-                .foregroundColor(badgeTextColor)
+                .foregroundColor(badgeColor)
             
             Text(badgeText)
-                .font(AppStyles.Typography.label)
-                .foregroundColor(badgeTextColor)
+                .font(SpendoraTheme.Typography.label)
+                .foregroundColor(badgeColor)
                 .lineLimit(1)
                 .fixedSize(horizontal: true, vertical: false)
         }
-        .padding(.horizontal, 6)
-        .padding(.vertical, 3)
-        .background(badgeBgColor)
-        .clipShape(RoundedRectangle(cornerRadius: AppStyles.Radius.small, style: .continuous))
+        .padding(.horizontal, 7)
+        .padding(.vertical, 3.5)
+        .background(badgeColor.opacity(0.12))
+        .clipShape(RoundedRectangle(cornerRadius: SpendoraTheme.Radius.badge, style: .continuous))
     }
 }

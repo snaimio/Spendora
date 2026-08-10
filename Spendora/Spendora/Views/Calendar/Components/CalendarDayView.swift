@@ -5,12 +5,8 @@
 
 import SwiftUI
 
-// MARK: - CalendarDayView (Obsidian Indigo Calendar Cell)
+// MARK: - CalendarDayView (Coral Fire Calendar Day Cell)
 
-/**
- `CalendarDayView` displays calendar day numbers with Obsidian Indigo today indicator (30x30 solid)
- and 1.5pt Indigo stroke rings + 4pt category dots for billing renewal dates.
- */
 struct CalendarDayView: View {
 
     // MARK: - Properties
@@ -29,33 +25,32 @@ struct CalendarDayView: View {
                 .foregroundColor(
                     isToday
                         ? .white
-                        : (isInMonth ? .textPrimary : .textTertiary.opacity(0.4))
+                        : (isInMonth ? SpendoraTheme.Colors.textPrimary : SpendoraTheme.Colors.textTertiary.opacity(0.35))
                 )
-                .frame(width: 30, height: 30)
+                .frame(width: 32, height: 32)
                 .background(
                     Group {
                         if isToday {
+                            // Today circle: coral gradient fill #FF6B6B→#FF8E53, white bold number
                             Circle()
-                                .fill(Color.brandPrimary)
-                                .shadow(color: Color.brandPrimary.opacity(0.35), radius: 4, x: 0, y: 2)
+                                .fill(SpendoraTheme.Colors.coralGradient)
+                                .shadow(color: SpendoraTheme.Colors.coral.opacity(0.35), radius: 6, x: 0, y: 2)
                         } else if !subscriptions.isEmpty {
+                            // Billing days: 2pt coral stroke ring around number
                             Circle()
-                                .stroke(Color.brandPrimary, lineWidth: 1.5)
-                                .background(Circle().fill(Color.brandPrimary.opacity(0.08)))
+                                .stroke(SpendoraTheme.Colors.coral, lineWidth: 2.0)
+                                .background(Circle().fill(SpendoraTheme.Colors.coralTint))
                         }
                     }
                 )
             
+            // 5pt coral dot centered below
             if !subscriptions.isEmpty {
-                HStack(spacing: 3) {
-                    ForEach(subscriptions.prefix(3), id: \.id) { sub in
-                        Circle()
-                            .fill(sub.categoryEnum.color)
-                            .frame(width: 4, height: 4)
-                    }
-                }
+                Circle()
+                    .fill(SpendoraTheme.Colors.coral)
+                    .frame(width: 5, height: 5)
             } else {
-                Spacer().frame(height: 4)
+                Spacer().frame(height: 5)
             }
         }
     }

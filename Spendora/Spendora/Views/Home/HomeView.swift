@@ -128,12 +128,12 @@ struct HomeView: View {
                     } label: {
                         ZStack(alignment: .topTrailing) {
                             Image(systemName: "bell.fill")
-                                .font(.system(size: 18))
-                                .foregroundColor(.brandPrimary)
+                                .font(.system(size: 17, weight: .semibold))
+                                .foregroundColor(SpendoraTheme.Colors.coral)
                             
                             if notificationCenterService.unreadCount > 0 {
                                 Circle()
-                                    .fill(Color.red)
+                                    .fill(SpendoraTheme.Colors.danger)
                                     .frame(width: 8, height: 8)
                                     .offset(x: 2, y: -2)
                             }
@@ -142,14 +142,24 @@ struct HomeView: View {
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
-                    HStack(spacing: 12) {
+                    HStack(spacing: 10) {
+                        // Coral Gradient + Button Pill
                         Button {
                             generator.impactOccurred()
                             showingAddSheet = true
                         } label: {
-                            Image(systemName: "plus.circle.fill")
-                                .font(.title3)
-                                .foregroundColor(.brandPrimary)
+                            HStack(spacing: 4) {
+                                Image(systemName: "plus")
+                                    .font(.system(size: 13, weight: .bold))
+                                Text("Add")
+                                    .font(.system(size: 13, weight: .semibold))
+                            }
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 6)
+                            .background(SpendoraTheme.Colors.coralGradient)
+                            .clipShape(Capsule())
+                            .shadow(color: SpendoraTheme.Colors.coral.opacity(0.3), radius: 4, y: 2)
                         }
                         
                         Menu {
@@ -185,32 +195,23 @@ struct HomeView: View {
                                 Label("AI Insights", systemImage: "brain.head.profile")
                             }
                         } label: {
-                            Image(systemName: "ellipsis.circle")
-                                .font(.title3)
-                                .foregroundColor(.brandSecondary)
+                            Image(systemName: "ellipsis.circle.fill")
+                                .font(.system(size: 20))
+                                .foregroundColor(SpendoraTheme.Colors.coralWarm)
                         }
                         
-                        // Profile Avatar Button
+                        // Profile Avatar Button (Warm Coral)
                         Button {
                             generator.impactOccurred()
                             showingProfileSheet = true
                         } label: {
                             ZStack {
                                 Circle()
-                                    .fill(
-                                        LinearGradient(
-                                            colors: [
-                                                Color(hex: profileManager.profile.avatarColorHex),
-                                                Color(hex: profileManager.profile.avatarColorHex).opacity(0.7)
-                                            ],
-                                            startPoint: .topLeading,
-                                            endPoint: .bottomTrailing
-                                        )
-                                    )
-                                    .frame(width: 30, height: 30)
+                                    .fill(SpendoraTheme.Colors.coralGradient)
+                                    .frame(width: 32, height: 32)
                                 
                                 Text(profileManager.profile.initials)
-                                    .font(.system(size: 11, weight: .bold, design: .rounded))
+                                    .font(.system(size: 12, weight: .bold))
                                     .foregroundColor(.white)
                             }
                         }

@@ -80,14 +80,13 @@ struct SubscriptionListView: View {
                     HStack {
                         Text("\(displayedSubscriptions.count) subscriptions")
                             .font(.system(.caption, design: .rounded))
-                            .foregroundColor(.textSecondary)
+                            .foregroundColor(SpendoraTheme.Colors.textSecondary)
                         
                         Spacer()
                         
                         Text("Monthly Total: \(CurrencyManager.shared.format(totalMonthly))")
-                            .font(.system(.caption, design: .rounded))
-                            .fontWeight(.semibold)
-                            .foregroundColor(.brandPrimary)
+                            .font(.system(size: 13, weight: .bold))
+                            .foregroundColor(SpendoraTheme.Colors.coral)
                     }
                     .padding(.horizontal)
                     .padding(.vertical, 6)

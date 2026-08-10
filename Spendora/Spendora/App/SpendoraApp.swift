@@ -108,7 +108,28 @@ struct MainTabView: View {
     @Query private var subscriptions: [Subscription]
     
 
-    // MARK: - Body
+    init() {
+        let appearance = UITabBarAppearance()
+        appearance.configureWithDefaultBackground()
+        appearance.backgroundEffect = UIBlurEffect(style: .systemUltraThinMaterial)
+        appearance.shadowColor = UIColor(hex: "#F0EBE3")
+        
+        let normalAttributes: [NSAttributedString.Key: Any] = [
+            .foregroundColor: UIColor(hex: "#A0A0B0")
+        ]
+        let selectedAttributes: [NSAttributedString.Key: Any] = [
+            .foregroundColor: UIColor(hex: "#FF6B6B")
+        ]
+        
+        appearance.stackedLayoutAppearance.normal.titleTextAttributes = normalAttributes
+        appearance.stackedLayoutAppearance.normal.iconColor = UIColor(hex: "#A0A0B0")
+        
+        appearance.stackedLayoutAppearance.selected.titleTextAttributes = selectedAttributes
+        appearance.stackedLayoutAppearance.selected.iconColor = UIColor(hex: "#FF6B6B")
+        
+        UITabBar.appearance().standardAppearance = appearance
+        UITabBar.appearance().scrollEdgeAppearance = appearance
+    }
 
     /// Main SwiftUI layout body property.
     var body: some View {
@@ -137,6 +158,6 @@ struct MainTabView: View {
                 }
                 .tag(3)
         }
-        .accentColor(.brandPrimary)
+        .tint(SpendoraTheme.Colors.coral)
     }
 }

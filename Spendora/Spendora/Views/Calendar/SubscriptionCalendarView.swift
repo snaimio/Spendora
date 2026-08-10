@@ -5,12 +5,8 @@
 
 import SwiftUI
 
-// MARK: - SubscriptionCalendarView
+// MARK: - SubscriptionCalendarView (60-30-10 Coral Fire Calendar)
 
-/**
- `SubscriptionCalendarView` presents Spendora's interactive subscription billing calendar
- wrapped inside adaptive 3D cards with Spendora Teal brand identity.
- */
 struct SubscriptionCalendarView: View {
 
     // MARK: - Properties
@@ -32,7 +28,7 @@ struct SubscriptionCalendarView: View {
                 
                 ScrollView {
                     VStack(spacing: 20) {
-                        // CARD 1: Calendar Grid Container Card (Spendora Teal Theme)
+                        // CARD 1: Calendar Grid Container Card (20pt radius, coral shadow)
                         VStack(spacing: 16) {
                             // Month Navigation Header
                             HStack {
@@ -43,17 +39,17 @@ struct SubscriptionCalendarView: View {
                                 } label: {
                                     Image(systemName: "chevron.left")
                                         .font(.system(size: 15, weight: .semibold))
-                                        .foregroundColor(.brandPrimary)
+                                        .foregroundColor(SpendoraTheme.Colors.coral)
                                         .padding(8)
-                                        .background(Color.brandPrimary.opacity(0.12))
+                                        .background(SpendoraTheme.Colors.coralTint)
                                         .clipShape(Circle())
                                 }
                                 
                                 Spacer()
                                 
                                 Text(selectedDate.formatted(.dateTime.month(.wide).year()))
-                                    .font(AppStyles.Typography.headline)
-                                    .foregroundColor(.textPrimary)
+                                    .font(SpendoraTheme.Typography.headline)
+                                    .foregroundColor(SpendoraTheme.Colors.textPrimary)
                                 
                                 Spacer()
                                 
@@ -64,20 +60,20 @@ struct SubscriptionCalendarView: View {
                                 } label: {
                                     Image(systemName: "chevron.right")
                                         .font(.system(size: 15, weight: .semibold))
-                                        .foregroundColor(.brandPrimary)
+                                        .foregroundColor(SpendoraTheme.Colors.coral)
                                         .padding(8)
-                                        .background(Color.brandPrimary.opacity(0.12))
+                                        .background(SpendoraTheme.Colors.coralTint)
                                         .clipShape(Circle())
                                 }
                             }
                             .padding(.horizontal, 4)
                             
-                            // Day Headers (Sun Mon Tue Wed Thu Fri Sat)
+                            // Day Headers
                             HStack {
                                 ForEach(calendar.shortWeekdaySymbols, id: \.self) { day in
                                     Text(day.uppercased())
-                                        .font(AppStyles.Typography.micro)
-                                        .foregroundColor(.textSecondary)
+                                        .font(SpendoraTheme.Typography.label)
+                                        .foregroundColor(SpendoraTheme.Colors.textSecondary)
                                         .frame(maxWidth: .infinity)
                                 }
                             }
@@ -101,104 +97,118 @@ struct SubscriptionCalendarView: View {
                             }
                         }
                         .padding(16)
-                        .appleCard(cornerRadius: AppStyles.Radius.hero)
+                        .spendoraCard(cornerRadius: SpendoraTheme.Radius.hero)
                         
-                        // CARD 2: Upcoming Billing Schedule Card
+                        // CARD 2: Upcoming Billing Schedule List
                         VStack(alignment: .leading, spacing: 12) {
                             HStack(spacing: 6) {
                                 Image(systemName: "calendar.badge.clock")
                                     .font(.system(size: 14, weight: .semibold))
-                                    .foregroundColor(.brandPrimary)
+                                    .foregroundColor(SpendoraTheme.Colors.coral)
                                 
                                 Text("UPCOMING BILLING DAYS")
-                                    .font(AppStyles.Typography.micro)
-                                    .foregroundColor(.textSecondary)
+                                    .font(SpendoraTheme.Typography.label)
+                                    .foregroundColor(SpendoraTheme.Colors.coralWarm)
                                     .tracking(1.2)
                             }
+                            .padding(.horizontal, 4)
                             
                             if subscriptionsWithBillingDates.isEmpty {
                                 HStack {
                                     Spacer()
                                     Text("No upcoming billing charges found.")
-                                        .font(.system(size: 13, weight: .medium, design: .rounded))
-                                        .foregroundColor(.textSecondary)
+                                        .font(.system(size: 13, weight: .medium))
+                                        .foregroundColor(SpendoraTheme.Colors.textSecondary)
                                         .padding(.vertical, 14)
                                     Spacer()
                                 }
                             } else {
-                                VStack(spacing: 8) {
+                                VStack(spacing: 10) {
                                     ForEach(subscriptionsWithBillingDates.prefix(5), id: \.id) { sub in
                                         HStack(spacing: 12) {
-                                            Circle()
-                                                .fill(sub.categoryEnum.color)
-                                                .frame(width: 10, height: 10)
+                                            // Left 3pt coral accent bar
+                                            RoundedRectangle(cornerRadius: 1.5)
+                                                .fill(SpendoraTheme.Colors.coral)
+                                                .frame(width: 3, height: 28)
                                             
+                                            // Service name bold
                                             Text(sub.displayName)
-                                                .font(.system(size: 15, weight: .bold, design: .rounded))
-                                                .foregroundColor(.textPrimary)
+                                                .font(.system(size: 15, weight: .bold))
+                                                .foregroundColor(SpendoraTheme.Colors.textPrimary)
                                             
                                             Spacer()
                                             
+                                            // Amount in coral #FF6B6B
                                             Text(CurrencyManager.shared.format(sub.isOneTime ? sub.cost : sub.monthlyCost))
-                                                .font(.system(size: 15, weight: .bold, design: .rounded))
-                                                .foregroundColor(Color(hex: "#FF6B6B"))
+                                                .font(Font.system(size: 15, weight: .bold).monospacedDigit())
+                                                .foregroundColor(SpendoraTheme.Colors.coral)
                                             
+                                            // Date in #8A8A9A
                                             Text(sub.formattedNextBillingDate)
-                                                .font(.system(size: 12, weight: .semibold, design: .rounded))
-                                                .foregroundColor(.textSecondary)
+                                                .font(SpendoraTheme.Typography.caption)
+                                                .foregroundColor(SpendoraTheme.Colors.textSecondary)
                                         }
-                                        .padding(12)
-                                        .background(
-                                            RoundedRectangle(cornerRadius: 12)
-                                                .fill(colorScheme == .dark ? Color.white.opacity(0.04) : Color.black.opacity(0.025))
-                                        )
+                                        .padding(14)
+                                        .spendoraCard(cornerRadius: 14)
                                     }
                                 }
                             }
                         }
-                        .padding(18)
-                        .spendora3DCard(cornerRadius: 22)
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 16)
-                    .padding(.bottom, 36)
+                    .padding(.horizontal, 16)
+                    .padding(.top, 12)
+                    .padding(.bottom, 32)
                 }
             }
             .navigationTitle("Calendar")
             .navigationBarTitleDisplayMode(.large)
-            .sheet(item: $selectedSubscription) { subscription in
-                SubscriptionDetailView(subscription: subscription)
+            .sheet(item: $selectedSubscription) { sub in
+                SubscriptionDetailView(subscription: sub)
             }
         }
     }
     
+    // MARK: - Private Helpers
+
     private var subscriptionsWithBillingDates: [Subscription] {
         subscriptions
-            .filter { !$0.isOverdue && !$0.isCancelled }
+            .filter { !$0.isCancelled }
             .sorted { $0.nextBillingDate < $1.nextBillingDate }
     }
-    
+
     private func subscriptionsForDate(_ date: Date) -> [Subscription] {
-        subscriptions.filter {
-            !$0.isCancelled && calendar.isDate($0.nextBillingDate, inSameDayAs: date)
+        subscriptions.filter { sub in
+            guard !sub.isCancelled else { return false }
+            return calendar.isDate(sub.nextBillingDate, equalTo: date, toGranularity: .day)
         }
     }
-    
+
     private func daysInMonth(date: Date) -> [Date] {
-        guard let monthInterval = calendar.dateInterval(of: .month, for: date) else { return [] }
-        guard let monthFirstWeek = calendar.dateInterval(of: .weekOfMonth, for: monthInterval.start) else { return [] }
+        guard let monthInterval = calendar.dateInterval(of: .month, for: date),
+              let firstDay = calendar.date(from: calendar.dateComponents([.year, .month], from: monthInterval.start)),
+              let monthRange = calendar.range(of: .day, in: .month, for: date)
+        else { return [] }
         
-        let startDate = monthFirstWeek.start
-        let endDate = calendar.date(byAdding: .day, value: 41, to: startDate) ?? Date()
+        let firstWeekday = calendar.component(.weekday, from: firstDay)
+        let leadingDays = (firstWeekday - calendar.firstWeekday + 7) % 7
         
-        var dates: [Date] = []
-        var currentDate = startDate
+        var days: [Date] = []
         
-        while currentDate < endDate {
-            dates.append(currentDate)
-            currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
+        for dayOffset in -leadingDays..<monthRange.count {
+            if let date = calendar.date(byAdding: .day, value: dayOffset, to: firstDay) {
+                days.append(date)
+            }
         }
         
-        return dates
+        let remaining = (7 - (days.count % 7)) % 7
+        if let lastDay = days.last {
+            for dayOffset in 1...max(0, remaining) {
+                if let date = calendar.date(byAdding: .day, value: dayOffset, to: lastDay) {
+                    days.append(date)
+                }
+            }
+        }
+        
+        return days
     }
 }

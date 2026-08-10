@@ -5,58 +5,57 @@
 
 import SwiftUI
 
-// MARK: - PremiumAppInfoRow (Obsidian Indigo Executive Branding Card)
+// MARK: - PremiumAppInfoRow (Coral Fire Gradient Header Card)
 
 struct PremiumAppInfoRow: View {
 
     var body: some View {
         HStack(spacing: 16) {
             ZStack {
-                // Ambient Glow Container (52x52)
-                RoundedRectangle(cornerRadius: AppStyles.Radius.medium, style: .continuous)
-                    .fill(Color.brandPrimary.opacity(0.12))
-                    .frame(width: 56, height: 56)
+                Circle()
+                    .fill(Color.white.opacity(0.2))
+                    .frame(width: 52, height: 52)
 
                 Image("SpendoraLogo")
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .frame(width: 48, height: 48)
-                    .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10, style: .continuous)
-                            .stroke(Color.brandPrimary.opacity(0.4), lineWidth: 1.5)
-                    )
+                    .frame(width: 44, height: 44)
+                    .clipShape(Circle())
+                    .overlay(Circle().stroke(Color.white.opacity(0.4), lineWidth: 1.5))
             }
 
             VStack(alignment: .leading, spacing: 3) {
                 HStack(spacing: 6) {
                     Text("SPENDORA")
-                        .font(.system(size: 17, weight: .bold, design: .default))
+                        .font(.system(size: 18, weight: .bold, design: .default))
                         .tracking(1.0)
-                        .foregroundColor(.textPrimary)
+                        .foregroundColor(.white)
                     
                     Text("PRO")
-                        .font(AppStyles.Typography.label)
-                        .foregroundColor(.white)
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundColor(SpendoraTheme.Colors.coral)
                         .padding(.horizontal, 6)
                         .padding(.vertical, 2)
-                        .background(Color.brandPrimary)
+                        .background(Color.white)
                         .clipShape(Capsule())
                 }
 
-                Text("Subscription & Expense Intelligence")
-                    .font(AppStyles.Typography.caption)
-                    .foregroundColor(.textSecondary)
+                Text("Smart Subscription & Expense Intelligence")
+                    .font(SpendoraTheme.Typography.caption)
+                    .foregroundColor(.white.opacity(0.9))
                     .lineLimit(1)
                 
                 Text("Version \(getAppVersion())")
-                    .font(AppStyles.Typography.label)
-                    .foregroundColor(.textTertiary)
+                    .font(SpendoraTheme.Typography.micro)
+                    .foregroundColor(.white.opacity(0.8))
             }
 
             Spacer(minLength: 0)
         }
-        .padding(.vertical, 6)
+        .padding(SpendoraTheme.Spacing.lg)
+        .background(SpendoraTheme.Colors.coralGradient)
+        .clipShape(RoundedRectangle(cornerRadius: SpendoraTheme.Radius.card, style: .continuous))
+        .shadow(color: SpendoraTheme.Colors.coral.opacity(0.3), radius: 10, y: 4)
     }
 
     private func getAppVersion() -> String {
