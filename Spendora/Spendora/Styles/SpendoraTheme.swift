@@ -58,7 +58,7 @@ public struct SpendoraTheme {
     }
 
     // MARK: - Typography Scale (SF Pro & SF Rounded for Numbers)
-    public static let heroNumber = Font.system(size: 52, weight: .bold, design: .rounded).monospacedDigit()
+    public static let heroNumber = Font.system(size: 48, weight: .semibold, design: .rounded).monospacedDigit()
     public static let statNumber = Font.system(size: 20, weight: .semibold, design: .rounded).monospacedDigit()
     public static let cardAmount = Font.system(size: 16, weight: .semibold, design: .rounded).monospacedDigit()
     

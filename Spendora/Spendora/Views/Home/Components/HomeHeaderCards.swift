@@ -90,10 +90,11 @@ struct ThisMonthCardView: View {
                     }
                 }
 
-                // Monthly Total — 52pt Bold Rounded Monospaced in Color(.label)
+                // Monthly Total — 48pt Semibold Rounded Monospaced in Color(.label)
                 VStack(alignment: .leading, spacing: 4) {
                     Text(CurrencyManager.shared.format(totalMonthly))
-                        .font(Font.system(size: 52, weight: .bold, design: .rounded).monospacedDigit())
+                        .font(.system(size: 48, weight: .semibold, design: .rounded))
+                        .monospacedDigit()
                         .foregroundColor(Color(.label))
                         .contentTransition(.numericText())
                         .lineLimit(1)
