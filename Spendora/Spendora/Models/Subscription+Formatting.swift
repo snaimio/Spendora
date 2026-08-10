@@ -9,7 +9,7 @@ import SwiftUI
 // MARK: - SubscriptionCategory
 
 /**
- `SubscriptionCategory` represents subscription classification with Spendora Teal brand category colors and icons.
+ `SubscriptionCategory` represents subscription classification with Apple's refined system palette.
  */
 enum SubscriptionCategory: String, CaseIterable, Identifiable {
 
@@ -45,16 +45,16 @@ enum SubscriptionCategory: String, CaseIterable, Identifiable {
 
     var color: Color {
         switch self {
-        case .entertainment: return Color(hex: "#FF6B6B")
-        case .music: return Color(hex: "#FF6B6B")
-        case .productivity: return Color(hex: "#00D4AA")
-        case .ai: return Color(hex: "#00B4D8")
-        case .health: return Color(hex: "#FFD93D")
-        case .shopping: return Color(hex: "#FF8A5C")
-        case .food: return Color(hex: "#FF6B6B")
-        case .education: return Color(hex: "#6C5CE7")
-        case .gaming: return Color(hex: "#A29BFE")
-        case .utilities, .other: return Color(hex: "#636E72")
+        case .entertainment: return Color(hex: "#FF2D55") // Apple Pink
+        case .music: return Color(hex: "#AF52DE")         // Apple Purple
+        case .productivity: return Color(hex: "#007AFF")   // Apple Blue
+        case .ai: return Color(hex: "#32ADE6")            // Apple Cyan
+        case .health: return Color(hex: "#34C759")         // Apple Green
+        case .shopping: return Color(hex: "#FF9500")       // Apple Orange
+        case .food: return Color(hex: "#FF3B30")           // Apple Red
+        case .education: return Color(hex: "#5856D6")      // Apple Indigo
+        case .gaming: return Color(hex: "#5E5CE6")         // Apple Violet
+        case .utilities, .other: return Color(hex: "#8E8E93") // Apple Gray
         }
     }
 }

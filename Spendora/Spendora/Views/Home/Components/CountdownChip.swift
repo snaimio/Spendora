@@ -5,14 +5,14 @@
 
 import SwiftUI
 
-// MARK: - CountdownChip
+// MARK: - CountdownChip (Apple System Badge)
 
 /**
- `CountdownChip` renders an adaptive status badge with Spendora Teal brand system colors:
- - Success / Safe (> 7 Days): Spendora Teal (#00D4AA)
- - Warning / Due Soon (1-7 Days): Gold Warning (#FFD93D)
- - Danger / Overdue / Due Today: Coral Red (#FF6B6B)
- - Cancelled / Inactive: Coral Red (#FF6B6B)
+ `CountdownChip` renders an Apple HIG status badge with system colors:
+ - Safe Paid (> 7 Days): Apple Green (#34C759)
+ - Due Soon (1-7 Days): Apple Orange (#FF9500)
+ - Overdue / Due Today: Apple Red (#FF3B30)
+ - Cancelled / Paused: Apple Gray (#8E8E93)
  */
 struct CountdownChip: View {
     let daysRemaining: Int
@@ -23,54 +23,41 @@ struct CountdownChip: View {
         daysRemaining > 7 && !isCancelled
     }
     
-    private var badgeTextColor: Color {
+    private var badgeColor: Color {
         if isCancelled {
-            return colorScheme == .dark ? Color(hex: "#FF6B6B") : Color(hex: "#DC2626")
+            return Color.textSecondary
         } else if daysRemaining <= 0 {
-            // Overdue / Due Today Red
-            return colorScheme == .dark ? Color(hex: "#FF6B6B") : Color(hex: "#DC2626")
+            return Color.brandDanger
         } else if daysRemaining <= 7 {
-            // Due Soon Gold
-            return colorScheme == .dark ? Color(hex: "#FFD93D") : Color(hex: "#B45309")
+            return Color.brandWarning
         } else {
-            // Safe Paid Spendora Teal
-            return colorScheme == .dark ? Color(hex: "#00D4AA") : Color(hex: "#059669")
+            return Color.brandSuccess
         }
     }
     
-    private var badgeBgColor: Color {
+    private var badgeIcon: String {
         if isCancelled {
-            return colorScheme == .dark ? Color(hex: "#FF6B6B").opacity(0.18) : Color(hex: "#FEE2E2")
-        } else if daysRemaining <= 0 {
-            return colorScheme == .dark ? Color(hex: "#FF6B6B").opacity(0.22) : Color(hex: "#FEE2E2")
+            return "pause.circle.fill"
+        } else if daysRemaining < 0 {
+            return "exclamationmark.circle.fill"
+        } else if daysRemaining == 0 {
+            return "flame.fill"
         } else if daysRemaining <= 7 {
-            return colorScheme == .dark ? Color(hex: "#FFD93D").opacity(0.22) : Color(hex: "#FEF3C7")
+            return "clock.fill"
         } else {
-            return colorScheme == .dark ? Color(hex: "#00D4AA").opacity(0.18) : Color(hex: "#D1FAE5")
-        }
-    }
-
-    private var badgeBorderColor: Color {
-        if isCancelled {
-            return colorScheme == .dark ? Color(hex: "#FF6B6B").opacity(0.35) : Color(hex: "#FCA5A5")
-        } else if daysRemaining <= 0 {
-            return colorScheme == .dark ? Color(hex: "#FF6B6B").opacity(0.4) : Color(hex: "#FCA5A5")
-        } else if daysRemaining <= 7 {
-            return colorScheme == .dark ? Color(hex: "#FFD93D").opacity(0.4) : Color(hex: "#FDE68A")
-        } else {
-            return colorScheme == .dark ? Color(hex: "#00D4AA").opacity(0.35) : Color(hex: "#A7F3D0")
+            return "checkmark.circle.fill"
         }
     }
     
     private var badgeText: String {
         if isCancelled {
-            return "Cancelled • Inactive"
+            return "Cancelled"
         } else if daysRemaining < 0 {
             return "Overdue (\(abs(daysRemaining))d)"
         } else if daysRemaining == 0 {
             return "Due Today"
         } else if daysRemaining == 1 {
-            return "Due in 1 day"
+            return "Due tomorrow"
         } else if daysRemaining <= 7 {
             return "Due in \(daysRemaining) days"
         } else {
@@ -79,24 +66,20 @@ struct CountdownChip: View {
     }
     
     var body: some View {
-        HStack(spacing: 5) {
-            Image(systemName: isCancelled ? "xmark.circle.fill" : (isSafePaid ? "checkmark.circle.fill" : "clock.fill"))
-                .font(.system(size: 10, weight: .bold))
-                .foregroundColor(badgeTextColor)
+        HStack(spacing: 4) {
+            Image(systemName: badgeIcon)
+                .font(.system(size: 10, weight: .semibold))
+                .foregroundColor(badgeColor)
             
             Text(badgeText)
-                .font(.system(size: 12, weight: .bold, design: .rounded))
-                .foregroundColor(badgeTextColor)
+                .font(AppStyles.Typography.micro)
+                .foregroundColor(badgeColor)
                 .lineLimit(1)
                 .fixedSize(horizontal: true, vertical: false)
         }
-        .padding(.horizontal, 9)
-        .padding(.vertical, 4)
-        .background(badgeBgColor)
-        .cornerRadius(8)
-        .overlay(
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(badgeBorderColor, lineWidth: 1)
-        )
+        .padding(.horizontal, 8)
+        .padding(.vertical, 3.5)
+        .background(badgeColor.opacity(colorScheme == .dark ? 0.16 : 0.10))
+        .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
     }
 }

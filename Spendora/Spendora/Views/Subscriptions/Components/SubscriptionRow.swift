@@ -5,14 +5,15 @@
 
 import SwiftUI
 
-// MARK: - SubscriptionRow (Apple HIG Hierarchy)
+// MARK: - SubscriptionRow (Apple Level Design)
 
 /**
- `SubscriptionRow` renders a subscription list row matching `SubscriptionCardView`'s Apple HIG hierarchy:
- - Name: 20pt Bold (LARGEST text on card!)
- - Price: 17pt Bold Coral (.brandSecondary)
- - Status Badge: Dedicated NEW ROW!
- - Corner Radius: 16pt (AppStyles.Radius.card)
+ `SubscriptionRow` renders a subscription list row matching Apple's HIG specifications:
+ - Name: 20pt Semibold (LARGEST text on card)
+ - Category & Cycle: 15pt Regular
+ - Price: 15pt-17pt Semibold with .monospacedDigit()
+ - Status Badge: Dedicated NEW ROW
+ - Corner Radius: 14pt
  */
 struct SubscriptionRow: View {
 
@@ -32,86 +33,69 @@ struct SubscriptionRow: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: AppStyles.Spacing.medium) {
-            // Category Emblem Badge Container (46x46)
+            // Category Icon Badge Container (42x42)
             ZStack {
                 Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: [rowColor, rowColor.opacity(0.75)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(width: 46, height: 46)
-                    .shadow(color: rowColor.opacity(0.35), radius: 5, x: 0, y: 2)
+                    .fill(rowColor.opacity(0.15))
+                    .frame(width: 42, height: 42)
                 
                 Image(systemName: rowIcon)
-                    .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(.white)
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundColor(rowColor)
             }
-            .frame(width: 46)
+            .frame(width: 42)
             
             // Content Stack
             VStack(alignment: .leading, spacing: AppStyles.Spacing.element) {
-                // ROW 1: SUBSCRIPTION NAME (LARGEST text on card - 20pt Bold!)
+                // ROW 1: SUBSCRIPTION NAME (LARGEST text on card - 20pt Semibold!)
                 HStack(alignment: .center) {
                     Text(subscription.displayName)
                         .font(AppStyles.Typography.headline)
                         .foregroundColor(.textPrimary)
                         .lineLimit(1)
-                        .minimumScaleFactor(0.75)
+                        .minimumScaleFactor(0.8)
                     
                     Spacer()
                     
                     Image(systemName: "chevron.right")
-                        .font(.system(size: 12, weight: .bold))
+                        .font(.system(size: 13, weight: .semibold))
                         .foregroundColor(.textTertiary)
                 }
                 
-                // ROW 2: PRICE & BILLING CYCLE (Price: 17pt Bold Coral Red)
+                // ROW 2: CATEGORY & BILLING CYCLE
                 HStack(spacing: 4) {
-                    Text(CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost))
-                        .font(Font.system(size: 17, weight: .bold, design: .rounded))
-                        .foregroundColor(.brandSecondary)
+                    Text(subscription.effectiveCategory)
+                        .font(AppStyles.Typography.subheadline)
+                        .foregroundColor(.textSecondary)
                     
-                    if subscription.isOneTime {
-                        Text("• Lifetime")
-                            .font(AppStyles.Typography.captionBold)
-                            .foregroundColor(.brandAccent)
-                    } else {
-                        Text("/month")
-                            .font(AppStyles.Typography.caption)
-                            .foregroundColor(.textSecondary)
-                        
-                        if subscription.isYearly {
-                            Text("• Yearly")
-                                .font(AppStyles.Typography.caption)
-                                .foregroundColor(.textSecondary)
-                        }
-                    }
+                    Text("•")
+                        .font(AppStyles.Typography.caption)
+                        .foregroundColor(.textTertiary)
+                    
+                    Text(subscription.isOneTime ? "Lifetime" : (subscription.isYearly ? "Yearly" : "Monthly"))
+                        .font(AppStyles.Typography.subheadline)
+                        .foregroundColor(.textSecondary)
                 }
                 
-                // ROW 3: NEXT BILLING DATE
-                if !subscription.isOneTime {
-                    HStack(spacing: 4) {
-                        Image(systemName: "calendar")
-                            .font(.system(size: 11, weight: .medium))
-                            .foregroundColor(.textSecondary)
+                // ROW 3: PRICE (.monospacedDigit) & NEXT BILLING DATE
+                HStack(spacing: 4) {
+                    Text(CurrencyManager.shared.format(subscription.isOneTime ? subscription.cost : subscription.monthlyCost))
+                        .font(Font.system(size: 15, weight: .semibold, design: .default).monospacedDigit())
+                        .foregroundColor(.textPrimary)
+                    
+                    Text(subscription.isOneTime ? "total" : "/month")
+                        .font(AppStyles.Typography.caption)
+                        .foregroundColor(.textSecondary)
+                    
+                    if !subscription.isOneTime {
+                        Text("•")
+                            .font(AppStyles.Typography.caption)
+                            .foregroundColor(.textTertiary)
                         
-                        Text("Renewal: \(subscription.formattedNextBillingDate)")
+                        Text("Next: \(subscription.formattedNextBillingDate)")
                             .font(AppStyles.Typography.caption)
                             .foregroundColor(.textSecondary)
                             .lineLimit(1)
-                    }
-                } else {
-                    HStack(spacing: 4) {
-                        Image(systemName: "checkmark.seal.fill")
-                            .font(.system(size: 11, weight: .bold))
-                            .foregroundColor(.brandPrimary)
-                        
-                        Text("One-Time Purchase")
-                            .font(AppStyles.Typography.captionBold)
-                            .foregroundColor(.brandPrimary)
                     }
                 }
                 
@@ -121,8 +105,7 @@ struct SubscriptionRow: View {
             }
             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
         }
-        .padding(.horizontal, AppStyles.Spacing.cardPadding)
-        .padding(.vertical, 14)
-        .spendora3DCard(cornerRadius: AppStyles.Radius.card)
+        .padding(AppStyles.Spacing.cardPadding)
+        .appleCard(cornerRadius: AppStyles.Radius.card)
     }
 }

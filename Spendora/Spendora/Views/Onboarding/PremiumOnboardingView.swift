@@ -9,7 +9,7 @@ import SwiftUI
 
 /**
  `PremiumOnboardingView` presents Spendora's 4-screen introduction flow,
- styled with Spendora Teal brand identity, vector hero icon badges, and animated capsule page indicators.
+ styled with Apple's native clean design language.
  */
 struct PremiumOnboardingView: View {
 
@@ -25,26 +25,26 @@ struct PremiumOnboardingView: View {
         OnboardingPage(
             icon: "sparkles.rectangle.stack.fill",
             title: "Track All Subscriptions",
-            description: "Keep Netflix, Spotify, Apple One, and all your recurring payments organized in one central executive dashboard.",
-            color: Color(hex: "#00D4AA")
+            description: "Keep Netflix, Spotify, Apple One, and all recurring bills organized in one executive portfolio.",
+            color: Color(hex: "#007AFF")
         ),
         OnboardingPage(
             icon: "bell.badge.fill",
             title: "Smart Billing Alerts",
-            description: "Receive advance push notifications before every renewal date. Never get caught off guard by auto-renewals again.",
-            color: Color(hex: "#FFD93D")
+            description: "Receive timely push notifications before every renewal date. Never get caught off guard by auto-renewals.",
+            color: Color(hex: "#FF9500")
         ),
         OnboardingPage(
             icon: "chart.line.uptrend.xyaxis.circle.fill",
-            title: "AI-Powered Analytics",
-            description: "Gain full visibility into your annual spending run-rate with intelligent financial breakdowns and savings score insights.",
-            color: Color(hex: "#00B4D8")
+            title: "Executive Analytics",
+            description: "Gain complete clarity into your annual spending run-rate with intelligent financial breakdowns.",
+            color: Color(hex: "#34C759")
         ),
         OnboardingPage(
             icon: "lock.shield.fill",
             title: "100% On-Device & Private",
-            description: "Your financial data stays strictly encrypted on your local device. Zero external cloud tracking or bank credentials required.",
-            color: Color(hex: "#6C5CE7")
+            description: "Your financial records stay strictly encrypted on your local device. Zero external cloud tracking.",
+            color: Color(hex: "#5856D6")
         )
     ]
 
@@ -63,15 +63,11 @@ struct PremiumOnboardingView: View {
                     } label: {
                         Text("Skip")
                             .font(AppStyles.Typography.subheadline)
-                            .fontWeight(.bold)
-                            .foregroundColor(.textSecondary)
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 8)
-                            .background(
-                                Capsule()
-                                    .fill(Color.cardBackground)
-                                    .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 2)
-                            )
+                            .foregroundColor(.secondary)
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 7)
+                            .background(Color.cardBackground)
+                            .clipShape(Capsule())
                     }
                     .padding(.top, 16)
                     .padding(.trailing, 20)
@@ -98,13 +94,13 @@ struct PremiumOnboardingView: View {
                     HStack(spacing: 8) {
                         ForEach(pages.indices, id: \.self) { index in
                             Capsule()
-                                .fill(currentPage == index ? Color(hex: "#00D4AA") : Color.textSecondary.opacity(0.3))
+                                .fill(currentPage == index ? Color.brandPrimary : Color.secondary.opacity(0.3))
                                 .frame(width: currentPage == index ? 24 : 8, height: 8)
                                 .animation(.spring(response: 0.3, dampingFraction: 0.7), value: currentPage)
                         }
                     }
                     
-                    // Primary Action Button (Spendora Teal Gradient)
+                    // Primary Action Button (Apple System Blue)
                     Button {
                         if currentPage == pages.count - 1 {
                             completeOnboarding()
@@ -118,21 +114,14 @@ struct PremiumOnboardingView: View {
                             Text(currentPage == pages.count - 1 ? "Get Started" : "Continue")
                                 .font(AppStyles.Typography.headline)
                             
-                            Image(systemName: currentPage == pages.count - 1 ? "sparkles" : "arrow.right")
-                                .font(.system(size: 16, weight: .bold))
+                            Image(systemName: currentPage == pages.count - 1 ? "arrow.right" : "chevron.right")
+                                .font(.system(size: 15, weight: .bold))
                         }
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                        .background(
-                            LinearGradient(
-                                colors: [Color(hex: "#00D4AA"), Color(hex: "#00B4D8")],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .cornerRadius(18)
-                        .shadow(color: Color(hex: "#00D4AA").opacity(0.4), radius: 10, x: 0, y: 5)
+                        .padding(.vertical, 15)
+                        .background(Color.brandPrimary)
+                        .clipShape(RoundedRectangle(cornerRadius: AppStyles.Radius.card, style: .continuous))
                         .opacity(showButtons ? 1 : 0)
                     }
                     .padding(.horizontal, 20)

@@ -125,16 +125,9 @@ struct YearlyReportView: View {
                         }
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                        .background(
-                            LinearGradient(
-                                colors: [.brandPrimary, .brandSecondary],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .cornerRadius(18)
-                        .shadow(color: Color.brandPrimary.opacity(0.35), radius: 10, x: 0, y: 4)
+                        .padding(.vertical, 15)
+                        .background(Color.brandPrimary)
+                        .clipShape(RoundedRectangle(cornerRadius: AppStyles.Radius.card, style: .continuous))
                     }
                     .padding(.top, 8)
                 }

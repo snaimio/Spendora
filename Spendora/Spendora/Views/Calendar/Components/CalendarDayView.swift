@@ -5,10 +5,10 @@
 
 import SwiftUI
 
-// MARK: - CalendarDayView
+// MARK: - CalendarDayView (Apple Standard Calendar Day Cell)
 
 /**
- `CalendarDayView` displays calendar day numbers with Spendora Teal today indicator badge and billing dots.
+ `CalendarDayView` displays calendar day numbers with Apple System Blue today indicator badge and billing dots.
  */
 struct CalendarDayView: View {
 
@@ -25,28 +25,21 @@ struct CalendarDayView: View {
     var body: some View {
         VStack(spacing: 4) {
             Text(Calendar.current.component(.day, from: date).formatted())
-                .font(.system(size: 14, weight: isToday ? .bold : .medium, design: .rounded))
+                .font(Font.system(size: 14, weight: isToday ? .semibold : .regular, design: .default).monospacedDigit())
                 .foregroundColor(
                     isToday
-                        ? (colorScheme == .dark ? Color(hex: "#0F0F1A") : .white)
+                        ? .white
                         : (isInMonth ? .textPrimary : .textSecondary.opacity(0.35))
                 )
-                .frame(width: 34, height: 34)
+                .frame(width: 32, height: 32)
                 .background(
                     Group {
                         if isToday {
                             Circle()
-                                .fill(
-                                    LinearGradient(
-                                        colors: [Color(hex: "#00D4AA"), Color(hex: "#00B4D8")],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                                .shadow(color: Color(hex: "#00D4AA").opacity(0.4), radius: 4, y: 2)
+                                .fill(Color.brandPrimary)
                         } else if !subscriptions.isEmpty {
                             Circle()
-                                .fill(Color(hex: "#00D4AA").opacity(0.16))
+                                .fill(Color.brandPrimary.opacity(0.12))
                         }
                     }
                 )
@@ -56,11 +49,11 @@ struct CalendarDayView: View {
                     ForEach(subscriptions.prefix(3), id: \.id) { sub in
                         Circle()
                             .fill(sub.categoryEnum.color)
-                            .frame(width: 5, height: 5)
+                            .frame(width: 4.5, height: 4.5)
                     }
                 }
             } else {
-                Spacer().frame(height: 5)
+                Spacer().frame(height: 4.5)
             }
         }
     }

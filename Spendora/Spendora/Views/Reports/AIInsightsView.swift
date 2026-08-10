@@ -61,9 +61,9 @@ struct AIInsightsView: View {
 
     private var healthStatusColor: Color {
         switch healthScore {
-        case 85...100: return Color(hex: "#00D4AA")
-        case 70...84: return Color(hex: "#FFD93D")
-        default: return Color(hex: "#FF6B6B")
+        case 85...100: return Color.brandSuccess
+        case 70...84: return Color.brandWarning
+        default: return Color.brandDanger
         }
     }
 
@@ -93,9 +93,9 @@ struct AIInsightsView: View {
                                 HStack(spacing: 6) {
                                     Image(systemName: "sparkles")
                                         .font(.headline)
-                                        .foregroundColor(Color(hex: "#00D4AA"))
+                                        .foregroundColor(.brandPrimary)
                                     Text("AI Financial Audits & Opportunities")
-                                        .font(.system(.headline, design: .rounded))
+                                        .font(AppStyles.Typography.headline)
                                         .foregroundColor(.textPrimary)
                                 }
                                 .padding(.horizontal, 4)

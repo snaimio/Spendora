@@ -5,10 +5,10 @@
 
 import SwiftUI
 
-// MARK: - AddSubscriptionSaveButton
+// MARK: - AddSubscriptionSaveButton (Apple Standard Primary Action)
 
 /**
- `AddSubscriptionSaveButton` renders the primary CTA save button styled with Spendora Teal gradient (#00D4AA → #00B4D8).
+ `AddSubscriptionSaveButton` renders the primary CTA save button styled with Apple's native system blue styling.
  */
 struct AddSubscriptionSaveButton: View {
 
@@ -24,42 +24,29 @@ struct AddSubscriptionSaveButton: View {
         Button {
             action()
         } label: {
-            HStack {
+            HStack(spacing: 8) {
                 if isSaving {
                     ProgressView()
                         .tint(.white)
                 } else {
-                    Text("Add Subscription")
-                        .font(.system(size: 17, weight: .bold, design: .rounded))
-                    Image(systemName: "arrow.right.circle.fill")
-                        .font(.system(size: 17, weight: .bold))
+                    Image(systemName: "plus")
+                        .font(.system(size: 16, weight: .semibold))
+                    Text("Save Subscription")
+                        .font(AppStyles.Typography.headline)
                 }
             }
             .foregroundColor(.white)
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 16)
+            .padding(.vertical, 15)
             .background(
-                Group {
-                    if isValid {
-                        LinearGradient(
-                            colors: [Color(hex: "#00D4AA"), Color(hex: "#00B4D8")],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    } else {
-                        LinearGradient(
-                            colors: [Color.gray.opacity(0.4), Color.gray.opacity(0.3)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    }
-                }
+                isValid
+                    ? Color.brandPrimary
+                    : Color.secondary.opacity(0.3)
             )
-            .cornerRadius(16)
-            .shadow(color: isValid ? Color(hex: "#00D4AA").opacity(0.4) : .clear, radius: 14, x: 0, y: 6)
+            .clipShape(RoundedRectangle(cornerRadius: AppStyles.Radius.card, style: .continuous))
         }
         .disabled(!isValid || isSaving)
-        .padding(.horizontal, 20)
+        .padding(.horizontal, AppStyles.Spacing.cardPadding)
         .padding(.top, 8)
     }
 }

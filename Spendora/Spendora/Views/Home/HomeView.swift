@@ -62,7 +62,7 @@ struct HomeView: View {
                 SpendoraBrandBackgroundView()
                 
                 ScrollView {
-                    VStack(spacing: 26) {
+                    VStack(spacing: 20) {
                         // Single Integrated Hero Summary Card (Monthly Spend, Gauge & Next Charge)
                         HeroCardView(
                             totalMonthly: totalMonthly,
@@ -72,11 +72,11 @@ struct HomeView: View {
                             nextSubscription: nextSubscription
                         )
                         .opacity(animateHeader ? 1 : 0)
-                        .offset(y: animateHeader ? 0 : 12)
+                        .offset(y: animateHeader ? 0 : 8)
                         
                         if !subscriptions.isEmpty {
                             // Search Bar, Sort Chips & Status Segmented Filter
-                            VStack(spacing: 14) {
+                            VStack(spacing: 12) {
                                 SearchBarView(searchText: $searchText)
                                 
                                 HStack {
@@ -105,9 +105,9 @@ struct HomeView: View {
                             EmptyStateView()
                         }
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 16)
-                    .padding(.bottom, 36)
+                    .padding(.horizontal, 16)
+                    .padding(.top, 12)
+                    .padding(.bottom, 32)
                 }
                 .id(refreshID)
                 .onAppear {

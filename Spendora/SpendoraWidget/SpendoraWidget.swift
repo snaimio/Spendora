@@ -126,67 +126,59 @@ struct SmallWidgetView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            // Header Bar (Spendora Teal Gradient)
-            HStack(spacing: 6) {
-                Image("AppLogo")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 22, height: 22)
-                    .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
-                    .shadow(color: Color(hex: "#00D4AA").opacity(0.3), radius: 3, x: 0, y: 1.5)
+            // Header Bar
+            HStack(spacing: 5) {
+                Image(systemName: "creditcard.fill")
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundColor(Color(hex: "#007AFF"))
                 
                 Text("SPENDORA")
-                    .font(.system(size: 10, weight: .black, design: .rounded))
-                    .tracking(1.2)
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [Color(hex: "#00D4AA"), Color(hex: "#00B4D8")],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
+                    .font(.system(size: 10, weight: .bold, design: .default))
+                    .tracking(1.0)
+                    .foregroundColor(.secondary)
+                
                 Spacer()
             }
             
             Spacer(minLength: 2)
             
-            // Spend Section (Spendora Teal #00D4AA)
+            // Spend Section
             VStack(alignment: .leading, spacing: 2) {
                 Text("THIS MONTH")
-                    .font(.system(size: 9, weight: .bold, design: .rounded))
+                    .font(.system(size: 9, weight: .semibold, design: .default))
                     .foregroundColor(.secondary)
-                    .tracking(1.0)
+                    .tracking(0.8)
                 
                 Text(entry.formattedMonthly)
-                    .font(.system(size: 22, weight: .black, design: .rounded))
-                    .foregroundColor(Color(hex: "#00D4AA"))
+                    .font(.system(size: 22, weight: .black, design: .default).monospacedDigit())
+                    .foregroundColor(.primary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
             }
             
             Spacer(minLength: 2)
             
-            // Upcoming Pill (Coral Accent)
+            // Upcoming Charge Pill
             HStack(spacing: 5) {
                 Image(systemName: "bell.fill")
                     .font(.system(size: 9))
-                    .foregroundColor(Color(hex: "#FFD93D"))
+                    .foregroundColor(Color(hex: "#FF9500"))
                 
                 VStack(alignment: .leading, spacing: 0) {
                     Text(entry.upcomingSubscription)
-                        .font(.system(size: 10, weight: .semibold, design: .rounded))
+                        .font(.system(size: 10, weight: .semibold, design: .default))
                         .lineLimit(1)
                     
                     Text(entry.formattedUpcomingDate)
-                        .font(.system(size: 8, design: .rounded))
+                        .font(.system(size: 8, design: .default))
                         .foregroundColor(.secondary)
                 }
             }
             .padding(.horizontal, 8)
-            .padding(.vertical, 6)
+            .padding(.vertical, 5)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(Color.secondary.opacity(0.12))
-            .cornerRadius(10)
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         }
         .padding(12)
         .containerBackground(for: .widget) {
@@ -204,110 +196,77 @@ struct MediumWidgetView: View {
         HStack(spacing: 16) {
             // Left Half: Spending Summary
             VStack(alignment: .leading, spacing: 8) {
-                HStack(spacing: 6) {
-                    Image("AppLogo")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 24, height: 24)
-                        .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
-                        .shadow(color: Color(hex: "#00D4AA").opacity(0.3), radius: 3, x: 0, y: 1.5)
+                HStack(spacing: 5) {
+                    Image(systemName: "creditcard.fill")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundColor(Color(hex: "#007AFF"))
                     
                     Text("SPENDORA")
-                        .font(.system(size: 11, weight: .black, design: .rounded))
-                        .tracking(1.5)
-                        .foregroundStyle(
-                            LinearGradient(
-                                colors: [Color(hex: "#00D4AA"), Color(hex: "#00B4D8")],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
+                        .font(.system(size: 11, weight: .bold, design: .default))
+                        .tracking(1.2)
+                        .foregroundColor(.secondary)
                 }
                 
                 Spacer()
                 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("MONTHLY SPENDING")
-                        .font(.system(size: 9, weight: .bold, design: .rounded))
+                    Text("MONTHLY SPEND")
+                        .font(.system(size: 9, weight: .semibold, design: .default))
                         .foregroundColor(.secondary)
-                        .tracking(1.0)
+                        .tracking(0.8)
                     
                     Text(entry.formattedMonthly)
-                        .font(.system(size: 26, weight: .black, design: .rounded))
-                        .foregroundColor(Color(hex: "#00D4AA"))
+                        .font(.system(size: 26, weight: .black, design: .default).monospacedDigit())
+                        .foregroundColor(.primary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                 }
                 
-                if entry.activeCount > 0 {
-                    HStack(spacing: 4) {
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.system(size: 9))
-                            .foregroundColor(Color(hex: "#00D4AA"))
-                        Text("\(entry.activeCount) active subscriptions")
-                            .font(.system(size: 9, weight: .medium, design: .rounded))
-                            .foregroundColor(.secondary)
-                    }
-                }
+                Text("\(entry.activeCount) active subscriptions")
+                    .font(.system(size: 10, design: .default))
+                    .foregroundColor(.secondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             
             Divider()
-                .padding(.vertical, 8)
             
-            // Right Half: Next Upcoming Subscription Card
+            // Right Half: Next Charge & Yearly Stats
             VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    Text("NEXT CHARGE")
-                        .font(.system(size: 9, weight: .bold, design: .rounded))
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("NEXT BILL")
+                        .font(.system(size: 9, weight: .semibold, design: .default))
                         .foregroundColor(.secondary)
-                        .tracking(1.0)
-                    Spacer()
-                    Image(systemName: "calendar.badge.clock")
-                        .font(.system(size: 11))
-                        .foregroundColor(Color(hex: "#FFD93D"))
+                        .tracking(0.8)
+                    
+                    Text(entry.upcomingSubscription)
+                        .font(.system(size: 14, weight: .bold, design: .default))
+                        .foregroundColor(.primary)
+                        .lineLimit(1)
+                    
+                    HStack(spacing: 4) {
+                        Text(entry.formattedUpcomingCost)
+                            .font(.system(size: 11, weight: .semibold, design: .default).monospacedDigit())
+                            .foregroundColor(Color(hex: "#007AFF"))
+                        
+                        Text("• \(entry.formattedUpcomingDate)")
+                            .font(.system(size: 10, design: .default))
+                            .foregroundColor(.secondary)
+                    }
                 }
                 
-                if entry.upcomingSubscription != "None" && entry.upcomingSubscription != "No subscriptions" {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(entry.upcomingSubscription)
-                            .font(.system(size: 16, weight: .bold, design: .rounded))
-                            .lineLimit(1)
-                        
-                        if entry.upcomingCost > 0 {
-                            Text("\(entry.formattedUpcomingCost)")
-                                .font(.system(size: 13, weight: .semibold, design: .rounded))
-                                .foregroundColor(Color(hex: "#FF6B6B"))
-                                .monospacedDigit()
-                        }
-                    }
-                    
-                    Spacer()
-                    
-                    Text(entry.formattedUpcomingDate)
-                        .font(.system(size: 10, weight: .bold, design: .rounded))
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 4)
-                        .background(
-                            LinearGradient(
-                                colors: [Color(hex: "#FF6B6B"), Color(hex: "#FF8A5C")],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .cornerRadius(8)
-                } else {
-                    Spacer()
-                    Text("No upcoming bills")
-                        .font(.system(size: 12, weight: .medium, design: .rounded))
+                Spacer()
+                
+                VStack(alignment: .leading, spacing: 1) {
+                    Text("YEARLY RUN RATE")
+                        .font(.system(size: 8, weight: .semibold, design: .default))
                         .foregroundColor(.secondary)
-                    Spacer()
+                        .tracking(0.8)
+                    
+                    Text(String(format: "%@%.2f", entry.currencySymbol, entry.totalYearly))
+                        .font(.system(size: 12, weight: .semibold, design: .default).monospacedDigit())
+                        .foregroundColor(.secondary)
                 }
             }
-            .padding(10)
-            .background(Color.secondary.opacity(0.08))
-            .cornerRadius(14)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(14)

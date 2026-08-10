@@ -42,17 +42,17 @@ struct SubscriptionCalendarView: View {
                                     }
                                 } label: {
                                     Image(systemName: "chevron.left")
-                                        .font(.system(size: 16, weight: .bold))
-                                        .foregroundColor(Color(hex: "#00D4AA"))
+                                        .font(.system(size: 15, weight: .semibold))
+                                        .foregroundColor(.brandPrimary)
                                         .padding(8)
-                                        .background(Color(hex: "#00D4AA").opacity(0.12))
+                                        .background(Color.brandPrimary.opacity(0.12))
                                         .clipShape(Circle())
                                 }
                                 
                                 Spacer()
                                 
                                 Text(selectedDate.formatted(.dateTime.month(.wide).year()))
-                                    .font(.system(size: 20, weight: .bold, design: .rounded))
+                                    .font(AppStyles.Typography.headline)
                                     .foregroundColor(.textPrimary)
                                 
                                 Spacer()
@@ -63,10 +63,10 @@ struct SubscriptionCalendarView: View {
                                     }
                                 } label: {
                                     Image(systemName: "chevron.right")
-                                        .font(.system(size: 16, weight: .bold))
-                                        .foregroundColor(Color(hex: "#00D4AA"))
+                                        .font(.system(size: 15, weight: .semibold))
+                                        .foregroundColor(.brandPrimary)
                                         .padding(8)
-                                        .background(Color(hex: "#00D4AA").opacity(0.12))
+                                        .background(Color.brandPrimary.opacity(0.12))
                                         .clipShape(Circle())
                                 }
                             }
@@ -76,7 +76,7 @@ struct SubscriptionCalendarView: View {
                             HStack {
                                 ForEach(calendar.shortWeekdaySymbols, id: \.self) { day in
                                     Text(day.uppercased())
-                                        .font(.system(size: 11, weight: .bold, design: .rounded))
+                                        .font(AppStyles.Typography.micro)
                                         .foregroundColor(.textSecondary)
                                         .frame(maxWidth: .infinity)
                                 }
@@ -100,18 +100,18 @@ struct SubscriptionCalendarView: View {
                                 }
                             }
                         }
-                        .padding(18)
-                        .spendora3DCard(cornerRadius: 22)
+                        .padding(16)
+                        .appleCard(cornerRadius: AppStyles.Radius.hero)
                         
                         // CARD 2: Upcoming Billing Schedule Card
                         VStack(alignment: .leading, spacing: 12) {
                             HStack(spacing: 6) {
                                 Image(systemName: "calendar.badge.clock")
-                                    .font(.system(size: 14, weight: .bold))
-                                    .foregroundColor(Color(hex: "#00D4AA"))
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundColor(.brandPrimary)
                                 
                                 Text("UPCOMING BILLING DAYS")
-                                    .font(.system(size: 12, weight: .bold, design: .rounded))
+                                    .font(AppStyles.Typography.micro)
                                     .foregroundColor(.textSecondary)
                                     .tracking(1.2)
                             }

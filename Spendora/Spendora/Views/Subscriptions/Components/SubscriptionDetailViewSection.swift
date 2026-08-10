@@ -63,16 +63,16 @@ struct SubscriptionDetailViewSection: View {
                             .foregroundColor(.textPrimary)
                         
                         Text(subscription.isOneTime ? "\(CurrencyManager.shared.format(subscription.cost)) • One-Time" : "\(CurrencyManager.shared.format(subscription.monthlyCost))/month")
-                            .font(Font.system(size: 18, weight: .bold, design: .rounded))
-                            .foregroundColor(.brandSecondary)
+                            .font(Font.system(size: 18, weight: .semibold, design: .default).monospacedDigit())
+                            .foregroundColor(.textPrimary)
                     }
                     
                     // Usage Stars Rating Display
                     HStack(spacing: 4) {
                         ForEach(1...5, id: \.self) { star in
                             Image(systemName: star <= subscription.usageRating ? "star.fill" : "star")
-                                .font(.system(size: 13))
-                                .foregroundColor(star <= subscription.usageRating ? .brandAccent : .secondary.opacity(0.3))
+                                .font(.system(size: 14))
+                                .foregroundColor(star <= subscription.usageRating ? .yellow : .secondary.opacity(0.3))
                         }
                     }
                     .padding(.top, 2)
