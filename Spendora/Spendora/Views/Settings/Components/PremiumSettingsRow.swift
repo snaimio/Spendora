@@ -17,7 +17,13 @@ struct PremiumSettingsRow<Content: View>: View {
     var isDestructive: Bool = false
     let trailing: Content?
     
-    init(icon: String, title: String, subtitle: String? = nil, isDestructive: Bool = false, @ViewBuilder trailing: () -> Content? = { nil }) {
+    init(
+        icon: String,
+        title: String,
+        subtitle: String? = nil,
+        isDestructive: Bool = false,
+        @ViewBuilder trailing: () -> Content?
+    ) {
         self.icon = icon
         self.title = title
         self.subtitle = subtitle
@@ -65,5 +71,13 @@ struct PremiumSettingsRow<Content: View>: View {
         }
         .frame(minHeight: 64)
         .contentShape(Rectangle())
+    }
+}
+
+extension PremiumSettingsRow where Content == EmptyView {
+    init(icon: String, title: String, subtitle: String? = nil, isDestructive: Bool = false) {
+        self.init(icon: icon, title: title, subtitle: subtitle, isDestructive: isDestructive) {
+            nil
+        }
     }
 }
