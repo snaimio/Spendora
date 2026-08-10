@@ -29,7 +29,7 @@ struct MarkAsPaidButton: View {
             withAnimation(.spring(response: 0.35, dampingFraction: 0.7)) {
                 subscription.markAsPaid()
                 try? modelContext.save()
-                NotificationService.shared.scheduleNotification(for: subscription)
+                NotificationService.shared.schedule(for: subscription)
                 isPaidThisCycle = true
             }
         } label: {
