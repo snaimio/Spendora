@@ -5,10 +5,10 @@
 
 import SwiftUI
 
-// MARK: - CalendarDayView (Apple Standard Calendar Day Cell)
+// MARK: - CalendarDayView (Slate & Rose-Gold Luxury Calendar Day Cell)
 
 /**
- `CalendarDayView` displays calendar day numbers with Apple System Blue today indicator badge and billing dots.
+ `CalendarDayView` displays calendar day numbers with Rose-Gold today indicator and glowing ring indicators for billing dates.
  */
 struct CalendarDayView: View {
 
@@ -18,18 +18,17 @@ struct CalendarDayView: View {
     let isToday: Bool
     let isInMonth: Bool
     let subscriptions: [Subscription]
-    @Environment(\.colorScheme) private var colorScheme
 
     // MARK: - Body
 
     var body: some View {
         VStack(spacing: 4) {
             Text(Calendar.current.component(.day, from: date).formatted())
-                .font(Font.system(size: 14, weight: isToday ? .semibold : .regular, design: .default).monospacedDigit())
+                .font(Font.system(size: 14, weight: (isToday || !subscriptions.isEmpty) ? .bold : .regular, design: .default).monospacedDigit())
                 .foregroundColor(
                     isToday
-                        ? .white
-                        : (isInMonth ? .textPrimary : .textSecondary.opacity(0.35))
+                        ? Color(hex: "#0E0E10")
+                        : (isInMonth ? .white : .textSecondary.opacity(0.35))
                 )
                 .frame(width: 32, height: 32)
                 .background(
@@ -37,9 +36,11 @@ struct CalendarDayView: View {
                         if isToday {
                             Circle()
                                 .fill(Color.brandPrimary)
+                                .shadow(color: Color.brandPrimary.opacity(0.4), radius: 6, x: 0, y: 2)
                         } else if !subscriptions.isEmpty {
                             Circle()
-                                .fill(Color.brandPrimary.opacity(0.12))
+                                .stroke(Color.brandPrimary, lineWidth: 1.5)
+                                .background(Circle().fill(Color.brandPrimary.opacity(0.12)))
                         }
                     }
                 )

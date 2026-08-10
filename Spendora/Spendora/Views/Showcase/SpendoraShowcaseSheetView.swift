@@ -2,25 +2,12 @@
 //  SpendoraShowcaseSheetView.swift
 //  Spendora
 //
-//  Production-ready, clean, modern SwiftUI UI/UX component sheet & 3-panel screen layout
-//  strictly adhering to Apple HIG (iOS 17/18) and Slate & Warm Gold (#C6A473) design patterns.
+//  Production-ready, clean, modern SwiftUI UI/UX component sheet & 4-panel screen layout
+//  strictly adhering to Apple HIG (iOS 17/18) and Slate & Warm Rose-Gold (#C6A473) design patterns.
 //
 
 import SwiftUI
 import Charts
-
-// MARK: - Slate & Warm Gold Design Tokens
-
-extension Color {
-    static let spendoraCanvas = Color(hex: "#0E0E10")
-    static let spendoraCard = Color(hex: "#1C1C1E")
-    static let spendoraCardBorder = Color(hex: "#2C2C2E")
-    static let spendoraGold = Color(hex: "#C6A473")
-    static let spendoraGoldLight = Color(hex: "#DFCAA6")
-    static let spendoraRed = Color(hex: "#FF453A")
-    static let spendoraGreen = Color(hex: "#30D158")
-    static let spendoraSlate = Color(hex: "#8E8E93")
-}
 
 // MARK: - Sample Data Models
 
@@ -39,15 +26,17 @@ struct ShowcaseRenewalItem: Identifiable {
     let daysRemaining: Int
     let icon: String
     let iconColor: Color
+    var isCancelled: Bool = false
 }
 
-// MARK: - Main Showcase Sheet View (3-Screen Adaptive Layout)
+// MARK: - Main Showcase Sheet View (4-Panel Adaptive Grid & Screen Layout)
 
 /**
- `SpendoraShowcaseSheetView` presents the complete production-grade 3-screen layout:
- 1. Executive Dashboard (Swift Charts Donut, Balance, Renewal List)
- 2. Analytics & AI Insights (Savings Score, Active Trials, Actionable Audits)
- 3. App Settings & Data Privacy (Form Sections, Toggles, Currency & Exports)
+ `SpendoraShowcaseSheetView` presents the complete production-grade 4-screen layout:
+ 1. Dashboard Screen (Hero Header Card C$76.26, Quick Stats 3-Col, Segmented Filter, Subscription Cards)
+ 2. Subscriptions List View (Translucent Search Bar #2C2C2E, Active & Cancelled Card Groups)
+ 3. Visual Calendar View (Dark Grid with Glowing Rose-Gold Date Rings, Upcoming Billing Feed)
+ 4. Settings & Data Privacy View (Branded Rose-Gold Logo Header, Unified #C6A473 Action Rows)
  */
 struct SpendoraShowcaseSheetView: View {
     @State private var selectedTab: Int = 0
@@ -55,64 +44,58 @@ struct SpendoraShowcaseSheetView: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             // Background Canvas (OLED Charcoal Black #0E0E10 + Ambient Radial Glow)
-            ZStack {
-                Color.spendoraCanvas
-                    .ignoresSafeArea()
-                
-                // Subtle Warm Gold Ambient Orb (Top-Right)
-                RadialGradient(
-                    colors: [Color.spendoraGold.opacity(0.12), Color.clear],
-                    center: .topTrailing,
-                    startRadius: 10,
-                    endRadius: 400
-                )
-                .ignoresSafeArea()
-            }
+            SpendoraBrandBackgroundView()
 
-            // Screen Content
+            // 4-Screen Page View Carousel
             TabView(selection: $selectedTab) {
                 ShowcaseDashboardScreen()
                     .tag(0)
 
-                ShowcaseAnalyticsScreen()
+                ShowcaseSubscriptionsListScreen()
                     .tag(1)
 
-                ShowcaseSettingsScreen()
+                ShowcaseCalendarScreen()
                     .tag(2)
+
+                ShowcaseSettingsScreen()
+                    .tag(3)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .ignoresSafeArea(edges: .bottom)
 
             // Floating Glassmorphism Bottom Tab Bar
             ShowcaseFloatingTabBar(selectedTab: $selectedTab)
-                .padding(.horizontal, 24)
+                .padding(.horizontal, 20)
                 .padding(.bottom, 12)
         }
         .preferredColorScheme(.dark)
     }
 }
 
-// MARK: - Panel 1: Executive Dashboard Screen
+// MARK: - Panel 1: Dashboard Screen
 
 struct ShowcaseDashboardScreen: View {
+    @State private var selectedSortIndex = 0
+    private let sortOptions = ["Alphabetical", "Billing Date", "Highest Cost", "Category"]
+
     private let categoryBreakdown: [ShowcaseCategorySpend] = [
-        ShowcaseCategorySpend(category: "Productivity", amount: 28.50, color: Color(hex: "#007AFF")),
-        ShowcaseCategorySpend(category: "AI Tools", amount: 20.00, color: Color(hex: "#32ADE6")),
-        ShowcaseCategorySpend(category: "Entertainment", amount: 16.99, color: Color(hex: "#FF453A")),
-        ShowcaseCategorySpend(category: "Music", amount: 10.02, color: Color.spendoraGold)
+        ShowcaseCategorySpend(category: "Productivity", amount: 28.50, color: Color(hex: "#C6A473")),
+        ShowcaseCategorySpend(category: "AI Tools", amount: 20.00, color: Color(hex: "#64D2FF")),
+        ShowcaseCategorySpend(category: "Entertainment", amount: 17.74, color: Color(hex: "#FF375F")),
+        ShowcaseCategorySpend(category: "Music", amount: 10.02, color: Color(hex: "#DFCAA6"))
     ]
 
     private let upcomingRenewals: [ShowcaseRenewalItem] = [
-        ShowcaseRenewalItem(name: "Spotify Premium", category: "Music", cost: 10.02, daysRemaining: 3, icon: "music.note", iconColor: Color.spendoraGold),
-        ShowcaseRenewalItem(name: "ChatGPT Plus", category: "AI Tools", cost: 20.00, daysRemaining: 6, icon: "cpu.fill", iconColor: Color(hex: "#32ADE6")),
-        ShowcaseRenewalItem(name: "Netflix Standard", category: "Entertainment", cost: 16.99, daysRemaining: 12, icon: "tv.fill", iconColor: Color(hex: "#FF453A")),
-        ShowcaseRenewalItem(name: "iCloud+ 2TB", category: "Productivity", cost: 12.99, daysRemaining: 18, icon: "cloud.fill", iconColor: Color(hex: "#007AFF"))
+        ShowcaseRenewalItem(name: "Spotify Premium", category: "Music", cost: 10.02, daysRemaining: 30, icon: "music.note", iconColor: Color(hex: "#C6A473")),
+        ShowcaseRenewalItem(name: "ChatGPT Plus", category: "AI Tools", cost: 20.00, daysRemaining: 6, icon: "cpu.fill", iconColor: Color(hex: "#64D2FF")),
+        ShowcaseRenewalItem(name: "Netflix Standard", category: "Entertainment", cost: 17.74, daysRemaining: 12, icon: "tv.fill", iconColor: Color(hex: "#FF375F")),
+        ShowcaseRenewalItem(name: "iCloud+ 2TB", category: "Productivity", cost: 12.99, daysRemaining: 18, icon: "cloud.fill", iconColor: Color(hex: "#C6A473"))
     ]
 
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 20) {
+                VStack(spacing: 16) {
                     // Minimal Top Navigation Bar
                     HStack(alignment: .center) {
                         // User Avatar & Greeting
@@ -121,7 +104,7 @@ struct ShowcaseDashboardScreen: View {
                                 Circle()
                                     .fill(
                                         LinearGradient(
-                                            colors: [Color.spendoraGold, Color.spendoraGold.opacity(0.6)],
+                                            colors: [Color.brandPrimary, Color.brandAccent],
                                             startPoint: .topLeading,
                                             endPoint: .bottomTrailing
                                         )
@@ -129,123 +112,122 @@ struct ShowcaseDashboardScreen: View {
                                     .frame(width: 40, height: 40)
                                 
                                 Text("GU")
-                                    .font(.system(size: 14, weight: .bold, design: .rounded))
-                                    .foregroundColor(Color.spendoraCanvas)
+                                    .font(.system(size: 14, weight: .bold))
+                                    .foregroundColor(Color(hex: "#0E0E10"))
                             }
 
                             VStack(alignment: .leading, spacing: 2) {
                                 Text("Good evening,")
-                                    .font(.system(size: 13, weight: .regular))
-                                    .foregroundColor(.spendoraSlate)
+                                    .font(AppStyles.Typography.caption)
+                                    .foregroundColor(.textSecondary)
                                 
                                 Text("Gabriel Utterson")
-                                    .font(.system(size: 17, weight: .semibold))
+                                    .font(AppStyles.Typography.body)
+                                    .fontWeight(.semibold)
                                     .foregroundColor(.white)
                             }
                         }
 
                         Spacer()
 
-                        // Dynamic Quick-Action Button
+                        // Dynamic Quick-Action Button (+)
                         Button {
                             let generator = UIImpactFeedbackGenerator(style: .medium)
                             generator.impactOccurred()
                         } label: {
                             Image(systemName: "plus")
                                 .font(.system(size: 16, weight: .bold))
-                                .foregroundColor(Color.spendoraCanvas)
-                                .frame(width: 36, height: 36)
-                                .background(Color.spendoraGold)
+                                .foregroundColor(Color(hex: "#0E0E10"))
+                                .frame(width: 38, height: 38)
+                                .background(Color.brandPrimary)
                                 .clipShape(Circle())
+                                .shadow(color: Color.brandPrimary.opacity(0.35), radius: 6, x: 0, y: 2)
                         }
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 8)
 
-                    // Interactive Donut Chart Card (Swift Charts)
-                    VStack(alignment: .leading, spacing: 16) {
+                    // Hero Header Card: "THIS MONTH" C$76.26 with Rose-Gold Accent
+                    VStack(alignment: .leading, spacing: 14) {
                         HStack {
-                            Text("MONTHLY EXPENDITURE")
-                                .font(.system(size: 11, weight: .semibold))
-                                .foregroundColor(.spendoraSlate)
+                            Text("THIS MONTH")
+                                .font(AppStyles.Typography.micro)
+                                .foregroundColor(.textSecondary)
                                 .tracking(1.2)
 
                             Spacer()
 
                             Text("October 2026")
-                                .font(.system(size: 12, weight: .medium))
-                                .foregroundColor(.spendoraGold)
+                                .font(AppStyles.Typography.caption)
+                                .foregroundColor(.brandPrimary)
                         }
 
-                        ZStack {
-                            Chart(categoryBreakdown) { item in
-                                SectorMark(
-                                    angle: .value("Amount", item.amount),
-                                    innerRadius: .ratio(0.72),
-                                    angularInset: 2.0
-                                )
-                                .cornerRadius(4)
-                                .foregroundStyle(item.color)
-                            }
-                            .frame(height: 190)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("C$76.26")
+                                .font(AppStyles.Typography.heroPrice)
+                                .foregroundColor(.white)
 
-                            // Centered Total Spend Metric
-                            VStack(spacing: 2) {
-                                Text("Total Spend")
-                                    .font(.system(size: 11, weight: .regular))
-                                    .foregroundColor(.spendoraSlate)
-                                
-                                Text("C$75.51")
-                                    .font(.system(size: 26, weight: .black, design: .default).monospacedDigit())
-                                    .foregroundColor(.white)
-                            }
+                            Text("4 active subscriptions")
+                                .font(AppStyles.Typography.subheadline)
+                                .foregroundColor(.textSecondary)
                         }
 
-                        // Category Chips
-                        HStack(spacing: 12) {
-                            ForEach(categoryBreakdown) { item in
-                                HStack(spacing: 5) {
-                                    Circle()
-                                        .fill(item.color)
-                                        .frame(width: 7, height: 7)
-                                    Text(item.category)
-                                        .font(.system(size: 11, weight: .medium))
-                                        .foregroundColor(.spendoraSlate)
+                        // Rose-Gold Mini Progress Line
+                        GeometryReader { geo in
+                            ZStack(alignment: .leading) {
+                                Capsule()
+                                    .fill(Color.white.opacity(0.08))
+                                    .frame(height: 5)
+
+                                Capsule()
+                                    .fill(Color.brandPrimary)
+                                    .frame(width: geo.size.width * 0.62, height: 5)
+                            }
+                        }
+                        .frame(height: 5)
+                        .padding(.top, 2)
+                    }
+                    .padding(AppStyles.Spacing.cardPadding)
+                    .appleCard(cornerRadius: AppStyles.Radius.hero)
+                    .padding(.horizontal, 20)
+
+                    // Quick Stats Row: 3-Column Balanced Metric Tiles
+                    HStack(spacing: 10) {
+                        MetricSubCard(title: "Yearly", value: "C$915.12")
+                        MetricSubCard(title: "Average", value: "C$19.07")
+                        MetricSubCard(title: "Total", value: "4")
+                    }
+                    .padding(.horizontal, 20)
+
+                    // Filter Bar: Segmented Controls with Capsule Highlight
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            ForEach(sortOptions.indices, id: \.self) { idx in
+                                Button {
+                                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                        selectedSortIndex = idx
+                                    }
+                                } label: {
+                                    Text(sortOptions[idx])
+                                        .font(AppStyles.Typography.captionBold)
+                                        .padding(.horizontal, 14)
+                                        .padding(.vertical, 7)
+                                        .background(
+                                            Capsule()
+                                                .fill(selectedSortIndex == idx ? Color.brandPrimary : Color(hex: "#2C2C2E"))
+                                        )
+                                        .foregroundColor(selectedSortIndex == idx ? Color(hex: "#0E0E10") : .textSecondary)
                                 }
                             }
                         }
-                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.horizontal, 20)
                     }
-                    .padding(18)
-                    .background(Color.spendoraCard)
-                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .stroke(Color.spendoraCardBorder, lineWidth: 1)
-                    )
-                    .shadow(color: Color.black.opacity(0.4), radius: 8, x: 0, y: 4)
-                    .padding(.horizontal, 20)
+                    .padding(.vertical, 2)
 
-                    // Upcoming Renewals List Header
-                    HStack {
-                        Text("Upcoming Renewals")
-                            .font(.system(size: 18, weight: .semibold))
-                            .foregroundColor(.white)
-
-                        Spacer()
-
-                        Text("View All")
-                            .font(.system(size: 13, weight: .medium))
-                            .foregroundColor(.spendoraGold)
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 6)
-
-                    // Upcoming Renewals Stack
-                    VStack(spacing: 10) {
+                    // Subscription Cards Stack
+                    VStack(spacing: 12) {
                         ForEach(upcomingRenewals) { item in
-                            HStack(spacing: 14) {
-                                // Emblem Icon
+                            HStack(alignment: .top, spacing: AppStyles.Spacing.medium) {
                                 ZStack {
                                     Circle()
                                         .fill(item.iconColor.opacity(0.15))
@@ -256,41 +238,45 @@ struct ShowcaseDashboardScreen: View {
                                         .foregroundColor(item.iconColor)
                                 }
 
-                                // Title & Category
-                                VStack(alignment: .leading, spacing: 3) {
-                                    Text(item.name)
-                                        .font(.system(size: 16, weight: .semibold))
-                                        .foregroundColor(.white)
+                                VStack(alignment: .leading, spacing: AppStyles.Spacing.element) {
+                                    HStack {
+                                        Text(item.name)
+                                            .font(AppStyles.Typography.headline)
+                                            .foregroundColor(.white)
 
-                                    Text(item.category)
-                                        .font(.system(size: 13, weight: .regular))
-                                        .foregroundColor(.spendoraSlate)
-                                }
+                                        Spacer()
 
-                                Spacer()
+                                        Image(systemName: "chevron.right")
+                                            .font(.system(size: 13, weight: .semibold))
+                                            .foregroundColor(.textTertiary)
+                                    }
 
-                                // Cost & Countdown Badge
-                                VStack(alignment: .trailing, spacing: 4) {
-                                    Text(String(format: "C$%.2f", item.cost))
-                                        .font(.system(size: 15, weight: .semibold).monospacedDigit())
-                                        .foregroundColor(.white)
+                                    HStack(spacing: 4) {
+                                        Text(item.category)
+                                            .font(AppStyles.Typography.subheadline)
+                                            .foregroundColor(.textSecondary)
 
-                                    Text("In \(item.daysRemaining) days")
-                                        .font(.system(size: 11, weight: .semibold))
-                                        .foregroundColor(item.daysRemaining <= 3 ? .spendoraGold : .spendoraSlate)
-                                        .padding(.horizontal, 7)
-                                        .padding(.vertical, 2.5)
-                                        .background((item.daysRemaining <= 3 ? Color.spendoraGold : Color.spendoraSlate).opacity(0.14))
-                                        .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+                                        Text("•")
+                                            .font(AppStyles.Typography.caption)
+                                            .foregroundColor(.textTertiary)
+
+                                        Text("Monthly")
+                                            .font(AppStyles.Typography.subheadline)
+                                            .foregroundColor(.textSecondary)
+                                    }
+
+                                    HStack(spacing: 4) {
+                                        Text(String(format: "C$%.2f/month", item.cost))
+                                            .font(Font.system(size: 15, weight: .semibold).monospacedDigit())
+                                            .foregroundColor(.white)
+                                    }
+
+                                    CountdownChip(daysRemaining: item.daysRemaining)
+                                        .padding(.top, 2)
                                 }
                             }
-                            .padding(14)
-                            .background(Color.spendoraCard)
-                            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                    .stroke(Color.spendoraCardBorder, lineWidth: 1)
-                            )
+                            .padding(AppStyles.Spacing.cardPadding)
+                            .appleCard(cornerRadius: AppStyles.Radius.card)
                         }
                     }
                     .padding(.horizontal, 20)
@@ -302,9 +288,23 @@ struct ShowcaseDashboardScreen: View {
     }
 }
 
-// MARK: - Panel 2: Analytics & AI Insights View
+// MARK: - Panel 2: Subscriptions List Screen
 
-struct ShowcaseAnalyticsScreen: View {
+struct ShowcaseSubscriptionsListScreen: View {
+    @State private var searchText = ""
+
+    private let activeList: [ShowcaseRenewalItem] = [
+        ShowcaseRenewalItem(name: "Spotify Premium", category: "Music", cost: 10.02, daysRemaining: 30, icon: "music.note", iconColor: Color.brandPrimary),
+        ShowcaseRenewalItem(name: "ChatGPT Plus", category: "AI Tools", cost: 20.00, daysRemaining: 6, icon: "cpu.fill", iconColor: Color(hex: "#64D2FF")),
+        ShowcaseRenewalItem(name: "Netflix Standard", category: "Entertainment", cost: 17.74, daysRemaining: 12, icon: "tv.fill", iconColor: Color(hex: "#FF375F")),
+        ShowcaseRenewalItem(name: "iCloud+ 2TB", category: "Productivity", cost: 12.99, daysRemaining: 18, icon: "cloud.fill", iconColor: Color.brandPrimary)
+    ]
+
+    private let cancelledList: [ShowcaseRenewalItem] = [
+        ShowcaseRenewalItem(name: "Paramount+", category: "Entertainment", cost: 9.99, daysRemaining: 0, icon: "play.tv.fill", iconColor: Color.textSecondary, isCancelled: true),
+        ShowcaseRenewalItem(name: "Duolingo Plus", category: "Education", cost: 6.99, daysRemaining: 0, icon: "character.book.closed.fill", iconColor: Color.textSecondary, isCancelled: true)
+    ]
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -312,205 +312,80 @@ struct ShowcaseAnalyticsScreen: View {
                     // Header
                     HStack {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("FINANCIAL INTELLIGENCE")
-                                .font(.system(size: 11, weight: .semibold))
-                                .foregroundColor(.spendoraSlate)
+                            Text("PORTFOLIO")
+                                .font(AppStyles.Typography.micro)
+                                .foregroundColor(.textSecondary)
                                 .tracking(1.2)
 
-                            Text("Analytics & Insights")
-                                .font(.system(size: 24, weight: .bold))
+                            Text("Subscriptions")
+                                .font(AppStyles.Typography.title)
                                 .foregroundColor(.white)
                         }
                         Spacer()
                     }
                     .padding(.horizontal, 20)
-                    .padding(.top, 12)
+                    .padding(.top, 8)
 
-                    // Dynamic 2-Column Metric Tiles
-                    HStack(spacing: 14) {
-                        // Metric 1: Savings Score
-                        VStack(alignment: .leading, spacing: 8) {
-                            HStack {
-                                Image(systemName: "star.circle.fill")
-                                    .font(.system(size: 18, weight: .semibold))
-                                    .foregroundColor(.spendoraGold)
+                    // Integrated Top Search Bar (#2C2C2E border stroke)
+                    HStack(spacing: 10) {
+                        Image(systemName: "magnifyingglass")
+                            .foregroundColor(.textSecondary)
+                            .font(.system(size: 15))
 
-                                Spacer()
-
-                                Text("Top 10%")
-                                    .font(.system(size: 10, weight: .bold))
-                                    .foregroundColor(.spendoraGreen)
-                                    .padding(.horizontal, 6)
-                                    .padding(.vertical, 2)
-                                    .background(Color.spendoraGreen.opacity(0.16))
-                                    .clipShape(Capsule())
-                            }
-
-                            Text("84/100")
-                                .font(.system(size: 28, weight: .black, design: .default).monospacedDigit())
-                                .foregroundColor(.white)
-
-                            Text("Savings Health Score")
-                                .font(.system(size: 12, weight: .medium))
-                                .foregroundColor(.spendoraSlate)
-                        }
-                        .padding(16)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color.spendoraCard)
-                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                .stroke(Color.spendoraCardBorder, lineWidth: 1)
-                        )
-
-                        // Metric 2: Active Trials
-                        VStack(alignment: .leading, spacing: 8) {
-                            HStack {
-                                Image(systemName: "hourglass.badge.plus")
-                                    .font(.system(size: 18, weight: .semibold))
-                                    .foregroundColor(Color(hex: "#FF9500"))
-
-                                Spacer()
-
-                                Text("Action Req.")
-                                    .font(.system(size: 10, weight: .bold))
-                                    .foregroundColor(Color(hex: "#FF9500"))
-                                    .padding(.horizontal, 6)
-                                    .padding(.vertical, 2)
-                                    .background(Color(hex: "#FF9500").opacity(0.16))
-                                    .clipShape(Capsule())
-                            }
-
-                            Text("1")
-                                .font(.system(size: 28, weight: .black, design: .default).monospacedDigit())
-                                .foregroundColor(.white)
-
-                            Text("Active Free Trial")
-                                .font(.system(size: 12, weight: .medium))
-                                .foregroundColor(.spendoraSlate)
-                        }
-                        .padding(16)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color.spendoraCard)
-                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                .stroke(Color.spendoraCardBorder, lineWidth: 1)
-                        )
+                        TextField("Search all subscriptions...", text: $searchText)
+                            .font(AppStyles.Typography.body)
+                            .foregroundColor(.white)
+                            .autocorrectionDisabled()
                     }
-                    .padding(.horizontal, 20)
-
-                    // Actionable AI Insight Container Card
-                    VStack(alignment: .leading, spacing: 14) {
-                        HStack(spacing: 10) {
-                            ZStack {
-                                Circle()
-                                    .fill(Color.spendoraGold.opacity(0.18))
-                                    .frame(width: 36, height: 36)
-
-                                Image(systemName: "sparkles")
-                                    .font(.system(size: 16, weight: .semibold))
-                                    .foregroundColor(.spendoraGold)
-                            }
-
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text("AI AUDIT RECOMMENDATION")
-                                    .font(.system(size: 10, weight: .bold))
-                                    .foregroundColor(.spendoraGold)
-                                    .tracking(1.0)
-
-                                Text("Underused Subscription Detected")
-                                    .font(.system(size: 16, weight: .semibold))
-                                    .foregroundColor(.white)
-                            }
-
-                            Spacer()
-                        }
-
-                        Text("You logged a 1-star usage rating for **Paramount+** ($9.99/mo) and haven't accessed it in 42 days. Cancelling before the Nov 2 renewal will save **C$119.88/year**.")
-                            .font(.system(size: 14, weight: .regular))
-                            .foregroundColor(Color(hex: "#D1D1D6"))
-                            .lineSpacing(4)
-
-                        // Action Buttons
-                        HStack(spacing: 12) {
-                            Button {
-                                if let url = URL(string: "https://paramountplus.com/account") {
-                                    UIApplication.shared.open(url)
-                                }
-                            } label: {
-                                HStack(spacing: 6) {
-                                    Image(systemName: "safari")
-                                        .font(.system(size: 13, weight: .semibold))
-                                    Text("Cancel on Provider Website")
-                                        .font(.system(size: 13, weight: .semibold))
-                                }
-                                .foregroundColor(Color.spendoraCanvas)
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 44)
-                                .background(Color.spendoraGold)
-                                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                            }
-
-                            Button {
-                                let generator = UIImpactFeedbackGenerator(style: .light)
-                                generator.impactOccurred()
-                            } label: {
-                                Text("Keep Active")
-                                    .font(.system(size: 13, weight: .medium))
-                                    .foregroundColor(.spendoraSlate)
-                                    .frame(width: 96)
-                                    .frame(height: 44)
-                                    .background(Color.spendoraCardBorder.opacity(0.5))
-                                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                            }
-                        }
-                        .padding(.top, 4)
-                    }
-                    .padding(18)
-                    .background(Color.spendoraCard)
-                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 12)
+                    .background(Color.cardBackground)
+                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .stroke(Color.spendoraGold.opacity(0.35), lineWidth: 1)
+                        RoundedRectangle(cornerRadius: 14, style: .continuous)
+                            .stroke(Color(hex: "#2C2C2E"), lineWidth: 1)
                     )
                     .padding(.horizontal, 20)
 
-                    // Secondary Insight: Duplicate Category Overlap
+                    // Active Section
                     VStack(alignment: .leading, spacing: 12) {
-                        HStack(spacing: 8) {
-                            Image(systemName: "rectangle.stack.fill")
-                                .font(.system(size: 14, weight: .semibold))
-                                .foregroundColor(Color(hex: "#32ADE6"))
-
-                            Text("2 Music Subscriptions Active")
-                                .font(.system(size: 15, weight: .semibold))
-                                .foregroundColor(.white)
-
+                        HStack {
+                            Text("Active (\(activeList.count))")
+                                .font(AppStyles.Typography.captionBold)
+                                .foregroundColor(.textSecondary)
+                                .textCase(.uppercase)
+                                .tracking(1.0)
                             Spacer()
-
-                            Text("Overlap")
-                                .font(.system(size: 10, weight: .bold))
-                                .foregroundColor(Color(hex: "#32ADE6"))
-                                .padding(.horizontal, 6)
-                                .padding(.vertical, 2)
-                                .background(Color(hex: "#32ADE6").opacity(0.16))
-                                .clipShape(Capsule())
                         }
+                        .padding(.horizontal, 20)
 
-                        Text("You are paying for both Spotify Premium ($10.02) and Apple Music ($10.99). Consolidating into one plan saves C$120.24 annually.")
-                            .font(.system(size: 13, weight: .regular))
-                            .foregroundColor(.spendoraSlate)
-                            .lineSpacing(3)
+                        VStack(spacing: 12) {
+                            ForEach(activeList) { item in
+                                ShowcaseRowView(item: item)
+                            }
+                        }
+                        .padding(.horizontal, 20)
                     }
-                    .padding(16)
-                    .background(Color.spendoraCard)
-                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .stroke(Color.spendoraCardBorder, lineWidth: 1)
-                    )
-                    .padding(.horizontal, 20)
+
+                    // Cancelled Section
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack {
+                            Text("Cancelled & Paused (\(cancelledList.count))")
+                                .font(AppStyles.Typography.captionBold)
+                                .foregroundColor(.textSecondary)
+                                .textCase(.uppercase)
+                                .tracking(1.0)
+                            Spacer()
+                        }
+                        .padding(.horizontal, 20)
+
+                        VStack(spacing: 12) {
+                            ForEach(cancelledList) { item in
+                                ShowcaseRowView(item: item)
+                            }
+                        }
+                        .padding(.horizontal, 20)
+                    }
                     .padding(.bottom, 90)
                 }
             }
@@ -519,7 +394,222 @@ struct ShowcaseAnalyticsScreen: View {
     }
 }
 
-// MARK: - Panel 3: App Settings & Data Privacy View
+struct ShowcaseRowView: View {
+    let item: ShowcaseRenewalItem
+
+    var body: some View {
+        HStack(alignment: .top, spacing: AppStyles.Spacing.medium) {
+            ZStack {
+                Circle()
+                    .fill(item.iconColor.opacity(0.15))
+                    .frame(width: 42, height: 42)
+
+                Image(systemName: item.icon)
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundColor(item.iconColor)
+            }
+
+            VStack(alignment: .leading, spacing: AppStyles.Spacing.element) {
+                HStack {
+                    Text(item.name)
+                        .font(AppStyles.Typography.headline)
+                        .foregroundColor(.white)
+
+                    Spacer()
+
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(.textTertiary)
+                }
+
+                HStack(spacing: 4) {
+                    Text(item.category)
+                        .font(AppStyles.Typography.subheadline)
+                        .foregroundColor(.textSecondary)
+
+                    Text("•")
+                        .font(AppStyles.Typography.caption)
+                        .foregroundColor(.textTertiary)
+
+                    Text(String(format: "C$%.2f/mo", item.cost))
+                        .font(Font.system(size: 14, weight: .semibold).monospacedDigit())
+                        .foregroundColor(.white)
+                }
+
+                CountdownChip(daysRemaining: item.daysRemaining, isCancelled: item.isCancelled)
+                    .padding(.top, 2)
+            }
+        }
+        .padding(AppStyles.Spacing.cardPadding)
+        .appleCard(cornerRadius: AppStyles.Radius.card)
+    }
+}
+
+// MARK: - Panel 3: Visual Calendar Screen
+
+struct ShowcaseCalendarScreen: View {
+    private let calendarDays: [Int] = Array(1...31)
+    private let billingDates: Set<Int> = [3, 6, 12, 18]
+
+    private let upcomingFeed: [ShowcaseRenewalItem] = [
+        ShowcaseRenewalItem(name: "ChatGPT Plus", category: "AI Tools", cost: 20.00, daysRemaining: 6, icon: "cpu.fill", iconColor: Color(hex: "#64D2FF")),
+        ShowcaseRenewalItem(name: "Netflix Standard", category: "Entertainment", cost: 17.74, daysRemaining: 12, icon: "tv.fill", iconColor: Color(hex: "#FF375F")),
+        ShowcaseRenewalItem(name: "iCloud+ 2TB", category: "Productivity", cost: 12.99, daysRemaining: 18, icon: "cloud.fill", iconColor: Color.brandPrimary)
+    ]
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: 20) {
+                    // Header
+                    HStack {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("SCHEDULE")
+                                .font(AppStyles.Typography.micro)
+                                .foregroundColor(.textSecondary)
+                                .tracking(1.2)
+
+                            Text("Renewal Calendar")
+                                .font(AppStyles.Typography.title)
+                                .foregroundColor(.white)
+                        }
+                        Spacer()
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 8)
+
+                    // Sleek Dark Calendar Grid with Glowing Rose-Gold Rings
+                    VStack(spacing: 16) {
+                        HStack {
+                            Image(systemName: "chevron.left")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundColor(.brandPrimary)
+                                .padding(8)
+                                .background(Color.brandPrimary.opacity(0.12))
+                                .clipShape(Circle())
+
+                            Spacer()
+
+                            Text("October 2026")
+                                .font(AppStyles.Typography.headline)
+                                .foregroundColor(.white)
+
+                            Spacer()
+
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundColor(.brandPrimary)
+                                .padding(8)
+                                .background(Color.brandPrimary.opacity(0.12))
+                                .clipShape(Circle())
+                        }
+
+                        // Day Headers
+                        HStack {
+                            ForEach(["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"], id: \.self) { day in
+                                Text(day)
+                                    .font(AppStyles.Typography.micro)
+                                    .foregroundColor(.textSecondary)
+                                    .frame(maxWidth: .infinity)
+                            }
+                        }
+
+                        // Grid
+                        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), spacing: 10) {
+                            ForEach(calendarDays, id: \.self) { day in
+                                VStack(spacing: 3) {
+                                    Text("\(day)")
+                                        .font(Font.system(size: 13, weight: billingDates.contains(day) ? .bold : .regular).monospacedDigit())
+                                        .foregroundColor(day == 10 ? Color(hex: "#0E0E10") : (billingDates.contains(day) ? .white : .textSecondary))
+                                        .frame(width: 30, height: 30)
+                                        .background(
+                                            Group {
+                                                if day == 10 {
+                                                    // Today Indicator (Rose-Gold)
+                                                    Circle()
+                                                        .fill(Color.brandPrimary)
+                                                        .shadow(color: Color.brandPrimary.opacity(0.4), radius: 6, x: 0, y: 2)
+                                                } else if billingDates.contains(day) {
+                                                    // Active Billing Day Glowing Ring
+                                                    Circle()
+                                                        .stroke(Color.brandPrimary, lineWidth: 1.5)
+                                                        .background(Circle().fill(Color.brandPrimary.opacity(0.14)))
+                                                }
+                                            }
+                                        )
+
+                                    if billingDates.contains(day) {
+                                        Circle()
+                                            .fill(Color.brandPrimary)
+                                            .frame(width: 4, height: 4)
+                                    } else {
+                                        Spacer().frame(height: 4)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .padding(AppStyles.Spacing.cardPadding)
+                    .appleCard(cornerRadius: AppStyles.Radius.hero)
+                    .padding(.horizontal, 20)
+
+                    // Upcoming Billing Days Feed
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack(spacing: 6) {
+                            Image(systemName: "calendar.badge.clock")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundColor(.brandPrimary)
+
+                            Text("UPCOMING BILLING DAYS")
+                                .font(AppStyles.Typography.micro)
+                                .foregroundColor(.textSecondary)
+                                .tracking(1.2)
+                        }
+                        .padding(.horizontal, 20)
+
+                        VStack(spacing: 10) {
+                            ForEach(upcomingFeed) { item in
+                                HStack(spacing: 12) {
+                                    ZStack {
+                                        Circle()
+                                            .fill(item.iconColor.opacity(0.15))
+                                            .frame(width: 38, height: 38)
+                                        Image(systemName: item.icon)
+                                            .foregroundColor(item.iconColor)
+                                            .font(.system(size: 16, weight: .semibold))
+                                    }
+
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text(item.name)
+                                            .font(AppStyles.Typography.body)
+                                            .fontWeight(.semibold)
+                                            .foregroundColor(.white)
+                                        Text("Due in \(item.daysRemaining) days")
+                                            .font(AppStyles.Typography.caption)
+                                            .foregroundColor(.textSecondary)
+                                    }
+
+                                    Spacer()
+
+                                    Text(String(format: "C$%.2f", item.cost))
+                                        .font(Font.system(size: 15, weight: .semibold).monospacedDigit())
+                                        .foregroundColor(.white)
+                                }
+                                .padding(14)
+                                .appleCard(cornerRadius: AppStyles.Radius.card)
+                            }
+                        }
+                        .padding(.horizontal, 20)
+                    }
+                    .padding(.bottom, 90)
+                }
+            }
+            .navigationBarHidden(true)
+        }
+    }
+}
+
+// MARK: - Panel 4: Settings & Data Privacy View
 
 struct ShowcaseSettingsScreen: View {
     @State private var biometricAuthEnabled: Bool = true
@@ -531,45 +621,88 @@ struct ShowcaseSettingsScreen: View {
     var body: some View {
         NavigationStack {
             Form {
-                // Section 1: Data & Privacy
+                // Branded Rose-Gold Logo Header Card
                 Section {
+                    HStack(spacing: 14) {
+                        ZStack {
+                            Circle()
+                                .fill(
+                                    LinearGradient(
+                                        colors: [Color.brandPrimary, Color.brandAccent],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
+                                .frame(width: 52, height: 52)
+
+                            Image("SpendoraLogo")
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: 48, height: 48)
+                                .clipShape(Circle())
+                        }
+
+                        VStack(alignment: .leading, spacing: 3) {
+                            HStack(spacing: 6) {
+                                Text("SPENDORA")
+                                    .font(.system(size: 17, weight: .black))
+                                    .tracking(1.2)
+                                    .foregroundColor(.white)
+
+                                Text("CAPSTONE")
+                                    .font(.system(size: 9, weight: .bold))
+                                    .foregroundColor(Color(hex: "#0E0E10"))
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 2)
+                                    .background(Color.brandPrimary)
+                                    .clipShape(Capsule())
+                            }
+
+                            Text("Smart Subscription & Expense Intelligence")
+                                .font(.system(size: 11, weight: .medium))
+                                .foregroundColor(.textSecondary)
+                        }
+                    }
+                    .padding(.vertical, 6)
+                }
+                .listRowBackground(Color.cardBackground)
+
+                // Section: Security & Alerts
+                Section("Security & Alerts") {
                     Toggle(isOn: $biometricAuthEnabled) {
                         HStack(spacing: 12) {
                             Image(systemName: "faceid")
                                 .font(.system(size: 17))
-                                .foregroundColor(.spendoraGold)
+                                .foregroundColor(.brandPrimary)
                                 .frame(width: 24)
 
                             Text("Face ID & Passcode")
                                 .foregroundColor(.white)
                         }
                     }
-                    .tint(.spendoraGold)
+                    .tint(.brandPrimary)
 
                     Toggle(isOn: $pushNotificationsEnabled) {
                         HStack(spacing: 12) {
                             Image(systemName: "bell.badge.fill")
                                 .font(.system(size: 17))
-                                .foregroundColor(.spendoraGold)
+                                .foregroundColor(.brandPrimary)
                                 .frame(width: 24)
 
                             Text("Billing Push Reminders")
                                 .foregroundColor(.white)
                         }
                     }
-                    .tint(.spendoraGold)
-                } header: {
-                    Text("Security & Alerts")
-                        .foregroundColor(.spendoraSlate)
+                    .tint(.brandPrimary)
                 }
-                .listRowBackground(Color.spendoraCard)
+                .listRowBackground(Color.cardBackground)
 
-                // Section 2: Appearance & Preferences
-                Section {
+                // Section: Preferences
+                Section("Preferences") {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Default Portfolio Currency")
-                            .font(.system(size: 14, weight: .regular))
-                            .foregroundColor(.spendoraSlate)
+                            .font(.system(size: 13, weight: .regular))
+                            .foregroundColor(.textSecondary)
 
                         Picker("Currency", selection: $selectedCurrencyIndex) {
                             ForEach(currencies.indices, id: \.self) { idx in
@@ -579,100 +712,54 @@ struct ShowcaseSettingsScreen: View {
                         .pickerStyle(.segmented)
                     }
                     .padding(.vertical, 4)
-                } header: {
-                    Text("Preferences")
-                        .foregroundColor(.spendoraSlate)
                 }
-                .listRowBackground(Color.spendoraCard)
+                .listRowBackground(Color.cardBackground)
 
-                // Section 3: Cloud Sync & Backup
-                Section {
-                    Toggle(isOn: $icloudSyncEnabled) {
-                        HStack(spacing: 12) {
-                            Image(systemName: "icloud.fill")
-                                .font(.system(size: 17))
-                                .foregroundColor(Color(hex: "#007AFF"))
-                                .frame(width: 24)
-
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text("iCloud Encrypted Sync")
-                                    .foregroundColor(.white)
-                                Text("Synced 4 minutes ago")
-                                    .font(.system(size: 11))
-                                    .foregroundColor(.spendoraSlate)
-                            }
-                        }
-                    }
-                    .tint(.spendoraGold)
-                } header: {
-                    Text("Cloud Sync")
-                        .foregroundColor(.spendoraSlate)
-                }
-                .listRowBackground(Color.spendoraCard)
-
-                // Section 4: Data Export Actions
-                Section {
-                    Button {
-                        let generator = UIImpactFeedbackGenerator(style: .medium)
-                        generator.impactOccurred()
-                    } label: {
-                        HStack {
-                            Image(systemName: "tablecells.fill")
-                                .foregroundColor(.spendoraGold)
-                                .frame(width: 24)
-                            Text("Export to CSV (Spreadsheet)")
-                                .foregroundColor(.white)
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .font(.caption)
-                                .foregroundColor(.spendoraSlate)
-                        }
+                // Section: Data & Backup
+                Section("Data Management") {
+                    HStack {
+                        Image(systemName: "tablecells.fill")
+                            .foregroundColor(.brandPrimary)
+                            .frame(width: 24)
+                        Text("Export to CSV (Spreadsheet)")
+                            .foregroundColor(.white)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundColor(.textSecondary)
                     }
 
-                    Button {
-                        let generator = UIImpactFeedbackGenerator(style: .medium)
-                        generator.impactOccurred()
-                    } label: {
-                        HStack {
-                            Image(systemName: "doc.text.fill")
-                                .foregroundColor(.spendoraGold)
-                                .frame(width: 24)
-                            Text("Export Executive Annual PDF")
-                                .foregroundColor(.white)
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .font(.caption)
-                                .foregroundColor(.spendoraSlate)
-                        }
+                    HStack {
+                        Image(systemName: "doc.text.fill")
+                            .foregroundColor(.brandPrimary)
+                            .frame(width: 24)
+                        Text("Export Executive Annual PDF")
+                            .foregroundColor(.white)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundColor(.textSecondary)
                     }
 
-                    Button {
-                        let generator = UIImpactFeedbackGenerator(style: .medium)
-                        generator.impactOccurred()
-                    } label: {
-                        HStack {
-                            Image(systemName: "arrow.down.doc.fill")
-                                .foregroundColor(.spendoraGold)
-                                .frame(width: 24)
-                            Text("Download Full JSON Backup")
-                                .foregroundColor(.white)
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .font(.caption)
-                                .foregroundColor(.spendoraSlate)
-                        }
+                    HStack {
+                        Image(systemName: "arrow.down.doc.fill")
+                            .foregroundColor(.brandPrimary)
+                            .frame(width: 24)
+                        Text("Download Full JSON Backup")
+                            .foregroundColor(.white)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundColor(.textSecondary)
                     }
-                } header: {
-                    Text("Data Management")
-                        .foregroundColor(.spendoraSlate)
                 } footer: {
-                    Text("Your financial records stay 100% on-device and private. Zero third-party analytics.")
-                        .foregroundColor(.spendoraSlate)
+                    Text("Your financial records stay 100% on-device and private. Zero external cloud tracking.")
+                        .foregroundColor(.textSecondary)
                 }
-                .listRowBackground(Color.spendoraCard)
+                .listRowBackground(Color.cardBackground)
             }
             .scrollContentBackground(.hidden)
-            .background(Color.spendoraCanvas)
+            .background(Color.appBackground)
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
             .padding(.bottom, 70)
@@ -687,7 +774,8 @@ struct ShowcaseFloatingTabBar: View {
 
     private let tabs: [(icon: String, label: String)] = [
         ("square.grid.2x2.fill", "Dashboard"),
-        ("chart.pie.fill", "Intelligence"),
+        ("list.bullet", "Subscriptions"),
+        ("calendar", "Calendar"),
         ("gearshape.fill", "Settings")
     ]
 
@@ -703,15 +791,15 @@ struct ShowcaseFloatingTabBar: View {
                 } label: {
                     VStack(spacing: 4) {
                         Image(systemName: tabs[idx].icon)
-                            .font(.system(size: 19, weight: selectedTab == idx ? .bold : .regular))
-                            .foregroundColor(selectedTab == idx ? Color.spendoraGold : Color.spendoraSlate)
+                            .font(.system(size: 18, weight: selectedTab == idx ? .bold : .regular))
+                            .foregroundColor(selectedTab == idx ? Color.brandPrimary : Color.textSecondary)
 
                         Text(tabs[idx].label)
                             .font(.system(size: 10, weight: selectedTab == idx ? .semibold : .regular))
-                            .foregroundColor(selectedTab == idx ? Color.spendoraGold : Color.spendoraSlate)
+                            .foregroundColor(selectedTab == idx ? Color.brandPrimary : Color.textSecondary)
                     }
                     .frame(maxWidth: .infinity)
-                    .frame(height: 52)
+                    .frame(height: 50)
                 }
             }
         }
@@ -720,7 +808,7 @@ struct ShowcaseFloatingTabBar: View {
         .clipShape(Capsule())
         .overlay(
             Capsule()
-                .stroke(Color.spendoraCardBorder.opacity(0.8), lineWidth: 1)
+                .stroke(Color(hex: "#2C2C2E").opacity(0.8), lineWidth: 1)
         )
         .shadow(color: Color.black.opacity(0.5), radius: 16, x: 0, y: 6)
     }
@@ -728,6 +816,6 @@ struct ShowcaseFloatingTabBar: View {
 
 // MARK: - Previews
 
-#Preview("Spendora Showcase Sheet - OLED Slate & Gold") {
+#Preview("Spendora 4-Panel Luxury Showcase") {
     SpendoraShowcaseSheetView()
 }

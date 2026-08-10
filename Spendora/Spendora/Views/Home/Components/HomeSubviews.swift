@@ -111,18 +111,16 @@ struct SearchBarView: View {
 
     @Binding var searchText: String
     
-
     // MARK: - Body
 
-    /// Main SwiftUI layout body property.
     var body: some View {
         HStack(spacing: 10) {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.textSecondary)
-                .font(.subheadline)
+                .font(.system(size: 15))
             
             TextField("Search subscriptions...", text: $searchText)
-                .font(.system(.body, design: .rounded))
+                .font(AppStyles.Typography.body)
                 .foregroundColor(.textPrimary)
                 .autocorrectionDisabled()
             
@@ -132,50 +130,31 @@ struct SearchBarView: View {
                 } label: {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundColor(.textSecondary)
-                        .font(.subheadline)
+                        .font(.system(size: 15))
                 }
             }
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 12)
-        .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(Color.cardBackground)
-                .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 3)
+        .background(Color.cardBackground)
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke(Color(hex: "#2C2C2E"), lineWidth: 1)
         )
     }
 }
 
 // MARK: - Sort Chips
 
-// MARK: - SortChipsView
-
-/**
- `SortChipsView` is a struct that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for sortchipsview handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `SortChipsView` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
- */
 struct SortChipsView: View {
 
     // MARK: - Properties
 
     @Binding var sortOption: SortOption
-    
 
     // MARK: - Body
 
-    /// Main SwiftUI layout body property.
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
@@ -186,26 +165,14 @@ struct SortChipsView: View {
                         }
                     } label: {
                         Text(option.rawValue)
-                            .font(.system(.caption, design: .rounded))
-                            .fontWeight(sortOption == option ? .semibold : .regular)
+                            .font(AppStyles.Typography.captionBold)
                             .padding(.horizontal, 14)
-                            .padding(.vertical, 8)
+                            .padding(.vertical, 7)
                             .background(
                                 Capsule()
-                                    .fill(sortOption == option ?
-                                        LinearGradient(
-                                            colors: [Color(hex: "#FF6B6B"), Color(hex: "#FFE66D")],
-                                            startPoint: .leading,
-                                            endPoint: .trailing
-                                        ) :
-                                        LinearGradient(
-                                            colors: [Color(.secondarySystemBackground), Color(.secondarySystemBackground)],
-                                            startPoint: .leading,
-                                            endPoint: .trailing
-                                        )
-                                    )
+                                    .fill(sortOption == option ? Color.brandPrimary : Color(hex: "#2C2C2E"))
                             )
-                            .foregroundColor(sortOption == option ? .white : .textSecondary)
+                            .foregroundColor(sortOption == option ? Color(hex: "#0E0E10") : .textSecondary)
                     }
                 }
             }

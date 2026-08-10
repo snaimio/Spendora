@@ -55,46 +55,34 @@ struct PremiumAppInfoRow: View {
                         Circle()
                             .stroke(
                                 LinearGradient(
-                                    colors: [Color(hex: "#FFD93D"), Color(hex: "#00D4AA")],
+                                    colors: [Color(hex: "#C6A473"), Color(hex: "#DFCAA6")],
                                     startPoint: .topLeading,
                                     endPoint: .bottomTrailing
                                 ),
                                 lineWidth: 2
                             )
                     )
-                    .shadow(color: Color(hex: "#FFD93D").opacity(0.4), radius: 8, x: 0, y: 4)
+                    .shadow(color: Color(hex: "#C6A473").opacity(0.35), radius: 8, x: 0, y: 4)
             }
 
             VStack(alignment: .leading, spacing: 3) {
                 HStack(spacing: 6) {
                     Text("SPENDORA")
-                        .font(.system(size: 18, weight: .black, design: .rounded))
+                        .font(.system(size: 18, weight: .black, design: .default))
                         .tracking(1.2)
-                        .foregroundStyle(
-                            LinearGradient(
-                                colors: [.brandPrimary, .brandSecondary],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
+                        .foregroundColor(.white)
                     
                     HStack(spacing: 3) {
                         Image(systemName: "sparkles")
                             .font(.system(size: 9))
                         Text("CAPSTONE")
-                            .font(.system(size: 9, weight: .bold, design: .rounded))
+                            .font(.system(size: 9, weight: .bold, design: .default))
                     }
-                    .foregroundColor(.white)
+                    .foregroundColor(Color(hex: "#0E0E10"))
                     .padding(.horizontal, 7)
                     .padding(.vertical, 3)
-                    .background(
-                        LinearGradient(
-                            colors: [.brandPrimary, .brandSecondary],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
-                    .cornerRadius(8)
+                    .background(Color.brandPrimary)
+                    .cornerRadius(6)
                 }
 
                 Text("Smart Subscription & Expense Intelligence")

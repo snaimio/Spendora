@@ -5,33 +5,44 @@
 
 import SwiftUI
 
-// MARK: - CountdownChip (Apple System Badge)
+// MARK: - CountdownChip (Luxury Status Badge)
 
 /**
- `CountdownChip` renders an Apple HIG status badge with system colors:
- - Safe Paid (> 7 Days): Apple Green (#34C759)
- - Due Soon (1-7 Days): Apple Orange (#FF9500)
- - Overdue / Due Today: Apple Red (#FF3B30)
- - Cancelled / Paused: Apple Gray (#8E8E93)
+ `CountdownChip` renders a refined dark-mode status pill container:
+ - Paid / Safe (> 7 Days): Dark Emerald container with Subtle Green (#30D158)
+ - Due Soon (1-7 Days): Warm Rose-Gold container (#C6A473)
+ - Overdue / Due Today: System Red (#FF453A)
+ - Cancelled / Paused: Muted Slate (#8E8E93)
  */
 struct CountdownChip: View {
     let daysRemaining: Int
     var isCancelled: Bool = false
-    @Environment(\.colorScheme) private var colorScheme
     
     private var isSafePaid: Bool {
         daysRemaining > 7 && !isCancelled
     }
     
-    private var badgeColor: Color {
+    private var badgeTextColor: Color {
         if isCancelled {
-            return Color.textSecondary
+            return Color(hex: "#8E8E93")
         } else if daysRemaining <= 0 {
-            return Color.brandDanger
+            return Color(hex: "#FF453A")
         } else if daysRemaining <= 7 {
-            return Color.brandWarning
+            return Color(hex: "#C6A473")
         } else {
-            return Color.brandSuccess
+            return Color(hex: "#30D158")
+        }
+    }
+    
+    private var badgeBgColor: Color {
+        if isCancelled {
+            return Color(hex: "#8E8E93").opacity(0.14)
+        } else if daysRemaining <= 0 {
+            return Color(hex: "#FF453A").opacity(0.14)
+        } else if daysRemaining <= 7 {
+            return Color(hex: "#C6A473").opacity(0.14)
+        } else {
+            return Color(hex: "#30D158").opacity(0.14)
         }
     }
     
@@ -66,20 +77,20 @@ struct CountdownChip: View {
     }
     
     var body: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: 5) {
             Image(systemName: badgeIcon)
                 .font(.system(size: 10, weight: .semibold))
-                .foregroundColor(badgeColor)
+                .foregroundColor(badgeTextColor)
             
             Text(badgeText)
                 .font(AppStyles.Typography.micro)
-                .foregroundColor(badgeColor)
+                .foregroundColor(badgeTextColor)
                 .lineLimit(1)
                 .fixedSize(horizontal: true, vertical: false)
         }
         .padding(.horizontal, 8)
-        .padding(.vertical, 3.5)
-        .background(badgeColor.opacity(colorScheme == .dark ? 0.16 : 0.10))
-        .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+        .padding(.vertical, 4)
+        .background(badgeBgColor)
+        .clipShape(Capsule())
     }
 }

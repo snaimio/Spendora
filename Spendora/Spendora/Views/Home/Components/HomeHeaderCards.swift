@@ -5,12 +5,12 @@
 
 import SwiftUI
 
-// MARK: - HeroCardView (Apple HIG Executive Financial Summary)
+// MARK: - HeroCardView (Slate & Rose-Gold Executive Dashboard Header)
 
 /**
- `HeroCardView` presents the primary executive dashboard components formatted to Apple's exacting standards:
- 1. `ThisMonthCardView`: Clean, focused card with 42pt Black Hero spend figure, budget usage bar, and Next Charge section.
- 2. `ExecutiveMetricsRow`: 3-Column balanced statistics (Yearly Run Rate, Monthly Average, Active Services count).
+ `HeroCardView` presents the primary executive dashboard components formatted to Spendora's luxury dark standards:
+ 1. `ThisMonthCardView`: Glassmorphic #1C1C1E card with large white spend figure, rose-gold budget progress bar, and Next Charge section.
+ 2. `ExecutiveMetricsRow`: 3-Column balanced statistics (Yearly, Average, Total).
  */
 struct HeroCardView: View {
 
@@ -30,7 +30,7 @@ struct HeroCardView: View {
 
     var body: some View {
         VStack(spacing: AppStyles.Spacing.medium) {
-            // CARD 1: Apple Executive Monthly Spend Card
+            // CARD 1: Executive Monthly Spend Card
             ThisMonthCardView(
                 totalMonthly: totalMonthly,
                 totalYearly: totalYearly,
@@ -39,7 +39,7 @@ struct HeroCardView: View {
                 nextSubscription: nextSubscription
             )
             
-            // CARD 2: 3-Column Balanced Metric Cards (Yearly | Average | Total)
+            // CARD 2: 3-Column Metric Tiles (Yearly | Average | Total)
             ExecutiveMetricsRow(
                 totalYearly: totalYearly,
                 averageMonthly: averageMonthlyCost,
@@ -57,7 +57,6 @@ struct ThisMonthCardView: View {
     let count: Int
     let subscriptionCount: Int
     var nextSubscription: Subscription? = nil
-    @Environment(\.colorScheme) private var colorScheme
 
     private var monthlyBudget: Double {
         BudgetService.shared.monthlyBudget
@@ -69,8 +68,8 @@ struct ThisMonthCardView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            VStack(alignment: .leading, spacing: 14) {
-                // Section Title: THIS MONTH (11pt Semibold Tracking)
+            VStack(alignment: .leading, spacing: 16) {
+                // Section Header: THIS MONTH (11pt Semibold Tracking)
                 HStack {
                     Text("THIS MONTH")
                         .font(AppStyles.Typography.micro)
@@ -82,7 +81,7 @@ struct ThisMonthCardView: View {
                     if monthlyBudget > 0 {
                         HStack(spacing: 4) {
                             Circle()
-                                .fill(budgetProgress >= 0.9 ? Color.brandSecondary : Color.brandSuccess)
+                                .fill(budgetProgress >= 0.9 ? Color.brandSecondary : Color.brandPrimary)
                                 .frame(width: 6, height: 6)
                             
                             Text(String(format: "%.0f%% used", budgetProgress * 100))
@@ -92,11 +91,11 @@ struct ThisMonthCardView: View {
                     }
                 }
 
-                // Main Monthly Spend Hero Amount (42pt Black Monospaced)
-                VStack(alignment: .leading, spacing: 2) {
+                // Main Monthly Spend Hero Amount (42pt Bold White Monospaced)
+                VStack(alignment: .leading, spacing: 4) {
                     Text(CurrencyManager.shared.format(totalMonthly))
                         .font(AppStyles.Typography.heroPrice)
-                        .foregroundColor(.textPrimary)
+                        .foregroundColor(.white)
                         .contentTransition(.numericText())
                         .lineLimit(1)
                         .minimumScaleFactor(0.6)
@@ -106,14 +105,14 @@ struct ThisMonthCardView: View {
                         .foregroundColor(.textSecondary)
                 }
                 
-                // Budget Progress Bar
+                // Rose-Gold Budget Progress Bar
                 if monthlyBudget > 0 {
                     VStack(alignment: .leading, spacing: 6) {
                         GeometryReader { geo in
                             ZStack(alignment: .leading) {
                                 Capsule()
-                                    .fill(colorScheme == .dark ? Color.white.opacity(0.12) : Color.black.opacity(0.06))
-                                    .frame(height: 6)
+                                    .fill(Color.white.opacity(0.08))
+                                    .frame(height: 5)
                                 
                                 Capsule()
                                     .fill(
@@ -121,10 +120,10 @@ struct ThisMonthCardView: View {
                                             ? Color.brandSecondary
                                             : Color.brandPrimary
                                     )
-                                    .frame(width: max(6, geo.size.width * CGFloat(budgetProgress)), height: 6)
+                                    .frame(width: max(6, geo.size.width * CGFloat(budgetProgress)), height: 5)
                             }
                         }
-                        .frame(height: 6)
+                        .frame(height: 5)
                         
                         HStack {
                             Text("Budget: \(CurrencyManager.shared.format(monthlyBudget))")
@@ -144,7 +143,7 @@ struct ThisMonthCardView: View {
             // Next Charge Spotlight Sub-Section
             if let next = nextSubscription {
                 Divider()
-                    .background(colorScheme == .dark ? Color.white.opacity(0.08) : Color.black.opacity(0.06))
+                    .background(Color(hex: "#2C2C2E"))
                 
                 VStack(alignment: .leading, spacing: 10) {
                     HStack {
@@ -161,10 +160,10 @@ struct ThisMonthCardView: View {
                         ZStack {
                             Circle()
                                 .fill(next.categoryEnum.color.opacity(0.15))
-                                .frame(width: 38, height: 38)
+                                .frame(width: 40, height: 40)
                             
                             Image(systemName: UniqueSubscriptionThemeHelper.resolveIcon(for: next))
-                                .font(.system(size: 16, weight: .semibold))
+                                .font(.system(size: 17, weight: .semibold))
                                 .foregroundColor(next.categoryEnum.color)
                         }
                         
@@ -172,7 +171,7 @@ struct ThisMonthCardView: View {
                         VStack(alignment: .leading, spacing: 2) {
                             Text(next.displayName)
                                 .font(AppStyles.Typography.headline)
-                                .foregroundColor(.textPrimary)
+                                .foregroundColor(.white)
                                 .lineLimit(1)
                             
                             Text(next.formattedNextBillingDate)
@@ -185,14 +184,14 @@ struct ThisMonthCardView: View {
                         // Cost Figure
                         Text(CurrencyManager.shared.format(next.isOneTime ? next.cost : next.monthlyCost))
                             .font(Font.system(size: 17, weight: .semibold, design: .default).monospacedDigit())
-                            .foregroundColor(.textPrimary)
+                            .foregroundColor(.white)
                     }
                     
                     // Status Badge ALWAYS on its own new dedicated row
                     CountdownChip(daysRemaining: next.daysUntilBilling, isCancelled: next.isCancelled)
                 }
                 .padding(AppStyles.Spacing.cardPadding)
-                .background(colorScheme == .dark ? Color.white.opacity(0.02) : Color.black.opacity(0.015))
+                .background(Color.white.opacity(0.02))
             }
         }
         .appleCard(cornerRadius: AppStyles.Radius.hero)
@@ -226,7 +225,7 @@ struct ExecutiveMetricsRow: View {
     }
 }
 
-// MARK: - MetricSubCard (Apple Minimalist Container)
+// MARK: - MetricSubCard (Apple Minimalist Slate Container)
 
 struct MetricSubCard: View {
     let title: String
@@ -240,8 +239,8 @@ struct MetricSubCard: View {
                 .lineLimit(1)
             
             Text(value)
-                .font(Font.system(size: 17, weight: .semibold, design: .default).monospacedDigit())
-                .foregroundColor(.textPrimary)
+                .font(Font.system(size: 16, weight: .semibold, design: .default).monospacedDigit())
+                .foregroundColor(.white)
                 .lineLimit(1)
                 .minimumScaleFactor(0.65)
         }
