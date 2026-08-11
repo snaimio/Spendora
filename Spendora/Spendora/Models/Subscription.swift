@@ -88,6 +88,12 @@ final class Subscription {
     /// Customizable notification reminder days before billing date (e.g. 0, 1, 3, 7 days, or -1 for disabled)
     var reminderDaysBefore: Int = 3  // reminderDaysBefore property
 
+    /// Previous billing date prior to last recorded payment (used for Undo)
+    var previousBillingDate: Date? = nil
+
+    /// Timestamp when a payment was last logged/recorded
+    var lastPaymentDate: Date? = nil
+
     /// Timestamp when record was created in app
     var createdAt: Date = Date()  // createdAt property
 

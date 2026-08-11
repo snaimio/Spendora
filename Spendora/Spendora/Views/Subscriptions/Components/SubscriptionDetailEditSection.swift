@@ -90,17 +90,16 @@ struct SubscriptionDetailEditSection: View {
                 Section("Record Payment") {
                     HStack {
                         Image(systemName: "creditcard.circle.fill")
-                            .font(.system(size: 20, weight: .bold))
-                            .foregroundColor(.brandPrimary)
+                            .font(.system(size: 20, weight: .semibold))
+                            .foregroundColor(SpendoraTheme.accent)
                         
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("Record Bill Payment")
-                                .font(.system(.body, design: .rounded))
-                                .fontWeight(.medium)
-                                .foregroundColor(.textPrimary)
-                            Text("Logs payment and advances billing date")
-                                .font(.system(.caption, design: .rounded))
-                                .foregroundColor(.textSecondary)
+                            Text("Record Payment")
+                                .font(.body)
+                                .foregroundColor(Color(.label))
+                            Text("Advances next billing date (reversible with Undo)")
+                                .font(.caption)
+                                .foregroundColor(Color(.secondaryLabel))
                         }
                         
                         Spacer()

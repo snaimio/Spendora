@@ -90,21 +90,38 @@ struct SubscriptionDetailViewSection: View {
                 DetailRow(icon: "repeat.circle.fill", title: "Billing Cycle", value: subscription.isOneTime ? "One-Time (Lifetime)" : (isYearly ? "Yearly" : "Monthly"))
             }
             
-            Section("Billing") {
+            Section("Billing & Payment Status") {
                 DetailRow(icon: "calendar", title: "Next Billing Date", value: subscription.formattedNextBillingDate)
-                DetailRow(icon: "clock.fill", title: "Days Until Billing", value: "\(subscription.daysUntilBilling) days")
+                
+                if subscription.isOverdue {
+                    DetailRow(icon: "exclamationmark.triangle.fill", title: "Due in", value: "Overdue by \(abs(subscription.daysUntilBilling)) \(abs(subscription.daysUntilBilling) == 1 ? "day" : "days")")
+                } else if subscription.daysUntilBilling == 0 {
+                    DetailRow(icon: "bell.fill", title: "Due in", value: "Due Today")
+                } else if subscription.daysUntilBilling == 1 {
+                    DetailRow(icon: "clock.fill", title: "Due in", value: "Due Tomorrow (1 day)")
+                } else {
+                    DetailRow(icon: "clock.fill", title: "Due in", value: "\(subscription.daysUntilBilling) days")
+                }
                 
                 if !subscription.isOneTime {
                     HStack {
                         Image(systemName: "creditcard.circle.fill")
-                            .foregroundColor(.brandPrimary)
+                            .foregroundColor(SpendoraTheme.accent)
                         Text("Record Payment")
-                            .font(AppStyles.Typography.body)
-                            .foregroundColor(.textPrimary)
+                            .font(.body)
+                            .foregroundColor(Color(.label))
                         Spacer()
                         MarkAsPaidButton(subscription: subscription)
                     }
                     .padding(.vertical, 2)
+                    
+                    if let lastPaid = subscription.lastPaymentDate {
+                        DetailRow(
+                            icon: "checkmark.seal.fill",
+                            title: "Last Payment Logged",
+                            value: lastPaid.formatted(date: .abbreviated, time: .shortened)
+                        )
+                    }
                 }
                 
                 if subscription.isOverdue {

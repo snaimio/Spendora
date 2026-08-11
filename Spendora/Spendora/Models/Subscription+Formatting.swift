@@ -115,8 +115,15 @@ extension Subscription {
         nextBillingDate.formatted(.dateTime.month(.abbreviated).day().year())
     }
 
+    var canUndoPayment: Bool {
+        previousBillingDate != nil
+    }
+
     func markAsPaid() {
         let calendar = Calendar.current
+        previousBillingDate = nextBillingDate
+        lastPaymentDate = Date()
+        
         if isYearly {
             if let next = calendar.date(byAdding: .year, value: 1, to: nextBillingDate) {
                 nextBillingDate = next
@@ -126,5 +133,12 @@ extension Subscription {
                 nextBillingDate = next
             }
         }
+    }
+
+    func undoPayment() {
+        guard let prev = previousBillingDate else { return }
+        nextBillingDate = prev
+        previousBillingDate = nil
+        lastPaymentDate = nil
     }
 }

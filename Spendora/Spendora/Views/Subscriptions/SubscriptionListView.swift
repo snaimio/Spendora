@@ -186,14 +186,31 @@ struct SubscriptionListView: View {
                 }
             }
             .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                Button {
-                    generator.impactOccurred()
-                    subscription.markAsPaid()
-                    try? modelContext.save()
-                } label: {
-                    Label("Paid", systemImage: "checkmark.circle")
+                if subscription.canUndoPayment {
+                    Button {
+                        generator.impactOccurred()
+                        withAnimation {
+                            subscription.undoPayment()
+                            try? modelContext.save()
+                            NotificationService.shared.schedule(for: subscription)
+                        }
+                    } label: {
+                        Label("Undo", systemImage: "arrow.uturn.backward.circle")
+                    }
+                    .tint(Color(.systemOrange))
+                } else if !subscription.isOneTime && !subscription.isCancelled {
+                    Button {
+                        generator.impactOccurred()
+                        withAnimation {
+                            subscription.markAsPaid()
+                            try? modelContext.save()
+                            NotificationService.shared.schedule(for: subscription)
+                        }
+                    } label: {
+                        Label("Paid", systemImage: "checkmark.circle")
+                    }
+                    .tint(SpendoraTheme.accent)
                 }
-                .tint(SpendoraTheme.accent)
             }
     }
 

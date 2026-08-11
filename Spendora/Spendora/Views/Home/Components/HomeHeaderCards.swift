@@ -158,16 +158,28 @@ struct ThisMonthCardView: View {
                             .foregroundColor(next.categoryEnum.color)
                     }
                     
-                    // Name .font(.headline), Date .font(.caption).foregroundColor(.secondary)
+                    // Name .font(.headline), Due in & Date .font(.caption).foregroundColor(.secondary)
                     VStack(alignment: .leading, spacing: 2) {
                         Text(next.displayName)
                             .font(.headline)
                             .foregroundColor(Color(.label))
                             .lineLimit(1)
                         
-                        Text(next.formattedNextBillingDate)
+                        let dueText: String = {
+                            if next.isOverdue {
+                                return "Overdue · \(next.formattedNextBillingDate)"
+                            } else if next.daysUntilBilling == 0 {
+                                return "Due Today · \(next.formattedNextBillingDate)"
+                            } else if next.daysUntilBilling == 1 {
+                                return "Due Tomorrow · \(next.formattedNextBillingDate)"
+                            } else {
+                                return "Due in \(next.daysUntilBilling) days · \(next.formattedNextBillingDate)"
+                            }
+                        }()
+                        
+                        Text(dueText)
                             .font(.caption)
-                            .foregroundColor(Color(.secondaryLabel))
+                            .foregroundColor(next.isOverdue ? Color(.systemRed) : (next.daysUntilBilling == 0 ? SpendoraTheme.accentText : Color(.secondaryLabel)))
                     }
                     
                     Spacer()
