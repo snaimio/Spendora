@@ -9,8 +9,8 @@ import SwiftData
 // MARK: - MarkAsPaidButton (Apple Native Action Pill with Undo)
 
 /**
- `MarkAsPaidButton` provides a one-tap subscription payment logger and undoer
- that advances the billing date, saves to SwiftData, and reschedules alerts.
+ `MarkAsPaidButton` provides a 1-tap subscription payment logger and undoer
+ with interactive scale feedback, clear button affordance, and instant date updates.
  */
 struct MarkAsPaidButton: View {
 
@@ -35,7 +35,7 @@ struct MarkAsPaidButton: View {
             } label: {
                 HStack(spacing: 5) {
                     Image(systemName: "checkmark.circle.fill")
-                        .font(.system(size: 11, weight: .semibold))
+                        .font(.system(size: 12, weight: .semibold))
                         .foregroundColor(Color(.systemGreen))
                     
                     Text("Paid")
@@ -47,15 +47,15 @@ struct MarkAsPaidButton: View {
                         .foregroundColor(Color(.secondaryLabel))
                 }
                 .padding(.horizontal, 10)
-                .padding(.vertical, 5)
+                .padding(.vertical, 6)
                 .background(Color(.systemGreen).opacity(0.12))
                 .clipShape(Capsule())
                 .overlay(
                     Capsule()
-                        .stroke(Color(.systemGreen).opacity(0.2), lineWidth: 0.5)
+                        .stroke(Color(.systemGreen).opacity(0.25), lineWidth: 0.8)
                 )
             }
-            .buttonStyle(.plain)
+            .buttonStyle(PressablePillStyle())
         } else {
             // State: Unpaid, allow Record Payment
             Button {
@@ -68,18 +68,33 @@ struct MarkAsPaidButton: View {
             } label: {
                 HStack(spacing: 5) {
                     Image(systemName: "creditcard.fill")
-                        .font(.system(size: 10, weight: .semibold))
+                        .font(.system(size: 11, weight: .semibold))
                     
                     Text("Record Payment")
                         .font(.caption2.weight(.semibold))
                 }
                 .foregroundColor(SpendoraTheme.accentText)
                 .padding(.horizontal, 10)
-                .padding(.vertical, 5)
+                .padding(.vertical, 6)
                 .background(SpendoraTheme.accentTint)
                 .clipShape(Capsule())
+                .overlay(
+                    Capsule()
+                        .stroke(SpendoraTheme.accent.opacity(0.25), lineWidth: 0.8)
+                )
             }
-            .buttonStyle(.plain)
+            .buttonStyle(PressablePillStyle())
         }
+    }
+}
+
+// MARK: - PressablePillStyle (Apple Responsive Feedback)
+
+private struct PressablePillStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.93 : 1.0)
+            .opacity(configuration.isPressed ? 0.85 : 1.0)
+            .animation(.easeInOut(duration: 0.12), value: configuration.isPressed)
     }
 }

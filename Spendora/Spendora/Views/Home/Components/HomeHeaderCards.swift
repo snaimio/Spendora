@@ -184,10 +184,16 @@ struct ThisMonthCardView: View {
                     
                     Spacer()
                     
-                    // Cost cardAmount in Sage Teal accent color
-                    Text(CurrencyManager.shared.format(next.isOneTime ? next.cost : next.monthlyCost))
-                        .font(SpendoraTheme.cardAmount)
-                        .foregroundColor(SpendoraTheme.accent)
+                    // Cost & 1-Tap Record Payment Pill
+                    VStack(alignment: .trailing, spacing: 4) {
+                        Text(CurrencyManager.shared.format(next.isOneTime ? next.cost : next.monthlyCost))
+                            .font(SpendoraTheme.cardAmount)
+                            .foregroundColor(SpendoraTheme.accent)
+                        
+                        if !next.isOneTime {
+                            MarkAsPaidButton(subscription: next)
+                        }
+                    }
                 }
                 .padding(SpendoraTheme.cardPadding)
             }

@@ -4,14 +4,16 @@
 //
 
 import SwiftUI
+import SwiftData
 
-// MARK: - SubscriptionCardView (Apple HIG Card Anatomy)
+// MARK: - SubscriptionCardView (Apple HIG Card Anatomy with 1-Tap Payment)
 
 struct SubscriptionCardView: View {
 
     // MARK: - Properties
 
     let subscription: Subscription
+    @Environment(\.modelContext) private var modelContext
 
     private var categoryColor: Color {
         subscription.isCancelled ? Color(.tertiaryLabel) : subscription.categoryEnum.color
@@ -74,9 +76,17 @@ struct SubscriptionCardView: View {
                     }
                 }
                 
-                // Row 4: Status Badge
-                StatusBadgeView(daysUntil: subscription.daysUntilBilling, isCancelled: subscription.isCancelled)
-                    .padding(.top, 2)
+                // Row 4: Status Badge & 1-Tap Record Payment Button
+                HStack {
+                    StatusBadgeView(daysUntil: subscription.daysUntilBilling, isCancelled: subscription.isCancelled)
+                    
+                    Spacer()
+                    
+                    if !subscription.isOneTime && !subscription.isCancelled {
+                        MarkAsPaidButton(subscription: subscription)
+                    }
+                }
+                .padding(.top, 4)
             }
         }
         .padding(SpendoraTheme.cardPadding)
@@ -86,5 +96,32 @@ struct SubscriptionCardView: View {
             RoundedRectangle(cornerRadius: SpendoraTheme.cardRadius, style: .continuous)
                 .stroke(Color(.separator), lineWidth: 0.5)
         )
+        .contextMenu {
+            if !subscription.isOneTime && !subscription.isCancelled {
+                Button {
+                    if subscription.canUndoPayment {
+                        subscription.undoPayment()
+                    } else {
+                        subscription.markAsPaid()
+                    }
+                    try? modelContext.save()
+                    NotificationService.shared.schedule(for: subscription)
+                } label: {
+                    if subscription.canUndoPayment {
+                        Label("Undo Payment", systemImage: "arrow.uturn.backward.circle")
+                    } else {
+                        Label("Record Payment", systemImage: "creditcard.circle")
+                    }
+                }
+            }
+            
+            if let link = subscription.linkURL, let url = URL(string: link) {
+                Button {
+                    UIApplication.shared.open(url)
+                } label: {
+                    Label("Manage on Website", systemImage: "safari")
+                }
+            }
+        }
     }
 }

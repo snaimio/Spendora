@@ -76,6 +76,11 @@ struct SubscriptionDetailViewSection: View {
                         }
                     }
                     .padding(.top, 2)
+                    
+                    if !subscription.isOneTime && !subscription.isCancelled {
+                        MarkAsPaidButton(subscription: subscription)
+                            .padding(.top, 4)
+                    }
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 8)
