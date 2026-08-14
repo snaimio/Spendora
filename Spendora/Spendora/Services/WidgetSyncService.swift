@@ -1,41 +1,22 @@
 //
 //  WidgetSyncService.swift
+//  Spendora
 //
-
-/**
- * Main/Core Functions & Purpose:
- * WidgetSyncService class syncing live subscription statistics to iOS Home Screen Widgets.
- * Writes current monthly total, next upcoming charge name, cost, and due date into shared App Group UserDefaults (`group.com.trios2026sn.Spendora`),
- * and forces WidgetCenter to reload all Widget timelines immediately.
- */
 
 import Foundation
 import WidgetKit
 import SwiftUI
 
-
 // MARK: - WidgetSyncService
 
 /**
- `WidgetSyncService` is a class that manages core data, layout, or business logic within Spendora.
- 
- ## Features
- - Serves as a key component for widgetsyncservice handling
- - Adheres to Swift single responsibility principles
- - Integrates with SwiftUI reactive state updates
- 
- ## Data Flow
- Properties in `WidgetSyncService` are initialized or updated reactively based on user interaction
- and service callbacks.
- 
- - Important: Always verify state bindings before executing main thread actions.
- - Note: Part of the Spendora architecture.
- - SeeAlso: `SpendoraApp`
+ `WidgetSyncService` synchronizes active subscription statistics, next upcoming charges,
+ and budget limits to the shared App Group UserDefaults (`group.com.trios2026sn.Spendora`),
+ and immediately triggers WidgetCenter timeline reloads.
  */
 class WidgetSyncService {
 
-    // MARK: - Properties
-
+    // MARK: - Core Methods
 
     /// Calculates current subscription totals and syncs payload to App Group UserDefaults
     static func update(subscriptions: [Subscription]) {
@@ -54,9 +35,12 @@ class WidgetSyncService {
         defaults?.set(totalMonthly, forKey: "totalMonthly")
         defaults?.set(totalYearly, forKey: "totalYearly")
         defaults?.set(activeSubs.count, forKey: "activeCount")
-        defaults?.set(nextSub?.displayName ?? "None", forKey: "nextSubName")
+        defaults?.set(nextSub?.displayName ?? "No upcoming bills", forKey: "nextSubName")
         defaults?.set(nextSub?.monthlyCost ?? 0, forKey: "nextSubCost")
         defaults?.set(nextSub?.nextBillingDate.timeIntervalSince1970 ?? 0, forKey: "nextSubDate")
+        defaults?.set(nextSub != nil ? UniqueSubscriptionThemeHelper.resolveIcon(for: nextSub!) : "creditcard.fill", forKey: "nextSubIcon")
+        defaults?.set(nextSub?.effectiveCategory ?? "Subscriptions", forKey: "nextSubCategory")
+        defaults?.set(BudgetService.shared.monthlyBudget, forKey: "monthlyBudget")
         defaults?.set(CurrencyManager.shared.currentCurrency.symbol, forKey: "currencySymbol")
 
         WidgetCenter.shared.reloadAllTimelines()
@@ -80,15 +64,7 @@ class WidgetSyncService {
         print("✅ Widget data updated manually - Total: \(totalMonthly), Next: \(nextSubName)")
     }
 
-
-    /**
-     Executes `clearWidgetData` for component logic.
-     
-     
-     ## Behavior
-     1. Validates method arguments and current state.
-     2. Executes core computation or state mutation.
-     */
+    /// Clears widget data on reset
     static func clearWidgetData() {
         let defaults = UserDefaults(suiteName: "group.com.trios2026sn.Spendora")
 
@@ -98,6 +74,9 @@ class WidgetSyncService {
         defaults?.removeObject(forKey: "nextSubName")
         defaults?.removeObject(forKey: "nextSubCost")
         defaults?.removeObject(forKey: "nextSubDate")
+        defaults?.removeObject(forKey: "nextSubIcon")
+        defaults?.removeObject(forKey: "nextSubCategory")
+        defaults?.removeObject(forKey: "monthlyBudget")
         defaults?.removeObject(forKey: "currencySymbol")
 
         WidgetCenter.shared.reloadAllTimelines()
