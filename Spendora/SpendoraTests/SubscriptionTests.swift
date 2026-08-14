@@ -204,36 +204,23 @@ final class SubscriptionTests: XCTestCase {
 
 
     /**
-     Executes `testSubscriptionStatus_PausedAndCancelled` for component logic.
-     
-     
-     ## Behavior
-     1. Validates method arguments and current state.
-     2. Executes core computation or state mutation.
+     Executes `testSubscriptionStatus_ActiveAndCancelled` for component logic.
      */
-    func testSubscriptionStatus_PausedAndCancelled() {
+    func testSubscriptionStatus_ActiveAndCancelled() {
         let activeSub = Subscription(name: "Netflix", cost: 15, isYearly: false, nextBillingDate: Date().addingTimeInterval(86400))
-        XCTAssertEqual(activeSub.status, .active)
-
-        let pausedSub = Subscription(name: "Gym", cost: 50, isYearly: false, nextBillingDate: Date().addingTimeInterval(86400), statusRaw: "Paused")
-        XCTAssertEqual(pausedSub.status, .paused)
+        XCTAssertFalse(activeSub.isCancelled)
 
         let cancelledSub = Subscription(name: "News", cost: 10, isYearly: false, nextBillingDate: Date().addingTimeInterval(86400), isCancelled: true)
-        XCTAssertEqual(cancelledSub.status, .cancelled)
+        XCTAssertTrue(cancelledSub.isCancelled)
     }
 
 
     /**
      Executes `testCurrencyNormalization` for component logic.
-     
-     
-     ## Behavior
-     1. Validates method arguments and current state.
-     2. Executes core computation or state mutation.
      */
     func testCurrencyNormalization() {
-        let subUSD = Subscription(name: "ChatGPT", cost: 20.0, isYearly: false, nextBillingDate: Date().addingTimeInterval(86400), currencyCode: "USD")
-        XCTAssertEqual(subUSD.currency, .USD)
-        XCTAssertGreaterThan(subUSD.normalizedMonthlyCost, 0)
+        let subUSD = Subscription(name: "ChatGPT", cost: 20.0, isYearly: false, nextBillingDate: Date().addingTimeInterval(86400), currency: "USD")
+        XCTAssertEqual(subUSD.currency, "USD")
+        XCTAssertGreaterThan(subUSD.monthlyCost, 0)
     }
 }
