@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="screenshots/app_logo.jpg" width="96" alt="Spendora App Logo" />
+</p>
+
 # 💎 Spendora — Smart Subscription & Expense Tracker
 ### Mobile Application Development Capstone Project 2026
 
