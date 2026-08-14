@@ -1,23 +1,22 @@
-<p align="center">
+<div align="center">
   <img src="screenshots/app_logo.jpg" width="96" alt="Spendora App Logo" />
-</p>
+  <h1>💎 Spendora — Smart Subscription & Expense Tracker</h1>
+  <p><b>Mobile Application Development Capstone Project 2026</b></p>
 
-# 💎 Spendora — Smart Subscription & Expense Tracker
-### Mobile Application Development Capstone Project 2026
+  <p>
+    <img src="https://img.shields.io/badge/Platform-iOS%2017.0%2B-000000?style=for-the-badge&logo=apple&logoColor=white" alt="iOS 17+">
+    <img src="https://img.shields.io/badge/Swift-5.9%20%2F%206.0-FA7343?style=for-the-badge&logo=swift&logoColor=white" alt="Swift 6.0">
+    <img src="https://img.shields.io/badge/Framework-SwiftUI-007AFF?style=for-the-badge&logo=swift&logoColor=white" alt="SwiftUI">
+    <img src="https://img.shields.io/badge/Database-SwiftData-5AC8FA?style=for-the-badge&logo=apple&logoColor=white" alt="SwiftData">
+    <img src="https://img.shields.io/badge/Widgets-WidgetKit-34C759?style=for-the-badge&logo=apple&logoColor=white" alt="WidgetKit">
+    <img src="https://img.shields.io/badge/Architecture-Clean%20MVVM-FF9500?style=for-the-badge" alt="Clean MVVM">
+    <img src="https://img.shields.io/badge/License-MIT-34C759?style=for-the-badge" alt="MIT License">
+  </p>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Platform-iOS%2017.0%2B-000000?style=for-the-badge&logo=apple&logoColor=white" alt="iOS 17+">
-  <img src="https://img.shields.io/badge/Swift-5.9%20%2F%206.0-FA7343?style=for-the-badge&logo=swift&logoColor=white" alt="Swift 6.0">
-  <img src="https://img.shields.io/badge/Framework-SwiftUI-007AFF?style=for-the-badge&logo=swift&logoColor=white" alt="SwiftUI">
-  <img src="https://img.shields.io/badge/Database-SwiftData-5AC8FA?style=for-the-badge&logo=apple&logoColor=white" alt="SwiftData">
-  <img src="https://img.shields.io/badge/Widgets-WidgetKit-34C759?style=for-the-badge&logo=apple&logoColor=white" alt="WidgetKit">
-  <img src="https://img.shields.io/badge/Architecture-Clean%20MVVM-FF9500?style=for-the-badge" alt="Clean MVVM">
-  <img src="https://img.shields.io/badge/License-MIT-34C759?style=for-the-badge" alt="MIT License">
-</p>
-
-<p align="center">
-  <b>A privacy-first native iOS application for tracking, analyzing, and managing recurring subscriptions and expenses.</b>
-</p>
+  <p>
+    <i>A privacy-first native iOS application for tracking, analyzing, and managing recurring subscriptions and expenses.</i>
+  </p>
+</div>
 
 ---
 
