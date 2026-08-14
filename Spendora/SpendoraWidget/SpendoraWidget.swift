@@ -31,29 +31,20 @@ struct SpendoraLogoEmblem: View {
     var size: CGFloat = 20
 
     var body: some View {
-        Group {
-            if let uiImage = UIImage(named: "AppLogo") ?? UIImage(named: "SpendoraLogo") {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: size, height: size)
-                    .clipShape(RoundedRectangle(cornerRadius: size * 0.24, style: .continuous))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: size * 0.24, style: .continuous)
-                            .stroke(Color.white.opacity(0.2), lineWidth: 0.5)
-                    )
-            } else {
-                ZStack {
-                    RoundedRectangle(cornerRadius: size * 0.24, style: .continuous)
-                        .fill(WidgetTheme.accent)
-                        .frame(width: size, height: size)
-                    
-                    Image(systemName: "creditcard.fill")
-                        .font(.system(size: size * 0.5, weight: .bold))
-                        .foregroundColor(.white)
-                }
-            }
-        }
+        Image("SpendoraLogo")
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .frame(width: size, height: size)
+            .clipShape(RoundedRectangle(cornerRadius: size * 0.23, style: .continuous))
+            .background(
+                RoundedRectangle(cornerRadius: size * 0.25, style: .continuous)
+                    .fill(Color.white)
+                    .shadow(color: Color.black.opacity(0.2), radius: 2, x: 0, y: 1)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: size * 0.23, style: .continuous)
+                    .stroke(Color.white.opacity(0.25), lineWidth: 0.5)
+            )
     }
 }
 
