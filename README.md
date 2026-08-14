@@ -55,15 +55,30 @@ Built with **SwiftUI**, **SwiftData**, **Swift Charts**, and **WidgetKit**, Spen
 
 ## ✨ Key Features
 
-* **Executive Dashboard**: Monthly spend total in San Francisco Rounded typography, budget progress gauge, active count, and next upcoming bill with live *"Due in X days"* countdown.
-* **1-Tap Record Payment & Instant Undo**: Log payments directly from the next charge card or subscription list to advance renewal dates (+1 month / +1 year) and update notifications. Made a mistake? Tap Undo to instantly roll back.
-* **Subscription Presets & Custom Entries**: 15+ popular provider presets (Netflix, Spotify, ChatGPT, Apple One) with brand colors, customizable theme chips, billing cycles, and advance reminder alerts.
-* **Search, Filtering & Swipe Actions**: Search subscriptions, filter by active/cancelled status, sort by price or renewal date, swipe to mark paid or undo, and long-press for iOS context menus.
-* **Direct Cancellation Links**: Open the provider's official cancellation webpage directly in Safari with one tap.
-* **AI Cost Insights & Value Scoring**: Rate subscriptions 1–5 stars. The app identifies underused services and calculates potential annual savings from cancelling or downgrading.
-* **Yearly Reports & Data Export**: Multi-year historical and projected spending comparison via Swift Charts, category breakdowns, PDF statement generation, and CSV spreadsheet export.
-* **Home & Lock Screen Widgets**: Small, Medium, Large, and Lock Screen widgets styled in Midnight Sage Teal (`#0E2426`) with the official Spendora logo, updating live via App Groups (`group.com.trios2026sn.Spendora`).
-* **Privacy-First Data Control**: 100% offline SwiftData storage, multi-currency formatting (CAD, USD, EUR, GBP, etc.), custom reminder times, and full JSON backup and restore.
+### 📊 Dashboard & Smart Tracking
+* **Executive Spending Overview**: Live monthly run rate in San Francisco Rounded typography alongside a real-time budget utilization progress bar.
+* **1-Tap Payment & Instant Undo**: Log payments directly from the dashboard to advance renewal dates (+1 month or +1 year) and reschedule reminders. Tap Undo anytime to roll back immediately.
+* **Live "Due in X Days" Countdowns**: Dynamic countdown badges alerting you to upcoming renewal charges.
+
+<br>
+
+### ➕ Fast Creation & Management
+* **Preset Catalog & Color Chips**: Quick-add presets for 15+ popular services (Netflix, Spotify, ChatGPT, Apple One) with custom theme colors and flexible billing cycles.
+* **Search, Filters & Swipe Actions**: Search subscriptions, filter by active or cancelled status, sort by price or renewal date, swipe to log payments, and long-press for native iOS context menus.
+* **Direct Web Cancellation**: 1-tap launcher opening the provider's official cancellation page directly in Safari.
+
+<br>
+
+### 💡 Financial Intelligence & Reports
+* **AI Cost Optimization**: 1–5 star utility scoring engine that flags low-value subscriptions and calculates potential annual savings.
+* **Yearly Trends & Statements**: Interactive Swift Charts comparing historical and projected spending, category breakdowns, and exportable PDF statements & CSV spreadsheets.
+* **Gamified Savings Score**: Dynamic financial health score and milestone challenges rewarding you as you cut unnecessary expenses.
+
+<br>
+
+### 📱 Widgets, Privacy & Settings
+* **Home & Lock Screen Widgets**: Small, Medium, Large, and Lock Screen accessories styled in Midnight Sage Teal (`#0E2426`) with live App Group synchronization.
+* **100% Offline Privacy**: On-device persistence with SwiftData, multi-currency formatting (10+ currencies), custom reminder delivery times, and full JSON backup & restore.
 
 ---
 
