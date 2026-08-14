@@ -63,6 +63,9 @@ struct Provider: TimelineProvider {
         let nextCategory = defaults?.string(forKey: "nextSubCategory") ?? "Subscriptions"
         let budget = defaults?.double(forKey: "monthlyBudget") ?? 0
         let symbol = defaults?.string(forKey: "currencySymbol") ?? "$"
+        let formattedMonthly = defaults?.string(forKey: "formattedMonthly")
+        let formattedYearly = defaults?.string(forKey: "formattedYearly")
+        let formattedNextCost = defaults?.string(forKey: "formattedNextCost")
         
         let upcomingDate = nextTime > 0 ? Date(timeIntervalSince1970: nextTime) : nil
         
@@ -77,7 +80,10 @@ struct Provider: TimelineProvider {
             upcomingIcon: nextIcon,
             upcomingCategory: nextCategory,
             monthlyBudget: budget,
-            currencySymbol: symbol
+            currencySymbol: symbol,
+            formattedMonthlyStored: formattedMonthly,
+            formattedYearlyStored: formattedYearly,
+            formattedNextCostStored: formattedNextCost
         )
         
         // Refresh every 30 minutes
@@ -102,18 +108,30 @@ struct SimpleEntry: TimelineEntry {
     let upcomingCategory: String
     let monthlyBudget: Double
     let currencySymbol: String
+    var formattedMonthlyStored: String? = nil
+    var formattedYearlyStored: String? = nil
+    var formattedNextCostStored: String? = nil
     
     var formattedMonthly: String {
+        if let stored = formattedMonthlyStored, !stored.isEmpty {
+            return stored
+        }
         let amount = String(format: "%.2f", totalSpending)
         return "\(currencySymbol)\(amount)"
     }
     
     var formattedYearly: String {
+        if let stored = formattedYearlyStored, !stored.isEmpty {
+            return stored
+        }
         let amount = String(format: "%.2f", totalYearly)
         return "\(currencySymbol)\(amount)"
     }
     
     var formattedUpcomingCost: String {
+        if let stored = formattedNextCostStored, !stored.isEmpty {
+            return stored
+        }
         let amount = String(format: "%.2f", upcomingCost)
         return "\(currencySymbol)\(amount)"
     }

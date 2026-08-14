@@ -42,10 +42,15 @@ class WidgetSyncService {
         defaults?.set(nextSub?.effectiveCategory ?? "Subscriptions", forKey: "nextSubCategory")
         defaults?.set(BudgetService.shared.monthlyBudget, forKey: "monthlyBudget")
         defaults?.set(CurrencyManager.shared.currentCurrency.symbol, forKey: "currencySymbol")
+        
+        // Exact formatted strings matching main app CurrencyManager
+        defaults?.set(CurrencyManager.shared.format(totalMonthly), forKey: "formattedMonthly")
+        defaults?.set(CurrencyManager.shared.format(totalYearly), forKey: "formattedYearly")
+        defaults?.set(CurrencyManager.shared.format(nextSub != nil ? (nextSub!.isOneTime ? nextSub!.cost : nextSub!.monthlyCost) : 0), forKey: "formattedNextCost")
 
         WidgetCenter.shared.reloadAllTimelines()
 
-        print("✅ Widget data updated - Total: \(totalMonthly), Next: \(nextSub?.displayName ?? "None")")
+        print("✅ Widget data updated - Total: \(totalMonthly), Formatted: \(CurrencyManager.shared.format(totalMonthly)), Next: \(nextSub?.displayName ?? "None")")
     }
 
     static func update(
@@ -58,6 +63,7 @@ class WidgetSyncService {
         defaults?.set(totalMonthly, forKey: "totalMonthly")
         defaults?.set(nextSubName, forKey: "nextSubName")
         defaults?.set(nextSubDate.timeIntervalSince1970, forKey: "nextSubDate")
+        defaults?.set(CurrencyManager.shared.format(totalMonthly), forKey: "formattedMonthly")
 
         WidgetCenter.shared.reloadAllTimelines()
 
@@ -78,6 +84,9 @@ class WidgetSyncService {
         defaults?.removeObject(forKey: "nextSubCategory")
         defaults?.removeObject(forKey: "monthlyBudget")
         defaults?.removeObject(forKey: "currencySymbol")
+        defaults?.removeObject(forKey: "formattedMonthly")
+        defaults?.removeObject(forKey: "formattedYearly")
+        defaults?.removeObject(forKey: "formattedNextCost")
 
         WidgetCenter.shared.reloadAllTimelines()
 

@@ -192,6 +192,12 @@ struct HomeView: View {
             .sheet(isPresented: $showingAIInsights) {
                 AIInsightsView(subscriptions: subscriptions)
             }
+            .onAppear {
+                WidgetSyncService.update(subscriptions: subscriptions)
+            }
+            .onChange(of: subscriptions) { _, newSubs in
+                WidgetSyncService.update(subscriptions: newSubs)
+            }
             .animation(.spring(response: 0.35, dampingFraction: 0.8), value: subscriptions.count)
         }
     }

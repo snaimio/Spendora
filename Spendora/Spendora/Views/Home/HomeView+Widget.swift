@@ -1,49 +1,20 @@
 //
 //  HomeView+Widget.swift
+//  Spendora
 //
-
-/**
- * Main/Core Functions & Purpose:
- * Extension for HomeView providing updateWidgetData method for App Group shared storage and timeline refresh.
- */
 
 import SwiftUI
 import WidgetKit
 
-
 // MARK: - HomeView Extension
 
-/**
- Extension on `HomeView` providing utility methods and helpers.
- */
 extension HomeView {
     
-
     /**
-     Executes `updateWidgetData` for component logic.
-     
-     
-     ## Behavior
-     1. Validates method arguments and current state.
-     2. Executes core computation or state mutation.
+     Synchronizes active subscription calculations, next charge, and currency formatting to iOS Widgets.
      */
     func updateWidgetData() {
-        let total = subscriptions.reduce(0) { $0 + $1.monthlyCost }
-        let next = subscriptions
-            .filter { !$0.isOverdue }
-            .sorted { $0.nextBillingDate < $1.nextBillingDate }
-            .first
-        
-        guard let defaults = UserDefaults(suiteName: "group.com.trios2026sn.Spendora") else {
-            return
-        }
-        
-        defaults.set(total, forKey: "totalMonthly")
-        defaults.set(next?.displayName ?? "None", forKey: "nextSubName")
-        defaults.set(next?.nextBillingDate.timeIntervalSince1970 ?? 0, forKey: "nextSubDate")
-        defaults.set(next?.monthlyCost ?? 0.0, forKey: "nextSubCost")
-        
-        WidgetCenter.shared.reloadAllTimelines()
+        WidgetSyncService.update(subscriptions: subscriptions)
         
         if CloudSyncService.shared.autoSyncEnabled {
             CloudSyncService.shared.syncSubscriptions(subscriptions)
