@@ -6,11 +6,55 @@
 import WidgetKit
 import SwiftUI
 
-// MARK: - Sage Teal Palette & Design Constants
+// MARK: - Sage Teal Palette & Luxury Solid Theme Constants
 
 private struct WidgetTheme {
-    static let accent = Color(red: 42/255, green: 183/255, blue: 169/255) // Sage Teal #2AB7A9
-    static let accentTint = Color(red: 42/255, green: 183/255, blue: 169/255).opacity(0.12)
+    /// Sage Teal brand accent #2AB7A9
+    static let accent = Color(red: 42/255, green: 183/255, blue: 169/255)
+    
+    /// Accent tint with subtle transparency
+    static let accentTint = Color(red: 42/255, green: 183/255, blue: 169/255).opacity(0.18)
+    
+    /// Cool solid signature dark teal background #0E2426
+    static let solidBackground = Color(red: 14/255, green: 36/255, blue: 38/255)
+    
+    /// Card surface overlay on top of solid background
+    static let cardBackground = Color.white.opacity(0.08)
+    
+    /// Card border stroke
+    static let cardBorder = Color.white.opacity(0.12)
+}
+
+// MARK: - Spendora App Logo Emblem View
+
+struct SpendoraLogoEmblem: View {
+    var size: CGFloat = 20
+
+    var body: some View {
+        Group {
+            if let uiImage = UIImage(named: "AppLogo") ?? UIImage(named: "SpendoraLogo") {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: size, height: size)
+                    .clipShape(RoundedRectangle(cornerRadius: size * 0.24, style: .continuous))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: size * 0.24, style: .continuous)
+                            .stroke(Color.white.opacity(0.2), lineWidth: 0.5)
+                    )
+            } else {
+                ZStack {
+                    RoundedRectangle(cornerRadius: size * 0.24, style: .continuous)
+                        .fill(WidgetTheme.accent)
+                        .frame(width: size, height: size)
+                    
+                    Image(systemName: "creditcard.fill")
+                        .font(.system(size: size * 0.5, weight: .bold))
+                        .foregroundColor(.white)
+                }
+            }
+        }
+    }
 }
 
 // MARK: - Timeline Provider
@@ -29,7 +73,10 @@ struct Provider: TimelineProvider {
             upcomingIcon: "tv.fill",
             upcomingCategory: "Entertainment",
             monthlyBudget: 150.0,
-            currencySymbol: "$"
+            currencySymbol: "$",
+            formattedMonthlyStored: "$76.26",
+            formattedYearlyStored: "$915.12",
+            formattedNextCostStored: "$15.99"
         )
     }
     
@@ -45,7 +92,10 @@ struct Provider: TimelineProvider {
             upcomingIcon: "tv.fill",
             upcomingCategory: "Entertainment",
             monthlyBudget: 150.0,
-            currencySymbol: "$"
+            currencySymbol: "$",
+            formattedMonthlyStored: "$76.26",
+            formattedYearlyStored: "$915.12",
+            formattedNextCostStored: "$15.99"
         )
         completion(entry)
     }
@@ -206,22 +256,20 @@ struct SmallWidgetView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // Header Bar: Sage Teal Brand Emblem + App Name
-            HStack(spacing: 5) {
-                Image(systemName: "creditcard.fill")
-                    .font(.system(size: 11, weight: .bold))
-                    .foregroundColor(WidgetTheme.accent)
+            // Header Bar: App Logo + App Title + Count
+            HStack(spacing: 6) {
+                SpendoraLogoEmblem(size: 18)
                 
                 Text("SPENDORA")
                     .font(.system(size: 10, weight: .bold, design: .rounded))
                     .tracking(0.8)
-                    .foregroundColor(Color(.secondaryLabel))
+                    .foregroundColor(Color.white.opacity(0.85))
                 
                 Spacer()
                 
                 Text("\(entry.activeCount) active")
                     .font(.system(size: 9, weight: .medium, design: .rounded))
-                    .foregroundColor(Color(.tertiaryLabel))
+                    .foregroundColor(Color.white.opacity(0.5))
             }
             
             Spacer(minLength: 4)
@@ -230,12 +278,12 @@ struct SmallWidgetView: View {
             VStack(alignment: .leading, spacing: 1) {
                 Text("THIS MONTH")
                     .font(.system(size: 9, weight: .semibold, design: .rounded))
-                    .foregroundColor(Color(.secondaryLabel))
+                    .foregroundColor(Color.white.opacity(0.6))
                     .tracking(0.6)
                 
                 Text(entry.formattedMonthly)
                     .font(.system(size: 24, weight: .semibold, design: .rounded).monospacedDigit())
-                    .foregroundColor(Color(.label))
+                    .foregroundColor(.white)
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
             }
@@ -257,15 +305,15 @@ struct SmallWidgetView: View {
                 VStack(alignment: .leading, spacing: 0) {
                     Text(entry.upcomingSubscription)
                         .font(.system(size: 11, weight: .semibold, design: .rounded))
-                        .foregroundColor(Color(.label))
+                        .foregroundColor(.white)
                         .lineLimit(1)
                     
                     Text(entry.formattedUpcomingDate)
                         .font(.system(size: 9, weight: .medium, design: .rounded))
                         .foregroundColor(
                             entry.isUpcomingOverdue
-                                ? Color(.systemRed)
-                                : (entry.isUpcomingToday ? WidgetTheme.accent : Color(.secondaryLabel))
+                                ? Color(red: 255/255, green: 90/255, blue: 95/255)
+                                : (entry.isUpcomingToday ? WidgetTheme.accent : Color.white.opacity(0.65))
                         )
                 }
                 
@@ -279,16 +327,16 @@ struct SmallWidgetView: View {
             }
             .padding(.horizontal, 8)
             .padding(.vertical, 6)
-            .background(Color(.secondarySystemBackground))
+            .background(WidgetTheme.cardBackground)
             .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .stroke(Color(.separator).opacity(0.4), lineWidth: 0.5)
+                    .stroke(WidgetTheme.cardBorder, lineWidth: 0.5)
             )
         }
         .padding(12)
         .containerBackground(for: .widget) {
-            Color(.systemBackground)
+            WidgetTheme.solidBackground
         }
     }
 }
@@ -302,15 +350,13 @@ struct MediumWidgetView: View {
         HStack(spacing: 14) {
             // Left Half: Monthly Spending Hero & Count
             VStack(alignment: .leading, spacing: 4) {
-                HStack(spacing: 5) {
-                    Image(systemName: "creditcard.fill")
-                        .font(.system(size: 12, weight: .bold))
-                        .foregroundColor(WidgetTheme.accent)
+                HStack(spacing: 6) {
+                    SpendoraLogoEmblem(size: 18)
                     
                     Text("SPENDORA")
                         .font(.system(size: 11, weight: .bold, design: .rounded))
                         .tracking(1.0)
-                        .foregroundColor(Color(.secondaryLabel))
+                        .foregroundColor(Color.white.opacity(0.85))
                 }
                 
                 Spacer()
@@ -318,29 +364,29 @@ struct MediumWidgetView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("THIS MONTH")
                         .font(.system(size: 9, weight: .semibold, design: .rounded))
-                        .foregroundColor(Color(.secondaryLabel))
+                        .foregroundColor(Color.white.opacity(0.6))
                         .tracking(0.6)
                     
                     Text(entry.formattedMonthly)
                         .font(.system(size: 26, weight: .semibold, design: .rounded).monospacedDigit())
-                        .foregroundColor(Color(.label))
+                        .foregroundColor(.white)
                         .lineLimit(1)
                         .minimumScaleFactor(0.75)
                 }
                 
                 Text("\(entry.activeCount) active subscriptions")
                     .font(.system(size: 10, weight: .medium, design: .rounded))
-                    .foregroundColor(Color(.secondaryLabel))
+                    .foregroundColor(Color.white.opacity(0.6))
                 
                 if entry.monthlyBudget > 0 {
                     GeometryReader { geo in
                         ZStack(alignment: .leading) {
                             Capsule()
-                                .fill(Color(.tertiarySystemFill))
+                                .fill(Color.white.opacity(0.15))
                                 .frame(height: 4)
                             
                             Capsule()
-                                .fill(entry.budgetProgress >= 1.0 ? Color(.systemRed) : WidgetTheme.accent)
+                                .fill(entry.budgetProgress >= 1.0 ? Color(red: 255/255, green: 90/255, blue: 95/255) : WidgetTheme.accent)
                                 .frame(width: geo.size.width * CGFloat(entry.budgetProgress), height: 4)
                         }
                     }
@@ -351,6 +397,7 @@ struct MediumWidgetView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             
             Divider()
+                .overlay(Color.white.opacity(0.15))
                 .padding(.vertical, 4)
             
             // Right Half: Next Charge & Yearly Run Rate
@@ -358,7 +405,7 @@ struct MediumWidgetView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("NEXT UPCOMING")
                         .font(.system(size: 9, weight: .semibold, design: .rounded))
-                        .foregroundColor(Color(.secondaryLabel))
+                        .foregroundColor(Color.white.opacity(0.6))
                         .tracking(0.6)
                     
                     HStack(spacing: 8) {
@@ -375,15 +422,15 @@ struct MediumWidgetView: View {
                         VStack(alignment: .leading, spacing: 1) {
                             Text(entry.upcomingSubscription)
                                 .font(.system(size: 13, weight: .semibold, design: .rounded))
-                                .foregroundColor(Color(.label))
+                                .foregroundColor(.white)
                                 .lineLimit(1)
                             
                             Text(entry.formattedUpcomingDate)
                                 .font(.system(size: 10, weight: .medium, design: .rounded))
                                 .foregroundColor(
                                     entry.isUpcomingOverdue
-                                        ? Color(.systemRed)
-                                        : (entry.isUpcomingToday ? WidgetTheme.accent : Color(.secondaryLabel))
+                                        ? Color(red: 255/255, green: 90/255, blue: 95/255)
+                                        : (entry.isUpcomingToday ? WidgetTheme.accent : Color.white.opacity(0.65))
                                 )
                         }
                     }
@@ -400,19 +447,19 @@ struct MediumWidgetView: View {
                 VStack(alignment: .leading, spacing: 1) {
                     Text("YEARLY RUN RATE")
                         .font(.system(size: 8, weight: .semibold, design: .rounded))
-                        .foregroundColor(Color(.secondaryLabel))
+                        .foregroundColor(Color.white.opacity(0.5))
                         .tracking(0.6)
                     
                     Text(entry.formattedYearly)
                         .font(.system(size: 12, weight: .semibold, design: .rounded).monospacedDigit())
-                        .foregroundColor(Color(.secondaryLabel))
+                        .foregroundColor(Color.white.opacity(0.8))
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(14)
         .containerBackground(for: .widget) {
-            Color(.systemBackground)
+            WidgetTheme.solidBackground
         }
     }
 }
@@ -426,22 +473,20 @@ struct LargeWidgetView: View {
         VStack(alignment: .leading, spacing: 12) {
             // Header Bar
             HStack {
-                HStack(spacing: 5) {
-                    Image(systemName: "creditcard.fill")
-                        .font(.system(size: 13, weight: .bold))
-                        .foregroundColor(WidgetTheme.accent)
+                HStack(spacing: 6) {
+                    SpendoraLogoEmblem(size: 20)
                     
                     Text("SPENDORA")
                         .font(.system(size: 12, weight: .bold, design: .rounded))
                         .tracking(1.0)
-                        .foregroundColor(Color(.secondaryLabel))
+                        .foregroundColor(Color.white.opacity(0.85))
                 }
                 
                 Spacer()
                 
                 Text("\(entry.activeCount) Active Subscriptions")
                     .font(.system(size: 11, weight: .medium, design: .rounded))
-                    .foregroundColor(Color(.secondaryLabel))
+                    .foregroundColor(Color.white.opacity(0.6))
             }
             
             // Executive Metrics Row
@@ -449,37 +494,45 @@ struct LargeWidgetView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("MONTHLY SPEND")
                         .font(.system(size: 9, weight: .semibold, design: .rounded))
-                        .foregroundColor(Color(.secondaryLabel))
+                        .foregroundColor(Color.white.opacity(0.6))
                     
                     Text(entry.formattedMonthly)
-                        .font(.system(size: 26, weight: .semibold, design: .rounded).monospacedDigit())
-                        .foregroundColor(Color(.label))
+                        .font(.system(size: 24, weight: .semibold, design: .rounded).monospacedDigit())
+                        .foregroundColor(.white)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(10)
-                .background(Color(.secondarySystemBackground))
+                .background(WidgetTheme.cardBackground)
                 .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(WidgetTheme.cardBorder, lineWidth: 0.5)
+                )
                 
                 VStack(alignment: .leading, spacing: 2) {
                     Text("YEARLY RUN RATE")
                         .font(.system(size: 9, weight: .semibold, design: .rounded))
-                        .foregroundColor(Color(.secondaryLabel))
+                        .foregroundColor(Color.white.opacity(0.6))
                     
                     Text(entry.formattedYearly)
-                        .font(.system(size: 26, weight: .semibold, design: .rounded).monospacedDigit())
+                        .font(.system(size: 24, weight: .semibold, design: .rounded).monospacedDigit())
                         .foregroundColor(WidgetTheme.accent)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(10)
-                .background(Color(.secondarySystemBackground))
+                .background(WidgetTheme.cardBackground)
                 .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(WidgetTheme.cardBorder, lineWidth: 0.5)
+                )
             }
             
             // Next Charge Card Section
             VStack(alignment: .leading, spacing: 6) {
                 Text("UPCOMING BILL")
                     .font(.system(size: 10, weight: .semibold, design: .rounded))
-                    .foregroundColor(Color(.secondaryLabel))
+                    .foregroundColor(Color.white.opacity(0.6))
                     .tracking(0.6)
                 
                 HStack(spacing: 10) {
@@ -496,14 +549,14 @@ struct LargeWidgetView: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text(entry.upcomingSubscription)
                             .font(.system(size: 14, weight: .semibold, design: .rounded))
-                            .foregroundColor(Color(.label))
+                            .foregroundColor(.white)
                         
                         Text(entry.formattedUpcomingDate)
                             .font(.system(size: 11, weight: .medium, design: .rounded))
                             .foregroundColor(
                                 entry.isUpcomingOverdue
-                                    ? Color(.systemRed)
-                                    : (entry.isUpcomingToday ? WidgetTheme.accent : Color(.secondaryLabel))
+                                    ? Color(red: 255/255, green: 90/255, blue: 95/255)
+                                    : (entry.isUpcomingToday ? WidgetTheme.accent : Color.white.opacity(0.65))
                             )
                     }
                     
@@ -516,8 +569,12 @@ struct LargeWidgetView: View {
                     }
                 }
                 .padding(10)
-                .background(Color(.secondarySystemBackground))
+                .background(WidgetTheme.cardBackground)
                 .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(WidgetTheme.cardBorder, lineWidth: 0.5)
+                )
             }
             
             Spacer(minLength: 0)
@@ -530,12 +587,12 @@ struct LargeWidgetView: View {
                 
                 Text("Tap to review budget & AI insights in Spendora")
                     .font(.system(size: 10, weight: .medium, design: .rounded))
-                    .foregroundColor(Color(.secondaryLabel))
+                    .foregroundColor(Color.white.opacity(0.55))
             }
         }
         .padding(14)
         .containerBackground(for: .widget) {
-            Color(.systemBackground)
+            WidgetTheme.solidBackground
         }
     }
 }
@@ -570,8 +627,7 @@ struct RectangularAccessoryView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
             HStack(spacing: 4) {
-                Image(systemName: "creditcard.fill")
-                    .font(.system(size: 10))
+                SpendoraLogoEmblem(size: 12)
                 Text("SPENDORA")
                     .font(.system(size: 10, weight: .bold, design: .rounded))
             }
@@ -627,7 +683,10 @@ struct SpendoraWidget: Widget {
         upcomingIcon: "tv.fill",
         upcomingCategory: "Entertainment",
         monthlyBudget: 150.0,
-        currencySymbol: "$"
+        currencySymbol: "$",
+        formattedMonthlyStored: "$76.26",
+        formattedYearlyStored: "$915.12",
+        formattedNextCostStored: "$15.99"
     )
 }
 
@@ -645,7 +704,10 @@ struct SpendoraWidget: Widget {
         upcomingIcon: "sparkles",
         upcomingCategory: "Productivity",
         monthlyBudget: 150.0,
-        currencySymbol: "$"
+        currencySymbol: "$",
+        formattedMonthlyStored: "$76.26",
+        formattedYearlyStored: "$915.12",
+        formattedNextCostStored: "$20.00"
     )
 }
 
@@ -663,6 +725,9 @@ struct SpendoraWidget: Widget {
         upcomingIcon: "music.note",
         upcomingCategory: "Entertainment",
         monthlyBudget: 150.0,
-        currencySymbol: "$"
+        currencySymbol: "$",
+        formattedMonthlyStored: "$76.26",
+        formattedYearlyStored: "$915.12",
+        formattedNextCostStored: "$10.99"
     )
 }
