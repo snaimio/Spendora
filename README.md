@@ -24,22 +24,25 @@ Subscription fatigue is one of the fastest-growing personal financial challenges
 
 ---
 
-## 🎥 Capstone Demo Video Showcase
+## 🎥 Capstone Demo Video & Animated Showcase
 
 <p align="center">
-  <img src="demo/thumbnail.png" width="90%" alt="Spendora Capstone Demo Thumbnail" />
+  <img src="screenshots/demo_preview.gif" width="360" alt="Spendora App Interactive Flow Preview" />
 </p>
 
 <p align="center">
   <a href="demo/Spendora_Demo.mp4">
-    <img src="https://img.shields.io/badge/Download-Full%202%3A30%20Capstone%20Demo%20Video-007AFF?style=for-the-badge&logo=apple&logoColor=white" alt="Download Capstone Demo Video" />
+    <img src="https://img.shields.io/badge/Watch-Full%20HD%20Walkthrough%20Video%20(10MB)-2AB7A9?style=for-the-badge&logo=apple&logoColor=white" alt="Watch HD Walkthrough Video" />
+  </a>
+  <a href="demo/Spendora_Demo.mp4" download>
+    <img src="https://img.shields.io/badge/Download-MP4%20Video-000000?style=for-the-badge&logo=quicktime&logoColor=white" alt="Download MP4 Video" />
   </a>
 </p>
 
-> 🎬 **2:30 Capstone Presentation Video**: Features smart-dressed AI presenter **Sheikh Naim** providing a 2-minute 30-second walkthrough covering Onboarding, Dashboard, Add Subscription, Managing & Cancelling Subscriptions, Swift Charts Analytics, Settings Export, and iOS 17 Home Screen Widgets.
+> 🎬 **Full 10-Chapter Video Walkthrough**: Complete walkthrough covering Dashboard & Live Budget, 1-Tap Record Payment & Instant Undo, Add Subscription with Theme Chips, Manage Subscriptions, AI Insights driven by 1–5 star ratings, Yearly Financial Statements, Settings JSON Backup, and Home & Lock Screen Widgets.
 > 
-> 📁 **Video Location**: [`demo/Spendora_Demo.mp4`](demo/Spendora_Demo.mp4)  
-> 🖼️ **Thumbnail Location**: [`demo/thumbnail.png`](demo/thumbnail.png)
+> 📁 **Video File**: [`demo/Spendora_Demo.mp4`](demo/Spendora_Demo.mp4) (Optimized 10 MB for seamless web & mobile playback)  
+> 🎞️ **Animated Preview**: [`screenshots/demo_preview.gif`](screenshots/demo_preview.gif)
 
 ---
 
