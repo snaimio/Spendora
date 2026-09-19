@@ -28,19 +28,11 @@ Built with **SwiftUI**, **SwiftData**, **Swift Charts**, and **WidgetKit**, Spen
 
 ---
 
-## 🎥 App Demonstration
+## 🎥 Video Walkthrough Demo
 
-<p align="center">
-  <img src="screenshots/demo_preview.gif" width="340" alt="Spendora App Interactive Preview" />
-</p>
+Watch the full walkthrough demonstration featuring voice narration, live budget tracking, 1-tap payment recording, AI financial insights, and interactive iOS 17 widgets.
 
-<p align="center">
-  <a href="https://raw.githubusercontent.com/snaimio/Spendora/main/demo/Spendora_Demo.mp4" target="_blank">
-    <img src="https://img.shields.io/badge/▶_Watch-Full_Walkthrough_Video-2AB7A9?style=for-the-badge&logo=apple&logoColor=white" alt="Watch Full Demo Video" />
-  </a>
-</p>
-
-> 🎬 **Walkthrough Video**: Complete demonstration with voice narration covering the Dashboard, 1-Tap Record Payment & Undo, Presets Catalog, AI Insights, Yearly Reports, Widgets, and Settings.
+https://github.com/user-attachments/assets/8c5b3538-9c70-4597-b945-fc59d7bf469e
 
 ---
 
